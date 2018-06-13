@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>KR Log Color Converter</title>
+        <script defer>
+            function convert(){
+                var colorsForum = {
+                    '^0': '[/color][color=#000000]',
+                    '^1': '[/color][color=#CC0000]',
+                    '^2': '[/color][color=#00CC00]',
+                    '^3': '[/color][color=#CCCC00]',
+                    '^4': '[/color][color=#0000CC]',
+                    '^5': '[/color][color=#00CCCC]',
+                    '^6': '[/color][color=#CC00CC]',
+                    '^7': '[/color][color=#AAAAAA]',
+                    '^8': '[/color][color=#CC5A00]',
+                    '^9': '[/color][color=#5A5A5A]',
+                    '\n': '\n[/color][color=#AAAAAA]'
+                }
+                var colorsHtml = {
+                    '^0': '</span><span style="color:#000000;">',
+                    '^1': '</span><span style="color:#CC0000;">',
+                    '^2': '</span><span style="color:#00CC00;">',
+                    '^3': '</span><span style="color:#CCCC00;">',
+                    '^4': '</span><span style="color:#0000CC;">',
+                    '^5': '</span><span style="color:#00CCCC;">',
+                    '^6': '</span><span style="color:#CC00CC;">',
+                    '^7': '</span><span style="color:#AAAAAA;">',
+                    '^8': '</span><span style="color:#CC5A00;">',
+                    '^9': '</span><span style="color:#5A5A5A;">',
+                    '\n': '<br></span><span style="color:#AAAAAA">'
+                }
+                var forumCode = '[color=#AAAAAA]';
+                var htmlCode = '<span style="font-family:monospace"><span style="color:#AAAAAA;">';
+                var forumTemp = document.getElementById('in').value;
+                var htmlTemp = forumTemp;
+                for(var i in colorsForum){
+                    forumTemp = forumTemp.split(i).join(colorsForum[i]);
+                    htmlTemp = htmlTemp.split(i).join(colorsHtml[i]);
+                }
+                forumCode += forumTemp;
+                htmlCode += htmlTemp;
+                forumCode += '[/color]';
+                htmlCode += '</span></span>';
+                document.getElementById('outForum').value = forumCode;
+                document.getElementById('outHtml').value = htmlCode;
+                document.getElementById('testHtml').innerHTML = htmlCode;
+            }
+        </script>
+    </head>
+    <body>
+        <h1>JK3 Color to Forum Converter</h1>
+        <p>You can resize the text-areas if you need to, with the handle.</p>
+        <textarea id="in" placeholder="paste log text here"></textarea><br><br>
+        <button onclick="convert()">Convert</button><br><br>
+        For KR Forum:<br>
+        <textarea id="outForum" placeholder="copy forum code from here"></textarea><br><br>
+        For HTML Embedding:<br>
+        <textarea id="outHtml" placeholder="copy html code from here"></textarea><br><br>
+        Preview:
+        <div id="testHtml"></div>
+    </body>
+</html>

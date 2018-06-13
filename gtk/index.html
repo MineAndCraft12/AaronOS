@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script defer>
+            console.log('init...');
+            function getId(target){
+                return document.getElementById(target);
+            }
+            // insert text within a string
+            function insert(str, text, pos, len){
+                return str.substring(0, pos) + text + str.substring(pos + (len || 0), str.length);
+            }
+            // replace text within a string
+            function replace(str, word, text, pos){
+                if(str.indexOf(word, pos) > -1){
+                    return insert(str, text, str.indexOf(word, (pos || 0)), word.length);
+                }
+                return str;
+            }
+            // return first line containing a string
+            function searchForLine(text, pos){
+                var found = 0;
+                var tmpPos = -1;
+                var tmpLine = (pos || 0);
+                while(!found){
+                    if(tmpLine >= original.length){
+                        found = 1;
+                    }
+                    var tmpInd = original[tmpLine].indexOf(text)
+                    if(tmpInd > -1){
+                        found = 1;
+                        tmpPos = tmpInd;
+                    }
+                    tmpLine++;
+                }
+                return tmpPos;
+            }
+            // count whitespace at beginning of a string
+            function countWhitespace(str){
+                
+            }
+            // if string contains any of the list of words
+            function containsAny(str, list){
+                for(var i in list){
+                    if(str.indexOf(list[i]) > -1){
+                        return true;
+                    }
+                }
+                return false;
+            }
+            var colors = {};
+            var synonyms = {
+                ':selected': ':focus',
+                '.view': '.winHTML',
+                ':insensitive': ':disabled',
+                'GtkTextView': 'textarea',
+                '.button': 'button',
+                '.linked': 'a',
+                '.separator': 'hr',
+                '.list-row': 'li',
+                '.list': 'ol, li',
+                '.activatable': '',
+                'GtkHtml': 'textarea',
+                '#content_frame': '.winHTML',
+                '-gtk-image-effect': 'filter',
+                '.background': '.winHTML',
+                '-gtk-icon-transform': 'transform',
+                'rotate(1turn)': 'rotate(360deg)',
+                'rotate(0.5turn)': 'rotate(180deg)',
+                'rotate(-1turn)': 'rotate(-360deg)',
+                '.rubberband': '::selection',
+                '.cell': 'td',
+                '.row': 'tr',
+                'column-header.button': 'th',
+                'column-header': 'th',
+                '.entry': 'input',
+                'to bottom': '180deg'
+            };
+            var violations = ['@import', '@define-color', 'background-clip:', 'outline-', '-GtkToolButton-icon-s', '-GtkTextView-error-un', '-GtkCheckButton-indic', '-GtkCheckMenuItem-ind', '-GtkScrolledWindow-sc', '-GtkScrolledWindow-sc', '-GtkToolItemGroup-exp', '-GtkExpander-expander', '-GtkTreeView-expander', '-GtkTreeView-horizont', '-GtkMenu-horizontal-p', '-GtkMenu-vertical-pad', '-GtkWidget-link-color', '-GtkWidget-visited-li', '-GtkWidget-focus-padd', '-GtkWidget-focus-line', '-GtkWidget-text-handl', '-GtkWidget-text-handl', '-GtkDialog-button-spa', '-GtkDialog-action-are', '-GtkStatusbar-shadow-'];
+            var original = '';
+            function convert(){
+                original = getId('original').value.split('\n');
+                colors = {};
+                var converted = [];
+                var temp = '';
+                for(var line = 0; line < original.length; line++){
+                    if(original[line].indexOf('@define-color ') === 0){
+                        var colorTemp = original[line].split(';')[0].split(' ');
+                        colorTemp.shift();
+                        var clr1 = colorTemp.shift();
+                        var clr2 = colorTemp.join(' ');
+                        var lineTemp = clr2;
+                        do{
+                            lineTemp = clr2;
+                            for(var i in colors){
+                                clr2 = replace(clr2, '@' + i, colors[i]);
+                            }
+                        }while(lineTemp !== clr2)
+                        if(clr2.indexOf('alpha(') > -1){
+                            clr2 = replace(clr2, 'alpha(', '');
+                            clr2 = clr2.substring(0, clr2.lastIndexOf(','));
+                        }
+                        if(clr2.indexOf('shade(') > -1){
+                            clr2 = replace(clr2, 'shade(', '');
+                            clr2 = clr2.substring(0, clr2.lastIndexOf(','));
+                        }
+                        
+                        colors[clr1] = clr2;
+                        getId('colors').innerHTML += '<div style="background-color:' + colors[clr1] + '";>@' + clr1 + ' = ' + clr2 + '</span>';
+                    }
+                }
+                var line = 0;
+                //while(searchForLine('*', line) < searchForLine('}', line) && searchForLine('*', line) > -1){
+                //    line = searchForLine('}') + 1;
+                //}
+                while(line < original.length){
+                    var origLine = original[line];
+                    var newLine = origLine;
+                    
+                    if(containsAny(newLine, violations)){
+                        if(containsAny(newLine, ['}'])){
+                            newLine = '}';
+                        }else{
+                            newLine = '';
+                        }
+                    }else{
+                        var lineTemp = newLine;
+                        do{
+                            lineTemp = newLine;
+                            for(var i in colors){
+                                newLine = replace(newLine, '@' + i, colors[i]);
+                            }
+                        }while(lineTemp !== newLine)
+                        
+                        var lineTemp = newLine;
+                        do{
+                            lineTemp = newLine;
+                            for(var i in synonyms){
+                                newLine = replace(newLine, i, synonyms[i]);
+                            }
+                        }while(lineTemp !== newLine)
+                    }
+                    
+                    converted.push(newLine);
+                    line++;
+                }
+                getId('converted').value = 'button{\n  outline:none !important;\n}\nbutton, button:hover, button:active, button:focus, input, input:hover, input:active, input:focus, textarea, textarea:active, textarea:hover, textarea:focus{\n  box-shadow:none;\n}\n' + converted.join('\n') + '.winHTML{\n  padding:0 !important;\n  margin:0 !imporatant;\n  border:none !important;\n}';
+            }
+        </script>
+    </head>
+    <body style='font-family:Sans-Serif;background:#FFF'>
+        <h1>GTK-3.0 to aOS Converter</h1>
+        <b style="background-color:#F00">Note - this app ignores themes, you must test your theme with other aOS apps. Also, be sure to RESTART THIS APP between Conversions, or errors may occur.</b><br><br>
+        How to use:<br><br>
+        Copy (Ctrl-A, Ctrl-C) the CSS code from the GTK theme (usually in the 'gtk-3' folder as a .css file, it is a quite long file - you may need to copy multiple files if the color declarations are separate).<br><br>
+        Paste (Ctrl-A, Ctrl-V) the CSS code into the first box below.<br><br>
+        Click 'Convert'. This will take a while, depending on how strong your system is and how long the file is. My laptop converted Mint-Y-Dark in about a quarter second.<br><br>
+        Copy (Ctrl-A, Ctrl-C) the CSS code that appears in the second box.<br><br>
+        Paste (Ctrl-A, Ctrl-V) the code into the aOS Custom Style Editor app.<br><br>
+        Preview the theme and click 'Save'.<br><br>
+        You can revert back to the default theme at any time by going to Settings -&gt; Custom Styles -&gt; Restore Default.<br><br>
+        This app will display any custom colors found in the theme at the bottom of this page as well. Most themes use custom colors, but if nothing appears, do not worry.
+        <hr>
+        <textarea id="original" placeholder="Paste CSS code here."></textarea><br>
+        <button onclick="convert()">Convert</button>
+        <hr>
+        <textarea id="converted" placeholder="Output here."></textarea>
+        <div id="colors" style="color:#000;text-shadow:0 0 1px #FFF;font-family:monospace;">Colors:</div>
+    </body>
+</html>

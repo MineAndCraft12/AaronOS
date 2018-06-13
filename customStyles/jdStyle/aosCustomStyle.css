@@ -1,0 +1,88 @@
+/* jd style */
+#taskbar{
+    max-width:80%;
+    left:10%;
+    border-top-left-radius:20px !important;
+    border-top-right-radius:20px !important;
+
+    border-bottom-left-radius:0px !important;
+    border-bottom-right-radius:0px !important;
+}
+button{
+    border-radius:50px;
+    background-color:#1BCB58;
+    color:#00699A;
+}
+div #winDsB window{
+    left:130px !important;
+}
+td{
+    border-radius:3px;
+    background-color:#008400;
+    color:#00B6FF
+}
+th{
+    border-radius:50px;
+    background-color:#008400;
+    color:#00B6FF
+}
+#winDsB{
+    height:400px;
+}
+#winDsBh{
+    top:20px;
+}
+winDsBi{
+    
+}
+#icnDsB{
+    border-radius:20px;
+}
+#winDsB{
+    overflow:visible;
+}
+#winDsB .winCap{
+    box-shadow:0px 300px 0px #000;
+}
+#taskbar{
+   border-radius:20px;
+}
+.iconImg{
+   border-radius:50px;
+}
+.winBimg{
+   background-image:url(http://wallpapercave.com/wp/CVO9Y72.jpg);
+}
+.winBig, .winExit, .winShrink{
+    border-top:4px;
+    width:25px;
+    height:18px;
+    background-color:#1AAC3C;
+}
+.winExit{
+    right:15px;
+}
+.winExit:hover{
+    background-color:rgb(241, 88, 82);
+}
+.winExit:active{
+    background-color:rgb(178, 72, 74);
+}
+.winShrink{
+    right:75px;
+}
+.winShrink:hover{
+    background-color:rgb(245, 177, 50);
+}
+.winShrink:active{
+    background-color:rgb(198, 151, 63);
+}
+.winBig{
+    right:45px;
+}
+.winBig:hover{
+    background-color:rgb(39, 190, 61);
+}
+.winBig:active{
+    background-color:rgb(43, 147, 58);
+}

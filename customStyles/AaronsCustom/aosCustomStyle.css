@@ -1,0 +1,27 @@
+/* caption buttons */
+.winExit{
+    right: 0;
+    width: 19px;
+    border-radius: 0;
+    border-right: none;
+}
+.winShrink{
+    right: 40px;
+    width: 19px;
+    border-bottom-right-radius: 0;
+    border-right: none;
+}
+.winBig{
+    right: 20px;
+    width: 19px;
+    border-radius: 0;
+    border-right: none;
+}
+
+/* context menu */
+#ctxMenu{
+    background-color: rgba(255, 255, 255, 0.75);
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 10px;
+}

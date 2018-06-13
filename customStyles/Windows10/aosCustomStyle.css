@@ -1,0 +1,108 @@
+/* Windows 10 */
+/* scrollbars */
+::-webkit-scrollbar{
+    width:16px;
+    background-color: #F0F0F0;
+    box-shadow: none;
+}
+::-webkit-scrollbar-corner{
+    background-color: #F0F0F0;
+    box-shadow: none;
+}
+::-webkit-resizer{
+    border-radius: 0;
+    background-color: #CDCDCD;
+    box-shadow: none;
+}
+::-webkit-scrollbar-thumb{
+    border-radius: 0;
+    background-color: #CDCDCD;
+    box-shadow: none;
+}
+::-webkit-scrollbar-button{
+    border-radius: 0;
+    background-color: #DADADA;
+    box-shadow: none;
+}
+/* window itself */
+.window{
+    border-radius: 0;
+}
+/* window html */
+.winHTML{
+    border-radius: 0;
+    left: 1px;
+    bottom: 1px;
+    padding-right: 4px;
+    padding-bottom: 2px;
+}
+/* taskbar */
+#taskbar .winAero{
+    opacity:0.5;
+}
+/* window buttons */
+.winBig, .winShrink, .winExit{
+    color: #FFF;
+    border-radius: 0;
+    border: none;
+    height: 19px;
+    top: 1px;
+    width: 38px;
+    font-family:aosProFont;
+    font-size:19px;
+    text-align:center;
+}
+.winExit{
+    right: 1px;
+}
+.winExit:hover{
+    background-color:#E81123;
+    color: #FFF;
+}
+.winBig{
+    right: 40px;
+}
+.winShrink{
+    right: 79px;
+}
+.winBig:hover, .winShrink:hover{
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #FFF;
+}
+/* context menu */
+#ctxMenu{
+    border-color:#CCC;
+    background-color:#F2F2F2;
+}
+#ctxMenu hr{
+    background-color:#D7D7D7;
+    border-radius: 0;
+    border: none;
+    margin-left:14px;
+    width:calc(100% - 14px);
+}
+#ctxMenu p{
+    transition: 0s;
+    color: #000;
+}
+#ctxMenu p:hover{
+    transition: 0s;
+    background-color: #91C9F7;
+    color: #000;
+}
+/* buttons */
+button{
+    border-color: #ADADAD;
+    background-color:#E1E1E1;
+    color: #000;
+    outline: none;
+    transition: 0.1s;
+}
+button:hover{
+    border-color:#0078D7;
+    background-color:#E5F1FB;
+}
+button:active{
+    border-color:#005499;
+    background-color:#CCE4F7;
+}

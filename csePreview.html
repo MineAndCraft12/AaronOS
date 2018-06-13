@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="styleBeta.css">
+        <style id="aosCustomStyle"></style>
+    </head>
+    <body style="background-color:#ACE" id="pagebody">
+        <div id="monitor" class="cursorDefault">
+            <div id="desktop" style="width:100%;height:calc(100% - 30px)">
+                <div id="hideall"></div>
+                <div id="widgetMenu">
+                    <div id="widgetTitle"></div>
+                    <div id="widgetContent"></div>
+                    <div class="winExit cursorPointer" style="border-color:#000; color:#000">x</div>
+                </div>
+                <div class="window" style="transform: scale(1); opacity: 1; left: 20px; top: 20px; width: 400px; height: 500px; display: block; z-index: 90; box-shadow: rgb(0, 0, 0) 0px 0px 30px;">
+                    <div class="winAero" style="opacity: 1; background-image: url(/bgBeta.png); background-color: rgba(190, 190, 190, 0.6); background-blend-mode: hard-light; filter: blur(2px); width: 480px; height: 580px; background-position: 20px 20px;"></div>
+                    <div class="winBimg" style="background-image: url(/winimg.png);"></div>
+                    <div class="winCap cursorMove" style="width:372px;"><img src="/appicons/ds/aOS.png" style="height:32px;margin-bottom:-12px;margin-top:-6px"> Application</div>
+                    <div class="winFld cursorPointer">^</div>
+                    <div class="winHTML" style="width: 394px; height: 476px;">
+                        <h1>Header</h1>
+                        <p>Paragraph</p>
+                        <hr>
+                        <input placeholder="Input"> <button>Button</button><br>
+                        <input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br>
+                        <textarea>Text Area</textarea>
+                    </div>
+                    <div class="winBig cursorPointer">o</div>
+                    <div class="winShrink cursorPointer">v</div>
+                    <div class="winExit cursorPointer">x</div>
+                </div>
+                <div id="notifWindow">
+                    <div id="notifTitle">Notification</div>
+                    <div id="notifContent">Content</div>
+                    <div id="notifButtons"><button>Button 1</button> <button>Button 2</button></div>
+                    <img id="notifImage" src="/appicons/aOS.png">
+                    <div class="winExit cursorPointer" style="border-color:#557; color:#557">x</div>
+                </div>
+                <div id="windowFrameOverlay" style="display:block;width:200px;height:100px;top:250px;left:100px"></div>
+            </div>
+            <div id="taskbar" style="width:100%">
+                <div id="tskbrAero" class="winAero"></div>
+                <div id="tskbrBimg" class="winBimg"></div>
+                <div id="icons">
+                    <div class="icon cursorPointer" id="icn{a}" style="display: inline-block;"><img class="imageIco" src="/appicons/ds/aOS.png"></div>
+                    <div class="icon cursorPointer" id="icnNRA" style="display: inline-block;"><img class="imageIco" src="/appicons/ds/NRA.png"></div>
+                    <div class="icon cursorPointer" id="icnApp" style="display: inline-block;"><img class="imageIco" src="/appicons/ds/CSE.png"></div>
+                </div>
+                <div id="time">
+                    <div id="widget_cpu" class="widget" aoswidgetname="cpu" style="line-height: 150%; padding-left: 6px; padding-right: 6px;">16%CPU</div>
+                    <div id="widget_fps" class="widget" aoswidgetname="fps">
+                        <div id="compactFPS">175<br>60</div>
+                        <div style="position:static;margin-left:26px;margin-right:6px;margin-top:-25px;font-family:Courier,monospace;font-size:21px">FPS</div>
+                    </div>
+                    <div id="widget_network" class="widget" aoswidgetname="network" style="line-height: 150%; padding-left: 6px; padding-right: 6px;">] [</div>
+                    <div id="widget_battery" class="widget" aoswidgetname="battery">
+                        <div id="batteryWidgetFrame">096+</div>
+                        <div style="position:static;margin-top:-8px;border:1px solid #FFF;width:0;height:3px;margin-left:32px"></div>
+                    </div>
+                    <div id="widget_users" class="widget" aoswidgetname="users" style="line-height: 150%; padding-left: 6px; padding-right: 6px;">2</div>
+                    <div id="widget_time" class="widget" aoswidgetname="time">
+                        <div id="compactTime">2/11/18<br>11:33:02</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

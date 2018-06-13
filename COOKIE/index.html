@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html> 
+    <head>
+        <title>JD's Cookie Clicker</title>
+            <link rel="stylesheet" href="style.css">
+       <script defer src="script.js"></script>
+    </head>
+    <body background="/winimg.png">
+        <div onclick="ShowShop()" id="showShop"><span id="ShopName">Shop</span>&#10095;</div>
+        <div id="cookieShop" style="background:url(/win7blur1080.png);background-color:#222">
+                <div id="cookieupgradeHeader">Upgrades</div>
+            <div id="Upgrades">
+                
+                <div onclick="buyItem(this)" style="left:1px;" class="upgradeItem disabled" id='extracursor'>
+                    <div class="imgItem"><img src="cursor-aero.png"></div>
+                        <p class="NameCenter">Extra Cursor</p><p class="ItemPrice" id="">10000 Cookies</p>
+                            <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                        
+                <div onclick="buyItem(this)" style="right:1px;" class="upgradeItem" id=''></div> <!-- we can reuse buyItem -->
+                <div onclick="buyItem(this)" style="top:70px;left:1px;" class="upgradeItem" id=''></div>
+                <div onclick="buyItem(this)" style="top:70px;right:1px;" class="upgradeItem" id=''></div>
+            </div>
+                <div id="cookieshopHeader">Shop</div>
+            <div onclick="buyItem(this)" title="+1 CPS" class="ShopItem disabled" id="clicker">
+                <div class="imgItem"><img src="shopitems/pointer.png"></div><p class="NameCenter">Clicker</p>
+                <p class="ItemPrice" id="">15 Cookies</p> <!-- raise by 10 -->
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+5 CPS" class="ShopItem disabled" id="grandmom">
+                <div class="imgItem"><img style="width:40px;height:40px;padding:5px;" src="shopitems/grandmom.png"></div><p class="NameCenter">Grandmom</p>
+                <p class="ItemPrice" id="">350 Cookies</p> <!-- raise 25 -->
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+15 CPS" class="ShopItem disabled" id="cookiedonation">
+                <div class="imgItem"><img src="shopitems/donations.png"></div><p class="NameCenter">Donations</p>
+                <p class="ItemPrice" id="">5000 Cookies</p> <!-- raise by 75 -->
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                
+            <div onclick="buyItem(this)" title="+25 CPS" class="ShopItem disabled" id="cookieseeds">
+                <div class="imgItem"><img style="width:40px;height:40px;padding:5px;"src="shopitems/seeds.png"></div><p class="NameCenter">Cookie Seeds</p>
+                <p class="ItemPrice" id="">25000 Cookies</p> <!-- raise by 150 -->
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                
+            <div onclick="buyItem(this)" title="+40 CPS" class="ShopItem disabled" id="cookietrees">
+                <div class="imgItem"><img style="width:40px;height:40px;padding:5px;"src="shopitems/tree cookie.png"></div><p class="NameCenter">Cookie Trees</p>
+                <p class="ItemPrice" id="">155000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+60 CPS" class="ShopItem disabled" id="cookiethief">
+                <div class="imgItem"><img style="width:35px;height:40px;padding:5px;"src="shopitems/cookiethef.png"></div><p class="NameCenter">Cookie Thief</p>
+                <p class="ItemPrice" id="">200000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+85 CPS" class="ShopItem disabled" id="cookiefactory">
+                <div class="imgItem"><img style="width:40px;height:40px;padding:5px;"src="shopitems/cookiefactory.png"></div><p class="NameCenter">Cookie Factory</p>
+                <p class="ItemPrice" id="">255000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+100 CPS" class="ShopItem disabled" id="cookieprinter">
+                <div class="imgItem"><img style="width:40px;height:40px;padding:5px;"src="shopitems/printer.png"></div><p class="NameCenter">Cookie Printer</p>
+                <p class="ItemPrice" id="">500000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+120 CPS" class="ShopItem disabled" id="cookiespaceship">
+                <div class="imgItem"><img style="width:20px;height:40px;padding:5px;"src="shopitems/ship.png"></div><p class="NameCenter">Cookie Ship</p>
+                <p class="ItemPrice" id="">1055000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+145 CPS" class="ShopItem disabled" id="cookieagents">
+                <div class="imgItem"><img style="width:50px;height:20px;padding:20px 0px 0px 0px;"src="shopitems/agents.png"></div><p class="NameCenter">Cookie Agents</p>
+                <p class="ItemPrice" id="">2000000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+152 CPS" class="ShopItem disabled" id="cookieempire">
+                <div class="imgItem"><img style="width:40px;height:40px;padding:5px;"src=""></div><p class="NameCenter">Cookie Empire</p>
+                <p class="ItemPrice" id="">2277500 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+160 CPS" class="ShopItem disabled" id="cookieplanet">
+                <div class="imgItem"><img style="width:46px;height:35px;padding:10px 2px 10px 2px;"src="shopitems/cookieplanet.png"></div><p class="NameCenter">Cookie Planet</p>
+                <p class="ItemPrice" id="">2555000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+180 CPS" class="ShopItem disabled" id="cookieplanetminers">
+                <div class="imgItem"></div><p class="NameCenter">Cookie Planet Miners</p>
+                <p class="ItemPrice" id="">3000000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+205 CPS" class="ShopItem disabled" id="cookietimemachine">
+                <div class="imgItem"></div><p class="NameCenter">Cookie Time Machine</p>
+                <p class="ItemPrice" id="">5000000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+            <div onclick="buyItem(this)" title="+220 CPS" class="ShopItem disabled" id="cookiecloner">
+                <div class="imgItem"></div><p class="NameCenter">Cookie Cloner</p>
+                <p class="ItemPrice" id="">7000000 Cookies</p>
+                    <div class="numberOfItems"><p class="NameCenterNum">0</p></div></div>
+                    
+        </div>
+        <!-- Rounded switch -->
+        <label style="z-index:100;"class="switch">
+            <input type="checkbox" checked>
+            <div class="slider round" onclick="allowCookieShake = -1 * allowCookieShake + 1;cookieIntensity = 0;getId('cookie').style.filter='';getId('cookie').style.left='';getId('cookie').style.top=''"></div>
+        </label><br><br>Enable Shaking<br><br>
+        <label style="z-index:100;"class="switch">
+            <input type="checkbox" checked>
+            <div class="slider round" onclick="allowBulletHoles = -1 * allowBulletHoles + 1;ctx.clearRect(0, 0, 360, 360);localStorage.removeItem('canvasImage')"></div>
+        </label><br><br>Enable Destruction<br><br>
+    <p style="position:absolute;left:10px;bottom:90px;display:block;z-index:1000;">Version 0.7B</p>
+    <button id="updates" style="position:absolute;left:10px;bottom:70px;display:block;z-index:1000;" onclick="showUpdate()">Updates</button>
+    <button style="position:absolute;left:10px;bottom:50px;display:block;z-index:1000;" onclick="if(confirm('Those poor cookies. You sure you want to delete them cookies?')){window.localStorage.setItem('startOver','true');window.location='/COOKIE'}">Delete all progress</button>
+    <button onclick='toggleHowPlay()'>How to play</button><br><br>
+    <!-- disabled as it messes with aOS
+    <button onclick='exportSave()'>Export Save</button><br>
+    <button onclick='importSave()'>Import Save</button>
+    -->
+        <div id="counter"><span id="cookieNumber">0</span> Cookies</div>
+        <div id="cps"><span id="cpsNumber">0</span> Automatic Clicks per Second (CPS)</div>
+        <div id="mcps"><span id="mcpsNumber">0</span> Manual Clicks per Second (MPS)</div>
+        <!-- ONTOUCHSTART is disabled just for now, testing reasons -->
+        <div id="cookie" onclick="clickedcookies(event);return false;" ontouchstart="clickedcookies(event.changedTouches[0]);return false;" style="background-size:100%;background-image:url(cookie.png);image-rendering: pixelated;"><canvas id="effects" width="360" height="360"></canvas></div>
+        <div id="floatingCursorLayer" style="z-index:99999999999;pointer-events:none;width:0;height:0;overflow:visible;position:absolute;left:0;top:0"></div>
+        
+        <div id="versonUpdate" style="text-align:center;">
+            V 0.7.9B - Fixed bug when buying nonexistent upgrade<br>
+            V 0.7.8B - Added How To Play video<br>
+            V 0.7B - Fixed the bullet holes for u JD :P<br>
+                Added lots of debugging stuff, like prizes for finding bugs<br>
+                Fixed webpage scaling issues on mobile devices<br>
+                Now works on the old ePaper Kindle Touch as well!<br>
+                Also confirmed to now work on my watch<br>
+            V 0.6B - Fixed some of the bugs aswell as some bullet holes -_- aaron...<br>
+                Added more shop ICONS!<br>
+            V 0.5B - Added more shop items!<br>
+            V 0.4B - Beta released!<br>
+                Added more shop Items!<br>
+                Added Upgrades!<br>
+            V 0.3A - Added more spice to the cookies colected!<br>
+                Added CPS (Clicks per Second) and MPS (Manual Clicks per Second)!<br>
+            V 0.2.4A - Added more shop items!<br>
+            V 0.2.3A - Added in some icons FINALY!<br>
+            V 0.2.2A - Added more Items in shop!<br>
+            V 0.2.1A - Fixed bugges with animations!<br> 
+            V 0.2A - Added background and animations!<br>
+            V 0.1A - The biggening of production!
+            </div>
+                
+        <div id="cheatboxlol"><div onclick="closeCheats" id="CloseTab">X</div>
+            
+            </div>
+        <div id="how_to_play" onclick="toggleHowPlay()"><img src="_howToPlay.gif" style="width:640px;height:480px;padding:0;margin:0"></div>
+        <div id="fps">0</div>
+    </body>
+</html>

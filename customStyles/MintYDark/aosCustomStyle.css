@@ -1,0 +1,87 @@
+.winAero, .winBimg, #tskbrAero, #tskbrBimg{
+ display:none !important;
+}
+.winHTML{
+ background-color:#404040;
+ color:#D3D3D3;
+ border-radius:0;
+}
+.window{
+ background-color:#2F2F2F;
+ border-radius:3px 3px 0 0;
+}
+#taskbar{
+ background-color:#383838;
+}
+textarea, input{
+ background-color:#414141;
+ box-shadow:none;
+ border:1px solid #252525;
+ border-radius:3px;
+ color:#DADADA;
+}
+textarea:hover, textarea:active, input:hover, input:active{
+ box-shadow:none;
+}
+textarea:focus, input:focus{
+ border-color:#8FA876;
+ box-shadow:none;
+}
+.winExit, .winShrink, .winBig, .winFld{
+ color:#666666;
+ border-color:transparent;
+ margin-top:2px;
+}
+.winExit:hover, .winShrink:hover, .winBig:hover, .winFld:hover{
+ background-color:transparent;
+ border-color:transparent;
+}
+.winExit:active, .winShrink:active, .winBig:active, .winFld:active{
+ background-color:transparent;
+ border-color:transparent;
+}
+button{
+ background-color:#444444;
+ box-shadow:none;
+ color:#D3D3D3;
+ border-radius:3px;
+ border:1px solid #2B2B2B;
+}
+button:hover, button:focus{
+ box-shadow:none;
+}
+button:active{
+ box-shadow:none;
+ border-color:#8FA976;
+}
+#notifWindow, #widgetMenu{
+ background-color:#404040;
+ border-color:#2F2F2F;
+ color:#D3D3D3;
+}
+#notifWindow .winExit, #widgetMenu .winExit{
+ color:#2F2F2F !important;
+ border-color:transparent !important;
+}
+#notifWindow .winExit:active, #widgetMenu .winExit:active{
+ color:#FF2F2F !important;
+}
+.winCap{
+ box-shadow:inset 0 1px 0 0 #373737;
+ border-radius:4px;
+ margin-left:-3px;
+ padding-left:26px;
+ padding-right:3px;
+}
+#FILcntn{
+ background-color:#404040 !important;
+}
+#FILtopdiv div{
+ background:none !important;
+ border-color:transparent !important;
+ color:#414141 !important;
+}
+#FILpath{
+ color: #D3D3D3;
+ background-color:#414141 !important;
+}

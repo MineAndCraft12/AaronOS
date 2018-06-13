@@ -1,0 +1,286 @@
+/* OSX HIGH SIERRA */
+ ::-webkit-scrollbar{
+     box-shadow: none;
+     width:16px;
+     background-color: #e5e5e5;
+}
+ ::-webkit-scrollbar-corner{
+     background-color: #afafaf;
+     box-shadow: none;
+}
+ ::-webkit-scrollbar-thumb{
+     box-shadow: none;
+     background-color: #afafaf;
+}
+ ::-webkit-scrollbar-button{
+     box-shadow: none;
+     background-color: #afafaf;
+}
+ .winAero{
+     display: none;
+}
+ .winBImg{
+     display: none;
+}
+ .window{
+     background-color: #BDBDBD;
+}
+ .winCap{
+     text-align:center;
+     text-shadow: 
+    /*0px 0px 2px #FFF*/
+     none;
+     color:#878787;
+     font-family:aosProFont, monospace;
+     font-size:13px;
+}
+ .winHTML{
+     left: 0;
+     padding-right:6px;
+     bottom: 0px;
+}
+ button{
+     background-color:#FFF;
+     border:1px solid #7F7F7F;
+     color:#000;
+     border-radius:5px;
+}
+ button:active{
+     background:linear-gradient(0deg, #55D, #88D);
+}
+ .window{
+     background:linear-gradient(rgb(247, 247, 247), rgb(207, 207, 207) 22px, rgb(146, 146, 146));
+     padding-bottom:0;
+}
+ .winBig, .winExit, .winShrink, .winFld{
+     text-indent:100%;
+     padding-bottom:2px;
+     border-radius:7px;
+     top:5px;
+     width:11px;
+     height:11px;
+}
+ .winExit{
+     font-size: 13px;
+     left: 5px;
+     background-color:rgb(251, 98, 92);
+     border:1px solid rgb(188, 82, 84);
+}
+ .winExit:hover{
+    /*background-color:rgb(241, 88, 82);
+     */
+    /*border:1px solid rgb(178, 72, 74);
+     */
+     text-indent: -0.2%;
+}
+ .winExit:active{
+     background-color:rgb(178, 72, 74);
+     border:1px solid rgb(241, 88, 82);
+}
+ .winShrink{
+     font-size: 24px;
+     left: 23px;
+     background-color:rgb(255, 187, 60);
+     border:1px solid rgb(208, 161, 73);
+}
+ .winShrink:hover{
+     text-indent: 0%;
+     background-color:rgb(245, 177, 50);
+     border:1px solid rgb(198, 151, 63);
+     color:rgb(198,151,63);
+}
+ .winShrink:active{
+     background-color:rgb(198, 151, 63);
+     border:1px solid rgb(245, 177, 50);
+     color:rgb(245,177,50);
+}
+ .winBig{
+     font-size: 20px;
+     left: 41px;
+     background-color:rgb(49, 200, 71);
+     border:1px solid rgb(53, 157, 68);
+}
+ .winBig:hover{
+     text-indent: -0.1%;
+     background-color:rgb(39, 190, 61);
+     border:1px solid rgb(43, 147, 58);
+}
+ .winBig:active{
+     background-color:rgb(40, 150, 64);
+     border:1px solid rgb(39, 190, 61);
+}
+ .winFld{
+     font-size: 13px;
+    /*20*/
+     left: 59px;
+    /*aaron*/
+     line-height:90%;
+     background-color:rgb(0, 188, 188);
+     border:1px solid rgb(67, 120, 193);
+}
+ .winFld:hover{
+     text-indent: 0%;
+     background-color:rgb(0, 188, 188);
+     border:1px solid rgb(37, 100, 188);
+     color:rgb(37,100,188);
+}
+ .winFld:active{
+     background-color:rgb(0, 70, 183);
+     border:1px solid rgb(37, 100, 188);
+     color:rgb(37,100,188);
+}
+ #taskbar{
+     max-width: 80%;
+     overflow:visible;
+     left:10%;
+     border-top-left-radius:5px;
+     border-top-right-radius:5px;
+}
+ #ctxMenu p:hover{
+     background-color: #1869db;
+     color: #FFF;
+     transition: none;
+}
+ #ctxMenu{
+     background-color: rgba(242, 242, 242);
+     padding-top: 5px;
+     padding-bottom: 5px;
+     border-radius: 10px;
+}
+/* aarons mods */
+ .winBimg{
+     display:none;
+}
+ .winBig:before{
+     content:"+ ";
+}
+ .winExit:before{
+     content:"X ";
+}
+ .winShrink:before{
+     content:"- ";
+}
+ .winFld:before{
+     content:"X ";
+}
+ .winCap img{
+     height:16px !important;
+     margin-top:3px !important;
+     margin-bottom:-4px !important;
+}
+ .icon{
+     transform:scale(1);
+     transform-origin:50% 100%;
+     transition:0.3s;
+}
+ .icon:hover{
+     transform:scale(2);
+     margin-left:16px;
+     margin-right:16px;
+}
+ #icons{
+     max-width: fit-content;
+     overflow:visible;
+}
+ #tskbrAero{
+     width:100%;
+     height:100%;
+     top:0;
+     left:0;
+}
+ #time{
+     position:fixed;
+     left:0;
+     top:0;
+     text-align:right;
+     background:#d1d1d1;
+}
+ #desktop{
+     top:29px !important;
+    /*height:(insert its current height minus 29px here) !important;
+     */
+}
+ #widgetMenu{
+     position:fixed;
+     left:77.7%;
+     top:26px;
+     text-align:right;
+}
+ .cursorDefault{
+     cursor:url("https://ejb.000webhostapp.com/osx/Arrow.cur"), auto;
+}
+.cursorScroll{
+     cursor:url("https://ejb.000webhostapp.com/osx/Arrow.cur"), auto;
+}
+ .cursorMove{
+     cursor:url("https://ejb.000webhostapp.com/osx/Move.cur"), auto;
+}
+ .cursorOpenHand{
+     cursor:url("https://ejb.000webhostapp.com/osx/Move.cur"), auto;
+}
+ .cursorCloseHand{
+     cursor:url("https://ejb.000webhostapp.com/osx/Move.cur"), auto;
+}
+ .cursorPointer{
+     cursor:url("https://ejb.000webhostapp.com/osx/Link Select.cur"), auto;
+}
+ .cursorLoadLight{
+    /*cursor:url(cursors/loadLight.png) 16 16, wait;
+    */
+     cursor:url("https://ejb.000webhostapp.com/osx/Busy.cur"), auto;
+}
+ .cursorLoadDark{
+    /*cursor:url(cursors/loadDark.png) 16 16, wait;
+    */
+     cursor:url("https://ejb.000webhostapp.com/osx/Busy.cur"), auto;
+}
+ .cursorForceLoad{
+     cursor:url("https://ejb.000webhostapp.com/osx/Busy.cur"), auto !important;
+}
+#icoFIL img, #icnFIL img{
+ content: url("https://cdn.macrumors.com/article-new/2018/02/macos-finder-icon-250x235.jpg");
+}
+#icoMSG img, #icnMSG img{
+content: url("https://i2.wp.com/www.deteched.com/wp-content/uploads/2017/07/IMessage_Icon.png?fit=300%2C300");
+}
+#icoSTN img, #icnSTN img{
+content: url("https://orig00.deviantart.net/dfed/f/2014/183/a/f/preference_icon_by_kafi2007-d7oyyr1.png");
+}
+#icosh img, #icnsh img{
+content: url("https://cdn3.macworld.co.uk/cmsdata/features/3608274/Terminalicon2_thumb230.png");
+}
+#dscFIL{
+    font-size:0px;
+}
+#dscFIL:after{
+    content:"Finder";
+    font-size:12px;
+}
+#dscSTN{
+    font-size:0px;
+}
+#dscSTN:after{
+    content:"Preferences";
+    font-size:12px;
+}
+#dscMSG{
+    font-size:0px;
+}
+#dscMSG:after{
+    content:"Messages";
+    font-size:12px;
+}
+#dscjsC{
+    font-size:0px;
+}
+#dscjsC:after{
+    content:"JS Terminal";
+    font-size:12px;
+}
+#dscsh{
+    font-size:0px;
+}
+#dscsh:after{
+    content:"Terminal";
+    font-size:12px;
+}

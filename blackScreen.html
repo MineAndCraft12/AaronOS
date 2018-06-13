@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Device has shut down</title>
+        <style>
+            html, body{
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                padding: 0;
+                background-color:#000;
+                color:#FFF;
+                font-family:monospace;
+                text-align:center;
+            }
+            #hiddendiv{
+                opacity: 0;
+                transition: 1s;
+            }
+            button{
+                border:none;
+                font-family:monospace;
+                background:#000;
+                color:#FFF;
+                outline:none;
+            }
+            button:hover, button:focus{
+                color:#000;
+                background:#FFF;
+            }
+        </style>
+        <script>
+            var aosSuffix = '';
+            if(String(window.location).indexOf('#restart-beta') > -1){
+                window.location = 'https://aaron-os-mineandcraft12.c9.io/aosBeta.php';
+            }else if(String(window.location).indexOf('#restart') > -1){
+                window.location = 'https://aaron-os-mineandcraft12.c9.io/aos.php';
+            }else if(String(window.location).indexOf('#beta') > -1){
+                aosSuffix = 'Beta';
+            }
+            setTimeout(function(){
+                document.getElementById('hiddendiv').style.opacity = "1";
+            }, 1000);
+            requestAnimationFrame(function(){
+                document.getElementById('reboot').focus();
+            })
+        </script>
+    </head>
+    <body>
+        <div id="hiddendiv">
+            <br>
+            Device has shut down.<br><br><button id="reboot" onclick="window.location = 'https://aaron-os-mineandcraft12.c9.io/aos' + aosSuffix + '.php'">Reboot</button>
+        </div>
+    </body>
+</html>

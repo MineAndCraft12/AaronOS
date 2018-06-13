@@ -1,0 +1,114 @@
+#taskbar{
+ box-shadow:0 -1px rgba(255, 255, 255, 0.8), 0 -2px rgba(0, 0, 0, 0.6);
+}
+.window{
+ box-shadow:0 0 0 1px rgba(255, 255, 255, 0.8), 0 0 0 2px rgba(0, 0, 0, 0.6), 0 0 30px #000 !important;
+}
+.winExit, .winBig, .winShrink, .winFld{
+ border-color:rgba(0, 0, 0, 0.4);
+ box-shadow:0 0 0 1px rgba(255, 255, 255, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.4), inset 0 8px 4px rgba(255, 255, 255, 0.4);
+ color:#FFF;
+ text-shadow:0 0 1px #000;
+}
+.winExit{
+ border-bottom-left-radius:0;
+ width:22px;
+ border-left-color:rgba(0, 0, 0, 0);
+ background-color:#D44;
+}
+.winBig{
+ border-radius:0;
+ width:22px;
+}
+.winShrink{
+ border-bottom-right-radius:0;
+ width:22px;
+ border-right-color:rgba(0, 0, 0, 0);
+}
+.winBig:hover, .winShrink:hover, .winFld:hover{
+ background-color:#57D;
+ color:#FFF;
+ border-color:rgba(0, 0, 0, 0.4);
+ box-shadow:0 0 10px 2px #BAF, inset 0 8px 4px rgba(255, 255, 255, 0.4);
+}
+.winExit:hover{
+ background-color:#D64;
+ color:#FFF;
+ box-shadow:0 0 10px 2px #FAA, inset 0 8px 4px rgba(255, 255, 255, 0.4);
+ border-color:rgba(0, 0, 0, 0.4);
+}
+.winBig:active, .winShrink:active, .winFld:active{
+ background-color:#03A;
+}
+.winExit:active{
+ background-color:#A30;
+}
+.winCap{
+ color:#000;
+ text-shadow:0 0 10px #FFF;
+ font-family:sans-serif;
+}
+.winHTML{
+ box-shadow:0 0 0 1px rgba(0, 0, 0, 0.6), 0 0 0 2px rgba(255, 255, 255, 0.8) !important;
+}
+button{
+ font-family:sans-serif;
+ color:#000;
+ border-radius:3px;
+ border-color:#7F7F7F;
+ background:linear-gradient(0deg, #D0D0D0 0%, #D7D7D7 40%, #EEE 60%, #F7F7F7 100%);
+ box-shadow:inset 0 0 0 1px rgba(255, 255, 255, 0.65);
+ outline:none;
+ transition:0.3s;
+}
+button:hover, button:focus{
+ border-color:#7087d0;
+ box-shadow:inset 0 0 0 1px rgba(235, 235, 255, 0.65);
+ background-image:linear-gradient(0deg, #D0D0D0 0%, #D7D7D7 40%, #EEE 60%, #F7F7F7 100%);
+ background-color:rgba(205, 220, 255, 0.65);
+ background-blend-mode:luminosity;
+}
+button:active{
+ border-color:#5067b0;
+ box-shadow:inset 0 0 3px #67D, inset 0 8px 4px rgba(255, 255, 255, 0.6);
+ background-image:linear-gradient(0deg, #D0D0D0 0%, #D7D7D7 40%, #EEE 60%, #F7F7F7 100%);
+ background-color:rgba(150, 175, 255, 0.65);
+ background-blend-mode:soft-light;
+}
+input, textarea{
+ border-color:#EEE;
+ border-top-color:#AAA;
+ border-radius:3px;
+ outline:none;
+}
+input:hover, input:focus, input:active, textarea:hover, textarea:focus, textarea:active{
+ border-color:#CDF;
+ border-top-color:#89B;
+}
+hr{
+ background:linear-gradient(90deg, rgba(100, 127, 150, 0) 0%, rgba(100, 127, 150, 0.3) 10%, rgba(100, 127, 150, 0.3) 90%, rgba(100, 127, 150, 0) 100%);
+ height:1px;
+ border:none;
+}
+#ctxMenu{
+ border-color:#CCC;
+ background-color:#F2F2F2;
+}
+#ctxMenu hr{
+ background-color:#D7D7D7;
+ border-radius: 0;
+ border: none;
+ margin-left:14px;
+ width:calc(100% - 14px);
+}
+#ctxMenu p{
+ transition: 0s;
+ color: #000;
+ border-radius:3px;
+}
+#ctxMenu p:hover{
+ transition: 0s;
+ box-shadow:inset 0 0 3px #67D;
+ background:none;
+ color: #000;
+}

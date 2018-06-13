@@ -1,0 +1,47 @@
+// ==UserScript==
+// @name         aOS On All Tabs
+// @namespace    https://aaron-os-mineandcraft12.c9.io/
+// @version      1.1
+// @description  AaronOS on all of your tabs!
+// @author       Aaron Adams
+// @match        http://*/*
+// @match        https://*/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    // Your code here...
+    if(window.top === window.self && window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io') !== 0 && window.location.href.indexOf('http://aaron-os-mineandcraft12.c9.io') !== 0 && window.location.href.indexOf('aaron-os-mineandcraft12.c9.io') !== 0){
+        window.aOSextensionDiv = window.document.createElement('div');
+        window.aOSextensionDiv.id = 'aOSextensionDiv';
+        window.aOSextensionDiv.setAttribute('style', 'transition:right 1s;overflow:hidden;border-left:1px solid #AAC;border-bottom:1px solid #AAC;width:80%;height:80%;right:calc(-80% + 5px);top:0;position:fixed;z-index:9999999999999999;background-color:#000;border-top-left-radius:5px;border-bottom-left-radius:5px');
+        window.aOSextensionDiv.innerHTML = '<div style="left:0;width:5px;height:100%;background-color:#557" onclick="aOSextensionToggle()"></div><iframe style="border:none;width:calc(100% - 5px);height:100%;position:absolute;right:0;top:0;display:block;"></iframe>';
+        window.aOSextensionRunning = 0;
+        window.aOSextensionOpen = 0;
+        window.aOSextensionToggle = function(){
+            if(!window.aOSextensionRunning){
+                window.setTimeout(function(){
+                    window.aOSextensionDiv.childNodes[1].src = "https://aaron-os-mineandcraft12.c9.io/";
+                }, 1000);
+                window.aOSextensionDiv.style.borderBottomColor = '#557';
+                window.aOSextensionDiv.style.borderLeftColor = '#557';
+                window.aOSextensionDiv.childNodes[0].style.backgroundColor = '#AAC';
+                window.aOSextensionRunning = 1;
+            }
+            if(!window.aOSextensionOpen){
+                window.aOSextensionDiv.style.right = '0';
+                window.aOSextensionOpen = 1;
+            }else{
+                window.aOSextensionDiv.style.right = 'calc(-80% + 5px)';
+                window.aOSextensionOpen = 0;
+            }
+        };
+        try{
+            window.document.body.append(window.aOSextensionDiv);
+        }catch(err){
+            window.document.body.appendChild(window.aOSextensionDiv);
+        }
+    }
+})();
