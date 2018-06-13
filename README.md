@@ -9,7 +9,7 @@ AaronOS is usable at https://aaron-os-mineandcraft12.c9.io/aosBeta.php
 You may be wondering, what is and isn't included here?
 
 Included:
- * All user-visible code in aOS
+ * All currently-used code in aOS
  * Any graphics or other assets that aOS uses
 
 Not Included:
@@ -19,8 +19,6 @@ Not Included:
  * Old, not-in-development versions of aOS
 
 The main PHP file is /aosBeta.php
- * this file is not included because it has PHP source that I can't trust the public to use for good
- * You can get this HTML source by going to view-source:https://aaron-os-mineandcraft12.c9.io/aosBeta.php
 
 The main JavaScript file is /scriptBeta.php
 
