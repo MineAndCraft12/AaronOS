@@ -322,8 +322,6 @@ div{
                 #NORAout{
                     width:100%;
                     height:95%;
-                    background-color:#FFF;
-                    color:#000;
                     font-family:aosProFont, monospace;
                     font-size:12px;
                     overflow:scroll;

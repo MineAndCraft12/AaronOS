@@ -3963,13 +3963,12 @@ c(function(){
             }
             this.appWindow.setCaption(lang('jsConsole', 'caption'));
             this.appWindow.setContent(
-                '<div id="cnsTrgt" style="background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#000', '#FFF') + '; width:100%; height:calc(100% - 18px); font-family:aosProFont,Courier,monospace; font-size:12px; top:0px; left:0px; overflow:scroll"></div>' +
+                '<div id="cnsTrgt" style="width:100%; height:calc(100% - 18px); font-family:aosProFont,Courier,monospace; font-size:12px; top:0px; left:0px; overflow:scroll"></div>' +
                 '<input id="cnsIn" onKeydown="if(event.keyCode === 13){apps.jsConsole.vars.runInput()}" placeholder="' + lang('jsConsole', 'input') + '" style="position:absolute; bottom:0px; font-family:aosProFont,Courier,monospace;display:block; padding:0; font-size:12px; width:90%; left:0px; height:16px;">' +
                 '<button id="cnsB"onClick="apps.jsConsole.vars.runInput()" style="font-size:12px; position:absolute; display:block; width:10%; height:18px; bottom:0px; right:0px;">' + lang('jsConsole', 'runCode') + '</button>'
             );
             addEditContext('cnsIn');
             this.appWindow.openWindow();
-            getId("winjsCh").style.background = "none";
             getId("cnsTrgt").innerHTML = '<span style="color:' + this.vars.cnsPosts[1] + ';">' + this.vars.cnsPosts[0] + '</span>';
             for(var j = 2; j < this.vars.cnsPosts.length; j+= 2){
                 getId("cnsTrgt").innerHTML += '<br><span style="color:' + this.vars.cnsPosts[j + 1] + ';">' + this.vars.cnsPosts[j] + '</span>';
@@ -4061,12 +4060,11 @@ c(function(){
                 this.appWindow.setCaption(lang('appNames', 'bash'));
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 331, parseInt(getId('desktop').style.height, 10) / 2 - 252, 662, 504);
                 this.appWindow.setContent(
-                    '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;color:' + darkSwitch('#000', '#FFF') + ';width:100%;">aOS Psuedo-Bash Terminal (Beta)<br>Not all commands included and they may not work properly<br>root is assumed; therefore su and sudo command does nothing</span>' +
-                    '<input id="bashInput" onkeydown="apps.bash.vars.checkPrefix()" onkeypress="apps.bash.vars.checkPrefix()" onkeyup="apps.bash.vars.checkPrefix();if(event.keyCode === 13){apps.bash.vars.execute()}" style="box-shadow:none;display:block;line-height:1em;font-family:aosProFont;font-size:12px;color:' + darkSwitch('#000', '#FFF') + ';border:none;outline:none;padding:0;width:100%;background:' + darkSwitch('#FFF', '#000') + '">'
+                    '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;width:100%;">aOS Psuedo-Bash Terminal (Beta)<br>Not all commands included and they may not work properly<br>root is assumed; therefore su and sudo command does nothing</span>' +
+                    '<input id="bashInput" onkeydown="apps.bash.vars.checkPrefix()" onkeypress="apps.bash.vars.checkPrefix()" onkeyup="apps.bash.vars.checkPrefix();if(event.keyCode === 13){apps.bash.vars.execute()}" style="background:none;color:inherit;box-shadow:none;display:block;line-height:1em;font-family:aosProFont;font-size:12px;border:none;outline:none;padding:0;width:100%;">'
                 );
                 this.vars.checkPrefix();
                 getId('winshh').style.overflowY = 'scroll';
-                getId('winshh').style.backgroundColor = darkSwitch('#FFF', '#000');
             }
             this.appWindow.openWindow();
         },
@@ -7339,10 +7337,11 @@ c(function(){
             "04/27/2018: B0.7.1.6\n + Minor debug feature added to Messaging.\n\n" +
             "05/29/2018: B0.7.2.0\n + Added Live Background option for using a website as a desktop background.\n + Added optional Dark Mode that can be toggled in Settings -> Windows\n : To make the UI more consistent, NORAA, Bash, and the Javascript Console all use themes that match the current light/dark mode.\n : Desktop icons now correctly align to the grid when placed by the user.\n\n" +
             "06/12/2018: B0.8.0.0\n + Added Web App Maker, which lets you turn any compatible webpage into an aOS app!\n : Changed the scrollbar and made it Dark Mode compatible.\n : Made a minor change to the code for Messaging.\n\n" +
-            "06/13/2018: B0.8.0.1\n : Fixed an issue in the backend with filesaving.",
+            "06/13/2018: B0.8.0.1\n : Fixed an issue in the backend with filesaving.\n\n" +
+            "06/14/2018: B0.8.0.2\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.0.1 (06/13/2018) r0';
+    window.aOSversion = 'B0.8.0.2 (06/14/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
