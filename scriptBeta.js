@@ -6726,12 +6726,11 @@ c(function(){
                 this.appWindow.setCaption('Desktop Icon Maker');
                 this.appWindow.setContent(
                     '<h1>Desktop Icon Maker</h1><hr>' +
-                    'Position X: <input id="IcMleft" value="' + this.newlaunch[1] + '"><br>' +
-                    'Position Y: <input id="IcMtop" value="' + this.newlaunch[2] + '"><br><br>' +
+                    'Position X: <input id="IcMleft" value="' + (Math.round(this.newlaunch[1] / 108) + 1) + '"><br>' +
+                    'Position Y: <input id="IcMtop" value="' + (Math.round(this.newlaunch[2] / 83) + 1) + '"><br><br>' +
                     'Type of shortcut: <button onclick="apps.iconMaker.vars.setType(0)" id="IcMapp">Application</button> <button onclick="apps.iconMaker.vars.setType(1)" id="IcMfile">JavaScript</button><br><br>' +
                     'Name of shortcut: <input id="IcMname"><br><br>' +
-                    'Unique ID for your shortcut (integer number): <input id="IcMid"><br><br>' +
-                    'Enter the shortcut item path exactly as it appears in the Apps Browser, or if selected, enter JavaScript code. Do not use double-quotes. They will be translated to single-quotes. It is best to just calle a function defined in a BootScript, so no conflicts will occur.<br>' +
+                    'Enter the shortcut item path exactly as it appears in the Apps Browser, or if selected, enter JavaScript code.<br>' +
                     '<input id="IcMpath"><br><br>' +
                     '<button onclick="apps.iconMaker.vars.createIcon()">Create Desktop Icon</button>'
                 );
@@ -6748,8 +6747,7 @@ c(function(){
                     'Position Y: <input id="IcMtop"><br><br>' +
                     'Type of shortcut: <button onclick="apps.iconMaker.vars.setType(0)" id="IcMapp">Application</button> <button onclick="apps.iconMaker.vars.setType(1)" id="IcMfile">JavaScript</button><br><br>' +
                     'Name of shortcut: <input id="IcMname"><br><br>' +
-                    'Unique ID for your shortcut (integer number): <input id="IcMid"><br><br>' +
-                    'Enter the shortcut item path exactly as it appears in the Apps Browser, or if selected, enter JavaScript code. Do not use double-quotes. They will be translated to single-quotes. It is best to just calle a function defined in a BootScript, so no conflicts will occur.<br>' +
+                    'Enter the shortcut item path exactly as it appears in the Apps Browser, or if selected, enter JavaScript code.<br>' +
                     '<input id="IcMpath"><br><br>' +
                     '<button onclick="apps.iconMaker.vars.createIcon()">Create Desktop Icon</button>'
                 );
@@ -6817,28 +6815,51 @@ c(function(){
                 if(icon){
                     apps.savemaster.vars.save('APP_IcM_ICON_' + id, icon, 1);
                 }else{
-                    if(getId('IcMid').value.length > 0 && getId('IcMleft').value.length > 0 && getId('IcMtop').value.length > 0 && getId('IcMname').value.length > 0 && getId('IcMpath').value.length > 0){
+                    if(parseInt(getId('IcMleft').value) > 0 && parseInt(getId('IcMtop').value) > 0 && getId('IcMname').value.length > 0 && getId('IcMpath').value.length > 0){
+                        var currMS = (new Date().getTime());
                         if(this.type === 0){
                             if(eval(getId('IcMpath').value) !== undefined){
-                                this.compiledIcon = '[' + getId('IcMid').value + ', ' +
+                                /*
+                                this.compiledIcon = '[' + currMS + ', ' +
                                     getId('IcMleft').value + ', ' +
                                     getId('IcMtop').value + ', ' +
                                     this.type + ', "' +
                                     getId('IcMname').value + '", "' +
                                     getId('IcMpath').value.split('\\').join('\\\\').split('"').join('\"') + '"]';
-                                apps.savemaster.vars.save('APP_IcM_ICON_' + getId('IcMid').value, this.compiledIcon, 1);
+                                */
+                                var tempIconObj = [
+                                    currMS,
+                                    (parseInt(getId('IcMleft').value) - 1) * 108 + 8,
+                                    (parseInt(getId('IcMtop').value) - 1) * 83 + 8,
+                                    this.type,
+                                    getId('IcMname').value,
+                                    getId('IcMpath').value
+                                ];
+                                this.compiledIcon = JSON.stringify(tempIconObj);
+                                apps.savemaster.vars.save('APP_IcM_ICON_' + currMS, this.compiledIcon, 1);
                                 this.buildIcon(this.compiledIcon);
                             }else{
                                 apps.prompt.vars.alert('The specified app could not be found. Please check that the file path to your app is spelled correctly.', 'Okay', function(){}, 'Icon Maker')
                             }
                         }else{
-                            this.compiledIcon = '[' + getId('IcMid').value + ', ' +
+                            /*
+                            this.compiledIcon = '[' + currMS + ', ' +
                                 getId('IcMleft').value + ', ' +
                                 getId('IcMtop').value + ', ' +
                                 this.type + ', "' +
                                 getId('IcMname').value + '", "' +
                                 getId('IcMpath').value.split('\\').join('\\\\').split('"').join('\\"') + '"]';
-                            apps.savemaster.vars.save('APP_IcM_ICON_' + getId('IcMid').value, this.compiledIcon, 1);
+                            */
+                            var tempIconObj = [
+                                currMS,
+                                (parseInt(getId('IcMleft').value) - 1) * 108 + 8,
+                                (parseInt(getId('IcMtop').value) - 1) * 83 + 8,
+                                this.type,
+                                getId('IcMname').value,
+                                getId('IcMpath').value
+                            ];
+                            this.compiledIcon = JSON.stringify(tempIconObj);
+                            apps.savemaster.vars.save('APP_IcM_ICON_' + currMS, this.compiledIcon, 1);
                             this.buildIcon(this.compiledIcon);
                         }
                     }else{
@@ -6846,17 +6867,22 @@ c(function(){
                     }
                 }
             },
+            iconClicks: {
+                
+            },
             buildIcon: function(icon){
-                apps.iconMaker.vars.decompiled = eval(icon);
+                apps.iconMaker.vars.decompiled = JSON.parse(icon);
                 if(apps.iconMaker.vars.decompiled[3]){
+                    apps.iconMaker.vars.iconClicks['c' + apps.iconMaker.vars.decompiled[0]] = apps.iconMaker.vars.decompiled[5];
                     getId('desktop').innerHTML +=
-                        '<div class="app cursorPointer" id="app' + apps.iconMaker.vars.decompiled[0] + '" style="left:' + apps.iconMaker.vars.decompiled[1] + 'px;top:' + apps.iconMaker.vars.decompiled[2] + 'px" onclick="' + apps.iconMaker.vars.decompiled[5].split('"').join("'") + '" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'/ctxMenu/beta/console.png\', \'\', \'/ctxMenu/beta/x.png\'], \' Execute\', \'' + apps.iconMaker.vars.decompiled[5].split('"').join("'").split('\\').join('\\\\').split("'").join("\\'") + '\', \'+Move Icon\', \'icnmove(event, \\\'' + apps.iconMaker.vars.decompiled[0] + '\\\')\', \' Delete Icon\', \'apps.iconMaker.vars.deleteIcon(' + apps.iconMaker.vars.decompiled[0] + ')\'])">' +
+                        '<div class="app cursorPointer" id="app' + apps.iconMaker.vars.decompiled[0] + '" style="left:' + apps.iconMaker.vars.decompiled[1] + 'px;top:' + apps.iconMaker.vars.decompiled[2] + 'px" onclick="eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'/ctxMenu/beta/console.png\', \'\', \'/ctxMenu/beta/x.png\'], \' Execute\', \'eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')\', \'+Move Icon\', \'icnmove(event, \\\'' + apps.iconMaker.vars.decompiled[0] + '\\\')\', \' Delete Icon\', \'apps.iconMaker.vars.deleteIcon(' + apps.iconMaker.vars.decompiled[0] + ')\'])">' +
                         '<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="/appicons/ds/jsC.png" onerror="this.src=\'/appicons/ds/redx.png\'"></div>' +
                         '<div class="appDesc" id="dsc' + apps.iconMaker.vars.decompiled[0] + '">' + apps.iconMaker.vars.decompiled[4] + '</div>' +
                         '</div>';
                 }else{
+                    apps.iconMaker.vars.iconClicks['c' + apps.iconMaker.vars.decompiled[0]] = 'openapp(' + apps.iconMaker.vars.decompiled[5] + ', "dsktp")';
                     getId("desktop").innerHTML +=
-                        '<div class="app cursorPointer" id="app' + apps.iconMaker.vars.decompiled[0] + '" style="left:' + apps.iconMaker.vars.decompiled[1] + 'px;top:' + apps.iconMaker.vars.decompiled[2] + 'px" onclick="openapp(' + apps.iconMaker.vars.decompiled[5] + ', \'dsktp\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'/ctxMenu/beta/window.png\', \'\', \'/ctxMenu/beta/x.png\'], \' Open\', \'openapp(' + apps.iconMaker.vars.decompiled[5] + ', \\\'dsktp\\\')\', \'+Move Icon\', \'icnmove(event, \\\'' + apps.iconMaker.vars.decompiled[0] + '\\\')\', \' Delete Icon\', \'apps.iconMaker.vars.deleteIcon(' + apps.iconMaker.vars.decompiled[0] + ')\'])">' +
+                        '<div class="app cursorPointer" id="app' + apps.iconMaker.vars.decompiled[0] + '" style="left:' + apps.iconMaker.vars.decompiled[1] + 'px;top:' + apps.iconMaker.vars.decompiled[2] + 'px" onclick="eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'/ctxMenu/beta/window.png\', \'\', \'/ctxMenu/beta/x.png\'], \' Open\', \'eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')\', \'+Move Icon\', \'icnmove(event, \\\'' + apps.iconMaker.vars.decompiled[0] + '\\\')\', \' Delete Icon\', \'apps.iconMaker.vars.deleteIcon(' + apps.iconMaker.vars.decompiled[0] + ')\'])">' +
                         '<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + vartry('eval(' + apps.iconMaker.vars.decompiled[5] + ').appWindow.appImg') + '" onerror="this.src=\'/appicons/ds/redx.png\'"></div>' +
                         '<div class="appDesc" id="dsc' + apps.iconMaker.vars.decompiled[0] + '">' + apps.iconMaker.vars.decompiled[4] + '</div>' +
                         '</div>';
@@ -6882,10 +6908,10 @@ c(function(){
             deleteElem: 0,
             deleteIcon: function(element){
                 this.deleteElem = element;
-                apps.prompt.vars.confirm('Are you sure you wish to delete this icon?<br><br>If deleted (assuming aOS does not hit an error), you can get it back by locating the icon in USERFILES and erasing the word "DELETED" from the beginning of the file. It is recommended that you make a copy of the icon file in USERFILES and name it something different, in case an error is reached.', ['No, Keep Icon', 'Yes, Delete Icon'], function(btn){
+                apps.prompt.vars.confirm('Are you sure you wish to delete this icon?', ['No, Keep Icon', 'Yes, Delete Icon'], function(btn){
                     if(btn){
                         getId('app' + apps.iconMaker.vars.deleteElem).style.display = 'none';
-                        apps.savemaster.vars.save('APP_IcM_ICON_' + apps.iconMaker.vars.deleteElem), 'DELETED' + USERFILES['APP_IcM_ICON_' + apps.iconMaker.vars.deleteElem], 1
+                        apps.savemaster.vars.delete('APP_IcM_ICON_' + apps.iconMaker.vars.deleteElem);
                     }
                 }, 'aOS');
             }
@@ -7338,10 +7364,10 @@ c(function(){
             "05/29/2018: B0.7.2.0\n + Added Live Background option for using a website as a desktop background.\n + Added optional Dark Mode that can be toggled in Settings -> Windows\n : To make the UI more consistent, NORAA, Bash, and the Javascript Console all use themes that match the current light/dark mode.\n : Desktop icons now correctly align to the grid when placed by the user.\n\n" +
             "06/12/2018: B0.8.0.0\n + Added Web App Maker, which lets you turn any compatible webpage into an aOS app!\n : Changed the scrollbar and made it Dark Mode compatible.\n : Made a minor change to the code for Messaging.\n\n" +
             "06/13/2018: B0.8.0.1\n : Fixed an issue in the backend with filesaving.\n\n" +
-            "06/14/2018: B0.8.0.2\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.",
+            "06/14/2018: B0.8.1.0\n : Serious rework of Desktop Icon Maker.\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.0.2 (06/14/2018) r0';
+    window.aOSversion = 'B0.8.1.0 (06/14/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -8102,6 +8128,7 @@ c(function(){
             latestDel: '',
             delete: function(filepath){
                 this.savePerf = Math.floor(performance.now());
+                /*
                 this.latestDel = '';
                 if(vartry('apps.savemaster.vars.delete.caller.name').indexOf('-' + lang('aOS', 'failedVarTry') + ' vartry(apps.savemaster.vars.delete.caller.name)') < 0){
                     this.latestDel += 'A function named "' + apps.savemaster.vars.delete.caller.name + '" ';
@@ -8115,23 +8142,26 @@ c(function(){
                 }
                 apps.prompt.vars.confirm(this.latestDel + ' wants to permanantly delete the file ' + filepath + '. Do you give permission to delete the file? This cannot be undone.', ['No, do nothing', 'Yes, delete file'], function(btn){
                     if(btn){
-                        apps.savemaster.vars.saving = 2;
+                */
+                apps.savemaster.vars.saving = 2;
+                taskbarShowHardware();
+                apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf] = new FormData();
+                apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf].append('k', SRVRKEYWORD);
+                apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf].append('f', filepath);
+                apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf] = new XMLHttpRequest();
+                apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].onreadystatechange = function(){
+                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
+                        apps.savemaster.vars.saving = 0;
                         taskbarShowHardware();
-                        apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf] = new FormData();
-                        apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf].append('k', SRVRKEYWORD);
-                        apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf].append('f', filepath);
-                        apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf] = new XMLHttpRequest();
-                        apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].onreadystatechange = function(){
-                            if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
-                                apps.savemaster.vars.saving = 0;
-                                taskbarShowHardware();
-                            }
-                        };
-                        apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].open('POST', 'filedeleter.php');
-                        apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].send(apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf]);
-                        delete USERFILES[filepath];
+                    }
+                };
+                apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].open('POST', 'filedeleter.php');
+                apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].send(apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf]);
+                delete USERFILES[filepath];
+                /*
                     }
                 });
+                */
             }
         }, 2, "savemaster", "/appicons/ds/SAV.png"
     );
