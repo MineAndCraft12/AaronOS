@@ -6819,14 +6819,6 @@ c(function(){
                         var currMS = (new Date().getTime());
                         if(this.type === 0){
                             if(eval(getId('IcMpath').value) !== undefined){
-                                /*
-                                this.compiledIcon = '[' + currMS + ', ' +
-                                    getId('IcMleft').value + ', ' +
-                                    getId('IcMtop').value + ', ' +
-                                    this.type + ', "' +
-                                    getId('IcMname').value + '", "' +
-                                    getId('IcMpath').value.split('\\').join('\\\\').split('"').join('\"') + '"]';
-                                */
                                 var tempIconObj = [
                                     currMS,
                                     (parseInt(getId('IcMleft').value) - 1) * 108 + 8,
@@ -6842,14 +6834,6 @@ c(function(){
                                 apps.prompt.vars.alert('The specified app could not be found. Please check that the file path to your app is spelled correctly.', 'Okay', function(){}, 'Icon Maker')
                             }
                         }else{
-                            /*
-                            this.compiledIcon = '[' + currMS + ', ' +
-                                getId('IcMleft').value + ', ' +
-                                getId('IcMtop').value + ', ' +
-                                this.type + ', "' +
-                                getId('IcMname').value + '", "' +
-                                getId('IcMpath').value.split('\\').join('\\\\').split('"').join('\\"') + '"]';
-                            */
                             var tempIconObj = [
                                 currMS,
                                 (parseInt(getId('IcMleft').value) - 1) * 108 + 8,
@@ -7364,10 +7348,10 @@ c(function(){
             "05/29/2018: B0.7.2.0\n + Added Live Background option for using a website as a desktop background.\n + Added optional Dark Mode that can be toggled in Settings -> Windows\n : To make the UI more consistent, NORAA, Bash, and the Javascript Console all use themes that match the current light/dark mode.\n : Desktop icons now correctly align to the grid when placed by the user.\n\n" +
             "06/12/2018: B0.8.0.0\n + Added Web App Maker, which lets you turn any compatible webpage into an aOS app!\n : Changed the scrollbar and made it Dark Mode compatible.\n : Made a minor change to the code for Messaging.\n\n" +
             "06/13/2018: B0.8.0.1\n : Fixed an issue in the backend with filesaving.\n\n" +
-            "06/14/2018: B0.8.1.0\n : Serious rework of Desktop Icon Maker.\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.",
+            "06/14/2018: B0.8.1.0\n : Serious rework of Desktop Icon Maker.\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.\n - Removed super annoying and cryptic file deletion alert.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.1.0 (06/14/2018) r0';
+    window.aOSversion = 'B0.8.1.0 (06/14/2018) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
