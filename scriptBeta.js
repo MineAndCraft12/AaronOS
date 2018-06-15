@@ -3568,7 +3568,7 @@ c(function(){
     );
     apps.nora.main('srtup');
     // getId('aOSloadingInfo').innerHTML = 'Initializing aDE';
-    getId('aOSloadingInfo').innerHTML = 'Initializing Beta Testing App...';
+    getId('aOSloadingInfo').innerHTML = 'Initializing Info Viewer...';
 });
 c(function(){
     m('init Nfo');
@@ -3677,7 +3677,7 @@ c(function(){
         },
         {
             appInfo: 'This is an app used by the developer to test UI changed brought to the Beta Update of aOS.'
-        }, 0, 'betaTest', '/appicons/ds/systemApp.png'
+        }, 1, 'betaTest', '/appicons/ds/systemApp.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Initializing Modding Tutorials...';
 });
@@ -3766,7 +3766,7 @@ c(function(){
         },
         {
             appInfo: 'This app is a database of mods that the developer himself encourages or supports.'
-        }, 0, 'modding', '/appicons/ds/HLP.png'
+        }, 1, 'modding', '/appicons/ds/HLP.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Initializing Modding Tutorials...';
 });
@@ -7348,10 +7348,11 @@ c(function(){
             "05/29/2018: B0.7.2.0\n + Added Live Background option for using a website as a desktop background.\n + Added optional Dark Mode that can be toggled in Settings -> Windows\n : To make the UI more consistent, NORAA, Bash, and the Javascript Console all use themes that match the current light/dark mode.\n : Desktop icons now correctly align to the grid when placed by the user.\n\n" +
             "06/12/2018: B0.8.0.0\n + Added Web App Maker, which lets you turn any compatible webpage into an aOS app!\n : Changed the scrollbar and made it Dark Mode compatible.\n : Made a minor change to the code for Messaging.\n\n" +
             "06/13/2018: B0.8.0.1\n : Fixed an issue in the backend with filesaving.\n\n" +
-            "06/14/2018: B0.8.1.0\n : Serious rework of Desktop Icon Maker.\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.\n - Removed super annoying and cryptic file deletion alert.",
+            "06/14/2018: B0.8.1.0\n : Serious rework of Desktop Icon Maker.\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.\n - Removed super annoying and cryptic file deletion alert.\n\n" +
+            "06/15/2018: B0.8.2.0\n : Cleaned up the desktop a little.\n + Added Controls popups for IndyCar and House Game",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.1.0 (06/14/2018) r1';
+    window.aOSversion = 'B0.8.2.0 (06/15/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -9760,7 +9761,7 @@ c(function(){
                     apps.help.appWindow.setContent('<button onClick="apps.help.vars.populateList(\'\')">Home</button> aOS Help: ' + this.lastFolder['2'] + '<hr>' + this.lastFolder.helpPage);
                 }
             }
-        }, 0, 'help', '/appicons/ds/HLP.png'
+        }, 1, 'help', '/appicons/ds/HLP.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Initializing Music Visualizer';
 });
@@ -10004,6 +10005,7 @@ c(function(){
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 323, parseInt(getId('monitor').style.height, 10) / 2 - 251, 646, 502);
                 this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'ICrFrame\').contentDocument.title">');
                 this.appWindow.setContent('<iframe id="ICrFrame" src="INDYCAR/index.html" style="border:none;width:640px;height:480px;overflow:hidden;"></iframe>');
+                apps.prompt.vars.alert("Controls:<br><br>Player 1: WASD for driving, X for brakes<br><br>Player 2: IJKL or &uarr;&larr;&darr;&rarr; for driving, M for brakes<br><br>Camera: Press T to change camera modes.", "Okay", function(){}, "Indycar");
             }
             this.appWindow.openWindow();
         },
@@ -10055,6 +10057,7 @@ c(function(){
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 507, parseInt(getId('monitor').style.height, 10) / 2 - 316, 1015, 633);
                 this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'HsGFrame\').contentDocument.title">');
                 this.appWindow.setContent('<iframe id="HsGFrame" src="HOUSEGAME/index.html" style="border:none;width:1009px;height:609px;overflow:hidden;"></iframe>');
+                apps.prompt.vars.notify("Controls:<br>Up: W<br>Down: D<br>Shoot: Space<br>Reinforcements: T", ["Close"], function(){}, "House Game", "appicons/HsG.png");
             }
             this.appWindow.openWindow();
         },
