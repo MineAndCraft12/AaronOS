@@ -108,7 +108,8 @@
                     if(!big){
                         for(var i = 0; i < 1024; i++){
                             vctx.beginPath();
-                            vctx.strokeStyle = 'rgb(0, ' + frequencyData[i] + ',' + (255 - frequencyData[i]) + ')';
+                            //vctx.strokeStyle = 'rgb(0, ' + frequencyData[i] + ',' + (255 - frequencyData[i]) + ')';
+                            vctx.strokeStyle = 'rgb(' + ((frequencyData[i] > 200) * ((frequencyData[i] - 200) * 4.6)) + ', ' + (frequencyData[i] - ((frequencyData[i] > 200) * ((frequencyData[i] - 200) * 4.6))) + ',' + (255 - frequencyData[i]) + ')';
                             vctx.moveTo(i + 0.5, 255);
                             vctx.lineTo(i + 0.5, (255 - frequencyData[i]));
                             vctx.stroke();
@@ -116,14 +117,16 @@
                     }else{
                         for(var i = 0; i < 1024; i++){
                             vctx.beginPath();
-                            vctx.strokeStyle = 'rgb(0, ' + frequencyData[i] + ',' + (255 - frequencyData[i]) + ')';
+                            //vctx.strokeStyle = 'rgb(0, ' + frequencyData[i] + ',' + (255 - frequencyData[i]) + ')';
+                            vctx.strokeStyle = 'rgb(' + ((frequencyData[i] > 200) * ((frequencyData[i] - 200) * 4.6)) + ', ' + (frequencyData[i] - ((frequencyData[i] > 200) * ((frequencyData[i] - 200) * 4.6))) + ',' + (255 - frequencyData[i]) + ')';
                             vctx.moveTo(Math.round(i * transformFact[0]) + 0.5, 255 * transformFact[1]);
                             vctx.lineTo(Math.round(i * transformFact[0]) + 0.5, Math.round((255 - frequencyData[i]) * transformFact[1]));
                             vctx.stroke();
                             if(Math.round((i + 1) * transformFact[0]) - Math.round(i * transformFact[0]) > 1 && i !== 1023){
                                 tempMedian = Math.round((frequencyData[i] + frequencyData[i + 1]) / 2);
                                 vctx.beginPath();
-                                vctx.strokeStyle = 'rgb(0, ' + tempMedian + ',' + (255 - tempMedian) + ')';
+                                //vctx.strokeStyle = 'rgb(0, ' + tempMedian + ',' + (255 - tempMedian) + ')';
+                                vctx.strokeStyle = 'rgb(' + ((tempMedian > 200) * ((tempMedian - 200) * 4.6)) + ', ' + (tempMedian - ((tempMedian > 200) * ((tempMedian - 200) * 4.6))) + ',' + (255 - tempMedian) + ')';
                                 vctx.moveTo(Math.round(i * transformFact[0]) + 1.5, 255 * transformFact[1]);
                                 vctx.lineTo(Math.round(i * transformFact[0]) + 1.5, Math.round((255 - tempMedian) * transformFact[1]));
                                 vctx.stroke();

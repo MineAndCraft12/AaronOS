@@ -7349,10 +7349,11 @@ c(function(){
             "06/12/2018: B0.8.0.0\n + Added Web App Maker, which lets you turn any compatible webpage into an aOS app!\n : Changed the scrollbar and made it Dark Mode compatible.\n : Made a minor change to the code for Messaging.\n\n" +
             "06/13/2018: B0.8.0.1\n : Fixed an issue in the backend with filesaving.\n\n" +
             "06/14/2018: B0.8.1.0\n : Serious rework of Desktop Icon Maker.\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.\n - Removed super annoying and cryptic file deletion alert.\n\n" +
-            "06/15/2018: B0.8.2.0\n : Cleaned up the desktop a little.\n + Added Controls popups for IndyCar and House Game",
+            "06/15/2018: B0.8.2.0\n : Cleaned up the desktop a little.\n + Added Controls popups for IndyCar and House Game\n\n" +
+            "06/20/2018: B0.8.3.0\n + Added red color to music visualizer.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.2.0 (06/15/2018) r0';
+    window.aOSversion = 'B0.8.3.0 (06/20/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -9834,7 +9835,8 @@ c(function(){
                             this.working = 1;
                         }
                         this.currnumber = parseInt(this.currtitle);
-                        apps.settings.vars.setWinColor(1, 'rgb(0,' + this.currnumber + ',' + (255 - this.currnumber) + ')');
+                        //apps.settings.vars.setWinColor(1, 'rgb(0,' + this.currnumber + ',' + (255 - this.currnumber) + ')');
+                        apps.settings.vars.setWinColor(1, 'rgb(' + ((this.currnumber > 200) * ((this.currnumber - 200) * 4.6)) + ', ' + (this.currnumber - ((this.currnumber > 200) * ((this.currnumber - 200) * 4.6))) + ',' + (255 - this.currnumber) + ')');
                     }else{
                         if(this.working){
                             apps.settings.vars.setWinColor(1, this.beforeColor);
