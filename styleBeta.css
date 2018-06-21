@@ -262,14 +262,19 @@ div{
                 transition: opacity .5s;
             }
             .winHTML{
-                width:519px;
+                width:calc(100% - 9px);
                 height:276px;
                 bottom:3px;
                 left:3px;
                 background-color:#FFF;
                 border-bottom-left-radius: 5px;
                 border-bottom-right-radius: 5px;
+                padding-left:3px;
             }
+                .noPadding{
+                    padding-left:0;
+                    width:calc(100% - 6px);
+                }
                 .darkMode .winHTML{
                     background-color:#000;
                     color:#FFF;
@@ -818,6 +823,7 @@ div{
     font-family:aosProFont, monospace;
     font-size:12px;
     margin:0;
+    padding-left:3px;
     border-bottom:1px solid #000;
 }
     .darkMode .changeLogTitle, .darkMode .changeLogDate, .darkMode .changeLogAddition, .darkMode .changeLogTweak, .darkMode .changeLogRemoval, .darkMode .changeLogUnknown{

@@ -1223,6 +1223,13 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     this.onTop = 0;
                 }
             },
+            paddingMode: function(mode){
+                if(mode){
+                    getId("win" + this.dsktpIcon + "h").classList.remove('noPadding');
+                }else{
+                    getId("win" + this.dsktpIcon + "h").classList.add('noPadding');
+                }
+            },
             setDims: function(xOff, yOff, xSiz, ySiz, ignoreDimsSet){
                 d(2, 'Setting dims of window.');
                 if(!mobileMode){
@@ -1248,7 +1255,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                         if(this.windowH !== xSiz){
                             getId("win" + this.dsktpIcon).style.width = xSiz + "px";
                             getId("win" + this.dsktpIcon + "c").style.width = xSiz - 29 + "px";
-                            getId("win" + this.dsktpIcon + "h").style.width = xSiz - 6 + "px";
+                            //getId("win" + this.dsktpIcon + "h").style.width = xSiz - 9 + "px";
                             getId("win" + this.dsktpIcon + "a").style.width = xSiz + 80 + "px";
                             this.windowH = xSiz;
                         }
@@ -1281,7 +1288,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     if(this.windowH !== parseInt(getId('desktop').style.width)){
                         getId("win" + this.dsktpIcon).style.width = parseInt(getId('desktop').style.width) + "px";
                         getId("win" + this.dsktpIcon + "c").style.width = parseInt(getId('desktop').style.width) - 29 + "px";
-                        getId("win" + this.dsktpIcon + "h").style.width = xSiz - 6 + "px";
+                        //getId("win" + this.dsktpIcon + "h").style.width = xSiz - 9 + "px";
                         getId("win" + this.dsktpIcon + "a").style.width = parseInt(getId('desktop').style.width) + 80 + "px";
                         this.windowH = parseInt(getId('desktop').style.width);
                     }
@@ -1957,6 +1964,7 @@ c(function(){
         1,
         function(launchType){
             if(launchType === 'srtup'){
+                this.appWindow.paddingMode(0);
                 getId('winDsBs').style.display = "none";
                 getId('winDsBb').style.display = "none";
                 getId('winDsBe').style.display = "none";
@@ -2310,6 +2318,7 @@ c(function(){
         1,
         function(launchtype){
             if(launchtype === 'srtup'){
+                this.appWindow.paddingMode(0);
                 getId('winNRAe').style.display = "none";
                 getId('winNRAb').style.right = '3px';
                 getId('winNRAs').style.right = '26px';
@@ -3778,6 +3787,7 @@ c(function(){
         1,
         function(launchType){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 250, 600, 500);
             }
             this.appWindow.setCaption("aOS Task Manager");
@@ -3959,6 +3969,7 @@ c(function(){
         1,
         function(launchType){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 500, parseInt(getId('desktop').style.height, 10) / 2 - 250, 1000, 500);
             }
             this.appWindow.setCaption(lang('jsConsole', 'caption'));
@@ -4057,6 +4068,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setCaption(lang('appNames', 'bash'));
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 331, parseInt(getId('desktop').style.height, 10) / 2 - 252, 662, 504);
                 this.appWindow.setContent(
@@ -4547,6 +4559,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setCaption("CPU");
                 this.appWindow.setContent("<canvas id='cpuMonCnv' width='200' height='100' style='width:100%;height:100%;background-color:#000;'></canvas>");
                 if(typeof this.appWindow.dimsSet !== 'function'){
@@ -4667,6 +4680,7 @@ c(function(){
                         }
                     }
                     this.appWindow.alwaysOnTop(1);
+                    this.appWindow.paddingMode(0);
                     break;
                 case 'shutdown':
                         
@@ -5741,7 +5755,7 @@ c(function(){
                 if(menu === 'oldMenu'){
                     openapp(apps.settings, 'oldMenu');
                 }else{
-                    apps.settings.appWindow.setContent('<div id="STNmenuDiv" style="font-family:aosProFont, monospace;font-size:12px;width:100%;height:100%;overflow:auto"><span style="font-size:36px"><button onclick="apps.settings.vars.showMenu(apps.settings.vars.menus)">Home</button> ' + menu.folderName + '</span><br><br></div>');
+                    apps.settings.appWindow.setContent('<div id="STNmenuDiv" style="font-family:aosProFont, monospace;font-size:12px;width:calc(100% - 3px);height:100%;overflow:auto"><span style="font-size:36px"><button onclick="apps.settings.vars.showMenu(apps.settings.vars.menus)">Home</button> ' + menu.folderName + '</span><br><br></div>');
                     if(menu.folder === 1){
                         getId("STNmenuDiv").innerHTML += '<hr><table id="STNmenuTable" style="width:100%;"></table>';
                         var j = 0;
@@ -6911,6 +6925,7 @@ c(function(){
         "Text Editor",
         1,
         function(launchType){
+            this.appWindow.paddingMode(0);
             this.vars.launchedAs = launchType;
             if(launchType !== "tskbr"){
                 this.appWindow.setCaption("Text Editor");
@@ -7350,10 +7365,11 @@ c(function(){
             "06/13/2018: B0.8.0.1\n : Fixed an issue in the backend with filesaving.\n\n" +
             "06/14/2018: B0.8.1.0\n : Serious rework of Desktop Icon Maker.\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.\n - Removed super annoying and cryptic file deletion alert.\n\n" +
             "06/15/2018: B0.8.2.0\n : Cleaned up the desktop a little.\n + Added Controls popups for IndyCar and House Game\n\n" +
-            "06/20/2018: B0.8.3.0\n + Added red color to music visualizer.",
+            "06/20/2018: B0.8.3.0\n + Added red color to music visualizer.\n\n" +
+            "06/21/2018: B0.8.3.1\n + Added padding that is enabled by default in all apps, however apps with special UI's are allowed to turn off the padding.\n : Tweaked green cutoff at red in music visualizer.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.3.0 (06/20/2018) r0';
+    window.aOSversion = 'B0.8.3.1 (06/21/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -7374,7 +7390,7 @@ c(function(){
             }else if(launchtype !== 'tskbr'){
                 this.appWindow.setCaption(fileToOpen.split('.')[fileToOpen.split('.').length - 1] + ' Properties');
                 this.appWindow.setContent(
-                    '<div style="font-family:aosProFont, monospace;font-size:12px; width:100%; overflow:visible">' +
+                    '<div style="font-family:aosProFont, monospace;font-size:12px; width:calc(100% - 3px); overflow:visible">' +
                     '<span style="font-size:36px;">' + fileToOpen.split('.')[fileToOpen.split('.').length - 1] + '</span><br>' +
                     '<span style="font-size:24px;">' + apps.files.vars.filetype(typeof eval(fileToOpen)) + '</span><br><br><br>' +
                     function(file){
@@ -7499,6 +7515,7 @@ c(function(){
         1,
         function(launchType){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 350, parseInt(getId('desktop').style.height, 10) / 2 - 200, 700, 400, 1);
             }
             this.appWindow.setCaption("File Explorer");
@@ -7719,6 +7736,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 350, parseInt(getId('desktop').style.height, 10) / 2 - 200, 700, 400, 1);
                 this.appWindow.setCaption("Changelog");
                 this.vars.cLogSplit = files.changelog.split('\n\n');
@@ -8165,7 +8183,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 200, 600, 400);
             }
-            getId('winAPIh').style.overflow = 'scroll';
+            getId('winAPIh').style.overflowY = 'scroll';
             this.appWindow.openWindow();
             this.vars.showDocumentation();
         },
@@ -8651,6 +8669,7 @@ c(function(){
                     function(){
                         this.appWindow.setCaption(this.appDesc);
                         if(!this.appWindow.appIcon){
+                            this.appWindow.paddingMode(0);
                             this.appWindow.setContent('<iframe style="width:100%;height:100%;border:none;" src="' + this.vars.appURL + '"></iframe>');
                             this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - (this.vars.sizeX / 2), parseInt(getId('desktop').style.height, 10) / 2 - (this.vars.sizeY / 2), this.vars.sizeX, this.vars.sizeY);
                         }
@@ -8708,6 +8727,7 @@ c(function(){
         function(){
             this.appWindow.setCaption("aOS Calculator");
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setContent('<iframe id="CalcFrame" style="width:100%;height:100%;border:none;font-family:aosProFont, monospace;font-size:12px;" src="/Calculator/"></iframe>');
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 200, 600, 400);
             }
@@ -8847,6 +8867,7 @@ c(function(){
         1,
         function(launchType){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.vars.lastUserRecieved = '';
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 400, parseInt(getId('desktop').style.height, 10) / 2 - 250, 800, 500);
             }
@@ -9194,6 +9215,7 @@ c(function(){
                 this.vars.ctx = this.vars.cnv.getContext('2d');
             }
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 321, parseInt(getId('desktop').style.height, 10) / 2 - 251, 643, 502);
             }
             this.appWindow.openWindow();
@@ -9774,6 +9796,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setContent('<iframe id="MSCframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="unrelated/keyfingers/cnv.php"></iframe>');
                 if(darkMode){
                     getId('MSCframe').onload = function(){
@@ -9861,6 +9884,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 apps.prompt.vars.notify('This app is just a quick-access link to mathway.com and I do not claim ownership of Mathway.', [], function(){}, 'Mathway', '/appicons/MWy.png');
                 this.appWindow.setContent('<iframe src="https://mathway.com" style="width:100%;height:100%;border:none;display:block;position:absolute;"></iframe>');
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 400, parseInt(getId('monitor').style.height, 10) / 2 - 250, 800, 500);
@@ -9911,6 +9935,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 200, parseInt(getId('monitor').style.height, 10) / 2 - 250, 400, 500);
                 this.appWindow.setCaption('Apps Browser');
                 this.appWindow.setContent('<div id="APBdiv" style="width:100%;height:100%;overflow-y:auto;font-family:aosProFont;"><div style="overflow-y:auto;font-size:12px;width:100%;height:128px;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';">This is a list of EVERY SINGLE APP installed on your copy of aOS, in the order that they were installed in (believe it or not, being in the wrong order can cause issues); including those that are hidden from your desktop and applications list.<br><br>WARNING - If an app is not available in the Apps List, it\'s probably for a reason. Some apps not available in the applications list may break if you launch them.<br><br>Note - if nothing happens when you try to open a certain app, do not worry. A window is <b>not</b> a requirement for an app to work. It probably is not designed for you to access.</div></div>');
@@ -10004,6 +10029,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 323, parseInt(getId('monitor').style.height, 10) / 2 - 251, 646, 502);
                 this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'ICrFrame\').contentDocument.title">');
                 this.appWindow.setContent('<iframe id="ICrFrame" src="INDYCAR/index.html" style="border:none;width:640px;height:480px;overflow:hidden;"></iframe>');
@@ -10056,6 +10082,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 507, parseInt(getId('monitor').style.height, 10) / 2 - 316, 1015, 633);
                 this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'HsGFrame\').contentDocument.title">');
                 this.appWindow.setContent('<iframe id="HsGFrame" src="HOUSEGAME/index.html" style="border:none;width:1009px;height:609px;overflow:hidden;"></iframe>');
@@ -10109,6 +10136,7 @@ c(function(){
         function(){
             this.appWindow.setCaption('Sticky Note');
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(10, 10, 200, 200);
                 this.appWindow.setContent('<textarea id="stickyNotePad" onblur="apps.postit.vars.savePost()" style="padding:0;color:#000;font-family:Comic Sans MS;font-weight:bold;border:none;resize:none;display:block;width:100%;height:100%;background-color:#FF7;"></textarea>');
                 addEditContext('stickyNotePad');
@@ -10168,6 +10196,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 200, parseInt(getId('monitor').style.height, 10) / 2 - 200, 400, 400);
                 this.appWindow.setCaption('Boot Script');
                 this.appWindow.setContent('<textarea id="BtStextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:100%;height:90%;resize:none;"></textarea><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.bootScript.vars.saveBootScript()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.bootScript.vars.helpBootScript()">Help</button>');
@@ -10250,6 +10279,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 200, parseInt(getId('monitor').style.height, 10) / 2 - 200, 400, 400);
                 this.appWindow.setCaption('Custom Style Editor');
                 this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe src="/csePreview.html" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
@@ -10314,6 +10344,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setCaption('GTK2aOS');
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 200, parseInt(getId('monitor').style.height, 10) / 2 - 200, 400, 400);
                 this.appWindow.setContent('<iframe src="/gtk/" style="border:none;width:100%;height:100%;display:block;"></iframe>');
@@ -10363,6 +10394,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 203, parseInt(getId('monitor').style.height, 10) / 2 - 262, 406, 524);
                 this.appWindow.setCaption('Function Grapher');
                 this.appWindow.setContent('<canvas width="400" height="400" style="width:400px;height:400px;position:absolute;border:none;" id="GphGraph"></canvas><div id="GphControls" style="white-space:nowrap;width:400px;height:99px;border-top:1px solid #000;bottom:0;font-family:monospace;overflow:auto;"></div>');
@@ -10597,6 +10629,7 @@ c(function(){
         0,
         function(){
             if(!this.appIcon){
+                this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 400, parseInt(getId('monitor').style.height, 10) / 2 - 300, 800, 600);
                 this.appWindow.setCaption('Cookie Clicker');
                 this.appWindow.setContent('<iframe src="/COOKIE" style="border:none; width:100%; height:100%; display:block;"></iframe>');
