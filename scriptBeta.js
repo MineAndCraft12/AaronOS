@@ -9836,7 +9836,7 @@ c(function(){
                         }
                         this.currnumber = parseInt(this.currtitle);
                         //apps.settings.vars.setWinColor(1, 'rgb(0,' + this.currnumber + ',' + (255 - this.currnumber) + ')');
-                        apps.settings.vars.setWinColor(1, 'rgb(' + ((this.currnumber > 200) * ((this.currnumber - 200) * 4.6)) + ', ' + (this.currnumber - ((this.currnumber > 200) * ((this.currnumber - 200) * 4.6))) + ',' + (255 - this.currnumber) + ')');
+                        apps.settings.vars.setWinColor(1, 'rgb(' + ((this.currnumber > 200) * ((this.currnumber - 200) * 4.6)) + ', ' + (this.currnumber - ((this.currnumber > 220) * ((this.currnumber - 220) * 7.2))) + ',' + (255 - this.currnumber) + ')');
                     }else{
                         if(this.working){
                             apps.settings.vars.setWinColor(1, this.beforeColor);
