@@ -7366,10 +7366,11 @@ c(function(){
             "06/14/2018: B0.8.1.0\n : Serious rework of Desktop Icon Maker.\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.\n - Removed super annoying and cryptic file deletion alert.\n\n" +
             "06/15/2018: B0.8.2.0\n : Cleaned up the desktop a little.\n + Added Controls popups for IndyCar and House Game\n\n" +
             "06/20/2018: B0.8.3.0\n + Added red color to music visualizer.\n\n" +
-            "06/21/2018: B0.8.3.1\n + Added padding that is enabled by default in all apps, however apps with special UI's are allowed to turn off the padding.\n : Tweaked green cutoff at red in music visualizer.",
+            "06/21/2018: B0.8.3.1\n + Added padding that is enabled by default in all apps, however apps with special UI's are allowed to turn off the padding.\n : Tweaked green cutoff at red in music visualizer.\n\n" +
+            "06/26/2018: B0.8.3.2\n : Not really an update, but the Music Visualizer icon is now displayed on the desktop.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.3.1 (06/21/2018) r0';
+    window.aOSversion = 'B0.8.3.2 (06/26/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -9873,7 +9874,7 @@ c(function(){
                     }
                 }
             }
-        }, 1, 'musicVis', '/appicons/ds/MSC.png'
+        }, 0, 'musicVis', '/appicons/ds/MSC.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Initializing Mathway';
 });
