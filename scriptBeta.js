@@ -9139,15 +9139,7 @@ c(function(){
                         if(!document.hasFocus() || getId('winMSG').style.display === 'none'){
                             this.notifPing.play();
                             if(getId('winMSG').style.display === 'none'){
-                                apps.prompt.vars.notify(this.lastResponseObject.n + ' said:<br><br>' + this.lastResponseObject.c // contd on next line
-                                    .split('[img]').join('<img style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/img]').join('">')
-                                    .split('[b]').join('<b>').split('[/b]').join('</b>')
-                                    .split('[i]').join('<i>').split('[/i]').join('</i>')
-                                    .split('[u]').join('<u>').split('[/u]').join('</u>')
-                                    .split('[IMG]').join('<img style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/IMG]').join('">')
-                                    .split('[B]').join('<b>').split('[/B]').join('</b>')
-                                    .split('[I]').join('<i>').split('[/I]').join('</i>')
-                                    .split('[U]').join('<u>').split('[/U]').join('</u>'),
+                                apps.prompt.vars.notify(this.lastResponseObject.n + ' said:<br><br>' + this.parseBB(this.lastResponseObject.c),
                                     ['Show App', 'Dismiss'],
                                     function(btn){
                                         if(btn === 0){

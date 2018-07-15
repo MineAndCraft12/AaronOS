@@ -286,6 +286,49 @@
                 notifClick: new Audio('messagingSounds/madestThouLook.wav'),
                 soundToPlay: 0,
                 canLookethOverThereSound: 0,
+                objTypes: {
+                    img: function(str){
+                        return '<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="' + str + '">';
+                    },
+                    url: function(str){
+                        if(str.indexOf('http') !== 0){
+                            str = 'http://' + str;
+                        }
+                        return '<a target="_blank" href="' + str + '">' + str + '</a>';
+                    },
+                    b: function(str){
+                        return '<b>' + str + '</b>';
+                    },
+                    i: function(str){
+                        return '<i>' + str + '</i>';
+                    },
+                    u: function(str){
+                        return '<u>' + str + '</u>';
+                    }
+                },
+                parseBB: function(text){
+                    var tempIn = text;
+                    var tempPointer = tempIn.length - 6;
+                    while(tempPointer >= 0){
+                        var nextObj = tempIn.indexOf('[', tempPointer);
+                        if(nextObj > -1){
+                            var nextEnd = tempIn.indexOf(']', nextObj);
+                            if(nextEnd > -1){
+                                var nextType = tempIn.toLowerCase().substring(nextObj + 1, nextEnd);
+                                if(this.objTypes[nextType]){
+                                    var nextClose = tempIn.toLowerCase().indexOf('[/' + nextType + ']', nextEnd);
+                                    if(nextClose > -1){
+                                        var replaceStr = tempIn.substring(nextEnd + 1, nextClose);
+                                        var newStr = this.objTypes[nextType](replaceStr);
+                                        tempIn = tempIn.substring(0, nextObj) + newStr + tempIn.substring(nextClose + 3 + nextType.length, tempIn.length);
+                                    }
+                                }
+                            }
+                        }
+                        tempPointer--;
+                    }
+                    return tempIn;
+                },
                 nextMessage: function(text){
                     //m('reading from messaging server');
                     if(text[0] === '{'){
@@ -296,52 +339,20 @@
                         this.lastMsgRecieved = this.lastResponseObject.l;
                         this.needsScroll = (getId('MSGdiv').scrollTop + window.innerHeight + 200 >= getId('MSGdiv').scrollHeight);
                         if(this.lastResponseObject.t){
-                            if(this.lastResponseObject.i !== this.lastUserRecieved){
+                            if(this.lastResponseObject.n !== this.lastUserRecieved){
                                 if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
                                     getId('MSGdiv').innerHTML += '<div style="color:#0A0; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right"><span style="color:transparent">m' + this.lastResponseObject.l + ' u_' + this.lastResponseObject.i + '</span> ' + this.lastResponseObject.n + '</div>';
-                                    getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.lastResponseObject.c // contd on next line
-                                        .split('[img]').join('<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/img]').join('">')
-                                        .split('[b]').join('<b>').split('[/b]').join('</b>')
-                                        .split('[i]').join('<i>').split('[/i]').join('</i>')
-                                        .split('[u]').join('<u>').split('[/u]').join('</u>')
-                                        .split('[IMG]').join('<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/IMG]').join('">')
-                                        .split('[B]').join('<b>').split('[/B]').join('</b>')
-                                        .split('[I]').join('<i>').split('[/I]').join('</i>')
-                                        .split('[U]').join('<u>').split('[/U]').join('</u>') + '</div>';
+                                    getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
                                 }else{
                                     getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right"><span style="color:transparent">m' + this.lastResponseObject.l + ' u_' + this.lastResponseObject.i + '</span> ' + this.lastResponseObject.n + '</div>';
-                                    getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.lastResponseObject.c // contd on next line
-                                        .split('[img]').join('<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/img]').join('">')
-                                        .split('[b]').join('<b>').split('[/b]').join('</b>')
-                                        .split('[i]').join('<i>').split('[/i]').join('</i>')
-                                        .split('[u]').join('<u>').split('[/u]').join('</u>')
-                                        .split('[IMG]').join('<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/IMG]').join('">')
-                                        .split('[B]').join('<b>').split('[/B]').join('</b>')
-                                        .split('[I]').join('<i>').split('[/I]').join('</i>')
-                                        .split('[U]').join('<u>').split('[/U]').join('</u>') + '</div>';
+                                    getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
                                 }
                             }else{
                                 getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:2px;"></div>';
                                 if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
-                                    getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.lastResponseObject.c // contd on next line
-                                        .split('[img]').join('<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/img]').join('">')
-                                        .split('[b]').join('<b>').split('[/b]').join('</b>')
-                                        .split('[i]').join('<i>').split('[/i]').join('</i>')
-                                        .split('[u]').join('<u>').split('[/u]').join('</u>')
-                                        .split('[IMG]').join('<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/IMG]').join('">')
-                                        .split('[B]').join('<b>').split('[/B]').join('</b>')
-                                        .split('[I]').join('<i>').split('[/I]').join('</i>')
-                                        .split('[U]').join('<u>').split('[/U]').join('</u>') + '</div>';
+                                    getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
                                 }else{
-                                    getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.lastResponseObject.c // contd on next line
-                                        .split('[img]').join('<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/img]').join('">')
-                                        .split('[b]').join('<b>').split('[/b]').join('</b>')
-                                        .split('[i]').join('<i>').split('[/i]').join('</i>')
-                                        .split('[u]').join('<u>').split('[/u]').join('</u>')
-                                        .split('[IMG]').join('<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="').split('[/IMG]').join('">')
-                                        .split('[B]').join('<b>').split('[/B]').join('</b>')
-                                        .split('[I]').join('<i>').split('[/I]').join('</i>')
-                                        .split('[U]').join('<u>').split('[/U]').join('</u>') + '</div>';
+                                    getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
                                 }
                             }
                         }else{
