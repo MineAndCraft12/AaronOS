@@ -978,6 +978,9 @@ div{
 .flowDesktop #winDsB, .flowDesktop #winNRA{
     display:none !important;
 }
+.flowDesktop #win_startMenu_top, .flowDesktop #win_nora_top{
+    display:none !important;
+}
 .flowDesktop .winHTML, .flowDesktop .winCap, .flowDesktop .winRot{
     pointer-events:none !important;
 }

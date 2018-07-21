@@ -1187,8 +1187,10 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
         if(doLog && appIcon){
             doLog('Init app ' + appIcon, '#D60');
         }
+        // this used to be used in HTML elements but now is just an abbreviation
         this.dsktpIcon = appIcon;
-        //this.appDesc = appDesc;
+        // now HTML elements match the codename of apps
+        this.objName = appPath;
         if(typeof langContent.en.appNames[appPath] === 'string'){
             this.appDesc = lang('appNames', appPath);
         }else{
@@ -1204,7 +1206,24 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
         this.vars = appVariables;
         //this.varsOriginal = appVariables;
         this.appWindow = {
+            /*
+                these are the elements that make up a window...
+                pretend in this case the app is called "settings"
+                anything below that says "settings" can be replaced with the name of your app
+                
+                div .window #win_settings_top           Topmost window div, contains entire window
+                    div .winAero   #win_settings_aero       Windowblur background of window (compare to Aero effect of Win7)
+                    div .winBimg   #win_settings_img        Texture of window borders
+                    div .winRot    #win_settings_size       Handle to resize window
+                    div .winCap    #win_settings_cap        Window caption with title and icon
+                    div .winFld    #win_settings_fold       Button to fold window (compare to Shade in linux)
+                    div .winHTML   #win_settings_html       HTML content of window, this is where your actual content goes
+                    div .winBig    #win_settings_big        Button to maximize the window (make the window "big"ger)
+                    div .winShrink #win_settings_shrink     Button to shrink, or hide, the window
+                    div .winExit   #win_settings_exit       Button to close window
+            */
             dsktpIcon: appIcon,
+            objName: appPath,
             appImg: appImg,
             windowX: 100,
             windowY: 50,
@@ -1216,18 +1235,18 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             onTop: 0,
             alwaysOnTop: function(setTo){
                 if(setTo && !this.onTop){
-                    getId('win' + this.dsktpIcon).style.zIndex = '100';
+                    getId('win_' + this.objName + '_top').style.zIndex = '100';
                     this.onTop = 1;
                 }else if(!setTo && this.onTop){
-                    getId('win' + this.dsktpIcon).style.zIndex = '90';
+                    getId('win_' + this.objName + '_top').style.zIndex = '90';
                     this.onTop = 0;
                 }
             },
             paddingMode: function(mode){
                 if(mode){
-                    getId("win" + this.dsktpIcon + "h").classList.remove('noPadding');
+                    getId("win_" + this.objName + "_html").classList.remove('noPadding');
                 }else{
-                    getId("win" + this.dsktpIcon + "h").classList.add('noPadding');
+                    getId("win_" + this.objName + "_html").classList.add('noPadding');
                 }
             },
             setDims: function(xOff, yOff, xSiz, ySiz, ignoreDimsSet){
@@ -1243,31 +1262,31 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                         xOff = Math.round(xOff);
                         yOff = Math.round(yOff);
                         if(this.windowX !== xOff){
-                            getId("win" + this.dsktpIcon).style.left = xOff + "px";
+                            getId("win_" + this.objName + "_top").style.left = xOff + "px";
                             //getId('win' + this.dsktpIcon).style.transform = 'translateX(' + xOff + 'px) translateY(' + yOff + 'px)';
                             this.windowX = Math.round(xOff);
                         }
                         if(this.windowY !== yOff){
-                            getId("win" + this.dsktpIcon).style.top = (yOff * (yOff > -1)) + "px";
+                            getId("win_" + this.objName + "_top").style.top = (yOff * (yOff > -1)) + "px";
                             //getId('win' + this.dsktpIcon).style.transform = 'translateX(' + xOff + 'px) translateY(' + yOff + 'px)';
                             this.windowY = Math.round(yOff);
                         }
                         if(this.windowH !== xSiz){
-                            getId("win" + this.dsktpIcon).style.width = xSiz + "px";
-                            getId("win" + this.dsktpIcon + "c").style.width = xSiz - 29 + "px";
+                            getId("win_" + this.objName + "_top").style.width = xSiz + "px";
+                            getId("win_" + this.objName + "_cap").style.width = xSiz - 29 + "px";
                             //getId("win" + this.dsktpIcon + "h").style.width = xSiz - 9 + "px";
-                            getId("win" + this.dsktpIcon + "a").style.width = xSiz + 80 + "px";
+                            getId("win_" + this.objName + "_aero").style.width = xSiz + 80 + "px";
                             this.windowH = xSiz;
                         }
                         if(this.windowV !== ySiz){
                             if(!this.folded){
-                                getId("win" + this.dsktpIcon).style.height = ySiz + "px";
+                                getId("win_" + this.objName + "_top").style.height = ySiz + "px";
                             }
-                            getId("win" + this.dsktpIcon + "h").style.height = ySiz - 24 + "px";
-                            getId("win" + this.dsktpIcon + "a").style.height = ySiz + 80 + "px";
+                            getId("win_" + this.objName + "_html").style.height = ySiz - 24 + "px";
+                            getId("win_" + this.objName + "_aero").style.height = ySiz + 80 + "px";
                             this.windowV = ySiz;
                         }
-                        getId("win" + this.dsktpIcon + "a").style.backgroundPosition = (-1 * xOff + 40) + "px " + (-1 * (yOff * (yOff > -1)) + 40) + "px";
+                        getId("win_" + this.objName + "_aero").style.backgroundPosition = (-1 * xOff + 40) + "px " + (-1 * (yOff * (yOff > -1)) + 40) + "px";
                         //getId("win" + this.dsktpIcon + "a").style.width = xSiz + 80 + "px";
                         //getId("win" + this.dsktpIcon + "a").style.height = ySiz + 80 + "px";
                         if(typeof this.dimsSet === 'function' && !ignoreDimsSet){
@@ -1276,33 +1295,33 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     }
                 }else{ // mobile mode
                     if(this.windowX !== 0){
-                        getId("win" + this.dsktpIcon).style.left = 0 + "px";
+                        getId("win_" + this.objName + "_top").style.left = 0 + "px";
                         //getId('win' + this.dsktpIcon).style.transform = 'translateX(' + xOff + 'px) translateY(' + yOff + 'px)';
                         this.windowX = 0;
                     }
                     if(this.windowY !== 0){
-                        getId("win" + this.dsktpIcon).style.top = (0 * (0 > -1)) + "px";
+                        getId("win_" + this.objName + "_top").style.top = (0 * (0 > -1)) + "px";
                         //getId('win' + this.dsktpIcon).style.transform = 'translateX(' + xOff + 'px) translateY(' + yOff + 'px)';
                         this.windowY = 0;
                     }
                     if(this.windowH !== parseInt(getId('desktop').style.width)){
-                        getId("win" + this.dsktpIcon).style.width = parseInt(getId('desktop').style.width) + "px";
-                        getId("win" + this.dsktpIcon + "c").style.width = parseInt(getId('desktop').style.width) - 29 + "px";
+                        getId("win_" + this.objName + "_top").style.width = parseInt(getId('desktop').style.width) + "px";
+                        getId("win_" + this.objName + "_cap").style.width = parseInt(getId('desktop').style.width) - 29 + "px";
                         //getId("win" + this.dsktpIcon + "h").style.width = xSiz - 9 + "px";
-                        getId("win" + this.dsktpIcon + "a").style.width = parseInt(getId('desktop').style.width) + 80 + "px";
+                        getId("win_" + this.objName + "_aero").style.width = parseInt(getId('desktop').style.width) + 80 + "px";
                         this.windowH = parseInt(getId('desktop').style.width);
                     }
                     if(this.windowV !== parseInt(getId('desktop').style.height)){
                         if(!this.folded){
-                            getId("win" + this.dsktpIcon).style.height = parseInt(getId('desktop').style.height) + "px";
+                            getId("win_" + this.objName + "_top").style.height = parseInt(getId('desktop').style.height) + "px";
                         }
-                        getId("win" + this.dsktpIcon + "h").style.height = ySiz - 24 + "px";
-                        getId("win" + this.dsktpIcon + "a").style.height = parseInt(getId('desktop').style.height) + 80 + "px";
+                        getId("win_" + this.objName + "_html").style.height = ySiz - 24 + "px";
+                        getId("win_" + this.objName + "_aero").style.height = parseInt(getId('desktop').style.height) + 80 + "px";
                         this.windowV = parseInt(getId('desktop').style.height);
                     }
-                    getId("win" + this.dsktpIcon + "a").style.backgroundPosition = (-1 * 0 + 40) + "px " + (-1 * (0 * (0 > -1)) + 40) + "px";
+                    getId("win_" + this.objName + "_aero").style.backgroundPosition = (-1 * 0 + 40) + "px " + (-1 * (0 * (0 > -1)) + 40) + "px";
                     if(parseInt(getId('desktop').style.width) !== xSiz && parseInt(getId('desktop').style.height) !== ySiz)
-                    getId("win" + this.dsktpIcon + "h").style.transform = "scale(" + ((parseInt(getId('desktop').style.width) - 6) / (xSiz - 6)) + ", " + ((parseInt(getId('desktop').style.height) - 24) / (ySiz - 24)) + ")";
+                    getId("win_" + this.objName + "_html").style.transform = "scale(" + ((parseInt(getId('desktop').style.width) - 6) / (xSiz - 6)) + ", " + ((parseInt(getId('desktop').style.height) - 24) / (ySiz - 24)) + ")";
                     //getId("win" + this.dsktpIcon + "a").style.width = xSiz + 80 + "px";
                     //getId("win" + this.dsktpIcon + "a").style.height = ySiz + 80 + "px";
                     if(typeof this.dimsSet === 'function' && !ignoreDimsSet){
@@ -1312,19 +1331,19 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             },
             openWindow: function(){
                 this.appIcon = 1;
-                getId("win" + this.dsktpIcon).style.display = "block";
-                getId("icn" + this.dsktpIcon).style.display = "inline-block";
-                getId("win" + this.dsktpIcon).style.pointerEvents = "";
+                getId("win_" + this.objName + "_top").style.display = "block";
+                getId("icn_" + this.objName).style.display = "inline-block";
+                getId("win_" + this.objName + "_top").style.pointerEvents = "";
                 
                 // experimental
                 requestAnimationFrame(function(){
-                    getId("win" + this.dsktpIcon).style.transform = 'scale(1)';
-                    getId("win" + this.dsktpIcon).style.opacity = "1";
+                    getId("win_" + this.objName + "_top").style.transform = 'scale(1)';
+                    getId("win_" + this.objName + "_top").style.opacity = "1";
                 }.bind(this));
                 setTimeout(function(){
                     if(this.appIcon){
-                        getId("win" + this.dsktpIcon).style.display = "block";
-                        getId("win" + this.dsktpIcon).style.opacity = "1";
+                        getId("win_" + this.objName + "_top").style.display = "block";
+                        getId("win_" + this.objName + "_top").style.opacity = "1";
                     }
                 }.bind(this), 300);
                 // end experimental
@@ -1333,19 +1352,19 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 this.appIcon = 0;
                 
                 // experimental
-                getId('win' + this.dsktpIcon).style.transformOrigin = '';
+                getId('win_' + this.objName + '_top').style.transformOrigin = '';
                 try{
-                    getId("win" + this.dsktpIcon).style.transform = 'scale(' + apps.settings.vars.winFadeDistance + ')';
+                    getId("win_" + this.objName + "_top").style.transform = 'scale(' + apps.settings.vars.winFadeDistance + ')';
                 }catch(err){
-                    getId("win" + this.dsktpIcon).style.transform = 'scale(0.8)';
+                    getId("win_" + this.objName + "_top").style.transform = 'scale(0.8)';
                 }
-                getId("win" + this.dsktpIcon).style.opacity = "0";
-                getId("win" + this.dsktpIcon).style.pointerEvents = "none";
+                getId("win_" + this.objName + "_top").style.opacity = "0";
+                getId("win_" + this.objName + "_top").style.pointerEvents = "none";
                 setTimeout(function(){
                     if(!this.appIcon){
-                        getId("win" + this.dsktpIcon).style.display = "none";
-                        getId("win" + this.dsktpIcon).style.width = "";
-                        getId("win" + this.dsktpIcon).style.height = "";
+                        getId("win_" + this.objName + "_top").style.display = "none";
+                        getId("win_" + this.objName + "_top").style.width = "";
+                        getId("win_" + this.objName + "_top").style.height = "";
                         this.windowH = -1;
                         this.windowV = -1;
                     }
@@ -1357,7 +1376,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 //getId("win" + this.dsktpIcon).style.display = "none";
                 //getId("win" + this.dsktpIcon).style.opacity = "0";
                 
-                getId("icn" + this.dsktpIcon).style.display = "none";
+                getId("icn_" + this.objName).style.display = "none";
                 this.fullscreen = 0;
                 if(this.folded){
                     this.foldWindow();
@@ -1365,40 +1384,40 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 toTop({dsktpIcon: 'CLOSING'}, 1);
             },
             closeIcon: function(){
-                getId('icn' + this.dsktpIcon).style.display = 'none';
+                getId('icn_' + this.objName).style.display = 'none';
             },
             folded: 0,
             foldWindow: function(){
                 if(this.folded){
-                    getId('win' + this.dsktpIcon + 'h').style.display = 'block';
-                    getId('win' + this.dsktpIcon).style.height = this.windowV + 'px';
+                    getId('win_' + this.objName + '_html').style.display = 'block';
+                    getId('win_' + this.objName + '_top').style.height = this.windowV + 'px';
                     this.folded = 0;
                 }else{
-                    getId('win' + this.dsktpIcon + 'h').style.display = 'none';
-                    getId('win' + this.dsktpIcon).style.height = '24px';
+                    getId('win_' + this.objName + '_html').style.display = 'none';
+                    getId('win_' + this.objName + '_top').style.height = '24px';
                     this.folded = 1;
                 }
             },
             closeKeepTask: function(){
                 // experimental
-                if(this.dsktpIcon !== 'DsB'){
+                if(this.objName !== 'startMenu'){
                     try{
-                        getId("win" + this.dsktpIcon).style.transformOrigin = getId("icn" + this.dsktpIcon).getBoundingClientRect().left - this.windowX + 23 + 'px ' + (parseInt(getId('monitor').style.height, 10) - this.windowY - 30) + 'px';
+                        getId("win_" + this.objName + "_top").style.transformOrigin = getId("icn_" + this.objName).getBoundingClientRect().left - this.windowX + 23 + 'px ' + (parseInt(getId('monitor').style.height, 10) - this.windowY - 30) + 'px';
                     }catch(err){
-                        getId("win" + this.dsktpIcon).style.transformOrigin = '50% ' + window.innerHeight + 'px';
+                        getId("win_" + this.objName + "_top").style.transformOrigin = '50% ' + window.innerHeight + 'px';
                     }
                     //try{
-                        getId("win" + this.dsktpIcon).style.transform = 'scale(0.1)'; //'scale(' + apps.settings.vars.winFadeDistance + ')';
+                        getId("win_" + this.objName + "_top").style.transform = 'scale(0.1)'; //'scale(' + apps.settings.vars.winFadeDistance + ')';
                     //}catch(err){
                     //    getId("win" + this.dsktpIcon).style.transform = 'scale(0.5)';
                     //}
-                    getId("win" + this.dsktpIcon).style.opacity = "0";
+                    getId("win_" + this.objName + "_top").style.opacity = "0";
                     setTimeout(function(){
-                        getId("win" + this.dsktpIcon).style.display = "none";
+                        getId("win_" + this.objName + "_top").style.display = "none";
                         //getId("win" + this.dsktpIcon).style.opacity = "1";
                     }.bind(this), 300);
                 }else{
-                    getId("win" + this.dsktpIcon).style.display = "none";
+                    getId("win_" + this.objName + "_top").style.display = "none";
                     // getId("win" + this.dsktpIcon).style.opacity = "0";
                 }
                 // end experimental
@@ -1407,18 +1426,18 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 //getId("win" + this.dsktpIcon).style.display = "none";
                 //getId("win" + this.dsktpIcon).style.opacity = "0";
                 
-                setTimeout("getId('icn" + this.dsktpIcon + "').style.backgroundColor = ''", 0);
+                setTimeout("getId('icn_" + this.objName + "').style.backgroundColor = ''", 0);
             },
             setCaption: function(newCap){
                 d(1, 'Changing caption.');
                 if(appImg){
-                    getId("win" + this.dsktpIcon + "c").innerHTML = '<img src="' + appImg + '" onerror="this.src=\'/appicons/ds/redx.png\'" style="height:32px;margin-bottom:-12px;margin-top:-6px;"> ' + newCap;
+                    getId("win_" + this.objName + "_cap").innerHTML = '<img src="' + appImg + '" onerror="this.src=\'/appicons/ds/redx.png\'" style="height:32px;margin-bottom:-12px;margin-top:-6px;"> ' + newCap;
                 }else{
-                    getId("win" + this.dsktpIcon + "c").innerHTML = this.dsktpIcon + '|' + newCap;
+                    getId("win_" + this.objName + "_cap").innerHTML = this.dsktpIcon + '|' + newCap;
                 }
             },
             setContent: function(newHTML){
-                getId("win" + this.dsktpIcon + "h").innerHTML = newHTML;
+                getId("win_" + this.objName + "_html").innerHTML = newHTML;
             },
             fullscreentempvars: [0, 0, 0, 0],
             toggleFullscreen: function(){
@@ -1438,15 +1457,15 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
         };
         if(appImg){
             getId("desktop").innerHTML +=
-                '<div class="app cursorPointer" id="app' + appIcon + '" oncontextmenu="ctxMenu(baseCtx.appXXX, 1, event, [event, \'' + appPath + '\', \'' + appIcon + '\'])">' +
-                '<div class="appIcon" id="ico' + appIcon + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + appImg + '" onerror="this.src=\'/appicons/ds/redx.png\'"></div>' +
-                '<div class="appDesc" id="dsc' + appIcon + '">' + this.appDesc + '</div>' +
+                '<div class="app cursorPointer" id="app_' + appPath + '" oncontextmenu="ctxMenu(baseCtx.appXXX, 1, event, [event, \'' + appPath + '\', \'' + appIcon + '\'])">' +
+                '<div class="appIcon" id="ico_' + appPath + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + appImg + '" onerror="this.src=\'/appicons/ds/redx.png\'"></div>' +
+                '<div class="appDesc" id="dsc_' + appPath + '">' + this.appDesc + '</div>' +
                 '</div></div>';
         }else{
             getId("desktop").innerHTML +=
-                '<div class="app cursorPointer" id="app' + appIcon + '" oncontextmenu="ctxMenu(baseCtx.appXXX, 1, event, [event, \'' + appPath + '\', \'' + appIcon + '\'])">' +
-                '<div class="appIcon" id="ico' + appIcon + '">' + appIcon + '</div>' +
-                '<div class="appDesc" id="dsc' + appIcon + '">' + this.appDesc + '</div>' +
+                '<div class="app cursorPointer" id="app_' + appPath + '" oncontextmenu="ctxMenu(baseCtx.appXXX, 1, event, [event, \'' + appPath + '\', \'' + appIcon + '\'])">' +
+                '<div class="appIcon" id="ico_' + appPath + '">' + appIcon + '</div>' +
+                '<div class="appDesc" id="dsc_' + appPath + '">' + this.appDesc + '</div>' +
                 '</div></div>';
         }
         this.keepOffDesktop = keepOffDesktop;
@@ -1463,61 +1482,61 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             getId("app" + appIcon).style.left = (8 + (Math.floor(appTotal / (Math.floor(window.innerHeight + 78) / 95))) * 108) + "px";
             getId("app" + appIcon).style.top = (8 + ((appTotal - 1) % Math.floor((window.innerHeight - 30) / 83) * 83)) + "px";
             */
-            getId("app" + appIcon).style.left = appPosX + "px";
-            getId("app" + appIcon).style.top = appPosY + "px";
+            getId("app_" + appPath).style.left = appPosX + "px";
+            getId("app_" + appPath).style.top = appPosY + "px";
             appPosY += 83;
             if(appPosY > window.innerHeight - 105){
                 appPosY = 8;
                 appPosX += 108;
             }
         }else{
-            getId("app" + appIcon).style.display = "none";
+            getId("app_" + appPath).style.display = "none";
         }
         getId("desktop").innerHTML +=
-            '<div class="window" id="win' + appIcon + '">' +
-            '<div class="winAero" id="win' + appIcon + 'a"></div>' +
-            '<div class="winBimg" id="win' + appIcon + 'i"></div>' +
-            '<div class="winRot cursorOpenHand" id="win' + appIcon + 'r"></div>' +
-            '<div class="winCap cursorOpenHand" id="win' + appIcon + 'c">' +
+            '<div class="window" id="win_' + appPath + '_top">' +
+            '<div class="winAero" id="win_' + appPath + '_aero"></div>' +
+            '<div class="winBimg" id="win_' + appPath + '_img"></div>' +
+            '<div class="winRot cursorOpenHand" id="win_' + appPath + '_size"></div>' +
+            '<div class="winCap cursorOpenHand" id="win_' + appPath + '_cap">' +
             '</div>' +
-            '<div class="winFld cursorPointer" id="win' + appIcon + 'f">^' +
+            '<div class="winFld cursorPointer" id="win_' + appPath + '_fold">^' +
             '</div>' +
-            '<div class="winHTML" id="win' + appIcon + 'h">' +
+            '<div class="winHTML" id="win_' + appPath + '_html">' +
             '</div>' +
-            '<div class="winBig cursorPointer" id="win' + appIcon + 'b">o' +
+            '<div class="winBig cursorPointer" id="win_' + appPath + '_big">o' +
             '</div>' +
-            '<div class="winShrink cursorPointer" id="win' + appIcon + 's">v' +
+            '<div class="winShrink cursorPointer" id="win_' + appPath + '_shrink">v' +
             '</div>' +
-            '<div class="winExit cursorPointer" id="win' + appIcon + 'e">x' +
+            '<div class="winExit cursorPointer" id="win_' + appPath + '_exit">x' +
             '</div></div>';
         if(appImg){
             getId("icons").innerHTML +=
-                '<div class="icon cursorPointer" id="icn' + appIcon + '">' +
+                '<div class="icon cursorPointer" id="icn_' + appPath + '">' +
                 '<img class="imageIco" src="' + appImg +
                 '" onerror="this.src=\'/appicons/ds/redx.png\'"></div>';
         }else{
             getId("icons").innerHTML +=
-                '<div class="icon cursorPointer" id="icn' + appIcon + '">' +
+                '<div class="icon cursorPointer" id="icn_' + appPath + '">' +
                 '<div class="iconImg">' + appIcon +
                 '</div></div>';
         }
-        getId("win" + appIcon + "c").setAttribute("onmousedown", "if(!apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winmove(event);}event.preventDefault();return false;}");
-        getId("win" + appIcon + "r").setAttribute("onmousedown", "if(!apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winrot(event);}event.preventDefault();return false;}");
-        getId("win" + appIcon + "c").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winmove(event);}event.preventDefault();return false;}");
-        getId("win" + appIcon + "r").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winrot(event);}event.preventDefault();return false;}");
-        getId("app" + appIcon).setAttribute("onClick", "openapp(apps." + appPath + ", 'dsktp')");
-        getId("icn" + appIcon).setAttribute("onClick", "openapp(apps." + appPath + ", 'tskbr')");
-        getId("win" + appIcon).setAttribute("onClick", "toTop(apps." + appPath + ")");
+        getId("win_" + appPath + "_cap").setAttribute("onmousedown", "if(!apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winmove(event);}event.preventDefault();return false;}");
+        getId("win_" + appPath + "_size").setAttribute("onmousedown", "if(!apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winrot(event);}event.preventDefault();return false;}");
+        getId("win_" + appPath + "_cap").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winmove(event);}event.preventDefault();return false;}");
+        getId("win_" + appPath + "_size").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winrot(event);}event.preventDefault();return false;}");
+        getId("app_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", 'dsktp')");
+        getId("icn_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", 'tskbr')");
+        getId("win_" + appPath + "_top").setAttribute("onClick", "toTop(apps." + appPath + ")");
         if(appPath !== 'startMenu' && appPath !== 'nora'){
-            getId("icn" + appIcon).setAttribute("oncontextmenu", "ctxMenu(baseCtx.icnXXX, 1, event, '" + appPath + "')");
-            getId("icn" + appIcon).setAttribute("onmouseenter", "highlightWindow('" + appPath + "')");
-            getId("icn" + appIcon).setAttribute("onmouseleave", "highlightHide()");
+            getId("icn_" + appPath).setAttribute("oncontextmenu", "ctxMenu(baseCtx.icnXXX, 1, event, '" + appPath + "')");
+            getId("icn_" + appPath).setAttribute("onmouseenter", "highlightWindow('" + appPath + "')");
+            getId("icn_" + appPath).setAttribute("onmouseleave", "highlightHide()");
         }
-        getId("win" + appIcon + "e").setAttribute("onClick", "apps." + appPath + ".signalHandler('close');event.stopPropagation()");
-        getId("win" + appIcon + "s").setAttribute("onClick", "apps." + appPath + ".signalHandler('shrink');event.stopPropagation()");
-        getId("win" + appIcon + "b").setAttribute("onClick", "apps." + appPath + ".appWindow.toggleFullscreen()");
-        getId("win" + appIcon + "f").setAttribute("onClick", "apps." + appPath + ".appWindow.foldWindow()");
-        getId("win" + appIcon + "c").setAttribute("oncontextmenu", "ctxMenu(baseCtx.winXXXc, 1, event, '" + appPath + "')");
+        getId("win_" + appPath + "_exit").setAttribute("onClick", "apps." + appPath + ".signalHandler('close');event.stopPropagation()");
+        getId("win_" + appPath + "_shrink").setAttribute("onClick", "apps." + appPath + ".signalHandler('shrink');event.stopPropagation()");
+        getId("win_" + appPath + "_big").setAttribute("onClick", "apps." + appPath + ".appWindow.toggleFullscreen()");
+        getId("win_" + appPath + "_fold").setAttribute("onClick", "apps." + appPath + ".appWindow.foldWindow()");
+        getId("win_" + appPath + "_cap").setAttribute("oncontextmenu", "ctxMenu(baseCtx.winXXXc, 1, event, '" + appPath + "')");
     }catch(err){
         if(doLog){
             doLog(err, '#F00');
@@ -1965,58 +1984,58 @@ c(function(){
         function(launchType){
             if(launchType === 'srtup'){
                 this.appWindow.paddingMode(0);
-                getId('winDsBs').style.display = "none";
-                getId('winDsBb').style.display = "none";
-                getId('winDsBe').style.display = "none";
-                getId('winDsBf').style.display = 'none';
-                getId('winDsB').style.transform = 'scale(1)';
+                getId('win_startMenu_shrink').style.display = "none";
+                getId('win_startMenu_big').style.display = "none";
+                getId('win_startMenu_exit').style.display = "none";
+                getId('win_startMenu_fold').style.display = 'none';
+                getId('win_startMenu_top').style.transform = 'scale(1)';
                 //getId('winDsBc').style.cursor = cursors.default;
-                getId('winDsBc').classList.remove('cursorLoadLight');
-                getId('winDsBc').classList.add('cursorDefault');
-                getId('winDsBc').setAttribute('onmousedown','');
-                getId('winDsBr').style.pointerEvents = "none";
-                getId('winDsBc').setAttribute('oncontextmenu', 'ctxMenu(apps.startMenu.vars.captionCtx, 1, event)');
+                getId('win_startMenu_cap').classList.remove('cursorLoadLight');
+                getId('win_startMenu_cap').classList.add('cursorDefault');
+                getId('win_startMenu_cap').setAttribute('onmousedown','');
+                getId('win_startMenu_size').style.pointerEvents = "none";
+                getId('win_startMenu_cap').setAttribute('oncontextmenu', 'ctxMenu(apps.startMenu.vars.captionCtx, 1, event)');
                 switch(tskbrToggle.tskbrPos){
                     case 1:
-                        getId('winDsB').style.borderTopLeftRadius = "0";
-                        getId('winDsB').style.borderBottomLeftRadius = "0";
-                        getId('winDsB').style.borderBottomRightRadius = "";
-                        getId('winDsB').style.borderTopRightRadius = "0";
-                        getId('winDsBh').style.borderBottomLeftRadius = "0";
-                        getId('winDsBh').style.borderBottomRightRadius = "";
+                        getId('win_startMenu_top').style.borderTopLeftRadius = "0";
+                        getId('win_startMenu_top').style.borderBottomLeftRadius = "0";
+                        getId('win_startMenu_top').style.borderBottomRightRadius = "";
+                        getId('win_startMenu_top').style.borderTopRightRadius = "0";
+                        getId('win_startMenu_html').style.borderBottomLeftRadius = "0";
+                        getId('win_startMenu_html').style.borderBottomRightRadius = "";
                         break;
                     case 2:
-                        getId('winDsB').style.borderTopLeftRadius = "0";
-                        getId('winDsB').style.borderBottomLeftRadius = "0";
-                        getId('winDsB').style.borderBottomRightRadius = "";
-                        getId('winDsB').style.borderTopRightRadius = "0";
-                        getId('winDsBh').style.borderBottomLeftRadius = "0";
-                        getId('winDsBh').style.borderBottomRightRadius = "";
+                        getId('win_startMenu_top').style.borderTopLeftRadius = "0";
+                        getId('win_startMenu_top').style.borderBottomLeftRadius = "0";
+                        getId('win_startMenu_top').style.borderBottomRightRadius = "";
+                        getId('win_startMenu_top').style.borderTopRightRadius = "0";
+                        getId('win_startMenu_html').style.borderBottomLeftRadius = "0";
+                        getId('win_startMenu_html').style.borderBottomRightRadius = "";
                         break;
                     case 3:
-                        getId('winDsB').style.borderTopLeftRadius = "";
-                        getId('winDsB').style.borderBottomLeftRadius = "0";
-                        getId('winDsB').style.borderBottomRightRadius = "0";
-                        getId('winDsB').style.borderTopRightRadius = "0";
-                        getId('winDsBh').style.borderBottomLeftRadius = "0";
-                        getId('winDsBh').style.borderBottomRightRadius = "0";
+                        getId('win_startMenu_top').style.borderTopLeftRadius = "";
+                        getId('win_startMenu_top').style.borderBottomLeftRadius = "0";
+                        getId('win_startMenu_top').style.borderBottomRightRadius = "0";
+                        getId('win_startMenu_top').style.borderTopRightRadius = "0";
+                        getId('win_startMenu_html').style.borderBottomLeftRadius = "0";
+                        getId('win_startMenu_html').style.borderBottomRightRadius = "0";
                         break;
                     default:
-                        getId('winDsB').style.borderTopLeftRadius = "0";
-                        getId('winDsB').style.borderBottomLeftRadius = "0";
-                        getId('winDsB').style.borderBottomRightRadius = "0";
-                        getId('winDsB').style.borderTopRightRadius = "";
-                        getId('winDsBh').style.borderBottomLeftRadius = "0";
-                        getId('winDsBh').style.borderBottomRightRadius = "0";
+                        getId('win_startMenu_top').style.borderTopLeftRadius = "0";
+                        getId('win_startMenu_top').style.borderBottomLeftRadius = "0";
+                        getId('win_startMenu_top').style.borderBottomRightRadius = "0";
+                        getId('win_startMenu_top').style.borderTopRightRadius = "";
+                        getId('win_startMenu_html').style.borderBottomLeftRadius = "0";
+                        getId('win_startMenu_html').style.borderBottomRightRadius = "0";
                 }
-                getId('winDsBh').style.overflowY = "scroll";
-                getId('winDsBh').style.background = 'none';
-                getId('winDsB').setAttribute('onClick', "toTop(apps.startMenu, 2)");
+                getId('win_startMenu_html').style.overflowY = "scroll";
+                getId('win_startMenu_html').style.background = 'none';
+                getId('win_startMenu_top').setAttribute('onClick', "toTop(apps.startMenu, 2)");
                 //getId('icnDsB').innerHTML = '<div class="iconImg">DsB</div>';
-                getId('icnDsB').setAttribute('oncontextmenu', 'ctxMenu(apps.startMenu.vars.iconCtx, 1, event)');
+                getId('icn_startMenu').setAttribute('oncontextmenu', 'ctxMenu(apps.startMenu.vars.iconCtx, 1, event)');
                 
-                getId('winDsB').style.transition = '0.35s';
-                getId('winDsBa').style.transition = '0.35s';
+                getId('win_startMenu_top').style.transition = '0.35s';
+                getId('win_startMenu_aero').style.transition = '0.35s';
                 
                 this.appWindow.alwaysOnTop(1);
                 
@@ -2026,7 +2045,7 @@ c(function(){
             }else if(launchType === 'dsktp'){
                 apps.prompt.vars.notify('By cheating.', [], function(){}, 'How did you do that?', '/appicons/ds/aOS.png');
             }else if(launchType === 'tskbr'){
-                if(getId('winDsB').style.display !== 'block'){
+                if(getId('win_startMenu_top').style.display !== 'block'){
                     switch(tskbrToggle.tskbrPos){
                         case 1:
                             requestAnimationFrame(function(){apps.startMenu.appWindow.setDims(0, 0, 300, 370)});
@@ -2319,10 +2338,10 @@ c(function(){
         function(launchtype){
             if(launchtype === 'srtup'){
                 this.appWindow.paddingMode(0);
-                getId('winNRAe').style.display = "none";
-                getId('winNRAb').style.right = '3px';
-                getId('winNRAs').style.right = '26px';
-                getId('winNRAc').setAttribute('oncontextmenu', 'ctxMenu([[event.pageX, event.pageY, "/ctxMenu/beta/minimize.png", "/ctxMenu/beta/add.png"], " Hide", "apps.nora.signalHandler(\'shrink\');toTop({appIcon:\'DSKTP\'},1)", " Toggle Fullscreen", "apps.nora.appWindow.toggleFullscreen();toTop(apps.nora)"])');
+                getId('win_nora_exit').style.display = "none";
+                getId('win_nora_big').style.right = '3px';
+                getId('win_nora_shrink').style.right = '26px';
+                getId('win_nora_cap').setAttribute('oncontextmenu', 'ctxMenu([[event.pageX, event.pageY, "/ctxMenu/beta/minimize.png", "/ctxMenu/beta/add.png"], " Hide", "apps.nora.signalHandler(\'shrink\');toTop({appIcon:\'DSKTP\'},1)", " Toggle Fullscreen", "apps.nora.appWindow.toggleFullscreen();toTop(apps.nora)"])');
                 this.appWindow.setCaption('NORAA');
                 this.appWindow.setDims(45, parseInt(getId('desktop').style.height, 10) - 500, 600, 500);
                 this.appWindow.setContent('<div id="NORAout">-- aOS Ready --</div><button id="NORAspeech" onclick="apps.nora.vars.speakIn()">Speak</button><input id="NORAin" onKeydown="if(event.keyCode === 13){apps.nora.vars.input()}"><button id="NORAbtn" onClick="apps.nora.vars.input()">Say</button>');
@@ -2408,7 +2427,7 @@ c(function(){
             }else if(launchtype === 'dsktp'){
                 apps.prompt.vars.notify('By cheating.', [], function(){}, 'How did you do that?', '/appicons/ds/NRA.png');
             }else if(launchtype === 'tskbr'){
-                if(getId('winNRA').style.display === 'none'){
+                if(getId('win_nora_top').style.display === 'none'){
                     this.appWindow.setDims(45, parseInt(getId('desktop').style.height, 10) - 500, 600, 500);
                 }
                 this.appWindow.openWindow();
@@ -2723,17 +2742,17 @@ c(function(){
                     'Have NORAA do a barrel roll',
                     function(){
                         apps.nora.vars.say('Hooray for aerodynamics!');
-                        getId('winNRA').style.transformOrigin = '50% -25%';
-                        getId('winNRA').style.transition = '0s';
-                        getId('winNRA').style.transform = 'scale(1) rotate(0deg)';
+                        getId('win_nora_top').style.transformOrigin = '50% -25%';
+                        getId('win_nora_top').style.transition = '0s';
+                        getId('win_nora_top').style.transform = 'scale(1) rotate(0deg)';
                         window.setTimeout(function(){
-                            getId('winNRA').style.transition = '2s';
-                            getId('winNRA').style.transform = 'scale(1) rotate(360deg)';
+                            getId('win_nora_top').style.transition = '2s';
+                            getId('win_nora_top').style.transform = 'scale(1) rotate(360deg)';
                         }, 64);
                         window.setTimeout(function(){
-                            getId('winNRA').style.transition = '';
-                            getId('winNRA').style.transform = 'scale(1)';
-                            getId('winNRA').style.transformOrigin = '0 0';
+                            getId('win_nora_top').style.transition = '';
+                            getId('win_nora_top').style.transform = 'scale(1)';
+                            getId('win_nora_top').style.transformOrigin = '0 0';
                         }, 2064);
                     }
                 ],
@@ -2743,17 +2762,17 @@ c(function(){
                     'Have NORAA do an aileron roll',
                     function(){
                         apps.nora.vars.say('Hooray for Starfox!');
-                        getId('winNRA').style.transformOrigin = '50% 50%';
-                        getId('winNRA').style.transition = '0s';
-                        getId('winNRA').style.transform = 'scale(1) rotate(0deg)';
+                        getId('win_nora_top').style.transformOrigin = '50% 50%';
+                        getId('win_nora_top').style.transition = '0s';
+                        getId('win_nora_top').style.transform = 'scale(1) rotate(0deg)';
                         window.setTimeout(function(){
-                            getId('winNRA').style.transition = '2s';
-                            getId('winNRA').style.transform = 'scale(1) rotate(360deg)';
+                            getId('win_nora_top').style.transition = '2s';
+                            getId('win_nora_top').style.transform = 'scale(1) rotate(360deg)';
                         }, 64);
                         window.setTimeout(function(){
-                            getId('winNRA').style.transition = '';
-                            getId('winNRA').style.transform = 'scale(1)';
-                            getId('winNRA').style.transformOrigin = '0 0';
+                            getId('win_nora_top').style.transition = '';
+                            getId('win_nora_top').style.transform = 'scale(1)';
+                            getId('win_nora_top').style.transformOrigin = '0 0';
                         }, 2064);
                     }
                 ],
@@ -3592,7 +3611,7 @@ c(function(){
                 this.appWindow.setContent('This app is used to display information about apps. Try right-clicking a title bar and clicking "about apps" to access this menu.');
             }else if(launchtype !== 'tskbr'){
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 250, 400, 500);
-                getId('winNfoh').style.overflowY = 'auto';
+                getId('win_appInfo_html').style.overflowY = 'auto';
                 try{
                     this.appWindow.setCaption('App Info: ' + apps[launchtype].appDesc);
                     this.appWindow.setContent(
@@ -3651,7 +3670,7 @@ c(function(){
         function(launchType){
             this.appWindow.setDims(20, 20, 600, 500);
             this.appWindow.setCaption('Beta Testing App');
-            getId('winBTAh').style.overflow = 'scroll';
+            getId('win_betaTest_html').style.overflow = 'scroll';
             this.appWindow.setContent('App for developer to test UI changes brought to the Beta Update of aOS.<br>&nbsp;<input value="Input"> <input value="disabled" disabled><br>&nbsp;<button>Button</button> <button disabled>disabled</button><br>HR on white background:<hr>HR on black background:<br><div style="background-color:#000;position:static">You found the secret message!<hr>This line was very hard to make!</div><br><img src="/appicons/ds/aOS.png" width="16"> 16<br><img src="/appicons/ds/aOS.png" width="32"> 32<br><img src="/appicons/ds/aOS.png" width="64"> 64<br><img src="/appicons/ds/aOS.png" width="128"> 128<br><img src="/appicons/ds/aOS.png" width="256"> 256 NATIVE<br><img src="/appicons/ds/aOS.png" width="512"> 512');
             this.appWindow.openWindow();
         },
@@ -3740,7 +3759,7 @@ c(function(){
                     '&nbsp;Ask me to make something for you.</span><br><br>' +
                     'It\'s best to use trigger phrases that sound more natural when said out loud - the user is able to speak with their voice to use NORAA and your command.'
                 );
-                getId('winMODh').style.overflowY = 'auto';
+                getId('win_modding_html').style.overflowY = 'auto';
             }
             this.appWindow.openWindow();
         },
@@ -3810,7 +3829,7 @@ c(function(){
                 "<p>modulelast, module: <br><span id='tMgModule' style='font-family:monospace' class='liveElement' liveVar='modulelast + \"<br>\" + module'>?<br>?</span></p>" +
                 "<ul style='font-family:monospace' id='tMgTaskList'></ul>"
             );
-            getId('wintMgh').style.overflowY = 'scroll';
+            getId('win_taskManager_html').style.overflowY = 'scroll';
             if(this.vars.running.tMg.MemCheck){
                 removeInterval("tMg", "MemCheck");
             }
@@ -4076,7 +4095,7 @@ c(function(){
                     '<input id="bashInput" onkeydown="apps.bash.vars.checkPrefix()" onkeypress="apps.bash.vars.checkPrefix()" onkeyup="apps.bash.vars.checkPrefix();if(event.keyCode === 13){apps.bash.vars.execute()}" style="background:none;color:inherit;box-shadow:none;display:block;line-height:1em;font-family:aosProFont;font-size:12px;border:none;outline:none;padding:0;width:100%;">'
                 );
                 this.vars.checkPrefix();
-                getId('winshh').style.overflowY = 'scroll';
+                getId('win_bash_html').style.overflowY = 'scroll';
             }
             this.appWindow.openWindow();
         },
@@ -4182,7 +4201,7 @@ c(function(){
                     this.pipeOut += '<br>' + String(message);
                 }else{
                     getId('bashContent').innerHTML += '<br>' + String(message).split('  ').join(' &nbsp;') + '&nbsp;';
-                    getId('winshh').scrollTop = getId('winshh').scrollHeight;
+                    getId('win_bash_html').scrollTop = getId('win_bash_html').scrollHeight;
                 }
             },
             piping: 0,
@@ -4638,9 +4657,9 @@ c(function(){
                 }
                 this.appWindow.setCaption('Application Prompt');
                 this.appWindow.setContent('<div id="PMTdescription" style="text-align:center;width:100%;padding-top:16px;font-family:monospace;">This app is used for alerts and prompts in aOS apps.</div><div id="PMTbuttons" style="font-family:monospace;padding-bottom:16px;text-align:center;width:100%;bottom:0;"><button onClick="apps.prompt.signalHandler(\'close\')">OK</button></div></div>');
-                getId("winPMTb").style.display = "none";
-                getId("winPMTe").style.display = "none";
-                getId("winPMTs").style.display = "none";
+                getId("win_prompt_big").style.display = "none";
+                getId("win_prompt_exit").style.display = "none";
+                getId("win_prompt_shrink").style.display = "none";
                 this.appWindow.alwaysOnTop(1);
                 this.appWindow.openWindow();
             }
@@ -6521,9 +6540,9 @@ c(function(){
             setFadeDistance: function(newDist, nosave){
                 this.winFadeDistance = newDist;
                 for(var app in apps){console.log(app);
-                    if(getId('win' + apps[app].dsktpIcon).style.opacity !== "1"){
-                        getId('win' + apps[app].dsktpIcon).style.transform = 'scale(' + newDist + ')';
-                        getId('win' + apps[app].dsktpIcon).style.opacity = '0';
+                    if(getId('win_' + apps[app].objName + '_top').style.opacity !== "1"){
+                        getId('win_' + apps[app].objName + '_top').style.transform = 'scale(' + newDist + ')';
+                        getId('win_' + apps[app].objName + '_top').style.opacity = '0';
                     }
                 }
                 if(!nosave){
@@ -6750,7 +6769,7 @@ c(function(){
                 );
                 //set the icon type to 0 once the function is ready
                 this.vars.setType(0);
-                getId('winIcMh').style.overflowY = 'auto';
+                getId('win_iconMaker_html').style.overflowY = 'auto';
                 this.appWindow.openWindow();
             }else{
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 250, 400, 500);
@@ -6766,7 +6785,7 @@ c(function(){
                     '<button onclick="apps.iconMaker.vars.createIcon()">Create Desktop Icon</button>'
                 );
                 this.vars.setType(0);
-                getId('winIcMh').style.overflowY = 'auto';
+                getId('win_iconMaker_html').style.overflowY = 'auto';
                 this.appWindow.openWindow();
             }
         },
@@ -6960,7 +6979,7 @@ c(function(){
                     }
                 }
                 getId("npScreen").wrap = "off";
-                getId('winTEh').style.background = 'none';
+                getId('win_notepad_html').style.background = 'none';
             }
             this.appWindow.openWindow();
         },
@@ -7368,10 +7387,11 @@ c(function(){
             "06/20/2018: B0.8.3.0\n + Added red color to music visualizer.\n\n" +
             "06/21/2018: B0.8.3.1\n + Added padding that is enabled by default in all apps, however apps with special UI's are allowed to turn off the padding.\n : Tweaked green cutoff at red in music visualizer.\n\n" +
             "06/26/2018: B0.8.3.2\n : Not really an update, but the Music Visualizer icon is now displayed on the desktop.\n\n" +
-            "07/11/2018: B0.8.4.0\n + Added [url] support to Messaging.\n : Rewrote the entire BBCode system in Messaging, is far more reliable and flexible. It can also support extension by developers now.",
+            "07/11/2018: B0.8.4.0\n + Added [url] support to Messaging.\n : Rewrote the entire BBCode system in Messaging, is far more reliable and flexible. It can also support extension by developers now.\n\n" +
+            "07/20/2018: B0.8.5.0\n : Modified the way that aOS names window, taskbar, and desktop elements. No longer are three-letter ID's required to be unique, and there should be no more conflicts in HTML IDs.\n : Updated necessary apps, to work correctly with this change. Please ensure that your own custom-made apps and scripts reflect the change as well.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.4.0 (07/11/2018) r0';
+    window.aOSversion = 'B0.8.5.0 (07/20/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -7382,7 +7402,7 @@ c(function(){
         "Properties Viewer",
         1,
         function(launchtype, fileToOpen){
-            getId('winPPTh').style.overflow = 'auto';
+            getId('win_properties_html').style.overflow = 'auto';
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 250, 400, 500, 1);
             }
@@ -7524,7 +7544,7 @@ c(function(){
             this.appWindow.openWindow();
             if(launchType === 'dsktp'){
                 this.vars.currLoc = '';
-                getId('winFILh').style.background = "none";
+                getId('win_files_html').style.background = "none";
                 this.appWindow.setContent(
                     '<div id="FILtopdiv" style="width:694px; height:25px;">' +
                     '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files.vars.back()">&larr;&nbsp;</div>' +
@@ -7762,7 +7782,7 @@ c(function(){
                     this.vars.cLogHTML = this.vars.cLogGroup + this.vars.cLogHTML;
                     this.vars.cLogHTML = '<p class="changeLogTitle">' + this.vars.cLogSplit[i][0].split(': ')[1] + '</p><p class="changeLogDate">' + this.vars.cLogSplit[i][0].split(': ')[0] + '</p>' + this.vars.cLogHTML;
                 }
-                getId('winCLgh').style.overflow = 'auto';
+                getId('win_changelog_html').style.overflow = 'auto';
                 this.appWindow.setContent(this.vars.cLogHTML);
             }
             this.appWindow.openWindow();
@@ -7934,7 +7954,7 @@ c(function(){
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 150, 400, 300);
             }
             //this.appWindow.setContent('<button onClick="apps.aerotest.appWindow.setDims(50, 50, prompt(\'New window width?\'), prompt(\'New window height?\'))">Change Window Size</button>');
-            getId("winWbTh").style.background = "none";
+            getId("win_aerotest_h").style.background = "none";
             this.appWindow.openWindow();
         },
         function(signal){
@@ -8185,7 +8205,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 200, 600, 400);
             }
-            getId('winAPIh').style.overflowY = 'scroll';
+            getId('win_appAPI_html').style.overflowY = 'scroll';
             this.appWindow.openWindow();
             this.vars.showDocumentation();
         },
@@ -8256,7 +8276,7 @@ c(function(){
                 c(function(){apps.appAPI.vars.newdoc(
                     'this.appWindow.setDims(x, y, w, h)<br>this.appWindow.setCaption(windowCaption)<br>this.appWindow.setContent(windowContent)<br>this.appWindow.openWindow()',
                     'this.appWindow.setDims(20, 20, 500, 400) //sets app x/y location to (20, 20) and width/height to (500, 400)<br>this.appWindow.setCaption("awesome window") //sets the name of your window<br>this.appWindow.setContent("some awesome content") //sets content of your app window, in HTML<br>this.appWindow.openWindow() //opens window',
-                    'When setting dims, remember that the number you give INCLUDES the title bar and borders of the window. The width of the sides of the border are 6px total, and the width of the top and bottom border are 24px total.<br>If your window has an icon, it will always be displayed before your caption. If not, your app\'s text icon will.<br>this.appWindow.setContent("text") is the same as calling <b>getId("win" + YOURAPPICON + "h").innerHTML = "text"</b><br>When opening your window, ensure the dims and caption were manually set. If they were not, then default settings will be used and things may break.'
+                    'When setting dims, remember that the number you give INCLUDES the title bar and borders of the window. The width of the sides of the border are 6px total, and the width of the top and bottom border are 24px total.<br>If your window has an icon, it will always be displayed before your caption. If not, your app\'s text icon will.<br>this.appWindow.setContent("text") is the same as calling <b>getId("win_" + YOURAPPNAME + "_html").innerHTML = "text"</b><br>When opening your window, ensure the dims and caption were manually set. If they were not, then default settings will be used and things may break.'
                 );});
                 c(function(){apps.appAPI.vars.newdoc(
                     'requestAnimationFrameIntact<br>windowperformancenowIntact',
@@ -8355,7 +8375,7 @@ c(function(){
                 if(!this.appWindow.appIcon){
                     this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 500, parseInt(getId('desktop').style.height, 10) / 2 - 300, 1000, 600);
                 }
-                this.vars.div = getId("winAPMh");
+                this.vars.div = getId("win_appmaker_h");
                 this.vars.div.style.overflow = "auto";
                 this.vars.div.style.backgroundPosition = 'center';
                 this.vars.div.style.backgroundRepeat = 'no-repeat';
@@ -8490,9 +8510,9 @@ c(function(){
             },
             saveProj: function(){
                 apps.prompt.vars.confirm('Overwrite your existing saved project?', ['No', 'Yes'], function(btn){
-                    getId('winAPMh').style.backgroundImage = 'url(/loadLight.gif)';
+                    getId('win_appMaker_html').style.backgroundImage = 'url(/loadLight.gif)';
                     // getId('winAPMh').style.cursor = cursors.loadLight;
-                    getId('winAPMh').classList.add('cursorLoadLight');
+                    getId('win_appMaker_html').classList.add('cursorLoadLight');
                     if(btn){
                         getId('APMappsaving').innerHTML = 'SAVING PROJECT...';
                         USERFILES.APP_APM_proj_code = getId('APMappcode').value;
@@ -8517,9 +8537,9 @@ c(function(){
                         setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_iconimage', USERFILES.APP_APM_proj_iconimage, 1)}, 4500);
                         setTimeout(function(){
                             getId('APMappsaving').innerHTML = '';
-                            getId('winAPMh').style.backgroundImage = '';
+                            getId('win_appMaker_html').style.backgroundImage = '';
                             // getId('winAPMh').style.cursor = '';
-                            getId('winAPMh').classList.remove('cursorLoadLight')
+                            getId('win_appMaker_html').classList.remove('cursorLoadLight')
                         }, 5000);
                     }
                 }, 'App Maker');
@@ -8556,7 +8576,7 @@ c(function(){
                     this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 500, parseInt(getId('desktop').style.height, 10) / 2 - 300, 1000, 600);
                 }
             }
-            getId('winWAPh').style.overflow = 'auto';
+            getId('win_webAppMaker_html').style.overflow = 'auto';
             this.appWindow.setContent(
                 '<h1>Web App Maker</h1>' +
                 '<p>Use this tool to add a web page as an app for aOS.</p>' +
@@ -8577,7 +8597,7 @@ c(function(){
                 '<input id="WAPname">' +
                 '<hr>' +
                 '<h2>App Abbreviation</h2>' +
-                '<p>This is the shortcut a user can type to get to the app quicker. This is required, and it <b>must</b> be unique.</p>' +
+                '<p>This is the shortcut a user can type to get to the app quicker. This is required.</p>' +
                 '<img src="appmaker/letters.png"><br>' +
                 '<input id="WAPletters" placeholder="two to three letters">' +
                 '<hr>' +
@@ -8789,7 +8809,7 @@ c(function(){
                 '<p id="SRCuserfiles">Search Results in "USERFILES"</p>'
             );
             addEditContext('SRCfield');
-            getId('winSRCh').style.overflowY = 'scroll';
+            getId('win_search_html').style.overflowY = 'scroll';
             this.appWindow.openWindow();
         },
         function(signal){
@@ -8874,7 +8894,7 @@ c(function(){
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 400, parseInt(getId('desktop').style.height, 10) / 2 - 250, 800, 500);
             }
             this.appWindow.setCaption('Messaging');
-            getId('winMSGh').setAttribute('onclick', 'if(apps.messaging.vars.soundToPlay && apps.messaging.vars.canLookethOverThereSound){apps.messaging.vars.notifClick.play(); apps.messaging.vars.soundToPlay = 0;}');
+            getId('win_messaging_html').setAttribute('onclick', 'if(apps.messaging.vars.soundToPlay && apps.messaging.vars.canLookethOverThereSound){apps.messaging.vars.notifClick.play(); apps.messaging.vars.soundToPlay = 0;}');
             if(launchType === 'dsktp'){
                 this.appWindow.setContent('<div id="MSGdiv" style="width:100%;height:calc(100% - 24px);overflow-y:scroll;"></div><div style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div><button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button><input id="MSGinput" style="position:absolute;height:21px;width:80%;bottom:0;left:10%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';text-align:center;font-family:monospace"><button onclick="apps.messaging.vars.sendMessage()" style="position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>');
                 this.vars.lastMsgRecieved = this.vars.lastMsgStart;
@@ -9136,9 +9156,9 @@ c(function(){
                         this.notifMessage.play();
                         this.soundToPlay = 1;
                     }else{
-                        if(!document.hasFocus() || getId('winMSG').style.display === 'none'){
+                        if(!document.hasFocus() || getId('win_messaging_top').style.display === 'none'){
                             this.notifPing.play();
-                            if(getId('winMSG').style.display === 'none'){
+                            if(getId('win_messaging_top').style.display === 'none'){
                                 apps.prompt.vars.notify(this.lastResponseObject.n + ' said:<br><br>' + this.parseBB(this.lastResponseObject.c),
                                     ['Show App', 'Dismiss'],
                                     function(btn){
@@ -9203,7 +9223,7 @@ c(function(){
                     //'<div onclick="apps.camera.vars.takePic()" style="cursor:url(cursors/pointer.png) 9 3, pointer; width:20px; height:20px; border-radius:10px; bottom:10px; left:310px; background-color:#557"></div>' +
                     '<canvas id="CAMcanvas" width="640" height="480" style="display:none"></canvas>'
                 );
-                getId('winCAMh').style.background = 'none';
+                getId('win_camera_html').style.background = 'none';
                 window.navigator.webkitGetUserMedia(
                     {"video": true},
                     function(stream){
@@ -9293,7 +9313,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 400, parseInt(getId('monitor').style.height, 10) / 2 - 255, 800, 500);
                 this.appWindow.setCaption('aOS Help');
-                getId('winHLPh').style.overflow = 'auto';
+                getId('win_help_h').style.overflow = 'auto';
                 this.vars.populateList();
             }
             this.appWindow.openWindow();
@@ -9677,7 +9697,7 @@ c(function(){
                             setContent: {
                                 '1': 'land',
                                 '2': 'Application.appWindow.setContent(newHTML)',
-                                helpPage: 'Sets the content of your window, in HTML. You can alternatively use <code>getId("win" + YOURDSKTPICON + "h").innerHTML = "new HTML content"</code>'
+                                helpPage: 'Sets the content of your window, in HTML. You can alternatively use <code>getId("win_" + YOURAPPNAME + "_html").innerHTML = "new HTML content"</code>'
                             },
                             fullscreenTempVars: {
                                 '1': 'land',
@@ -10734,26 +10754,26 @@ m('init finalizing');
 //function to open apps
 function toTop(appToNudge, dsktpClick){
     m('Moving App ' + appToNudge.dsktpIcon + ' to Top');
-    for(var appLication in apps){
-        if(dsktpClick !== 2){
-            if(getId("win" + apps[appLication].dsktpIcon).style.zIndex !== "100"){
-                getId("win" + apps[appLication].dsktpIcon).style.zIndex = parseInt(getId("win" + apps[appLication].dsktpIcon).style.zIndex, 10) - 1;
+    if(dsktpClick !== 2){
+        for(var appLication in apps){
+            if(getId("win_" + apps[appLication].objName + "_top").style.zIndex !== "100"){
+                getId("win_" + apps[appLication].objName + "_top").style.zIndex = parseInt(getId("win_" + apps[appLication].objName + "_top").style.zIndex, 10) - 1;
             }
-            getId("win" + apps[appLication].dsktpIcon + "c").style.opacity = ".5";
-            getId("win" + apps[appLication].dsktpIcon + "a").style.opacity = "1";
-            getId('icn' + apps[appLication].dsktpIcon).style.backgroundColor = '';
+            getId("win_" + apps[appLication].objName + "_cap").style.opacity = ".5";
+            getId("win_" + apps[appLication].objName + "_aero").style.opacity = "1";
+            getId('icn_' + apps[appLication].objName).style.backgroundColor = '';
         }
     }
     if(!dsktpClick){
-        if(appToNudge.appWindow.appIcon && getId("win" + appToNudge.dsktpIcon).style.opacity !== "1"){
+        if(appToNudge.appWindow.appIcon && getId("win_" + appToNudge.objName + "_top").style.opacity !== "1"){
             appToNudge.appWindow.openWindow();
         }
-        if(getId("win" + appToNudge.dsktpIcon).style.zIndex !== "100"){
-            getId("win" + appToNudge.dsktpIcon).style.zIndex = "90";
+        if(getId("win_" + appToNudge.objName + "_top").style.zIndex !== "100"){
+            getId("win_" + appToNudge.objName + "_top").style.zIndex = "90";
         }
-        getId("win" + appToNudge.dsktpIcon + "c").style.opacity = "1";
-        getId("win" + appToNudge.dsktpIcon + "a").style.opacity = "1";
-        getId('icn' + appToNudge.dsktpIcon).style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
+        getId("win_" + appToNudge.objName + "_cap").style.opacity = "1";
+        getId("win_" + appToNudge.objName + "_aero").style.opacity = "1";
+        getId('icn_' + appToNudge.objName).style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
         //getId("win" + appToNudge.dsktpIcon).style.boxShadow = "0 0 30px #000";
     }
     if(appToNudge !== apps.startMenu && apps.startMenu.appWindow.appIcon){
@@ -10764,15 +10784,15 @@ function toTop(appToNudge, dsktpClick){
     if(appToNudge.dsktpIcon !== "CLOSING"){
         var tempAppsList = [];
         for(var appLication in apps){
-            if(getId("win" + apps[appLication].dsktpIcon).style.zIndex !== "100" && apps[appLication].appWindow.appIcon){
-                tempAppsList.push([appLication, getId("win" + apps[appLication].dsktpIcon).style.zIndex]);
+            if(getId("win_" + apps[appLication].objName + "_top").style.zIndex !== "100" && apps[appLication].appWindow.appIcon){
+                tempAppsList.push([appLication, getId("win_" + apps[appLication].objName + "_top").style.zIndex]);
             }
         }
         tempAppsList.sort(function(a, b){
             return b[1] - a[1];
         });
         for(var i = 0; i < tempAppsList.length; i++){
-            getId("win" + apps[tempAppsList[i][0]].dsktpIcon).style.zIndex = 90 - i;
+            getId("win_" + apps[tempAppsList[i][0]].objName + "_top").style.zIndex = 90 - i;
         }
     }
 }
@@ -10811,13 +10831,16 @@ var winmovecurrapp = '';
 function winmove(e){
     if(e.currentTarget !== getId("winmove")){
         getId("winmove").style.display = "block";
-        winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 1);
+        //winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 1);
+        winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 4);
+        console.log(winmoveSelect);
         winmovex = e.pageX;
         winmovey = e.pageY;
         //winmoveOrX = parseInt(getId(winmoveSelect).style.left);
         //winmoveOrY = parseInt(getId(winmoveSelect).style.top);
         for(var app in apps){
-            if(apps[app].dsktpIcon == winmoveSelect.substring(3, winmoveSelect.length)){
+            //if(apps[app].dsktpIcon == winmoveSelect.substring(3, winmoveSelect.length)){
+            if(apps[app].objName == winmoveSelect.substring(4, winmoveSelect.length)){
                 winmovecurrapp = app;
                 break;
             }
@@ -11605,10 +11628,14 @@ if('serviceWorker' in navigator){
   window.addEventListener('load', function(){
     navigator.serviceWorker.register('/serviceworker.js').then(function(registration){
       // Registration was successful
-      doLog('ServiceWorker registration successful with scope: ' + registration.scope, '#ABCDEF');
+      //doLog('ServiceWorker registration successful with scope: ' + registration.scope, '#ABCDEF');
     }, function(err) {
       // registration failed :(
-      doLog('ServiceWorker registration failed: ' + err, '#F00');
+      try{
+        doLog('ServiceWorker registration failed: ' + err, '#F00');
+      }catch(err2){
+          console.log('ServiceWorker registration failed: ' + err);
+      }
     });
   });
 }
