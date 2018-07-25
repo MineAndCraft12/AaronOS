@@ -1791,6 +1791,9 @@ widgets.users = new Widget(
                         var userWidgetResponse = widgets.users.vars.xhttp.responseText.split('<br>');
                         widgets.users.vars.numberUsers = userWidgetResponse.shift();
                         widgets.users.vars.usersNames = userWidgetResponse;
+                        for(var i in widgets.users.vars.usersNames){
+                            widgets.users.vars.usersNames[i] = apps.messaging.vars.parseBB(widgets.users.vars.usersNames[i], 1);
+                        }
                         getId('widget_users').innerHTML = widgets.users.vars.numberUsers;
                         setTimeout(widgets.users.frame, 30000);
                     }
@@ -4656,7 +4659,7 @@ c(function(){
                     this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 4, parseInt(getId('desktop').style.height, 10) / 4, parseInt(getId('desktop').style.width, 10) / 2, parseInt(getId('desktop').style.height, 10) / 2);
                 }
                 this.appWindow.setCaption('Application Prompt');
-                this.appWindow.setContent('<div id="PMTdescription" style="text-align:center;width:100%;padding-top:16px;font-family:monospace;">This app is used for alerts and prompts in aOS apps.</div><div id="PMTbuttons" style="font-family:monospace;padding-bottom:16px;text-align:center;width:100%;bottom:0;"><button onClick="apps.prompt.signalHandler(\'close\')">OK</button></div></div>');
+                this.appWindow.setContent('<div id="PMTdescription" style="text-align:center;width:100%;height:calc(100% - 4em);padding-top:16px;font-family:monospace;overflow-y:auto">This app is used for alerts and prompts in aOS apps.</div><div id="PMTbuttons" style="font-family:monospace;padding-bottom:16px;text-align:center;width:100%;bottom:0;"><button onClick="apps.prompt.signalHandler(\'close\')">OK</button></div></div>');
                 getId("win_prompt_big").style.display = "none";
                 getId("win_prompt_exit").style.display = "none";
                 getId("win_prompt_shrink").style.display = "none";
@@ -7388,10 +7391,12 @@ c(function(){
             "06/21/2018: B0.8.3.1\n + Added padding that is enabled by default in all apps, however apps with special UI's are allowed to turn off the padding.\n : Tweaked green cutoff at red in music visualizer.\n\n" +
             "06/26/2018: B0.8.3.2\n : Not really an update, but the Music Visualizer icon is now displayed on the desktop.\n\n" +
             "07/11/2018: B0.8.4.0\n + Added [url] support to Messaging.\n : Rewrote the entire BBCode system in Messaging, is far more reliable and flexible. It can also support extension by developers now.\n\n" +
-            "07/20/2018: B0.8.5.0\n : Modified the way that aOS names window, taskbar, and desktop elements. No longer are three-letter ID's required to be unique, and there should be no more conflicts in HTML IDs.\n : Updated necessary apps, to work correctly with this change. Please ensure that your own custom-made apps and scripts reflect the change as well.",
+            "07/20/2018: B0.8.5.0\n : Modified the way that aOS names window, taskbar, and desktop elements. No longer are three-letter ID's required to be unique, and there should be no more conflicts in HTML IDs.\n : Updated necessary apps, to work correctly with this change. Please ensure that your own custom-made apps and scripts reflect the change as well.\n\n" +
+            "07/24/2018: B0.8.6.0\n + Added [color], [glow], [outline] to Messaging.\n + Messaging usernames can now use BBCode tags that are marked as safe.\n + Added formatting list to Messaging.\n : Fixed issue with resizing windows and moving app icons.\n\n" +
+            "07/25/2018: B0.8.6.1\n + Added [font] to Messaging.\n : Fixed BBCode rendering of usernames in Online Users widget and the Messaging notifications.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.5.0 (07/20/2018) r0';
+    window.aOSversion = 'B0.8.6.1 (07/25/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -8896,7 +8901,7 @@ c(function(){
             this.appWindow.setCaption('Messaging');
             getId('win_messaging_html').setAttribute('onclick', 'if(apps.messaging.vars.soundToPlay && apps.messaging.vars.canLookethOverThereSound){apps.messaging.vars.notifClick.play(); apps.messaging.vars.soundToPlay = 0;}');
             if(launchType === 'dsktp'){
-                this.appWindow.setContent('<div id="MSGdiv" style="width:100%;height:calc(100% - 24px);overflow-y:scroll;"></div><div style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div><button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button><input id="MSGinput" style="position:absolute;height:21px;width:80%;bottom:0;left:10%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';text-align:center;font-family:monospace"><button onclick="apps.messaging.vars.sendMessage()" style="position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>');
+                this.appWindow.setContent('<div id="MSGdiv" style="width:100%;height:calc(100% - 24px);overflow-y:scroll;"></div><div style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div><button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button><button style="position:absolute;bottom:0;height:24px;width:10%;left:10%;" onclick="apps.messaging.vars.doFormatting()">Formatting</button><input id="MSGinput" style="position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:monospace"><button onclick="apps.messaging.vars.sendMessage()" style="position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>');
                 this.vars.lastMsgRecieved = this.vars.lastMsgStart;
                 getId('MSGinput').setAttribute('onkeyup', 'if(event.keyCode === 13){apps.messaging.vars.sendMessage();}');
             }
@@ -8945,7 +8950,7 @@ c(function(){
         },
         {
             appInfo: 'The official AaronOS Messenger. Chat with the entire aOS community, all at once.<br><br>To set your name, go to Settings -&gt; 1, and enter a chat name.<br><br>To view past messages, go to Settings -&gt; 2, and enter in the number of past messages you wish to view.',
-            discussionTopic: 'AaronOS is on Discord! <a href="https://discord.gg/Y5Jytdm" target="_blank">https://discord.gg/Y5Jytdm</a><br>View Past Messages: Settings -&gt; 2 -&gt; Number of Messages',
+            discussionTopic: 'AaronOS is on Discord! <a href="https://discord.gg/Y5Jytdm" target="_blank">https://discord.gg/Y5Jytdm</a><br>View Past Messages: Settings -&gt; Load Past Messages',
             lastMsgRecieved: '-9',
             nameTemp: 'Anonymous',
             name: 'Anonymous',
@@ -8954,6 +8959,13 @@ c(function(){
             message: '',
             lastSetIn: '',
             lastMsgStart: '-9',
+            doFormatting: function(){
+                tempStr = '';
+                for(var i in apps.messaging.vars.objTypes){
+                    tempStr += '<hr><span style="background:#CCC;padding:3px;border-radius:3px;">[' + i + ']</span><br><br>' + (apps.messaging.vars.objDesc[i] || 'No description.') + '<br><br>Example:<br><br><span style="background:#CCC;padding:3px;border-radius:3px;">' + (apps.messaging.vars.objExamp[i] || 'No example.') + '</span><br><br>' + apps.messaging.vars.parseBB(apps.messaging.vars.objExamp[i] || '');
+                }
+                apps.prompt.vars.alert('Here are all the installed formatting tools:' + tempStr, 'Okay', function(){}, 'Messaging');
+            },
             doSettings: function(){
                 apps.prompt.vars.confirm('Choose a settings option below.', ['Cancel', 'Change Chat Name', 'Load Past Messages', 'Toggle Fun Geico Easter Egg'], function(txtIn){
                     apps.messaging.vars.lastSetIn = txtIn;
@@ -9066,8 +9078,8 @@ c(function(){
                     return '<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="' + str + '">';
                 },
                 url: function(str){
-                    if(str.indexOf('http') !== 0){
-                        str = 'http://' + str;
+                    if(str.indexOf('http://') !== 0 && str.indexOf('https://') !== 0 && str.indexOf('/') !== 0){
+                        str = 'https://' + str;
                     }
                     return '<a target="_blank" href="' + str + '">' + str + '</a>';
                 },
@@ -9079,9 +9091,114 @@ c(function(){
                 },
                 u: function(str){
                     return '<u>' + str + '</u>';
+                },
+                font: function(str){
+                    var strComma = str.indexOf(',');
+                    var strCommaSpace = str.indexOf(', ');
+                    var strSplit = '';
+                    if(strComma > -1){
+                        if(strCommaSpace === strComma){
+                            strSplit = str.split(', ');
+                            return '<span style="font-family:' + strSplit.shift().split(';')[0] + ', monospace;">' + strSplit.join(', ') + '</span>';
+                        }else{
+                            strSplit = str.split(',');
+                            return '<span style="font-family:' + strSplit.shift().split(';')[0] + ', monospace;">' + strSplit.join(',') + '</span>';
+                        }
+                    }else{
+                        return '[font]' + str + '[/font]';
+                    }
+                },
+                color: function(str){
+                    var strComma = str.indexOf(',');
+                    var strCommaSpace = str.indexOf(', ');
+                    var strSplit = '';
+                    if(strComma > -1){
+                        if(strCommaSpace === strComma){
+                            strSplit = str.split(', ');
+                            return '<span style="color:' + strSplit.shift().split(';')[0] + ';">' + strSplit.join(', ') + '</span>';
+                        }else{
+                            strSplit = str.split(',');
+                            return '<span style="color:' + strSplit.shift().split(';')[0] + ';">' + strSplit.join(',') + '</span>';
+                        }
+                    }else{
+                        return '[color]' + str + '[/color]';
+                    }
+                },
+                glow: function(str){
+                    var strComma = str.indexOf(',');
+                    var strCommaSpace = str.indexOf(', ');
+                    var strSplit = '';
+                    if(strComma > -1){
+                        if(strCommaSpace === strComma){
+                            strSplit = str.split(', ');
+                            return '<span style="text-shadow:0 0 5px ' + strSplit.shift().split(';')[0].split(' ')[0] + ';">' + strSplit.join(', ') + '</span>';
+                        }else{
+                            strSplit = str.split(',');
+                            return '<span style="text-shadow:0 0 5px ' + strSplit.shift().split(';')[0].split(' ')[0] + ';">' + strSplit.join(',') + '</span>';
+                        }
+                    }else{
+                        return '[glow]' + str + '[/glow]';
+                    }
+                },
+                outline: function(str){
+                    var strComma = str.indexOf(',');
+                    var strCommaSpace = str.indexOf(', ');
+                    var strSplit = '';
+                    if(strComma > -1){
+                        if(strCommaSpace === strComma){
+                            strSplit = str.split(', ');
+                            strShift = strSplit.shift().split(';')[0].split(' ')[0];
+                            return '<span style="text-shadow:1px 0 0 ' + strShift + ', -1px 0 0 ' + strShift + ', 0 1px 0 ' + strShift + ', 0 -1px 0 ' + strShift + ';">' + strSplit.join(', ') + '</span>';
+                        }else{
+                            strSplit = str.split(',');
+                            strShift = strSplit.shift().split(';')[0].split(' ')[0];
+                            return '<span style="text-shadow:1px 0 0 ' + strShift + ', -1px 0 0 ' + strShift + ', 0 1px 0 ' + strShift + ', 0 -1px 0 ' + strShift + ';">' + strSplit.join(',') + '</span>';
+                        }
+                    }else{
+                        return '[outline]' + str + '[/outline]';
+                    }
+                },
+                flip: function(str){
+                    return '<div style="transform:rotate(180deg);display:inline-block;position:relative">' + str + '</div>';
                 }
             },
-            parseBB: function(text){
+            objSafe: {
+                img: 0,
+                url: 0,
+                b: 1,
+                i: 1,
+                u: 1,
+                font: 1,
+                color: 1,
+                glow: 1,
+                outline: 1,
+                flip: 1
+            },
+            objDesc: {
+                img: 'Embed an image via URL.',
+                url: 'Format your text as a clickable URL.',
+                b: 'Format your text as bold.',
+                i: 'Format your text as italics.',
+                u: 'Format your text as underlined.',
+                font: 'Format your text with a font.',
+                color: 'Format your text with a color.',
+                glow: 'Format your text with a colorful glow.',
+                outline: 'Format your text with an outline.',
+                flip: 'Flip your text upside-down.'
+            },
+            objExamp: {
+                img: '[img]https://image.prntscr.com/image/jcPyuzbNTNu1cHgg18yaZg.png[/img]',
+                url: '[url]https://duckduckgo.com[/url]',
+                b: '[b]This is bold text.[/b]',
+                i: '[i]This is italic text.[/i]',
+                u: '[u]This is underlined text.[/u]',
+                font: '[font]Comic Sans MS, This text has a custom font.[/font]',
+                color: '[color]red, This is red text via name.[/color]<br><br>[color]#00AA00, This is green text via hex.[/color]',
+                glow: '[glow]red, This is glowy red text.[/glow]',
+                outline: '[outline]red, This is red outlined text.[/outline]',
+                flip: '[flip]This is upside-down text.[/flip]'
+            },
+            parseBB: function(text, safe){
                 var tempIn = text;
                 var tempPointer = tempIn.length - 6;
                 while(tempPointer >= 0){
@@ -9093,9 +9210,11 @@ c(function(){
                             if(this.objTypes[nextType]){
                                 var nextClose = tempIn.toLowerCase().indexOf('[/' + nextType + ']', nextEnd);
                                 if(nextClose > -1){
-                                    var replaceStr = tempIn.substring(nextEnd + 1, nextClose);
-                                    var newStr = this.objTypes[nextType](replaceStr);
-                                    tempIn = tempIn.substring(0, nextObj) + newStr + tempIn.substring(nextClose + 3 + nextType.length, tempIn.length);
+                                    if(!(safe && !this.objSafe[nextType])){
+                                        var replaceStr = tempIn.substring(nextEnd + 1, nextClose);
+                                        var newStr = this.objTypes[nextType](replaceStr);
+                                        tempIn = tempIn.substring(0, nextObj) + newStr + tempIn.substring(nextClose + 3 + nextType.length, tempIn.length);
+                                    }
                                 }
                             }
                         }
@@ -9116,10 +9235,10 @@ c(function(){
                     if(this.lastResponseObject.t){
                         if(this.lastResponseObject.n !== this.lastUserRecieved){
                             if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
-                                getId('MSGdiv').innerHTML += '<div style="color:#0A0; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right"><span style="color:transparent">' + this.lastResponseObject.l + '</span> ' + this.lastResponseObject.n + '</div>';
+                                getId('MSGdiv').innerHTML += '<div style="color:#0A0; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right"><span style="color:transparent">' + this.lastResponseObject.l + '</span> ' + this.parseBB(this.lastResponseObject.n, 1) + '</div>';
                                 getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
                             }else{
-                                getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right"><span style="color:transparent">' + this.lastResponseObject.l + '</span> ' + this.lastResponseObject.n + '</div>';
+                                getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right"><span style="color:transparent">' + this.lastResponseObject.l + '</span> ' + this.parseBB(this.lastResponseObject.n, 1) + '</div>';
                                 getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
                             }
                         }else{
@@ -9159,7 +9278,7 @@ c(function(){
                         if(!document.hasFocus() || getId('win_messaging_top').style.display === 'none'){
                             this.notifPing.play();
                             if(getId('win_messaging_top').style.display === 'none'){
-                                apps.prompt.vars.notify(this.lastResponseObject.n + ' said:<br><br>' + this.parseBB(this.lastResponseObject.c),
+                                apps.prompt.vars.notify(apps.messaging.vars.parseBB(this.lastResponseObject.n, 1) + ' said:<br><br>' + this.parseBB(this.lastResponseObject.c),
                                     ['Show App', 'Dismiss'],
                                     function(btn){
                                         if(btn === 0){
@@ -10895,7 +11014,7 @@ var icomoveOrY = 0;
 function icomove(e, elem){
     if(elem){
         getId("icomove").style.display = "block";
-        icomoveSelect = "app" + elem;
+        icomoveSelect = "app_" + elem;
         icomovex = e.pageX;
         icomovey = e.pageY;
         icomoveOrX = parseInt(getId(icomoveSelect).style.left, 10);
@@ -10948,11 +11067,16 @@ var tempwinrota = "";
 function winrot(e){
     if(e.currentTarget !== getId("winrot")){
         getId("winrot").style.display = "block";
-        winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 1);
+        //winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 1);
+        winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 5);
+        console.log(winmoveSelect);
         winmovex = e.pageX;
         winmovey = e.pageY;
+        //winmoveOrX = parseInt(getId(winmoveSelect).style.left);
+        //winmoveOrY = parseInt(getId(winmoveSelect).style.top);
         for(var app in apps){
-            if(apps[app].dsktpIcon == winmoveSelect.substring(3, winmoveSelect.length)){
+            //if(apps[app].dsktpIcon == winmoveSelect.substring(3, winmoveSelect.length)){
+            if(apps[app].objName == winmoveSelect.substring(4, winmoveSelect.length)){
                 winmovecurrapp = app;
                 break;
             }
@@ -11220,7 +11344,7 @@ var baseCtx = {
             openapp(apps[args[1]], 'dsktp');
         }, '/ctxMenu/beta/window.png'],
         ['+' + lang('ctxMenu', 'moveIcon'), function(args){
-            icomove(args[0], args[2]);
+            icomove(args[0], args[1]);
         }]
     ],
     icnXXX: [
