@@ -6438,7 +6438,7 @@ c(function(){
                                 if(USERFILES.APP_STN_scnsav_wikiRandom === '0'){
                                     getId('screensaverLayer').innerHTML = '<iframe src="https://en.wikipedia.org/wiki/Special:Random" style="pointer-events:none;border:none;width:100%;height:100%;"></iframe>';
                                 }else{
-                                    getId('screensaverLayer').innerHTML = '<iframe src="https://en.wikipedia.org/wiki/Special:Random" style="pointer-events:none;border:none;width:100%;height:100%;"></iframe><div style="top:10px;left:180px;font-size:108px;color:#557;font-family:aosProFont"><img src="/appicons/ds/aOS.png"><i>Screensaver</i></div>';
+                                    getId('screensaverLayer').innerHTML = '<iframe src="https://en.wikipedia.org/wiki/Special:Random" style="pointer-events:none;border:none;width:100%;height:100%;"></iframe><div style="top:10px;right:200px;font-size:108px;color:#557;font-family:aosProFont"><img src="/appicons/ds/aOS.png" style="width:128px;height:128px"><i>Screensaver</i></div>';
                                 }
                                 setTimeout(apps.settings.vars.screensavers.wikiRandom.vars.canRun, 180000);
                             }
@@ -7458,10 +7458,10 @@ c(function(){
             "07/24/2018: B0.8.6.0\n + Added [color], [glow], [outline] to Messaging.\n + Messaging usernames can now use BBCode tags that are marked as safe.\n + Added formatting list to Messaging.\n : Fixed issue with resizing windows and moving app icons.\n\n" +
             "07/25/2018: B0.8.6.1\n + Added [font] to Messaging.\n : Fixed BBCode rendering of usernames in Online Users widget and the Messaging notifications.\n\n" +
             "08/01/2018: B0.8.6.2\n : Made Glass Windows theme compatible with dark mode.\n : Fixed disappearing scrollbars in some Dashboard menus.\n : Fixed redundant scrollbar in some Dashboard menus.\n\n" +
-            "08/24/2018: B0.8.6.3\n + Apps can now temporarily block the screensaver. Useful for games, videos, etc.\n : Camera, Music Visualizer, IndyCar game, and House Game now block the screensaver.",
+            "08/24/2018: B0.8.6.3\n + Apps can now temporarily block the screensaver. Useful for games, videos, etc.\n : Fixed size and positioning of logo on Wikipedia screensaver.\n : Camera, Music Visualizer, IndyCar game, and House Game now block the screensaver.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.6.3 (08/24/2018) r0';
+    window.aOSversion = 'B0.8.6.3 (08/24/2018) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
