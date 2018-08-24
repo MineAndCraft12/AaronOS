@@ -337,6 +337,46 @@ perfStart('masterInitAOS');
 
 // screensaver system
 var screensaverRunning = 0;
+// screensaver blockers
+var screensaverBlocks = [];
+function countScreensaverBlocks(name){
+    if(!name){
+        name = "";
+    }
+    name = String(name).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+    var temp = 0;
+    for(var i in screensaverBlocks){
+        if(screensaverBlocks[i] === name){
+            temp++;
+        }
+    }
+    return temp;
+}
+function blockScreensaver(name){
+    if(!name){
+        name = "";
+    }
+    name = String(name).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+    screensaverBlocks.push(name);
+    return countScreensaverBlocks(name);
+}
+function unblockScreensaver(name, purge){
+    if(!name){
+        name = "";
+    }
+    name = String(name).split("&").join("&amp;").split("<").join("&lt;").split(">").join("&gt;");
+    if(screensaverBlocks.indexOf(name) === -1){
+        return -1;
+    }
+    if(purge){
+        while(screensaverBlocks.indexOf(name) > -1){
+            screensaverBlocks.splice(screensaverBlocks.indexOf(name), 1);
+        }
+        return 0;
+    }
+    screensaverBlocks.splice(screensaverBlocks.indexOf(name), 1);
+    return countScreensaverBlocks(name);
+}
 // previous mouse position
 var lastPageX = 0;
 var lastPageY = 0;
@@ -5648,6 +5688,28 @@ c(function(){
                         option: "Type of Screensaver",
                         description: function(){return 'Current: ' + apps.settings.vars.currScreensaver + ". This is the type of screensaver that aOS will select."},
                         buttons: function(){return apps.settings.vars.grabScreensavers()}
+                    },
+                    blocks: {
+                        option: "Screensaver Blocks",
+                        description: function(){return "If the screensaver is being blocked temporarily, the handles used to do so are displayed below. If you wish, you can click one to delete it, though this may lead to unexpected behavior."},
+                        buttons: function(){
+                            apps.settings.vars.screensaverBlockNames = [];
+                            var tempCount = [];
+                            var tempStr = '';
+                            for(var i in screensaverBlocks){
+                                var tempInd = apps.settings.vars.screensaverBlockNames.indexOf(screensaverBlocks[i]);
+                                if(tempInd > -1){
+                                    tempCount[tempInd]++;
+                                }else{
+                                    apps.settings.vars.screensaverBlockNames.push(screensaverBlocks[i]);
+                                    tempCount.push(1);
+                                }
+                            }
+                            for(var i in tempCount){
+                                tempStr += "<button onclick='unblockScreensaver(apps.settings.vars.screensaverBlockNames[" + i + "]);apps.settings.vars.showMenu(apps.settings.vars.menus.screensaver)'>" + apps.settings.vars.screensaverBlockNames[i] + ": " + tempCount[i] + "</button> ";
+                            }
+                            return tempStr;
+                        }
                     }
                 },
                 customStyles: {
@@ -5867,6 +5929,7 @@ c(function(){
                 '/tapet/t5_1080.png',
                 '/win98halo.png'
             ],
+            screensaverBlockNames: [],
             customStyleHttp: null,
             recievedCustomStyle: function(){
                 if(apps.settings.vars.customStyleHttp.readyState === 4){
@@ -6169,7 +6232,7 @@ c(function(){
                 return str + '';
             },
             checkScreensaver: function(){
-                if(apps.settings.vars.screensaverEnabled && !screensaverRunning){
+                if(apps.settings.vars.screensaverEnabled && !screensaverRunning && screensaverBlocks.length === 0){
                     if(perfCheck('userActivity') > apps.settings.vars.screensaverTime){
                         getId('screensaverLayer').style.display = "block";
                         apps.settings.vars.screensavers[apps.settings.vars.currScreensaver].start();
@@ -7394,10 +7457,11 @@ c(function(){
             "07/20/2018: B0.8.5.0\n : Modified the way that aOS names window, taskbar, and desktop elements. No longer are three-letter ID's required to be unique, and there should be no more conflicts in HTML IDs.\n : Updated necessary apps, to work correctly with this change. Please ensure that your own custom-made apps and scripts reflect the change as well.\n\n" +
             "07/24/2018: B0.8.6.0\n + Added [color], [glow], [outline] to Messaging.\n + Messaging usernames can now use BBCode tags that are marked as safe.\n + Added formatting list to Messaging.\n : Fixed issue with resizing windows and moving app icons.\n\n" +
             "07/25/2018: B0.8.6.1\n + Added [font] to Messaging.\n : Fixed BBCode rendering of usernames in Online Users widget and the Messaging notifications.\n\n" +
-            "08/01/2018: B0.8.6.2\n : Made Glass Windows theme compatible with dark mode.\n : Fixed disappearing scrollbars in some Dashboard menus.\n : Fixed redundant scrollbar in some Dashboard menus.",
+            "08/01/2018: B0.8.6.2\n : Made Glass Windows theme compatible with dark mode.\n : Fixed disappearing scrollbars in some Dashboard menus.\n : Fixed redundant scrollbar in some Dashboard menus.\n\n" +
+            "08/24/2018: B0.8.6.3\n + Apps can now temporarily block the screensaver. Useful for games, videos, etc.\n : Camera, Music Visualizer, IndyCar game, and House Game now block the screensaver.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
-    }; //changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.6.2 (08/01/2018) r2';
+    }; // changelog: (using this comment to make changelog easier for me to find)
+    window.aOSversion = 'B0.8.6.3 (08/24/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -9363,11 +9427,13 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 321, parseInt(getId('desktop').style.height, 10) / 2 - 251, 643, 502);
             }
+            blockScreensaver("apps.camera");
             this.appWindow.openWindow();
         },
         function(signal){
             switch(signal){
                 case "forceclose":
+                    unblockScreensaver("apps.camera", 1);
                     try{
                         getId('CAMvideo').pause();
                         getId('CAMvideo').src = "";
@@ -9380,6 +9446,7 @@ c(function(){
                     this.appWindow.closeIcon();
                     break;
                 case "close":
+                    unblockScreensaver("apps.camera", 1)
                     try{
                         getId('CAMvideo').pause();
                         getId('CAMvideo').src = "";
@@ -9955,16 +10022,19 @@ c(function(){
             }
             this.appWindow.setCaption('Music Visualizer');
             this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 515, parseInt(getId('monitor').style.height, 10) / 2 - 143, 1030, 309);
+            blockScreensaver("apps.musicVis");
             this.appWindow.openWindow();
         },
         function(signal){
             switch(signal){
                 case "forceclose":
+                    unblockScreensaver("apps.musicVis", 1);
                     //this.vars = this.varsOriginal;
                     this.appWindow.closeWindow();
                     this.appWindow.closeIcon();
                     break;
                 case "close":
+                    unblockScreensaver("apps.musicVis", 1);
                     this.appWindow.closeWindow();
                     this.appWindow.setContent("");
                     break;
@@ -10180,16 +10250,19 @@ c(function(){
                 this.appWindow.setContent('<iframe id="ICrFrame" src="INDYCAR/index.html" style="border:none;width:640px;height:480px;overflow:hidden;"></iframe>');
                 apps.prompt.vars.alert("Controls:<br><br>Player 1: WASD for driving, X for brakes<br><br>Player 2: IJKL or &uarr;&larr;&darr;&rarr; for driving, M for brakes<br><br>Camera: Press T to change camera modes.", "Okay", function(){}, "Indycar");
             }
+            blockScreensaver("apps.indycar");
             this.appWindow.openWindow();
         },
         function(signal){
             switch(signal){
                 case "forceclose":
+                    unblockScreensaver("apps.indycar", 1);
                     //this.vars = this.varsOriginal;
                     this.appWindow.closeWindow();
                     this.appWindow.closeIcon();
                     break;
                 case "close":
+                    unblockScreensaver("apps.indycar", 1);
                     this.appWindow.closeWindow();
                     this.appWindow.setCaption('IndyCar');
                     getId('ICrFrame').contentDocument.innerHTML = "";
@@ -10233,16 +10306,19 @@ c(function(){
                 this.appWindow.setContent('<iframe id="HsGFrame" src="HOUSEGAME/index.html" style="border:none;width:1009px;height:609px;overflow:hidden;"></iframe>');
                 apps.prompt.vars.notify("Controls:<br>Up: W<br>Down: D<br>Shoot: Space<br>Reinforcements: T", ["Close"], function(){}, "House Game", "appicons/HsG.png");
             }
+            blockScreensaver("apps.housegame");
             this.appWindow.openWindow();
         },
         function(signal){
             switch(signal){
                 case "forceclose":
+                    unblockScreensaver("apps.housegame", 1);
                     //this.vars = this.varsOriginal;
                     this.appWindow.closeWindow();
                     this.appWindow.closeIcon();
                     break;
                 case "close":
+                    unblockScreensaver("apps.housegame", 1);
                     this.appWindow.closeWindow();
                     this.appWindow.setCaption("House Game")
                     getId('HsGFrame').contentDocument.innerHTML = "";
