@@ -3,7 +3,9 @@
 //if(isset($_COOKIE['keyword'])){
     $dirstuff = array_diff(scandir('USERFILES/!MESSAGE'), array('..', '.'));
     $dirsize = count($dirstuff) - 1;
-    if($_GET['l'] === 'none'){
+    if(!isset($_GET['l'])){
+        $last = $dirsize - 1;
+    }else if($_GET['l'] === 'none'){
         $last = $dirsize - 3;
     }else{
         $last = $_GET['l'];
