@@ -7459,10 +7459,11 @@ c(function(){
             "07/25/2018: B0.8.6.1\n + Added [font] to Messaging.\n : Fixed BBCode rendering of usernames in Online Users widget and the Messaging notifications.\n\n" +
             "08/01/2018: B0.8.6.2\n : Made Glass Windows theme compatible with dark mode.\n : Fixed disappearing scrollbars in some Dashboard menus.\n : Fixed redundant scrollbar in some Dashboard menus.\n\n" +
             "08/24/2018: B0.8.6.3\n + Apps can now temporarily block the screensaver. Useful for games, videos, etc.\n : Fixed size and positioning of logo on Wikipedia screensaver.\n : Camera, Music Visualizer, IndyCar game, and House Game now block the screensaver.\n\n" +
-            "09/27/2018: B0.8.6.4\n : Slightly modified API for Messaging.",
+            "09/27/2018: B0.8.6.4\n : Slightly modified API for Messaging.\n\n" +
+            "10/06/2018: B0.8.7.0\n + Added [site] to messaging.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.6.4 (09/27/2018) r0';
+    window.aOSversion = 'B0.8.7.0 (10/06/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -8025,7 +8026,7 @@ c(function(){
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 150, 400, 300);
             }
             //this.appWindow.setContent('<button onClick="apps.aerotest.appWindow.setDims(50, 50, prompt(\'New window width?\'), prompt(\'New window height?\'))">Change Window Size</button>');
-            getId("win_aerotest_h").style.background = "none";
+            getId("win_aerotest_html").style.background = "none";
             this.appWindow.openWindow();
         },
         function(signal){
@@ -9149,6 +9150,12 @@ c(function(){
                     }
                     return '<a target="_blank" href="' + str + '">' + str + '</a>';
                 },
+                site: function(str){
+                    if(str.indexOf('http://') !== 0 && str.indexOf('https://') !== 0 && str.indexOf('/') !== 0){
+                        str = 'https://' + encodeURI(str);
+                    }
+                    return '<div style="position:relative;display:block;width:100%;border:none;background:#FFF;margin-top:-3px;margin-bottom:-3px;border-radius:10px;box-shadow:inset 0 0 5px #000;height:400px;" onclick="if(event.target.tagName.toLowerCase() === \'button\'){this.outerHTML = \'<iframe src=\\\'\' + this.getAttribute(\'aosMessagingSiteURL\') + \'\\\' style=\\\'\' + this.getAttribute(\'style\') + \'\\\'></iframe>\'}" aosMessagingSiteURL="' + str + '"><p style="margin-top:188px;text-align:center;"><button>Click to load site:<br>' + str + '</button></p></div>';
+                },
                 b: function(str){
                     return '<b>' + str + '</b>';
                 },
@@ -9231,6 +9238,7 @@ c(function(){
             objSafe: {
                 img: 0,
                 url: 0,
+                site: 0,
                 b: 1,
                 i: 1,
                 u: 1,
@@ -9243,6 +9251,7 @@ c(function(){
             objDesc: {
                 img: 'Embed an image via URL.',
                 url: 'Format your text as a clickable URL.',
+                site: 'Embed a website via URL',
                 b: 'Format your text as bold.',
                 i: 'Format your text as italics.',
                 u: 'Format your text as underlined.',
@@ -9255,6 +9264,7 @@ c(function(){
             objExamp: {
                 img: '[img]https://image.prntscr.com/image/jcPyuzbNTNu1cHgg18yaZg.png[/img]',
                 url: '[url]https://duckduckgo.com[/url]',
+                site: '[site]https://bing.com[/site]',
                 b: '[b]This is bold text.[/b]',
                 i: '[i]This is italic text.[/i]',
                 u: '[u]This is underlined text.[/u]',
