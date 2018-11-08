@@ -2,36 +2,54 @@
  display:none !important;
 }
 .winHTML{
- background-color:#404040;
- color:#D3D3D3;
+ background-color:#FFF;
+ color:#747474;
  border-radius:0;
 }
+ .darkMode .winHTML{
+  background-color:#404040;
+  color:#D3D3D3;
+ }
 .window{
- background-color:#2F2F2F;
+ background-color:#D9D9D9;
  border-radius:3px 3px 0 0;
 }
+ .darkMode .window{
+  background-color:#2F2F2F;
+ }
 #taskbar{
  background-color:#383838;
 }
 textarea, input{
- background-color:#414141;
+ background-color:#FFF;
  box-shadow:none;
- border:1px solid #252525;
+ border:1px solid #CFCFCF;
  border-radius:3px;
- color:#DADADA;
+ color:#747474;
 }
+ .darkMode textarea, .darkMode input{
+  background-color:#414141;
+  border:1px solid #252525;
+  color:#DADADA;
+ }
 textarea:hover, textarea:active, input:hover, input:active{
  box-shadow:none;
 }
 textarea:focus, input:focus{
- border-color:#8FA876;
+ border-color:#9AB87C;
  box-shadow:none;
 }
+ .darkMode textarea:focus, .darkMode input:focus{
+  border-color:#8FA876;
+ }
 .winExit, .winShrink, .winBig, .winFld{
- color:#666666;
+ color:#909090;
  border-color:transparent;
  margin-top:2px;
 }
+ .darkMode .winExit, .darkMode .winShrink, .darkMode .winBig, .darkMode .winFld{
+  color:#666666;
+ }
 .winExit:hover, .winShrink:hover, .winBig:hover, .winFld:hover{
  background-color:transparent;
  border-color:transparent;
@@ -41,47 +59,76 @@ textarea:focus, input:focus{
  border-color:transparent;
 }
 button{
- background-color:#444444;
+ background-color:#FCFDFD;
  box-shadow:none;
- color:#D3D3D3;
+ color:#747474;
  border-radius:3px;
- border:1px solid #2B2B2B;
+ border:1px solid #CFCFCF;
 }
+ .darkMode button{
+  background-color:#444444;
+  color:#D3D3D3;
+  border:1px solid #2B2B2B;
+ }
 button:hover, button:focus{
  box-shadow:none;
 }
 button:active{
  box-shadow:none;
- border-color:#8FA976;
+ border-color:#9AB87C;
 }
+ .darkMode button:active{
+  border-color:#8FA976;
+ }
 #notifWindow, #widgetMenu{
- background-color:#404040;
- border-color:#2F2F2F;
- color:#D3D3D3;
+ background-color:#FFF;
+ border-color:#D9D9D9;
+ color:#747474;
 }
+ .darkMode #notifWindow, .darkMode #widgetMenu{
+  background-color:#404040;
+  border-color:#2F2F2F;
+  color:#D3D3D3;
+ }
 #notifWindow .winExit, #widgetMenu .winExit{
- color:#2F2F2F !important;
+ color:#D9D9D9 !important;
  border-color:transparent !important;
 }
+ .darkMode #notifWindow .winExit, .darkMode #widgetMenu .winExit{
+  color:#2F2F2F !important;
+ }
 #notifWindow .winExit:active, #widgetMenu .winExit:active{
  color:#FF2F2F !important;
 }
 .winCap{
- box-shadow:inset 0 1px 0 0 #373737;
+ box-shadow:inset 0 1px 0 0 #EEE;
  border-radius:4px;
  margin-left:-3px;
  padding-left:26px;
  padding-right:3px;
 }
+ .darkMode .winCap{
+  box-shadow:inset 0 1px 0 0 #373737;
+ }
 #FILcntn{
- background-color:#404040 !important;
+ background-color:#FFF !important;
 }
+ .darkMode #FILcntn{
+  background-color:#404040 !important;
+ }
 #FILtopdiv div{
  background:none !important;
  border-color:transparent !important;
- color:#414141 !important;
+ color:#FFF !important;
 }
+ .darkMode #FILtopdiv div{
+  color:#414141 !important;
+ }
 #FILpath{
- color: #D3D3D3;
- background-color:#414141 !important;
+ color: #747474;
+ background-color:#FFF !important;
 }
+ .darkMode #FILpath{
+  color: #D3D3D3;
+  background-color:#414141 !important;
+ }

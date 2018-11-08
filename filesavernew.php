@@ -36,6 +36,34 @@
                 }else{
                     $filepath = 'USERFILES/'.$_POST['k'].'/'.str_replace('.', 'X', $_POST['f']).'.txt';
                 }
+                
+                $newUsers = fopen('USERFILES/newUsers.txt', 'r');
+                if(filesize('USERFILES/newUsers.txt') === 0){
+                    $newUsersList = array();
+                }else{
+                    $newUsersList = explode("\n", fread($newUsers, filesize('USERFILES/newUsers.txt')));
+                }
+                fclose($newUsers);
+                $newList = array();
+                $userFound = 0;
+                $user = 'none';
+                foreach($newUsersList as $user){
+                    if((int)substr($user, strpos($user, '=') + 1, strlen($user)) >= round(microtime(true) * 1000) - 120000){
+                        array_push($newList, $user);
+                        if(strpos($user, $_COOKIE['keyword']) === 0){
+                            echo 'Error - Your account is too new to save files, please wait a total of 30 seconds before creating your first file. This is to prevent a flood on the server.';
+                            $userFound = 1;
+                        }
+                    }
+                }
+                unset($user);
+                $newUsers = fopen('USERFILES/newUsers.txt', 'w');
+                fwrite($newUsers, join("\n", $newList));
+                fclose($newUsers);
+                if($userFound){
+                    die();
+                }
+                
                 $file = fopen($filepath, 'w');
                 //if($file){
                     //if(isset($_GET['rdp'])){

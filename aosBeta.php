@@ -48,6 +48,7 @@
     <!-- aOS computer screen and content inside on startup -->
     <div id="monitor" class="cursorDefault">
         <iframe id="liveBackground"></iframe>
+        <iframe id="prlxBackground" onload="try{if(apps.settings.vars.prlxBackgroundEnabled){apps.settings.vars.prlxBackgroundUsable = 1}}catch(err){}" onunload="try{apps.settings.vars.prlxBackgroundUsable = 0}catch(err){}"></iframe>
         <div id="desktop" onclick="try{exitFlowMode()}catch(err){}">
             <div id="hideall" onClick="toTop({dsktpIcon: 'DESKTOP'}, 1)"></div>
             <!--<div id="dsktpWidgets"></div>-->

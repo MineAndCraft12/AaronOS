@@ -161,7 +161,7 @@ div{
         aeroFriendly3 = url(http://i50.photobucket.com/albums/f331/HawaiiWirikidor/ththththStickPeople.gif)
         interesting1 = url(http://orig11.deviantart.net/dec2/f/2012/185/9/2/tileable_futuristic_grid_by_ndugger-d55yz5h.png)
     */
-    background-image:url(bgBeta.png);
+    background-image:url(p.png);
     /*background-size:cover;*/
     background-position:0 0;
     font-family:sans-serif;
@@ -221,15 +221,15 @@ div{
                 height:360px;
                 left:-40px;
                 top:-40px;
-                background-image:url(bgBeta.png);
+                background-image:url(p.png);
                 -webkit-filter:blur(5px);
                 filter:blur(5px);
                 opacity:1;
                 background-position: -485px -260px;
                 /*background-color:rgba(190, 190, 255, .6);*/
-                background-color:rgba(190, 190, 255, .6);
+                background-color:rgba(190, 190, 255, .3);
                 /*background-blend-mode:screen;*/
-                background-blend-mode:hard-light;
+                background-blend-mode:screen;
             }
                 #tskbrAero{
                     height: 70px;
@@ -711,7 +711,7 @@ div{
     z-index:9999999999999998;
     transition:opacity 1s;
     background-color:#000;
-    background-image:url('bgBeta.png');
+    background-image:url('p.png');
     filter:blur(10px);
     background-position:20px 20px;
 }
@@ -1003,6 +1003,18 @@ div{
 }
 
 #liveBackground{
+    position:absolute;
+    display:none;
+    border:none;
+    background:#FFF;
+    left:0;
+    top:0;
+    height:100%;
+    width:100%;
+    pointer-events:none;
+}
+
+#prlxBackground{
     position:absolute;
     display:none;
     border:none;

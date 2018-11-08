@@ -392,6 +392,13 @@ function markUserMouseActive(event){
         }
         lastPageX = event.pageX;
         lastPageY = event.pageY;
+        try{
+            if(apps.settings.vars.prlxBackgroundEnabled && apps.settings.vars.prlxBackgroundUsable){
+                apps.settings.vars.prlxBackgroundUpdate();
+            }
+        }catch(err){
+            // this error is to be supressed during boot. It is expected to occur.
+        }
     }
 }
 // user has used their keyboard
@@ -4931,12 +4938,12 @@ c(function(){
                     'Set Custom Resolution:<br><input id="STNscnresX">px by <input id="STNscnresY">px <button onclick="fitWindowRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Set aOS Screen Res</button><br>' +
                     '<button onclick="apps.settings.vars.reqFullscreen()">Enter Fullscreen</button> <button onclick="apps.settings.vars.endFullscreen()">Exit Fullscreen</button><hr>' +
                     '<b>Windows</b><br>' +
-                    'Window color: <input id="STNwinColorInput" placeholder="rgba(190, 190, 255, .6)" value="' + this.vars.currWinColor + '"> <button onClick="apps.settings.vars.setWinColor()">Set</button><br><br>' +
+                    'Window color: <input id="STNwinColorInput" placeholder="rgba(190, 190, 255, .3)" value="' + this.vars.currWinColor + '"> <button onClick="apps.settings.vars.setWinColor()">Set</button><br><br>' +
                     '<button onClick="apps.settings.vars.togAero()">Toggle Window Blur Effect</button><br>' +
                     '<i>Windowblur strength is how much windows blur the background. The default is 2, and large values may produce unintended results as well as lower the framerate.</i><br>' +
                     'Windowblur Strength: <input id="STNwinblurRadius" placeholder="5" value="' + this.vars.currWinblurRad + '"> <button onclick="apps.settings.vars.setAeroRad()">Set</button><br>' +
                     '<i>Window Blur uses a Blend Mode to determine how its color affects the background. Since people will have conflicting ideas on what is best, I give you the choice.</i><br>' +
-                    'Window Blur Blend Mode: <input id="STNwinBlendInput" placeholder="hard-light" value="' + this.vars.currWinBlend + '"> <button onClick="apps.settings.vars.setWinBlend()">Set</button><br>' +
+                    'Window Blur Blend Mode: <input id="STNwinBlendInput" placeholder="screen" value="' + this.vars.currWinBlend + '"> <button onClick="apps.settings.vars.setWinBlend()">Set</button><br>' +
                     'Window Blur Opacity: <input id="STNwinOpacInput" placeholder="1" value="' + this.vars.currWinOpac + '"> <button onClick="apps.settings.vars.setWinOpac()">Set</button><br>' +
                     'Window Background Image: <button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="winimg.png" value="' + this.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button><hr>' +
                     '<b>Taskbar</b><br>' +
@@ -5125,6 +5132,14 @@ c(function(){
                             if(typeof USERFILES.APP_STN_LIVEBG === "string"){
                                 apps.settings.vars.setLiveBg(USERFILES.APP_STN_LIVEBG, 1);
                             }
+                            if(typeof USERFILES.APP_STN_PRLXBG === "string"){
+                                apps.settings.vars.setPrlxBg(USERFILES.APP_STN_PRLXBG, 1);
+                            }
+                            if(typeof USERFILES.APP_STN_PRLXBG_ENABLED === "string"){
+                                if(USERFILES.APP_STN_PRLXBG_ENABLED === "1"){
+                                    apps.settings.vars.togPrlxBg(1);
+                                }
+                            }
                             if(typeof USERFILES.APP_STN_SETTING_BACKDROPFILTER === "string"){
                                 if(USERFILES.APP_STN_SETTING_BACKDROPFILTER === "1"){
                                     apps.settings.vars.togBackdropFilter(1);
@@ -5257,8 +5272,13 @@ c(function(){
                     },
                     liveBackground: {
                         option: 'Live Background',
-                        description: function(){return 'Live Background allows you to set a website as your desktop wallpaper. Live Background is not fully compatible with WindowBlur. Not all websites work in Live Background.'},
+                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.liveBackgroundEnabled)"></span>, Live Background allows you to set a website as your desktop wallpaper. Live Background is not fully compatible with WindowBlur. Not all websites work in Live Background.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togLiveBg()">Toggle</button> | <input id="STNliveBg" placeholder="URL to site" value="' + apps.settings.vars.liveBackgroundURL + '"> <button onclick="apps.settings.vars.setLiveBg(getId(\'STNliveBg\').value)">Set URL</button>'}
+                    },
+                    parallaxBackground: {
+                        option: 'Parallax Background',
+                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.prlxBackgroundEnabled)"></span>, Parallax Background allows you to create your own wallpapers with depth in them. The wallpaper moves around as you move your mouse. Provide a comma-separated list of image URLs. The first image is displayed at the bottom of the stack.'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.togPrlxBg()">Toggle</button> | <input id="STNprlxBg" placeholder="comma-separated image URLs" value="' + (apps.settings.vars.prlxBackgroundURLs || "/p1.png,/p2.png,/p3.png,/p4.png") + '"> <button onclick="apps.settings.vars.setPrlxBg(getId(\'STNprlxBg\').value)">Set URLs</button>'}
                     },
                     premade: {
                         option: 'aOS Backgrounds',
@@ -5487,7 +5507,7 @@ c(function(){
                     windowColor: {
                         option: 'Window Color',
                         description: function(){return 'Set the color of your window borders, as any CSS-compatible color.'},
-                        buttons: function(){return '<input id="STNwinColorInput" placeholder="rgba(190, 190, 255, .6)" value="' + apps.settings.vars.currWinColor + '"> <button onClick="apps.settings.vars.setWinColor()">Set</button>'}
+                        buttons: function(){return '<input id="STNwinColorInput" placeholder="rgba(190, 190, 255, .3)" value="' + apps.settings.vars.currWinColor + '"> <button onClick="apps.settings.vars.setWinColor()">Set</button>'}
                     },
                     darkMode: {
                         option: 'Dark Mode',
@@ -5512,7 +5532,7 @@ c(function(){
                     blurBlend: {
                         option: 'Windowblur Blend Mode',
                         description: function(){return 'Window Blur uses a Blend Mode to determine how its color affects the background. Since people will have conflicting ideas on what is best, I give you the choice.'},
-                        buttons: function(){return '<input id="STNwinBlendInput" placeholder="hard-light" value="' + apps.settings.vars.currWinBlend + '"> <button onClick="apps.settings.vars.setWinBlend()">Set</button>'}
+                        buttons: function(){return '<input id="STNwinBlendInput" placeholder="screen" value="' + apps.settings.vars.currWinBlend + '"> <button onClick="apps.settings.vars.setWinBlend()">Set</button>'}
                     },
                     fadeDist: {
                         option: 'Window Fade Distance',
@@ -5737,6 +5757,11 @@ c(function(){
                         description: function(){return 'Style aOS to look similar to how it did during the Alpha. Certain things may differ due to CSS limitations.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'/customStyles/aosAlpha/aosCustomStyle.css\');">Install</button>'}
                     },
+                    terminal: {
+                        option: 'Terminal',
+                        description: function(){return 'Style aOS to look like an old green-on-black terminal! Recommend enabling dark mode so apps know the background is dark, and disabling windowblur for performance.'},
+                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'/customStyles/terminal/aosCustomStyle.css\');">Install</button>'}
+                    },
                     glassWindows1: {
                         option: 'Glass Windows 1',
                         description: function(){return 'Style aOS will all-glass windows! This works on -most- apps, and gets rid of the default white background behind the apps. Now, the entire window is glass!'},
@@ -5754,8 +5779,8 @@ c(function(){
                     },
                     mintYDark: {
                         // put aaron's personal stylesheet here
-                        option: 'Mint-Y-Dark',
-                        description: function(){return 'Style aOS to look similar to Linux Mint\'s Mint-Y-Dark theme! Linux Mint is the property of the Linux Mint team - this is simply a user-made file that I have included in the library of custom content.'},
+                        option: 'Mint-Y',
+                        description: function(){return 'Style aOS to look similar to Linux Mint\'s Mint-Y theme! Compatible with Dark Mode! Linux Mint is the property of the Linux Mint team - this is simply a user-made file that I have included in the library of custom content.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'/customStyles/MintYDark/aosCustomStyle.css\');">Install</button>'}
                     },
                     win98: {
@@ -5934,7 +5959,7 @@ c(function(){
             recievedCustomStyle: function(){
                 if(apps.settings.vars.customStyleHttp.readyState === 4){
                     if(apps.settings.vars.customStyleHttp.status === 200){
-                        apps.savemaster.vars.save('aosCustomStyle', apps.settings.vars.customStyleHttp.responseText, 1);
+                        apps.savemaster.vars.save('aosCustomStyle', apps.settings.vars.customStyleHttp.responseText/*.split("\n").join("\\n")*/, 1);
                         getId('aosCustomStyle').innerHTML = USERFILES.aosCustomStyle;
                         apps.settings.vars.customStyleHttp = null;
                     }else{
@@ -6007,7 +6032,13 @@ c(function(){
             },
             liveBackgroundEnabled: 0,
             liveBackgroundURL: '',
+            prxlBackgroundEnabled: 0,
+            prlxBackgroundURLs: '/p1.png,/p2.png,/p3.png,/p4.png',
+            prlxBackgroundUsable: 0,
             togLiveBg: function(nosave){
+                if(apps.settings.vars.prlxBackgroundEnabled){
+                    apps.settings.vars.togPrlxBg();
+                }
                 if(apps.settings.vars.liveBackgroundEnabled){
                     apps.settings.vars.liveBackgroundEnabled = 0;
                     getId('liveBackground').style.display = 'none';
@@ -6029,6 +6060,35 @@ c(function(){
                 if(!nosave){
                     apps.savemaster.vars.save('APP_STN_LIVEBG', newURL, 1);
                 }
+            },
+            togPrlxBg: function(nosave){
+                if(apps.settings.vars.liveBackgroundEnabled){
+                    apps.settings.vars.togLiveBg();
+                }
+                if(apps.settings.vars.prlxBackgroundEnabled){
+                    apps.settings.vars.prlxBackgroundEnabled = 0;
+                    getId('prlxBackground').style.display = 'none';
+                    getId('prlxBackground').src = '';
+                }else{
+                    apps.settings.vars.prlxBackgroundEnabled = 1;
+                    getId('prlxBackground').style.display = 'block';
+                    getId('prlxBackground').src = 'prlxBg.php?img=' + encodeURIComponent(apps.settings.vars.prlxBackgroundURLs) + '#0,0';
+                }
+                if(!nosave){
+                    apps.savemaster.vars.save('APP_STN_PRLXBG_ENABLED', apps.settings.vars.prlxBackgroundEnabled, 1);
+                }
+            },
+            setPrlxBg: function(newURL, nosave){
+                apps.settings.vars.prlxBackgroundURLs = newURL;
+                if(apps.settings.vars.prlxBackgroundEnabled){
+                    getId('prlxBackground').src = 'prlxBg.php?img=' + encodeURIComponent(newURL) + '#0,0';
+                }
+                if(!nosave){
+                    apps.savemaster.vars.save('APP_STN_PRLXBG', newURL, 1);
+                }
+            },
+            prlxBackgroundUpdate: function(){
+                getId('prlxBackground').src = getId('prlxBackground').src.split('#')[0] + '#' + lastPageX + ',' + lastPageY;
             },
             tmpPasswordSet: '',
             newPassword: function(){
@@ -6470,8 +6530,8 @@ c(function(){
                 this.screensavers[type].selected();
                 apps.savemaster.vars.save("APP_STN_SETTING_SCREENSAVER", this.currScreensaver, 1);
             },
-            currWinColor: "rgba(190, 190, 255, .6)",
-            currWinBlend: "hard-light",
+            currWinColor: "rgba(190, 190, 255, .3)",
+            currWinBlend: "screen",
             currWinOpac: "1",
             currWinblurRad: "5",
             isAero: 1,
@@ -7460,10 +7520,14 @@ c(function(){
             "08/01/2018: B0.8.6.2\n : Made Glass Windows theme compatible with dark mode.\n : Fixed disappearing scrollbars in some Dashboard menus.\n : Fixed redundant scrollbar in some Dashboard menus.\n\n" +
             "08/24/2018: B0.8.6.3\n + Apps can now temporarily block the screensaver. Useful for games, videos, etc.\n : Fixed size and positioning of logo on Wikipedia screensaver.\n : Camera, Music Visualizer, IndyCar game, and House Game now block the screensaver.\n\n" +
             "09/27/2018: B0.8.6.4\n : Slightly modified API for Messaging.\n\n" +
-            "10/06/2018: B0.8.7.0\n + Added [site] to messaging.",
+            "10/06/2018: B0.8.7.0\n + Added [site] to messaging.\n\n" +
+            "10/11/2018: B0.8.7.1\n : Fixed an issue that recently came up, where any files with newlines would crash aOS on boot.\n\n" +
+            "10/12/2018: B0.8.8.0\n + New default wallpaper and window color!\n + New Parallax Background option in Settings -> Background. Your wallpaper scrolls around when you move your mouse!\n : Fixed issues with CustomStyles.\n\n" +
+            "11/07/2018: B0.8.8.1\n + New custom style preset, Terminal!\n\n" +
+            "11/08/2018: B0.8.9.0\n + Added new Minesweeper clone for aOS!\n + The Linux Mint custom style now obeys light / dark mode settings!",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.7.0 (10/06/2018) r0';
+    window.aOSversion = 'B0.8.9.0 (11/08/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -8079,7 +8143,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 25, 600, 50);
             }
-            this.appWindow.setContent("This is useless unless you are an app developer. Please don't.");
+            this.appWindow.setContent("This app handles filesaving. It does nothing aside from that.");
             this.appWindow.openWindow();
         },
         function(signal){
@@ -10901,6 +10965,282 @@ c(function(){
         {
             appInfo: 'The Cookie Clicker clone written by Aaron, the aOS developer, and Joseph, the developer of JAOS. It\'s actually pretty addicting.'
         }, 1, 'cookieClicker', '/appicons/ds/CCl.png'
+    );
+    getId('aOSloadingInfo').innerHTML = 'Initializing Minesweeper';
+});
+c(function(){
+    apps.minesweeper = new Application(
+        'MSw',
+        'Minesweeper',
+        0,
+        function(){
+            if(!this.appIcon){
+                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 400, parseInt(getId('monitor').style.height, 10) / 2 - 300, 492, 561);
+                this.appWindow.setCaption('Minesweeper');
+                getId("win_minesweeper_html").style.overflow = "auto";
+                this.appWindow.setContent('<div id="MSwField" style="margin-bottom:3px;"></div><div id="MSwControls"><button onclick="apps.minesweeper.vars.newGame()">New Game</button> <button onclick="apps.minesweeper.vars.settings()">Settings</button> <span style="font-family:aosProFont;font-size:12px;">Mines: <span id="MSwMines">0</span>, Flags: <span id="MSwFlags">0</span></span><br>Left Click to break blocks.<br>Right Click to place flags.</div>');
+                this.appWindow.openWindow();
+                this.vars.newGame();
+            }
+            this.appWindow.openWindow();
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    this.appWindow.setContent("");
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        },
+        {
+            appInfo: 'The Minesweeper clone written for aOS.',
+            dims: [8, 8],
+            mines: 10,
+            flags: 0,
+            minefield: [
+                [0, 0],
+                [0, 0]
+            ],
+            flagfield: [
+                [0, 0],
+                [0, 0]
+            ],
+            newGame: function(){
+                this.flagfield = [];
+                for(var i = 0; i < this.dims[1]; i++){
+                    this.flagfield.push([]);
+                    for(var j = 0; j < this.dims[0]; j++){
+                        this.flagfield[i].push(0);
+                    }
+                }
+                
+                this.minefield = [];
+                for(var i = 0; i < this.dims[1]; i++){
+                    this.minefield.push([]);
+                    for(var j = 0; j < this.dims[0]; j++){
+                        this.minefield[i].push(0);
+                    }
+                }
+                
+                this.flags = 0;
+                while(this.flags < this.mines){
+                    var tempX = Math.floor(Math.random() * this.dims[0]);
+                    var tempY = Math.floor(Math.random() * this.dims[1]);
+                    if(!this.minefield[tempY][tempX]){
+                        this.minefield[tempY][tempX] = 1;
+                        this.flags++;
+                    }
+                }
+                this.flags = 0;
+                
+                var tempHTML = "<br><br><br>";
+                for(var i in this.minefield){
+                    tempHTML += "<div style='font-size:0;position:relative;white-space:nowrap;'>";
+                    for(var j in this.minefield[i]){
+                        tempHTML += "<button id='MSwB" + j + "x" + i + "' onclick='apps.minesweeper.vars.checkBlock(" + j + "," + i + ")' oncontextmenu='apps.minesweeper.vars.flagBlock(" + j + "," + i + ");event.stopPropagation();return false;' style='width:20px;height:20px;'></button>";
+                        tempHTML += "<div id='MSwF" + j + "x" + i + "' style='position:relative;background:none !important;display:inline-block;width:20px;margin-left:-13px;margin-right:-7px;font-family:aosProFont;font-size:12px;pointer-events:none;'></div>"
+                    }
+                    tempHTML += "<div style='position:relative;background:none !important;display:inline-block;width:3px;margin:0px;height:3px;pointer-events:none;'></div></div>";
+                }
+                getId("MSwField").innerHTML = tempHTML;
+                getId("MSwMines").innerHTML = this.mines;
+                getId("MSwFlags").innerHTML = this.flags;
+            },
+            settings: function(){
+                apps.prompt.vars.confirm("Please choose a difficulty level:", ["Cancel", "Beginner (8x8, 10)", "Intermediate (16x16, 40)", "Expert (24x24, 99)", "Custom"], function(btn){
+                    if(btn){
+                        switch(btn){
+                            case 1:
+                                apps.minesweeper.vars.dims = [8, 8];
+                                apps.minesweeper.vars.mines = 10;
+                                apps.minesweeper.vars.newGame();
+                                break;
+                            case 2:
+                                apps.minesweeper.vars.dims = [16, 16];
+                                apps.minesweeper.vars.mines = 40;
+                                apps.minesweeper.vars.newGame();
+                                break;
+                            case 3:
+                                apps.minesweeper.vars.dims = [24, 24];
+                                apps.minesweeper.vars.mines = 99;
+                                apps.minesweeper.vars.newGame();
+                                break;
+                            case 4:
+                                apps.prompt.vars.prompt("How wide will your minefield be?", "Next", function(width){
+                                    apps.prompt.vars.prompt("How tall will your minefield be?", "Next", function(height){
+                                        apps.prompt.vars.prompt("How many bombs will your minefield contain?", "Submit", function(numOfMines){
+                                            if(parseInt(width) > 0 && parseInt(height) > 0 && parseInt(numOfMines) <= parseInt(width) * parseInt(height) && parseInt(numOfMines) >= 0){
+                                                apps.minesweeper.vars.dims = [parseInt(width), parseInt(height)];
+                                                apps.minesweeper.vars.mines = parseInt(numOfMines);
+                                                apps.minesweeper.vars.newGame();
+                                            }else{
+                                                apps.prompt.vars.alert("Failed to start game, one of your rules is invalid.<br><br>Width: " + parseInt(width) + "<br>Height: " + parseInt(height) + "<br>Bombs:" + parseInt(numOfMines), "Okay", function(){}, "Minesweeper");
+                                            }
+                                        });
+                                    }, "Minesweeper")
+                                }, "Minesweeper");
+                                break;
+                            default:
+                                apps.prompt.vars.notify("Error - unknown menu option.", ["Oof"], function(){}, "Minesweeper", "/appicons/ds/aOS.png");
+                        }
+                    }
+                }, "Minesweeper");
+            },
+            flagBlock: function(x, y){
+                if(this.flagfield[y][x]){
+                    this.flagfield[y][x] = 0;
+                    getId("MSwF" + x + "x" + y).innerHTML = "";
+                    this.flags--;
+                }else{
+                    this.flagfield[y][x] = 1;
+                    getId("MSwF" + x + "x" + y).innerHTML = "F";
+                    this.flags++;
+                }
+                getId("MSwFlags").innerHTML = this.flags;
+                if(this.flags === this.mines){
+                    this.showMines();
+                }
+            },
+            checkBlock: function(x, y){
+                if(this.blockModdable(x, y)){
+                    getId("MSwB" + x + "x" + y).style.opacity = "0.1";
+                    getId("MSwB" + x + "x" + y).style.pointerEvents = "none";
+                    if(this.flagfield[y][x]){
+                        this.flagfield[y][x] = 0;
+                        getId("MSwF" + x + "x" + y).innerHTML = "";
+                        this.flags--;
+                    }else{
+                        if(this.minefield[y][x]){
+                            this.showMines();
+                        }else{
+                            var nearby = 0;
+                            try{
+                                if(this.minefield[y - 1][x - 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y - 1][x]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y - 1][x + 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y][x - 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y][x + 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y + 1][x - 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y + 1][x]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y + 1][x + 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            if(nearby){
+                                getId("MSwF" + x + "x" + y).innerHTML = nearby;
+                                getId("MSwF" + x + "x" + y).style.opacity = "0.5";
+                            }else{
+                                if(this.blockModdable(x - 1, y - 1)){
+                                    this.checkBlock(x - 1, y - 1);
+                                }
+                                if(this.blockModdable(x, y - 1)){
+                                    this.checkBlock(x, y - 1);
+                                }
+                                if(this.blockModdable(x + 1, y - 1)){
+                                    this.checkBlock(x + 1, y - 1);
+                                }
+                                if(this.blockModdable(x - 1, y)){
+                                    this.checkBlock(x - 1, y - 1);
+                                }
+                                if(this.blockModdable(x + 1, y)){
+                                    this.checkBlock(x + 1, y);
+                                }
+                                if(this.blockModdable(x - 1, y + 1)){
+                                    this.checkBlock(x - 1, y + 1);
+                                }
+                                if(this.blockModdable(x, y + 1)){
+                                    this.checkBlock(x, y + 1);
+                                }
+                                if(this.blockModdable(x + 1, y + 1)){
+                                    this.checkBlock(x + 1, y + 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            blockModdable: function(x, y){
+                if(x > this.dims[0] - 1 || y > this.dims[1] - 1){
+                    return false;
+                }
+                if(x < 0 || y < 0){
+                    return false;
+                }
+                if(this.flagfield[y][x]){
+                    return false;
+                }
+                if(getId("MSwB" + x + "x" + y).style.pointerEvents === "none"){
+                    return false;
+                }
+                return true;
+            },
+            showMines: function(){
+                for(var i in this.minefield){
+                    for(var j in this.minefield[i]){
+                        getId("MSwB" + j + "x" + i).style.pointerEvents = "none";
+                        if(this.minefield[i][j]){
+                            if(this.flagfield[i][j]){
+                                getId("MSwF" + j + "x" + i).innerHTML = "<b>F</b>";
+                                getId("MSwF" + j + "x" + i).style.color = "#0A0";
+                            }else{
+                                getId("MSwF" + j + "x" + i).innerHTML = "<b>B</b>";
+                                getId("MSwF" + j + "x" + i).style.color = "#F00";
+                            }
+                        }
+                    }
+                }
+            }
+        }, 0, 'minesweeper', '/appicons/ds/aOS.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Finalizing...';
 });
