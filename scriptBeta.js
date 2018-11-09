@@ -7524,10 +7524,11 @@ c(function(){
             "10/11/2018: B0.8.7.1\n : Fixed an issue that recently came up, where any files with newlines would crash aOS on boot.\n\n" +
             "10/12/2018: B0.8.8.0\n + New default wallpaper and window color!\n + New Parallax Background option in Settings -> Background. Your wallpaper scrolls around when you move your mouse!\n : Fixed issues with CustomStyles.\n\n" +
             "11/07/2018: B0.8.8.1\n + New custom style preset, Terminal!\n\n" +
-            "11/08/2018: B0.8.9.0\n + Added new Minesweeper clone for aOS!\n + The Linux Mint custom style now obeys light / dark mode settings!",
+            "11/08/2018: B0.8.9.0\n + Added new Minesweeper clone for aOS!\n + The Linux Mint custom style now obeys light / dark mode settings!\n\n" +
+            "11/09/2018: B0.8.9.1\n : The first move in Minesweeper cannot land on a bomb.\n : Adjusted placement of text in Minesweeper.\n : Fixed issue in Minesweeper where empty regions wouldn't clear all the way.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.9.0 (11/08/2018) r0';
+    window.aOSversion = 'B0.8.9.1 (11/09/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -10975,11 +10976,11 @@ c(function(){
         0,
         function(){
             if(!this.appIcon){
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 400, parseInt(getId('monitor').style.height, 10) / 2 - 300, 492, 561);
+                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 246, parseInt(getId('monitor').style.height, 10) / 2 - 280, 492, 561);
                 this.appWindow.setCaption('Minesweeper');
                 getId("win_minesweeper_html").style.overflow = "auto";
-                this.appWindow.setContent('<div id="MSwField" style="margin-bottom:3px;"></div><div id="MSwControls"><button onclick="apps.minesweeper.vars.newGame()">New Game</button> <button onclick="apps.minesweeper.vars.settings()">Settings</button> <span style="font-family:aosProFont;font-size:12px;">Mines: <span id="MSwMines">0</span>, Flags: <span id="MSwFlags">0</span></span><br>Left Click to break blocks.<br>Right Click to place flags.</div>');
-                this.appWindow.openWindow();
+                this.appWindow.setContent('<div id="MSwField" style="margin-bottom:3px;"></div><div id="MSwControls"><button onclick="apps.minesweeper.vars.firstTurn = 1;apps.minesweeper.vars.newGame()">New Game</button> <button onclick="apps.minesweeper.vars.settings()">Settings</button> <span style="font-family:aosProFont;font-size:12px;">Mines: <span id="MSwMines">0</span>, Flags: <span id="MSwFlags">0</span></span><br>Dig = Left Click | Flag = Right Click</div>');
+                this.vars.firstTurn = 1;
                 this.vars.newGame();
             }
             this.appWindow.openWindow();
@@ -11027,47 +11028,51 @@ c(function(){
                 [0, 0],
                 [0, 0]
             ],
-            newGame: function(){
-                this.flagfield = [];
-                for(var i = 0; i < this.dims[1]; i++){
-                    this.flagfield.push([]);
-                    for(var j = 0; j < this.dims[0]; j++){
-                        this.flagfield[i].push(0);
+            newGame: function(firstX, firstY){
+                if(this.firstTurn){
+                    this.flagfield = [];
+                    for(var i = 0; i < this.dims[1]; i++){
+                        this.flagfield.push([]);
+                        for(var j = 0; j < this.dims[0]; j++){
+                            this.flagfield[i].push(0);
+                        }
                     }
-                }
-                
-                this.minefield = [];
-                for(var i = 0; i < this.dims[1]; i++){
-                    this.minefield.push([]);
-                    for(var j = 0; j < this.dims[0]; j++){
-                        this.minefield[i].push(0);
+                    
+                    this.minefield = [];
+                    for(var i = 0; i < this.dims[1]; i++){
+                        this.minefield.push([]);
+                        for(var j = 0; j < this.dims[0]; j++){
+                            this.minefield[i].push(0);
+                        }
                     }
-                }
-                
-                this.flags = 0;
-                while(this.flags < this.mines){
-                    var tempX = Math.floor(Math.random() * this.dims[0]);
-                    var tempY = Math.floor(Math.random() * this.dims[1]);
-                    if(!this.minefield[tempY][tempX]){
-                        this.minefield[tempY][tempX] = 1;
-                        this.flags++;
+                }else{
+                    this.flags = 0;
+                    while(this.flags < this.mines){
+                        var tempX = Math.floor(Math.random() * this.dims[0]);
+                        var tempY = Math.floor(Math.random() * this.dims[1]);
+                        if(!this.minefield[tempY][tempX] && !(tempX === firstX && tempY === firstY)){
+                            this.minefield[tempY][tempX] = 1;
+                            this.flags++;
+                        }
                     }
+                    this.flags = 0;
                 }
-                this.flags = 0;
-                
-                var tempHTML = "<br><br><br>";
-                for(var i in this.minefield){
-                    tempHTML += "<div style='font-size:0;position:relative;white-space:nowrap;'>";
-                    for(var j in this.minefield[i]){
-                        tempHTML += "<button id='MSwB" + j + "x" + i + "' onclick='apps.minesweeper.vars.checkBlock(" + j + "," + i + ")' oncontextmenu='apps.minesweeper.vars.flagBlock(" + j + "," + i + ");event.stopPropagation();return false;' style='width:20px;height:20px;'></button>";
-                        tempHTML += "<div id='MSwF" + j + "x" + i + "' style='position:relative;background:none !important;display:inline-block;width:20px;margin-left:-13px;margin-right:-7px;font-family:aosProFont;font-size:12px;pointer-events:none;'></div>"
+                if(this.firstTurn){
+                    var tempHTML = "<br><br><br>";
+                    for(var i in this.minefield){
+                        tempHTML += "<div style='font-size:0;position:relative;white-space:nowrap;'>";
+                        for(var j in this.minefield[i]){
+                            tempHTML += "<button id='MSwB" + j + "x" + i + "' onclick='apps.minesweeper.vars.checkBlock(" + j + "," + i + ")' oncontextmenu='apps.minesweeper.vars.flagBlock(" + j + "," + i + ");event.stopPropagation();return false;' style='width:20px;height:20px;'></button>";
+                            tempHTML += "<div id='MSwF" + j + "x" + i + "' style='position:relative;background:none !important;display:inline-block;width:20px;margin-left:-13px;margin-right:-7px;margin-bottom:1px;font-family:aosProFont;font-size:12px;pointer-events:none;'></div>"
+                        }
+                        tempHTML += "<div style='position:relative;background:none !important;display:inline-block;width:3px;margin:0px;height:3px;pointer-events:none;'></div></div>";
                     }
-                    tempHTML += "<div style='position:relative;background:none !important;display:inline-block;width:3px;margin:0px;height:3px;pointer-events:none;'></div></div>";
+                    getId("MSwField").innerHTML = tempHTML;
+                    getId("MSwMines").innerHTML = this.mines;
+                    getId("MSwFlags").innerHTML = this.flags;
                 }
-                getId("MSwField").innerHTML = tempHTML;
-                getId("MSwMines").innerHTML = this.mines;
-                getId("MSwFlags").innerHTML = this.flags;
             },
+            firstTurn: 1,
             settings: function(){
                 apps.prompt.vars.confirm("Please choose a difficulty level:", ["Cancel", "Beginner (8x8, 10)", "Intermediate (16x16, 40)", "Expert (24x24, 99)", "Custom"], function(btn){
                     if(btn){
@@ -11075,25 +11080,29 @@ c(function(){
                             case 1:
                                 apps.minesweeper.vars.dims = [8, 8];
                                 apps.minesweeper.vars.mines = 10;
+                                apps.minesweeper.vars.firstTurn = 1;
                                 apps.minesweeper.vars.newGame();
                                 break;
                             case 2:
                                 apps.minesweeper.vars.dims = [16, 16];
                                 apps.minesweeper.vars.mines = 40;
+                                apps.minesweeper.vars.firstTurn = 1;
                                 apps.minesweeper.vars.newGame();
                                 break;
                             case 3:
                                 apps.minesweeper.vars.dims = [24, 24];
                                 apps.minesweeper.vars.mines = 99;
+                                apps.minesweeper.vars.firstTurn = 1;
                                 apps.minesweeper.vars.newGame();
                                 break;
                             case 4:
                                 apps.prompt.vars.prompt("How wide will your minefield be?", "Next", function(width){
                                     apps.prompt.vars.prompt("How tall will your minefield be?", "Next", function(height){
                                         apps.prompt.vars.prompt("How many bombs will your minefield contain?", "Submit", function(numOfMines){
-                                            if(parseInt(width) > 0 && parseInt(height) > 0 && parseInt(numOfMines) <= parseInt(width) * parseInt(height) && parseInt(numOfMines) >= 0){
+                                            if(parseInt(width) > 0 && parseInt(height) > 0 && parseInt(numOfMines) < parseInt(width) * parseInt(height) && parseInt(numOfMines) >= 0){
                                                 apps.minesweeper.vars.dims = [parseInt(width), parseInt(height)];
                                                 apps.minesweeper.vars.mines = parseInt(numOfMines);
+                                                apps.minesweeper.vars.firstTurn = 1;
                                                 apps.minesweeper.vars.newGame();
                                             }else{
                                                 apps.prompt.vars.alert("Failed to start game, one of your rules is invalid.<br><br>Width: " + parseInt(width) + "<br>Height: " + parseInt(height) + "<br>Bombs:" + parseInt(numOfMines), "Okay", function(){}, "Minesweeper");
@@ -11109,101 +11118,107 @@ c(function(){
                 }, "Minesweeper");
             },
             flagBlock: function(x, y){
-                if(this.flagfield[y][x]){
-                    this.flagfield[y][x] = 0;
-                    getId("MSwF" + x + "x" + y).innerHTML = "";
-                    this.flags--;
-                }else{
-                    this.flagfield[y][x] = 1;
-                    getId("MSwF" + x + "x" + y).innerHTML = "F";
-                    this.flags++;
-                }
-                getId("MSwFlags").innerHTML = this.flags;
-                if(this.flags === this.mines){
-                    this.showMines();
-                }
-            },
-            checkBlock: function(x, y){
-                if(this.blockModdable(x, y)){
-                    getId("MSwB" + x + "x" + y).style.opacity = "0.1";
-                    getId("MSwB" + x + "x" + y).style.pointerEvents = "none";
+                if(!this.firstTurn){
                     if(this.flagfield[y][x]){
                         this.flagfield[y][x] = 0;
                         getId("MSwF" + x + "x" + y).innerHTML = "";
                         this.flags--;
                     }else{
-                        if(this.minefield[y][x]){
-                            this.showMines();
+                        this.flagfield[y][x] = 1;
+                        getId("MSwF" + x + "x" + y).innerHTML = "F";
+                        this.flags++;
+                    }
+                    getId("MSwFlags").innerHTML = this.flags;
+                    if(this.flags === this.mines){
+                        this.showMines();
+                    }
+                }
+            },
+            checkBlock: function(x, y){
+                if(this.firstTurn){
+                    this.firstTurn = 0;
+                    this.newGame(x, y);
+                }
+                if(this.flagfield[y][x]){
+                    /*
+                    this.flagfield[y][x] = 0;
+                    getId("MSwF" + x + "x" + y).innerHTML = "";
+                    this.flags--;
+                    */
+                }else{
+                    getId("MSwB" + x + "x" + y).style.opacity = "0.1";
+                    getId("MSwB" + x + "x" + y).style.pointerEvents = "none";
+                    if(this.minefield[y][x]){
+                        this.showMines();
+                    }else{
+                        var nearby = 0;
+                        try{
+                            if(this.minefield[y - 1][x - 1]){
+                                nearby++;
+                            }
+                        }catch(minefieldEdge){}
+                        try{
+                            if(this.minefield[y - 1][x]){
+                                nearby++;
+                            }
+                        }catch(minefieldEdge){}
+                        try{
+                            if(this.minefield[y - 1][x + 1]){
+                                nearby++;
+                            }
+                        }catch(minefieldEdge){}
+                        try{
+                            if(this.minefield[y][x - 1]){
+                                nearby++;
+                            }
+                        }catch(minefieldEdge){}
+                        try{
+                            if(this.minefield[y][x + 1]){
+                                nearby++;
+                            }
+                        }catch(minefieldEdge){}
+                        try{
+                            if(this.minefield[y + 1][x - 1]){
+                                nearby++;
+                            }
+                        }catch(minefieldEdge){}
+                        try{
+                            if(this.minefield[y + 1][x]){
+                                nearby++;
+                            }
+                        }catch(minefieldEdge){}
+                        try{
+                            if(this.minefield[y + 1][x + 1]){
+                                nearby++;
+                            }
+                        }catch(minefieldEdge){}
+                        if(nearby){
+                            getId("MSwF" + x + "x" + y).innerHTML = nearby;
+                            getId("MSwF" + x + "x" + y).style.opacity = "0.5";
                         }else{
-                            var nearby = 0;
-                            try{
-                                if(this.minefield[y - 1][x - 1]){
-                                    nearby++;
-                                }
-                            }catch(minefieldEdge){}
-                            try{
-                                if(this.minefield[y - 1][x]){
-                                    nearby++;
-                                }
-                            }catch(minefieldEdge){}
-                            try{
-                                if(this.minefield[y - 1][x + 1]){
-                                    nearby++;
-                                }
-                            }catch(minefieldEdge){}
-                            try{
-                                if(this.minefield[y][x - 1]){
-                                    nearby++;
-                                }
-                            }catch(minefieldEdge){}
-                            try{
-                                if(this.minefield[y][x + 1]){
-                                    nearby++;
-                                }
-                            }catch(minefieldEdge){}
-                            try{
-                                if(this.minefield[y + 1][x - 1]){
-                                    nearby++;
-                                }
-                            }catch(minefieldEdge){}
-                            try{
-                                if(this.minefield[y + 1][x]){
-                                    nearby++;
-                                }
-                            }catch(minefieldEdge){}
-                            try{
-                                if(this.minefield[y + 1][x + 1]){
-                                    nearby++;
-                                }
-                            }catch(minefieldEdge){}
-                            if(nearby){
-                                getId("MSwF" + x + "x" + y).innerHTML = nearby;
-                                getId("MSwF" + x + "x" + y).style.opacity = "0.5";
-                            }else{
-                                if(this.blockModdable(x - 1, y - 1)){
-                                    this.checkBlock(x - 1, y - 1);
-                                }
-                                if(this.blockModdable(x, y - 1)){
-                                    this.checkBlock(x, y - 1);
-                                }
-                                if(this.blockModdable(x + 1, y - 1)){
-                                    this.checkBlock(x + 1, y - 1);
-                                }
-                                if(this.blockModdable(x - 1, y)){
-                                    this.checkBlock(x - 1, y - 1);
-                                }
-                                if(this.blockModdable(x + 1, y)){
-                                    this.checkBlock(x + 1, y);
-                                }
-                                if(this.blockModdable(x - 1, y + 1)){
-                                    this.checkBlock(x - 1, y + 1);
-                                }
-                                if(this.blockModdable(x, y + 1)){
-                                    this.checkBlock(x, y + 1);
-                                }
-                                if(this.blockModdable(x + 1, y + 1)){
-                                    this.checkBlock(x + 1, y + 1);
-                                }
+                            if(this.blockModdable(x - 1, y - 1)){
+                                this.checkBlock(x - 1, y - 1);
+                            }
+                            if(this.blockModdable(x, y - 1)){
+                                this.checkBlock(x, y - 1);
+                            }
+                            if(this.blockModdable(x + 1, y - 1)){
+                                this.checkBlock(x + 1, y - 1);
+                            }
+                            if(this.blockModdable(x - 1, y)){
+                                this.checkBlock(x - 1, y);
+                            }
+                            if(this.blockModdable(x + 1, y)){
+                                this.checkBlock(x + 1, y);
+                            }
+                            if(this.blockModdable(x - 1, y + 1)){
+                                this.checkBlock(x - 1, y + 1);
+                            }
+                            if(this.blockModdable(x, y + 1)){
+                                this.checkBlock(x, y + 1);
+                            }
+                            if(this.blockModdable(x + 1, y + 1)){
+                                this.checkBlock(x + 1, y + 1);
                             }
                         }
                     }
