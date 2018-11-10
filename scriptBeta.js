@@ -7525,10 +7525,10 @@ c(function(){
             "10/12/2018: B0.8.8.0\n + New default wallpaper and window color!\n + New Parallax Background option in Settings -> Background. Your wallpaper scrolls around when you move your mouse!\n : Fixed issues with CustomStyles.\n\n" +
             "11/07/2018: B0.8.8.1\n + New custom style preset, Terminal!\n\n" +
             "11/08/2018: B0.8.9.0\n + Added new Minesweeper clone for aOS!\n + The Linux Mint custom style now obeys light / dark mode settings!\n\n" +
-            "11/09/2018: B0.8.9.1\n : The first move in Minesweeper cannot land on a bomb.\n : Adjusted placement of text in Minesweeper.\n : Fixed issue in Minesweeper where empty regions wouldn't clear all the way.",
+            "11/09/2018: B0.8.9.1\n + Added new settings to Minesweeper - Omnipresent Grid, Automatic Clearing, and Safe First Move.\n + Added a new feature to Minesweeper - Easy Clear!\n : Adjusted placement of text in Minesweeper.\n : Fixed issue in Minesweeper where empty regions wouldn't clear all the way.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.9.1 (11/09/2018) r0';
+    window.aOSversion = 'B0.8.9.1 (11/09/2018) r2';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -10979,7 +10979,7 @@ c(function(){
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 246, parseInt(getId('monitor').style.height, 10) / 2 - 280, 492, 561);
                 this.appWindow.setCaption('Minesweeper');
                 getId("win_minesweeper_html").style.overflow = "auto";
-                this.appWindow.setContent('<div id="MSwField" style="margin-bottom:3px;"></div><div id="MSwControls"><button onclick="apps.minesweeper.vars.firstTurn = 1;apps.minesweeper.vars.newGame()">New Game</button> <button onclick="apps.minesweeper.vars.settings()">Settings</button> <span style="font-family:aosProFont;font-size:12px;">Mines: <span id="MSwMines">0</span>, Flags: <span id="MSwFlags">0</span></span><br>Dig = Left Click | Flag = Right Click</div>');
+                this.appWindow.setContent('<div id="MSwField" style="margin-bottom:3px;"></div><div id="MSwControls"><button onclick="apps.minesweeper.vars.firstTurn = 1;apps.minesweeper.vars.newGame()">New Game</button> <button onclick="apps.minesweeper.vars.difficulty()">Difficulty</button> <button onclick="apps.minesweeper.vars.settings()">Settings</button> <span style="font-family:aosProFont;font-size:12px;">B: <span id="MSwMines">0</span>, F: <span id="MSwFlags">0</span></span><br>Dig = Left Click | Flag = Right Click</div>');
                 this.vars.firstTurn = 1;
                 this.vars.newGame();
             }
@@ -11006,7 +11006,21 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    
+                    if(typeof USERFILES.APP_MSw_grid === "string"){
+                        if(USERFILES.APP_MSw_grid === "0"){
+                            this.vars.grid = 0;
+                        }
+                    }
+                    if(typeof USERFILES.APP_MSw_clear === "string"){
+                        if(USERFILES.APP_MSw_clear === "0"){
+                            this.vars.clear = 0;
+                        }
+                    }
+                    if(typeof USERFILES.APP_MSw_safe === "string"){
+                        if(USERFILES.APP_MSw_safe === "0"){
+                            this.vars.safe = 0;
+                        }
+                    }
                     break;
                 case 'shutdown':
                         
@@ -11017,9 +11031,11 @@ c(function(){
         },
         {
             appInfo: 'The Minesweeper clone written for aOS.',
-            dims: [8, 8],
-            mines: 10,
+            dims: [24, 24],
+            area: 576,
+            mines: 99,
             flags: 0,
+            digs: 0,
             minefield: [
                 [0, 0],
                 [0, 0]
@@ -11038,6 +11054,8 @@ c(function(){
                         }
                     }
                     
+                    this.digs = 0;
+                    this.area = this.dims[0] * this.dims[1];
                     this.minefield = [];
                     for(var i = 0; i < this.dims[1]; i++){
                         this.minefield.push([]);
@@ -11045,12 +11063,13 @@ c(function(){
                             this.minefield[i].push(0);
                         }
                     }
+                    this.flags = 0;
                 }else{
                     this.flags = 0;
                     while(this.flags < this.mines){
                         var tempX = Math.floor(Math.random() * this.dims[0]);
                         var tempY = Math.floor(Math.random() * this.dims[1]);
-                        if(!this.minefield[tempY][tempX] && !(tempX === firstX && tempY === firstY)){
+                        if(!this.minefield[tempY][tempX] && !(tempX === firstX && tempY === firstY && this.safe)){
                             this.minefield[tempY][tempX] = 1;
                             this.flags++;
                         }
@@ -11073,7 +11092,7 @@ c(function(){
                 }
             },
             firstTurn: 1,
-            settings: function(){
+            difficulty: function(){
                 apps.prompt.vars.confirm("Please choose a difficulty level:", ["Cancel", "Beginner (8x8, 10)", "Intermediate (16x16, 40)", "Expert (24x24, 99)", "Custom"], function(btn){
                     if(btn){
                         switch(btn){
@@ -11098,18 +11117,52 @@ c(function(){
                             case 4:
                                 apps.prompt.vars.prompt("How wide will your minefield be?", "Next", function(width){
                                     apps.prompt.vars.prompt("How tall will your minefield be?", "Next", function(height){
-                                        apps.prompt.vars.prompt("How many bombs will your minefield contain?", "Submit", function(numOfMines){
-                                            if(parseInt(width) > 0 && parseInt(height) > 0 && parseInt(numOfMines) < parseInt(width) * parseInt(height) && parseInt(numOfMines) >= 0){
+                                        apps.prompt.vars.prompt("How many bombs will your minefield contain?<br><br>Leave blank for 17% fill.", "Submit", function(numOfMines){
+                                            if(parseInt(width) > 0 && parseInt(height) > 0 && parseInt(numOfMines || Math.round(parseInt(width) * parseInt(height) * 0.17)) < parseInt(width) * parseInt(height) && parseInt(numOfMines || Math.round(parseInt(width) * parseInt(height) * 0.17)) > 0){
                                                 apps.minesweeper.vars.dims = [parseInt(width), parseInt(height)];
-                                                apps.minesweeper.vars.mines = parseInt(numOfMines);
+                                                apps.minesweeper.vars.mines = parseInt(numOfMines || Math.round(parseInt(width) * parseInt(height) * 0.17));
                                                 apps.minesweeper.vars.firstTurn = 1;
                                                 apps.minesweeper.vars.newGame();
                                             }else{
-                                                apps.prompt.vars.alert("Failed to start game, one of your rules is invalid.<br><br>Width: " + parseInt(width) + "<br>Height: " + parseInt(height) + "<br>Bombs:" + parseInt(numOfMines), "Okay", function(){}, "Minesweeper");
+                                                apps.prompt.vars.alert("Failed to start game, one of your rules is invalid.<br><br>Width: " + parseInt(width) + "<br>Height: " + parseInt(height) + "<br>Bombs: " + parseInt(numOfMines || Math.round(parseInt(width) * parseInt(height) * 0.17)), "Okay", function(){}, "Minesweeper");
                                             }
-                                        });
+                                        }, "Minesweeper");
                                     }, "Minesweeper")
                                 }, "Minesweeper");
+                                break;
+                            default:
+                                apps.prompt.vars.notify("Error - unknown menu option.", ["Oof"], function(){}, "Minesweeper", "/appicons/ds/aOS.png");
+                        }
+                    }
+                }, "Minesweeper");
+            },
+            grid: 1,
+            clear: 1,
+            safe: 1,
+            easyClear: 1,
+            settings: function(){
+                apps.prompt.vars.confirm("Choose an option to toggle:<br><br>Omnipresent Grid: " + numtf(apps.minesweeper.vars.grid) + "<br>Automatic Clearing: " + numtf(apps.minesweeper.vars.clear) + "<br>Safe First Turn: " + numtf(apps.minesweeper.vars.safe) + "<br>Easy Clear: " + numtf(apps.minesweeper.vars.easyClear), ["Cancel", "Omnipresent Grid", "Automatic Clearing", "Safe First Turn", "Easy Clear", "DEBUG"], function(btn){
+                    if(btn){
+                        switch(btn){
+                            case 1:
+                                apps.minesweeper.vars.grid = Math.abs(apps.minesweeper.vars.grid - 1);
+                                apps.savemaster.vars.save("APP_MSw_grid", apps.minesweeper.vars.grid, 1);
+                                break;
+                            case 2:
+                                apps.minesweeper.vars.clear = Math.abs(apps.minesweeper.vars.clear - 1);
+                                apps.savemaster.vars.save("APP_MSw_clear", apps.minesweeper.vars.clear, 1);
+                                break;
+                            case 3:
+                                apps.minesweeper.vars.safe = Math.abs(apps.minesweeper.vars.safe - 1);
+                                apps.savemaster.vars.save("APP_MSw_safe", apps.minesweeper.vars.safe, 1);
+                                break;
+                            case 4:
+                                apps.minesweeper.vars.easyClear = Math.abs(apps.minesweeper.vars.easyClear - 1);
+                                apps.savemaster.vars.save("APP_MSw_easyClear", apps.minesweeper.vars.easyClear, 1);
+                                break;
+                            case 5:
+                                apps.minesweeper.vars.cheat();
+                                apps.prompt.vars.notify("Oof", ["Oof"], function(){}, "Minesweeper", "/appicons/ds/aOS.png");
                                 break;
                             default:
                                 apps.prompt.vars.notify("Error - unknown menu option.", ["Oof"], function(){}, "Minesweeper", "/appicons/ds/aOS.png");
@@ -11146,81 +11199,159 @@ c(function(){
                     this.flags--;
                     */
                 }else{
-                    getId("MSwB" + x + "x" + y).style.opacity = "0.1";
+                    getId("MSwB" + x + "x" + y).style.opacity = "0." + this.grid;
                     getId("MSwB" + x + "x" + y).style.pointerEvents = "none";
                     if(this.minefield[y][x]){
                         this.showMines();
                     }else{
-                        var nearby = 0;
-                        try{
-                            if(this.minefield[y - 1][x - 1]){
-                                nearby++;
-                            }
-                        }catch(minefieldEdge){}
-                        try{
-                            if(this.minefield[y - 1][x]){
-                                nearby++;
-                            }
-                        }catch(minefieldEdge){}
-                        try{
-                            if(this.minefield[y - 1][x + 1]){
-                                nearby++;
-                            }
-                        }catch(minefieldEdge){}
-                        try{
-                            if(this.minefield[y][x - 1]){
-                                nearby++;
-                            }
-                        }catch(minefieldEdge){}
-                        try{
-                            if(this.minefield[y][x + 1]){
-                                nearby++;
-                            }
-                        }catch(minefieldEdge){}
-                        try{
-                            if(this.minefield[y + 1][x - 1]){
-                                nearby++;
-                            }
-                        }catch(minefieldEdge){}
-                        try{
-                            if(this.minefield[y + 1][x]){
-                                nearby++;
-                            }
-                        }catch(minefieldEdge){}
-                        try{
-                            if(this.minefield[y + 1][x + 1]){
-                                nearby++;
-                            }
-                        }catch(minefieldEdge){}
-                        if(nearby){
-                            getId("MSwF" + x + "x" + y).innerHTML = nearby;
-                            getId("MSwF" + x + "x" + y).style.opacity = "0.5";
+                        this.digs++;
+                        if(this.digs === this.area - this.mines){
+                            this.showMines();
                         }else{
-                            if(this.blockModdable(x - 1, y - 1)){
-                                this.checkBlock(x - 1, y - 1);
-                            }
-                            if(this.blockModdable(x, y - 1)){
-                                this.checkBlock(x, y - 1);
-                            }
-                            if(this.blockModdable(x + 1, y - 1)){
-                                this.checkBlock(x + 1, y - 1);
-                            }
-                            if(this.blockModdable(x - 1, y)){
-                                this.checkBlock(x - 1, y);
-                            }
-                            if(this.blockModdable(x + 1, y)){
-                                this.checkBlock(x + 1, y);
-                            }
-                            if(this.blockModdable(x - 1, y + 1)){
-                                this.checkBlock(x - 1, y + 1);
-                            }
-                            if(this.blockModdable(x, y + 1)){
-                                this.checkBlock(x, y + 1);
-                            }
-                            if(this.blockModdable(x + 1, y + 1)){
-                                this.checkBlock(x + 1, y + 1);
+                            var nearby = 0;
+                            try{
+                                if(this.minefield[y - 1][x - 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y - 1][x]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y - 1][x + 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y][x - 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y][x + 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y + 1][x - 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y + 1][x]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            try{
+                                if(this.minefield[y + 1][x + 1]){
+                                    nearby++;
+                                }
+                            }catch(minefieldEdge){}
+                            if(nearby){
+                                getId("MSwF" + x + "x" + y).innerHTML = nearby;
+                                getId("MSwF" + x + "x" + y).style.opacity = "0.5";
+                                if(this.easyClear){
+                                    getId("MSwB" + x + "x" + y).style.pointerEvents = "";
+                                    getId("MSwB" + x + "x" + y).setAttribute("onclick", "apps.minesweeper.vars.eClear(" + x + "," + y + ")");
+                                }
+                            }else if(this.clear){
+                                if(this.blockModdable(x - 1, y - 1)){
+                                    this.checkBlock(x - 1, y - 1);
+                                }
+                                if(this.blockModdable(x, y - 1)){
+                                    this.checkBlock(x, y - 1);
+                                }
+                                if(this.blockModdable(x + 1, y - 1)){
+                                    this.checkBlock(x + 1, y - 1);
+                                }
+                                if(this.blockModdable(x - 1, y)){
+                                    this.checkBlock(x - 1, y);
+                                }
+                                if(this.blockModdable(x + 1, y)){
+                                    this.checkBlock(x + 1, y);
+                                }
+                                if(this.blockModdable(x - 1, y + 1)){
+                                    this.checkBlock(x - 1, y + 1);
+                                }
+                                if(this.blockModdable(x, y + 1)){
+                                    this.checkBlock(x, y + 1);
+                                }
+                                if(this.blockModdable(x + 1, y + 1)){
+                                    this.checkBlock(x + 1, y + 1);
+                                }
                             }
                         }
+                    }
+                }
+            },
+            eClear: function(x, y){
+                var nearby = 0;
+                try{
+                    if(this.flagfield[y - 1][x - 1]){
+                        nearby++;
+                    }
+                }catch(minefieldEdge){}
+                try{
+                    if(this.flagfield[y - 1][x]){
+                        nearby++;
+                    }
+                }catch(minefieldEdge){}
+                try{
+                    if(this.flagfield[y - 1][x + 1]){
+                        nearby++;
+                    }
+                }catch(minefieldEdge){}
+                try{
+                    if(this.flagfield[y][x - 1]){
+                        nearby++;
+                    }
+                }catch(minefieldEdge){}
+                try{
+                    if(this.flagfield[y][x + 1]){
+                        nearby++;
+                    }
+                }catch(minefieldEdge){}
+                try{
+                    if(this.flagfield[y + 1][x - 1]){
+                        nearby++;
+                    }
+                }catch(minefieldEdge){}
+                try{
+                    if(this.flagfield[y + 1][x]){
+                        nearby++;
+                    }
+                }catch(minefieldEdge){}
+                try{
+                    if(this.flagfield[y + 1][x + 1]){
+                        nearby++;
+                    }
+                }catch(minefieldEdge){}
+                if(nearby === parseInt(getId("MSwF" + x + "x" + y).innerHTML)){
+                    if(this.blockModdable(x - 1, y - 1)){
+                        this.checkBlock(x - 1, y - 1);
+                    }
+                    if(this.blockModdable(x, y - 1)){
+                        this.checkBlock(x, y - 1);
+                    }
+                    if(this.blockModdable(x + 1, y - 1)){
+                        this.checkBlock(x + 1, y - 1);
+                    }
+                    if(this.blockModdable(x - 1, y)){
+                        this.checkBlock(x - 1, y);
+                    }
+                    if(this.blockModdable(x + 1, y)){
+                        this.checkBlock(x + 1, y);
+                    }
+                    if(this.blockModdable(x - 1, y + 1)){
+                        this.checkBlock(x - 1, y + 1);
+                    }
+                    if(this.blockModdable(x, y + 1)){
+                        this.checkBlock(x, y + 1);
+                    }
+                    if(this.blockModdable(x + 1, y + 1)){
+                        this.checkBlock(x + 1, y + 1);
                     }
                 }
             },
@@ -11251,6 +11382,15 @@ c(function(){
                                 getId("MSwF" + j + "x" + i).innerHTML = "<b>B</b>";
                                 getId("MSwF" + j + "x" + i).style.color = "#F00";
                             }
+                        }
+                    }
+                }
+            },
+            cheat: function(){
+                for(var i in this.minefield){
+                    for(var j in this.minefield[i]){
+                        if(this.minefield[i][j]){
+                            getId("MSwB" + j + "x" + i).style.filter = "contrast(0.5) sepia(1) hue-rotate(-40deg) saturate(3)";
                         }
                     }
                 }
