@@ -277,6 +277,7 @@
                                         if(this.easyClear){
                                             getId("MSwB" + x + "x" + y).style.pointerEvents = "";
                                             getId("MSwB" + x + "x" + y).setAttribute("onclick", "apps.minesweeper.vars.eClear(" + x + "," + y + ")");
+                                            getId("MSwB" + x + "x" + y).setAttribute("oncontextmenu", "");
                                         }
                                     }else if(this.clear){
                                         if(this.blockModdable(x - 1, y - 1)){

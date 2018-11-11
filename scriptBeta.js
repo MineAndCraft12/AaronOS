@@ -7526,7 +7526,7 @@ c(function(){
             "11/07/2018: B0.8.8.1\n + New custom style preset, Terminal!\n\n" +
             "11/08/2018: B0.8.9.0\n + Added new Minesweeper clone for aOS!\n + The Linux Mint custom style now obeys light / dark mode settings!\n\n" +
             "11/09/2018: B0.8.9.1\n + Added new settings to Minesweeper - Omnipresent Grid, Automatic Clearing, and Safe First Move.\n + Added a new feature to Minesweeper - Easy Clear!\n : Adjusted placement of text in Minesweeper.\n : Fixed issue in Minesweeper where empty regions wouldn't clear all the way.\n\n" +
-            "11/10/2018: B0.8.9.2\n : Various fixes in Minesweeper\n - Removed automatic win in Minesweeper if all blocks are cleared, was causing bugs\n : Settings can now be changed in standalone Minesweeper.",
+            "11/10/2018: B0.8.9.2\n : Fixed bug with Easy Clear that lets you place flags on broken blocks.\n : Various fixes in Minesweeper\n - Removed automatic win in Minesweeper if all blocks are cleared, was causing bugs\n : Settings can now be changed in standalone Minesweeper.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
     window.aOSversion = 'B0.8.9.2 (11/10/2018) r0';
@@ -11258,6 +11258,7 @@ c(function(){
                                 if(this.easyClear){
                                     getId("MSwB" + x + "x" + y).style.pointerEvents = "";
                                     getId("MSwB" + x + "x" + y).setAttribute("onclick", "apps.minesweeper.vars.eClear(" + x + "," + y + ")");
+                                    getId("MSwB" + x + "x" + y).setAttribute("oncontextmenu", "");
                                 }
                             }else if(this.clear){
                                 if(this.blockModdable(x - 1, y - 1)){
