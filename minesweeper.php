@@ -185,6 +185,7 @@
                                     break;
                                 case 5:
                                     this.cheat();
+                                    break;
                                 default:
                                     alert("Error - unknown menu option. Oof.");
                             }
