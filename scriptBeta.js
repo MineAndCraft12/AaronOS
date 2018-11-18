@@ -4984,6 +4984,21 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
+                    if(localStorage.getItem("askedPassword") !== "1" && !(typeof USERFILES.aOSpassword === "string")){
+                        window.setTimeout(function(){
+                            if(!(typeof USERFILES.aOSpassword === "string")){
+                                apps.prompt.vars.notify("Please set a password on your account in Settings to protect it.", ["Set Password", "Cancel"], function(btn){
+                                    if(btn === 0){
+                                        openapp(apps.settings, "dsktp");
+                                        apps.settings.vars.showMenu(apps.settings.vars.menus.info);
+                                    }else{
+                                        apps.prompt.vars.notify("In the future, you can go to Settings -&gt; Information to set a password on your account.", ["Okay"], function(){}, 'AaronOS', '/appicons/ds/aOS.png');
+                                    }
+                                }, 'AaronOS', '/appicons/ds/aOS.png');
+                                localStorage.setItem("askedPassword", "1");
+                            }
+                        }, 600000);
+                    }
                     window.setTimeout(function(){
                         getId('aOSloadingInfo').innerHTML = 'Welcome.';
                         getId('desktop').style.display = '';
@@ -7526,10 +7541,11 @@ c(function(){
             "11/07/2018: B0.8.8.1\n + New custom style preset, Terminal!\n\n" +
             "11/08/2018: B0.8.9.0\n + Added new Minesweeper clone for aOS!\n + The Linux Mint custom style now obeys light / dark mode settings!\n\n" +
             "11/09/2018: B0.8.9.1\n + Added new settings to Minesweeper - Omnipresent Grid, Automatic Clearing, and Safe First Move.\n + Added a new feature to Minesweeper - Easy Clear!\n : Adjusted placement of text in Minesweeper.\n : Fixed issue in Minesweeper where empty regions wouldn't clear all the way.\n\n" +
-            "11/10/2018: B0.8.9.2\n : Fixed bug with Easy Clear that lets you place flags on broken blocks.\n : Various fixes in Minesweeper\n - Removed automatic win in Minesweeper if all blocks are cleared, was causing bugs\n : Settings can now be changed in standalone Minesweeper.",
+            "11/10/2018: B0.8.9.2\n : Updated the Camera app to use newer API.\n : aOS only nags you to download Chrome once, instead of every time it loads.\n : Fixed bug with Easy Clear in Minesweeper that lets you place flags on broken blocks.\n : Various fixes in Minesweeper\n - Removed automatic win in Minesweeper if all blocks are cleared, was causing bugs\n : Settings can now be changed in standalone Minesweeper.\n\n" +
+            "11/18/2018: B0.8.9.3\n : Made the login screens a bit smoother.\n + aOS will prompt users to set a password after five minutes on brand new accounts.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.9.2 (11/10/2018) r0';
+    window.aOSversion = 'B0.8.9.3 (11/18/2018) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -9485,13 +9501,13 @@ c(function(){
                     '<canvas id="CAMcanvas" width="640" height="480" style="display:none"></canvas>'
                 );
                 getId('win_camera_html').style.background = 'none';
-                window.navigator.webkitGetUserMedia(
-                    {"video": true},
+                window.navigator.mediaDevices.getUserMedia({"video": true}).then(
                     function(stream){
                         apps.camera.vars.streamObj = stream;
                         getId('CAMvideo').src = window.webkitURL.createObjectURL(stream);
                         getId('CAMvideo').play();
-                    },
+                    }
+                ).catch(
                     function(err){
                         doLog('Error starting camera!', '#F00');
                         doLog(err, '#F00');
@@ -12370,7 +12386,14 @@ c(function(){
     });
     if(window.navigator.vendor !== "Google Inc."){
         doLog('Looks like you are not using Google Chrome. Make sure you use Google Chrome to access aOS. Otherwise, certain features will be missing or broken.', '#F00;text-decoration:underline');
-        apps.prompt.vars.notify('It appears that you\'re not using Google Chrome. Make sure you use Chrome to access aOS. Otherwise, certain features will be missing or broken.', [], function(){}, 'Google Chrome', '/appicons/ds/aOS.png');
+        try{
+            if(localStorage.getItem('notifyChrome') !== "1"){
+                apps.prompt.vars.notify('It appears that you\'re not using Google Chrome. Make sure you use Chrome to access aOS. Otherwise, certain features will be missing or broken.', [], function(){}, 'Google Chrome', '/appicons/ds/aOS.png');
+                localStorage.setItem('notifyChrome');
+            }
+        }catch(localStorageNotSupported){
+            apps.prompt.vars.notify('It appears that you\'re not using Google Chrome. Make sure you use Chrome to access aOS. Otherwise, certain features will be missing or broken.', [], function(){}, 'Google Chrome', '/appicons/ds/aOS.png');
+        }
     }
     
     if(localStorageSupported){

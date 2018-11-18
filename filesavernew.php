@@ -50,10 +50,10 @@
                 foreach($newUsersList as $user){
                     if((int)substr($user, strpos($user, '=') + 1, strlen($user)) >= round(microtime(true) * 1000) - 120000){
                         array_push($newList, $user);
-                        if(strpos($user, $_COOKIE['keyword']) === 0){
-                            echo 'Error - Your account is too new to save files, please wait a total of 30 seconds before creating your first file. This is to prevent a flood on the server.';
-                            $userFound = 1;
-                        }
+                        //if(strpos($user, $_COOKIE['keyword']) === 0){
+                        //    echo 'Error - Your account is too new to save files, please wait a total of 30 seconds before creating your first file. This is to prevent a flood on the server.';
+                        //    $userFound = 1;
+                        //}
                     }
                 }
                 unset($user);

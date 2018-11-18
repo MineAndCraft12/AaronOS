@@ -111,9 +111,9 @@
                 <h1>AaronOS</h1>
                 <hr>
                 <span id="aOSloadingInfo">Initializing...</span><br><br>
-                If you think aOS is frozen:<br><br>
-                You can try Safe Mode by adding "?safe=true" to the URL.<br>
-                You can <button onclick="document.getElementById('aOSisLoading').style.display = 'none';document.getElementById('aOSloadingBg').style.display = 'none';document.getElementById('desktop').style.display = '';document.getElementById('taskbar').style.display = '';">Force Boot</button>, but this is NOT recommended.<br><br>
+                &nbsp;<br>
+                <a href="?safeMode"><button>Safe Mode</button></a><br><br>
+                <button onclick="document.getElementById('aOSisLoading').style.display = 'none';document.getElementById('aOSloadingBg').style.display = 'none';document.getElementById('desktop').style.display = '';document.getElementById('taskbar').style.display = '';">Force Boot</button><br><br>
                 <?php if(isset($_COOKIE['keyword'])){echo 'Your OS ID is <span id="aOSloadingKey">'.$_COOKIE['keyword'].'</span>';}else{echo 'You will get a new OS ID.';} ?>
                 <img id="aosLoadingImage" src="/appicons/ds/aOS.png" style="display:none"><!--<br>-->
             </div>
