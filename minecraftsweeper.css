@@ -1,0 +1,34 @@
+#MSwField{
+    color:#FFF !important;
+    overflow:visible;
+    left:10px !important;
+    margin-left:10px !important;
+}
+#MSwField button{
+    border:none;
+    background:url(/mc/grass_top.png);
+    width:16px !important;
+    height:18px !important;
+}
+#MSwField div{
+    height:16px !important;
+    margin-top:2px !important;
+    margin-bottom:-2px !important;
+    margin-left:-11px !important;
+    margin-right:-9px !important;
+}
+.mcdirt{
+    background:url(/mc/dirt.png) !important;
+}
+.mctnt{
+    background:url(/mc/tnt_top.png) !important;
+}
+.mcflagon{
+    background:url(/mc/flagon.png) !important;
+}
+.mcflagoff{
+    background:url(/mc/flagoff.png) !important;
+}
+.mcstone{
+    background:url(/mc/stone.png) !important;
+}

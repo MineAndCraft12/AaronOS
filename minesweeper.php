@@ -3,6 +3,7 @@
     <head>
         <title>aOS Minesweeper</title>
         <link rel="stylesheet" href="/customStyles/Windows98/aosCustomStyle.css">
+        <link rel="stylesheet" href="" id="minecraft">
         <style>
             @font-face{
                 font-family: "aosProFont";
@@ -28,6 +29,7 @@
             <button onclick="apps.minesweeper.vars.difficulty()">Difficulty</button>
             <button onclick="apps.minesweeper.vars.settings()">Settings</button>
             <button onclick="apps.minesweeper.vars.darkMode()">Dark Mode</button>
+            <button onclick="apps.minesweeper.vars.minecraftMode()">Minecraft Mode</button>
             <span style="font-family:aosProFont;font-size:12px;">B: <span id="MSwMines">0</span>, F: <span id="MSwFlags">0</span></span><br>
             Dig = Left Click | Flag = Right Click
         </div>
@@ -36,7 +38,7 @@
         function getId(target){
             return document.getElementById(target);
         }
-        
+        var minecraftMode = 0;
         var apps = {
             minesweeper: {
                 vars: {
@@ -54,6 +56,10 @@
                         [0, 0],
                         [0, 0]
                     ],
+                    minecraftMode: function(){
+                        getId("minecraft").setAttribute("href", "/minecraftsweeper.css?" + Math.random());
+                        minecraftMode = 1;
+                    },
                     newGame: function(firstX, firstY){
                         if(this.firstTurn){
                             this.flagfield = [];
@@ -195,11 +201,19 @@
                         if(!this.firstTurn){
                             if(this.flagfield[y][x]){
                                 this.flagfield[y][x] = 0;
-                                getId("MSwF" + x + "x" + y).innerHTML = "";
+                                if(!minecraftMode){
+                                    getId("MSwF" + x + "x" + y).innerHTML = "";
+                                }else{
+                                    getId("MSwB" + x + "x" + y).className = "";
+                                }
                                 this.flags--;
                             }else{
                                 this.flagfield[y][x] = 1;
-                                getId("MSwF" + x + "x" + y).innerHTML = "F";
+                                if(!minecraftMode){
+                                    getId("MSwF" + x + "x" + y).innerHTML = "F";
+                                }else{
+                                    getId("MSwB" + x + "x" + y).className = "mcflagoff";
+                                }
                                 this.flags++;
                             }
                             getId("MSwFlags").innerHTML = this.flags;
@@ -220,10 +234,17 @@
                             this.flags--;
                             */
                         }else{
-                            getId("MSwB" + x + "x" + y).style.opacity = "0." + this.grid;
+                            if(!minecraftMode){
+                                getId("MSwB" + x + "x" + y).style.opacity = "0." + this.grid;
+                            }else{
+                                getId("MSwB" + x + "x" + y).className = "mcdirt";
+                            }
                             getId("MSwB" + x + "x" + y).style.pointerEvents = "none";
                             if(this.minefield[y][x]){
                                 this.showMines();
+                                if(minecraftMode){
+                                    getId("MSwB" + x + "x" + y).className = "mcstone";
+                                }
                             }else{
                                 this.digs++;
                                 /*
@@ -274,7 +295,9 @@
                                     }catch(minefieldEdge){}
                                     if(nearby){
                                         getId("MSwF" + x + "x" + y).innerHTML = nearby;
-                                        getId("MSwF" + x + "x" + y).style.opacity = "0.5";
+                                        if(!minecraftMode){
+                                            getId("MSwF" + x + "x" + y).style.opacity = "0.5";
+                                        }
                                         if(this.easyClear){
                                             getId("MSwB" + x + "x" + y).style.pointerEvents = "";
                                             getId("MSwB" + x + "x" + y).setAttribute("onclick", "apps.minesweeper.vars.eClear(" + x + "," + y + ")");
@@ -402,11 +425,19 @@
                                 getId("MSwB" + j + "x" + i).style.pointerEvents = "none";
                                 if(this.minefield[i][j]){
                                     if(this.flagfield[i][j]){
-                                        getId("MSwF" + j + "x" + i).innerHTML = "<b>F</b>";
-                                        getId("MSwF" + j + "x" + i).style.color = "#0A0";
+                                        if(!minecraftMode){
+                                            getId("MSwF" + j + "x" + i).innerHTML = "<b>F</b>";
+                                            getId("MSwF" + j + "x" + i).style.color = "#0A0";
+                                        }else{
+                                            getId("MSwB" + j + "x" + i).className = "mcflagon";
+                                        }
                                     }else{
-                                        getId("MSwF" + j + "x" + i).innerHTML = "<b>B</b>";
-                                        getId("MSwF" + j + "x" + i).style.color = "#F00";
+                                        if(!minecraftMode){
+                                            getId("MSwF" + j + "x" + i).innerHTML = "<b>B</b>";
+                                            getId("MSwF" + j + "x" + i).style.color = "#F00";
+                                        }else{
+                                            getId("MSwB" + j + "x" + i).className = "mctnt";
+                                        }
                                     }
                                 }
                             }

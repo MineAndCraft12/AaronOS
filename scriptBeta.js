@@ -1900,71 +1900,78 @@ widgets.flow = new Widget(
 );
 
 //text-editing functionality
-function addEditContext(element, nopaste){
-    getId(element).oncontextmenu = function(event){
+function showEditContext(event){
+    if(currentSelection.length === 0){
+        textEditorTools.tempvar = '-';
+    }else{
+        textEditorTools.tempvar = ' ';
+    }
+    var canPasteHere = 0;
+    if((event.target.tagName === "INPUT" && (event.target.getAttribute("type") === "text" || event.target.getAttribute("type") === "password" || event.target.getAttribute("type") === null)) || event.target.tagName === "TEXTAREA"){
+        canPasteHere = 1;
+    }
+    textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "/ctxMenu/beta/happy.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
+    for(var i = 1; i <= textEditorTools.slots; i++){
         if(currentSelection.length === 0){
             textEditorTools.tempvar = '-';
+            textEditorTools.tempvar2 = '_';
         }else{
             textEditorTools.tempvar = ' ';
+            textEditorTools.tempvar2 = '+';
         }
-        textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "/ctxMenu/beta/happy.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5) + "...\'", "textspeech(\'" + currentSelection + "\');getId(\'ctxMenu\').style.display = \'none\'"];
-        for(var i = 1; i <= textEditorTools.slots; i++){
-            if(currentSelection.length === 0){
-                textEditorTools.tempvar = '-';
-                textEditorTools.tempvar2 = '_';
-            }else{
-                textEditorTools.tempvar = ' ';
-                textEditorTools.tempvar2 = '+';
-            }
-            if(i === 1){
-                textEditorTools.tmpGenArray.push(textEditorTools.tempvar2 + 'Copy "' + currentSelection.substring(0, 5) + '..." to Slot 1');
-            }else{
-                textEditorTools.tmpGenArray.push(textEditorTools.tempvar + 'Copy "' + currentSelection.substring(0, 5) + '..." to Slot ' + i);
-            }
-            textEditorTools.tmpGenArray[0].push('/ctxMenu/beta/load.png');
-            textEditorTools.tmpGenArray.push('textEditorTools.copy(' + (i - 0) + ');getId(\'ctxMenu\').style.display = \'none\'');
+        if(i === 1){
+            textEditorTools.tmpGenArray.push(textEditorTools.tempvar2 + 'Copy "' + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." to Slot 1');
+        }else{
+            textEditorTools.tmpGenArray.push(textEditorTools.tempvar + 'Copy "' + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." to Slot ' + i);
         }
+        textEditorTools.tmpGenArray[0].push('/ctxMenu/beta/load.png');
+        textEditorTools.tmpGenArray.push('textEditorTools.copy(' + (i - 0) + ');getId(\'ctxMenu\').style.display = \'none\'');
+    }
+    if(canPasteHere){
         for(var i = 1; i <= textEditorTools.slots; i++){
-            if(textEditorTools.clipboard[i - 1].length === 0 || nopaste){
+            if(textEditorTools.clipboard[i - 1].length === 0 || (typeof event.target.id !== "string" || event.target.id === "") || event.target.getAttribute("disabled") !== null){
                 if(i === 1){
-                    textEditorTools.tmpGenArray.push('_Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
+                    textEditorTools.tmpGenArray.push('_Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
                 }else{
-                    textEditorTools.tmpGenArray.push('-Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
+                    textEditorTools.tmpGenArray.push('-Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
                 }
                 textEditorTools.tmpGenArray.push('');
             }else{
                 if(i === 1){
-                    textEditorTools.tmpGenArray.push('+Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
+                    textEditorTools.tmpGenArray.push('+Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
                 }else{
-                    textEditorTools.tmpGenArray.push(' Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
+                    textEditorTools.tmpGenArray.push(' Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
                 }
-                textEditorTools.tmpGenArray.push('textEditorTools.paste(\'' + this.id + '\', ' + i + ', ' + this.selectionStart + ');getId(\'ctxMenu\').style.display = \'none\'');
+                textEditorTools.tmpGenArray.push('textEditorTools.paste(\'' + event.target.id + '\', ' + i + ', ' + this.selectionStart + ');getId(\'ctxMenu\').style.display = \'none\'');
             }
             textEditorTools.tmpGenArray[0].push('/ctxMenu/beta/save.png');
         }
-        /*
-        for(var i = 1; i <= textEditorTools.slots; i++){
-            if(textEditorTools.clipboard[i - 1].length === 0 || nopaste || currentSelection.length === 0){
-                if(i === 1){
-                    textEditorTools.tmpGenArray.push('_Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
-                }else{
-                    textEditorTools.tmpGenArray.push('-Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
-                }
-                textEditorTools.tmpGenArray.push('');
-            }else{
-                if(i === 1){
-                    textEditorTools.tmpGenArray.push('+Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
-                }else{
-                    textEditorTools.tmpGenArray.push(' Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
-                }
-                textEditorTools.tmpGenArray.push('textEditorTools.swap(\'' + this.id + '\', ' + i + ', ' + this.selectionStart + ');getId(\'ctxMenu\').style.display = \'none\'');
-            }
-            textEditorTools.tmpGenArray[0].push('/ctxMenu/beta/file.png');
-        }
-        */
-        textEditorTools.tempvar3 = currentSelection;
-        ctxMenu(textEditorTools.tmpGenArray);
     }
+    /*
+    for(var i = 1; i <= textEditorTools.slots; i++){
+        if(textEditorTools.clipboard[i - 1].length === 0 || nopaste || currentSelection.length === 0){
+            if(i === 1){
+                textEditorTools.tmpGenArray.push('_Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
+            }else{
+                textEditorTools.tmpGenArray.push('-Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
+            }
+            textEditorTools.tmpGenArray.push('');
+        }else{
+            if(i === 1){
+                textEditorTools.tmpGenArray.push('+Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
+            }else{
+                textEditorTools.tmpGenArray.push(' Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
+            }
+            textEditorTools.tmpGenArray.push('textEditorTools.swap(\'' + this.id + '\', ' + i + ', ' + this.selectionStart + ');getId(\'ctxMenu\').style.display = \'none\'');
+        }
+        textEditorTools.tmpGenArray[0].push('/ctxMenu/beta/file.png');
+    }
+    */
+    textEditorTools.tempvar3 = currentSelection;
+    ctxMenu(textEditorTools.tmpGenArray);
+}
+function addEditContext(element, nopaste){
+    doLog("addEditContext is depreceated", "#FF7F00");
 }
 var textEditorTools = {
     tempvar: '',
@@ -2482,7 +2489,6 @@ c(function(){
                 }
                 this.appWindow.openWindow();
             }
-            addEditContext('NORAin');
         },
         function(signal){
             switch(signal){
@@ -3241,9 +3247,9 @@ c(function(){
                                     apps.nora.vars.waitingToSpeak.push(text.substring(9, text.length));
                                     apps.nora.vars.speakWords();
                                 }
-                                apps.nora.vars.say(text.substring(9, text.length));
+                                apps.nora.vars.say(text.substring(9, text.length).split('<').join('&lt;').split('>').join('&gt;'));
                             }else{
-                                apps.nora.vars.say(text);
+                                apps.nora.vars.say(text.split('<').join('&lt;').split('>').join('&gt;'));
                             }
                         }else{
                             apps.nora.vars.say('<i>NORAA remains silent.</i>');
@@ -4047,7 +4053,6 @@ c(function(){
                 '<input id="cnsIn" onKeydown="if(event.keyCode === 13){apps.jsConsole.vars.runInput()}" placeholder="' + lang('jsConsole', 'input') + '" style="position:absolute; bottom:0px; font-family:aosProFont,Courier,monospace;display:block; padding:0; font-size:12px; width:90%; left:0px; height:16px;">' +
                 '<button id="cnsB"onClick="apps.jsConsole.vars.runInput()" style="font-size:12px; position:absolute; display:block; width:10%; height:18px; bottom:0px; right:0px;">' + lang('jsConsole', 'runCode') + '</button>'
             );
-            addEditContext('cnsIn');
             this.appWindow.openWindow();
             getId("cnsTrgt").innerHTML = '<span style="color:' + this.vars.cnsPosts[1] + ';">' + this.vars.cnsPosts[0] + '</span>';
             for(var j = 2; j < this.vars.cnsPosts.length; j+= 2){
@@ -4119,11 +4124,13 @@ c(function(){
         console.log('%c' + msg, 'color:' + clr);
         apps.jsConsole.vars.makeLog(msg, clr);
     };
-    var debugArraySize = 0;
-    function debugArray(arrayPath){
-        debugArraySize = 0;
+    debugArray = function(arrayPath, recursive, layer){
+        var debugArraySize = 0;
         for(var i in eval(arrayPath)){
-            doLog("<br>" + arrayPath + "." + i + ": " + eval(arrayPath)[i], "#55F");
+            doLog("<br>[" + (layer || 0) + "]" + arrayPath + "." + i + ": " + apps.webAppMaker.vars.sanitize(eval(arrayPath)[i]), "#55F");
+            if(typeof eval(arrayPath)[i] === "object" && recursive){
+                debugArray(eval(arrayPath)[i], 0, (layer || 0) + 1)
+            }
             debugArraySize++;
         }
         return "Length: " + debugArraySize;
@@ -4801,7 +4808,6 @@ c(function(){
                                 }
                                 getId('PMTbuttons').innerHTML = '<input id="PMTtextIn"> <button id="PMTalertButton" onClick="apps.prompt.signalHandler(\'close\');apps.prompt.vars.currprompt[3](getId(\'PMTtextIn\').value)">' + this.currprompt[2] + '</button>';
                                 c(function(){
-                                    addEditContext('PMTtextIn');
                                     getId('PMTtextIn').focus();
                                     getId('PMTtextIn').addEventListener('keydown', function(event){
                                         if(event.keyCode === 13){
@@ -5858,10 +5864,15 @@ c(function(){
                         description: function(){return 'If you have a Tampermonkey-capable browser (Google Chrome or Firefox are two of them) and love aOS, you can get quick access to aOS on all of your tabs! (this extension is in beta and certain things may break)'},
                         buttons: function(){return 'Visit <a href="/tampermonkey.txt">tampermonkey.txt</a> and copy-paste its contents into Tampermonkey. A bar will appear on all of your pages from then on that will allow you to open aOS on any tab.'}
                     },
+                    trustedApps: {
+                        option: 'Trusted Apps',
+                        description: function(){return 'This is a list of all external apps that you have allowed to use permissions on aOS. The list is JSON-encoded.';},
+                        buttons: function(){return '<textarea id="STN_trusted_apps" style="white-space:nowrap;width:75%;height:8em">' + (USERFILES.APP_WAP_trusted_apps || "") + '</textarea><button onclick="apps.savemaster.vars.save(\'APP_WAP_trusted_apps\', getId(\'STN_trusted_apps\').value, 1);apps.webAppMaker.vars.reflectPermissions();">Set</button>'}
+                    },
                     trustedServers: {
                         option: 'Trusted Servers',
                         description: function(){return 'This is a list of all external servers you allow to modify the files on your aOS. Ensure each server is on its own line and there are no stray characters.';},
-                        buttons: function(){return '<textarea id="STN_trusted_servers" value="' + (USERFILES.APP_STN_trusted_servers || "") + '"></textarea><button onclick="apps.savemaster.vars.save(\'APP_STN_trusted_servers\', getId(\'STN_trusted_servers\').value, 1);">Set</button>'}
+                        buttons: function(){return '<textarea id="STN_trusted_servers" style="white-space:nowrap;width:75%;height:8em">' + (USERFILES.APP_STN_trusted_servers || "") + '</textarea><button onclick="apps.savemaster.vars.save(\'APP_STN_trusted_servers\', getId(\'STN_trusted_servers\').value, 1);">Set</button>'}
                     },
                     fileAPI: {
                         option: 'File API',
@@ -7112,8 +7123,6 @@ c(function(){
                     '</div>'
                 );
                 getId('npToolsBtn').addEventListener('click', apps.notepad.vars.openEditTools);
-                addEditContext('npLoad');
-                addEditContext('npScreen');
                 this.appWindow.dimsSet = function(){
                     if(getId('npScreen') !== null){
                         getId('npScreen').style.height = this.windowV - 40 + "px";
@@ -7542,10 +7551,14 @@ c(function(){
             "11/08/2018: B0.8.9.0\n + Added new Minesweeper clone for aOS!\n + The Linux Mint custom style now obeys light / dark mode settings!\n\n" +
             "11/09/2018: B0.8.9.1\n + Added new settings to Minesweeper - Omnipresent Grid, Automatic Clearing, and Safe First Move.\n + Added a new feature to Minesweeper - Easy Clear!\n : Adjusted placement of text in Minesweeper.\n : Fixed issue in Minesweeper where empty regions wouldn't clear all the way.\n\n" +
             "11/10/2018: B0.8.9.2\n : Updated the Camera app to use newer API.\n : aOS only nags you to download Chrome once, instead of every time it loads.\n : Fixed bug with Easy Clear in Minesweeper that lets you place flags on broken blocks.\n : Various fixes in Minesweeper\n - Removed automatic win in Minesweeper if all blocks are cleared, was causing bugs\n : Settings can now be changed in standalone Minesweeper.\n\n" +
-            "11/18/2018: B0.8.9.3\n : Made the login screens a bit smoother.\n + aOS will prompt users to set a password after five minutes on brand new accounts.",
+            "11/18/2018: B0.8.9.3\n : Made the login screens a bit smoother.\n + aOS will prompt users to set a password after five minutes on brand new accounts.\n\n" +
+            "11/20/2018: B0.8.9.4\n + Added [br] and [hr] in Messaging.\n : Adapted bbcode parser to accept [tag=param] to give parameters to a tag.\n : Adapted bbcode parser to properly handle unclosed tags.\n : Fixed a vulnerability in Messaging.\n\n" +
+            "11/21/2018: B0.8.9.5\n + Almost any text field in the system supports Copy/Paste now. Developers no longer have to manually register their text field for copy-paste tools.\n : Fixed XSS vulnerability in Copy-Paste menu.\n\n" +
+            "11/25/2018: B0.9.0.0\n + Added system that allows embedded Web Apps to communicate with aOS.\n\n" +
+            "11/26/2018: B0.9.0.1\n + Added API documentation to Web App Maker.\n : Fixed a crash in App Maker.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.8.9.3 (11/18/2018) r1';
+    window.aOSversion = 'B0.9.0.1 (11/25/2018) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -8488,11 +8501,6 @@ c(function(){
                     'The level of battery left in the system, or the status of the battery charging. If batteryLevel is -1, then no battery was detected by aOS. Same with batteryLevel. (on some systems, this is a glitch and a simple restart of aOS can fix it) A batteryCharging of 1 means it is charging. 0 means it is not charging.'
                 );});
                 c(function(){apps.appAPI.vars.newdoc(
-                    'addEditContext(elementId)',
-                    'addEditContext("myInputElement")',
-                    'Adds the Copy-Paste context menu to any &lt;input&gt; or &lt;textarea&gt;. An example of this menu can be seen in many aOS apps, such as Text Editor or Sticky Note. Use addEditContext <i>after</i> you create the element, and make sure you use its element ID.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
                     'c(someFunction, functionArgs)',
                     'c(function(arg){<br>&nbsp; alert("Your arg is " + arg); // alerts 743 for us<br>}, 743);',
                     'The c function is a useful tool in making an app that will take a long time to process some information. Instead of processing the information or performing a large action all at once and causing aOS to freeze, you can spread it out over more time easily, with the c function. Keep in mind that any function you put inside of c will run <i>after</i> the current function is done running. For instance, we can make x = 1, then tell c to alert(x), then make x = 2. We will get an alert of 2 because the c function runs <i>after the current function</i>'
@@ -8529,7 +8537,7 @@ c(function(){
                 if(!this.appWindow.appIcon){
                     this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 500, parseInt(getId('desktop').style.height, 10) / 2 - 300, 1000, 600);
                 }
-                this.vars.div = getId("win_appmaker_h");
+                this.vars.div = getId("win_appmaker_html");
                 this.vars.div.style.overflow = "auto";
                 this.vars.div.style.backgroundPosition = 'center';
                 this.vars.div.style.backgroundRepeat = 'no-repeat';
@@ -8581,15 +8589,7 @@ c(function(){
                     '<p>If your app will not have an image, then enter 0. Your app\'s three-letter abbreviation will be used instead.</p>' +
                     '<br><hr>' +
                     '<button onClick="apps.appmaker.vars.compileApp()">Compile and Open in Text Editor</button> <button onClick="apps.appmaker.vars.installApp()">Compile and Install on This Browser (requires OS reboot)</button><br>';
-                    addEditContext('APMappcode');
-                    addEditContext('APMappname');
-                    addEditContext('APMappicon');
-                    addEditContext('APMapplaunchtypes');
-                    addEditContext('APMappmaincode');
-                    addEditContext('APMappsignal');
-                    addEditContext('APMappvars');
-                    addEditContext('APMappdsktp');
-                    addEditContext('APMappiconimage');
+                    
             }
             this.appWindow.openWindow();
         },
@@ -8764,6 +8764,11 @@ c(function(){
                 'Width: <input id="WAPsizeX" placeholder="700" value="700"><br>' +
                 'Height: <input id="WAPsizeY" placeholder="400" value="400">' +
                 '<hr>' +
+                '<h2>App API</h2>' +
+                '<p>If you are writing an app designed specifically for aOS, there is an API available for you to use, that allows you to interface with aOS.</p>' +
+                '<p>If you are not a developer, you can ignore this section.</p>' +
+                '<button onclick="apps.webAppMaker.vars.alertAPI()">API Documentation</button>' +
+                '<hr>' +
                 '<h2>Install App</h2>' +
                 '<p>This will add your app to your database. Next time you load aOS (or refresh the page), your app will be on the desktop.</p>' +
                 '<button onclick="apps.webAppMaker.vars.addApp()">Install</button>' +
@@ -8803,6 +8808,33 @@ c(function(){
                         }
                     }
                     doLog("Done.", "#ACE");
+                    doLog("Initializing WAP Message Listener and Permission system...", "#ACE");
+                    if(safeMode){
+                        doLog("Failed Message Listener because Safe Mode is enabled.", "#F00");
+                    }else{
+                        window.addEventListener("message", apps.webAppMaker.vars.recieveMessage);
+                    }
+                    if(typeof USERFILES.APP_WAP_trusted_apps === "string"){
+                        try{
+                            var tempobj = JSON.parse(USERFILES.APP_WAP_trusted_apps);
+                            var fail = 0;
+                            for(var i in tempobj){
+                                for(var j in tempobj[i]){
+                                    if(tempobj[i][j] !== "true" && tempobj[i][j] !== "false"){
+                                        fail = 1;
+                                    }
+                                }
+                            }
+                            if(fail){
+                                doLog("Failed Permissions: Not in correct format.", "#F00");
+                            }else{
+                                apps.webAppMaker.vars.trustedApps = tempobj;
+                            }
+                        }catch(err){
+                            doLog("Failed Permissions: " + err, "#F00");
+                        }
+                    }
+                    doLog("Done.", "#ACE");
                     break;
                 case 'shutdown':
                         
@@ -8813,6 +8845,283 @@ c(function(){
         },
         {
             appInfo: 'Use this tool to convert any compatible webpage into an app for aOS!<br><br>If you need to delete an app made with this tool, then open its window, right click its title bar, and click "About App". There will be a file name in that info window. You can delete that file in File Manager -> USERFILES, and the app will be uninstalled.',
+            actions: {
+                fs: {
+                    read: function(input){
+                        if(typeof USERFILES[input[0]] === "string"){
+                            return "success:fs:read:" + USERFILES[input[0]];
+                        }else{
+                            return "error:fs:read:file not found:" + input[0];
+                        }
+                    },
+                    write: function(input){
+                        apps.saveMaster.vars.save(input[0], input[1], 1);
+                        return "success:fs:write:" + input[0];
+                    }
+                },
+                prompt: {
+                    alert: function(input){
+                        
+                    },
+                    prompt: function(input){
+                        
+                    },
+                    confirm: function(input){
+                        
+                    },
+                    notify: function(input){
+                        
+                    }
+                },
+                readsetting: {
+                    darkmode: function(input){
+                        return "success:readsetting:darkmode:" + numtf(darkMode);
+                    },
+                    customstyle: function(input){
+                        return "success:readsetting:customstyle:" + getId("aosCustomStyle").innerHTML;
+                    }
+                },
+                writesetting: {
+                    darkmode: function(input){
+                        if(input[0] === "1"){
+                            if(!darkMode){
+                                apps.settings.vars.togDarkMode();
+                            }
+                            return "success:writesetting:darkmode:1"
+                        }else if(input[0] === "0"){
+                            if(darkMode){
+                                apps.settings.vars.togDarkMode();
+                            }
+                            return "success:writesetting:darkmode:0"
+                        }else{
+                            return "error:writesetting:darkmode:invalid value"
+                        }
+                    }
+                },
+                js: {
+                    exec: function(input){
+                        try{
+                            return "success:js:eval:" + eval(input[0]);
+                        }catch(error){
+                            return "error:js:eval:" + error;
+                        }
+                    }
+                }
+            },
+            actionDesc: {
+                fs: "access your USERFILES on aOS",
+                prompt: "show prompts and notifications on aOS",
+                readsetting: "read your settings on aOS",
+                writesetting: "change your settings on aOS",
+                js: "execute JavaScript code on aOS"
+            },
+            commandExamples: {
+                fs: {
+                    read: "aos:fs:read:file_name",
+                    write: "aos:fs:write:file_name:content"
+                },
+                prompt: {
+                    alert: "",
+                    prompt: "",
+                    confirm: "",
+                    notify: ""
+                },
+                readsetting: {
+                    darkmode: "aos:readsetting:darkmode",
+                    customstyle: "aos:readsetting:customstyle"
+                },
+                writesetting: {
+                    darkmode: "aos:writesetting:darkmode:[0|1]"
+                },
+                js: {
+                    exec: "aos:js:eval:runnableCodeHere()"
+                }
+            },
+            commandDescriptions: {
+                fs: {
+                    read: "Read a file from USERFILES",
+                    write: "Write a file to USERFILES",
+                },
+                prompt: {
+                    alert: "unimplemented",
+                    prompt: "unimplemented",
+                    confirm: "unimplemented",
+                    notify: "unimplemented"
+                },
+                readsetting: {
+                    darkmode: "Read the Dark Mode setting",
+                    customstyle: "Read the user's custom stylesheet"
+                },
+                writesetting: {
+                    darkMode: "Change the Dark Mode setting to 1 or 0"
+                },
+                js: {
+                    exec: "Execute JS code on aOS"
+                }
+            },
+            alertAPI: function(){
+                apps.prompt.vars.alert('<div style="display:inline-block;position:relative;text-align:left"><h1>Web App API</h1>' +
+                'Using JavaScript\'s postMessage function, you can build functionality into your web app that lets you interface with aOS.<br><br>' +
+                'In order to send a request to aOS, you can use the following code:<br>' +
+                '<span style="background:#CCC;font-family:aosProFont, monospace">window.parent.postMessage("aos:command:goes:here", "https://aaron-os-mineandcraft12.c9.io");</span><br><br>' +
+                'In order to recieve a reply from aOS, you can use the following code:<br>' +
+                '<div style="background:#CCC;position:relative;display:inline-block;font-family:aosProFont, monospace;text-align:left">window.addEventListener("message", function(msg){<br>' +
+                '&nbsp; if(String(msg.data).indexOf("aosreply:") === 0){<br>' +
+                '&nbsp; &nbsp; yourCustomReplyHandlerFunction(msg);<br>' +
+                '&nbsp; }<br>' +
+                '});</div><br><br>' +
+                'The API relies on permissions, to ensure that the user can control whether your app has permission to access certain groups of commands.<br>' +
+                'To request permission to a certain command type, send a message like this:<br>' +
+                '<span style="background:#CCC;font-family:aosProFont, monospace">aos:permission:_____</span><br>' +
+                'In the blank, enter the type of permission you wish to request. At the moment, these are the supported permissions:<br>' +
+                '<span style="font-family:aosProFont, monospace">' + this.buildAPI(1) + '</span><br>' +
+                'aOS will respond in one of three ways:<br>' +
+                'No Response = aOS is prompting the user for permission. (if you get no reply, wait for the user to allow permission and then have them request again)<br>' +
+                '<span style="background:#CCC;font-family:aosProFont, monospace">aosreply:permission:_____:true</span> = your permission to use the feature is granted.<br>' +
+                '<span style="background:#CCC;font-family:aosProFont, monospace">aosreply:permission:_____:false</span> = your permission to use the feature is denied.<br><br>' +
+                'To send a command to aOS, send a message like this:<br>' +
+                '<span style="background:#CCC;font-family:aosProFont, monospace">aos:__<u>1</u>__:__<u>2</u>__:__<u>3</u>__:...</span><br>' +
+                'Blank 1: Permission group you need to access<br>' +
+                'Blank 2: Command you need to issue<br>' +
+                'Blank 3+: If needed, parameter(s) for the command<br>' +
+                'For example, to check if the user has dark mode enabled, issue this command, which aOS will reply to with the current state of darkMode.<br>' +
+                '<span style="background:#CCC;font-family:aosProFont, monospace">aos:readsetting:darkmode</span><br>' +
+                'aOS will reply with this:<br>' +
+                '<span style="background:#CCC;font-family:aosProFont, monospace">aosreply:readsetting:darkmode:[true/false]</span><br>' +
+                'If aOS ever hits an error in processing your command, it will give you a message like this:<br>' +
+                '<span style="background:#CCC;font-family:aosProFont, monospace">aosreply:error:_____</span><br>' +
+                '<h2>Commands:</h2><hr><span style="font-family:aosProFont, monospace">' + this.buildAPI() + '</span></div>', "Okay", function(){}, "Web App Maker");
+            },
+            buildAPI: function(permissions){
+                var str = '';
+                var str2 = '';
+                for(var i in this.actions){
+                    if(str !== ''){
+                        if(!permissions){
+                            str += '<hr>';
+                        }else{
+                            str += ', ';
+                        }
+                    }
+                    str += i;
+                    if(!permissions){
+                        str += '<br>';
+                        for(var j in this.actions[i]){
+                            str += '<br>';
+                            str += j + ': ' + this.commandDescriptions[i][j];
+                        }
+                    }
+                }
+                return str;
+            },
+            trustedApps: {
+                "https://aaron-os-mineandcraft12.c9.io": {
+                    "fs": "true",
+                    "prompt": "true",
+                    "readsetting": "true",
+                    "writesetting": "true",
+                    "js": "true"
+                }
+            },
+            updatePermissions: function(){
+                apps.savemaster.vars.save("APP_WAP_trusted_apps", JSON.stringify(apps.webAppMaker.vars.trustedApps, null, 4), 1);
+            },
+            reflectPermissions: function(){
+                doLog("Initializing WAP Permission system...", "#ACE");
+                if(typeof USERFILES.APP_WAP_trusted_apps === "string"){
+                    try{
+                        var tempobj = JSON.parse(USERFILES.APP_WAP_trusted_apps);
+                        var fail = 0;
+                        for(var i in tempobj){
+                            for(var j in tempobj[i]){
+                                if(tempobj[i][j] !== "true" && tempobj[i][j] !== "false"){
+                                    fail = 1;
+                                }
+                            }
+                        }
+                        if(fail){
+                            doLog("Failed Permissions: Not in correct format.", "#F00");
+                        }else{
+                            apps.webAppMaker.vars.trustedApps = tempobj;
+                        }
+                    }catch(err){
+                        doLog("Failed Permissions: " + err, "#F00");
+                    }
+                }
+                doLog("Done.", "#ACE");
+            },
+            recieveMessage: function(msg){
+                if(typeof msg.data === "string"){
+                    if(msg.data.indexOf("aos:") === 0){
+                        var msgData = msg.data.split(":");
+                        msgData.shift();
+                        if(msgData.length > 1){
+                            if(msgData[0] === "permission"){
+                                if(apps.webAppMaker.vars.actions[msgData[1]]){
+                                    if(!apps.webAppMaker.vars.trustedApps[msg.origin]){
+                                        apps.webAppMaker.vars.trustedApps[msg.origin] = {};
+                                    }
+                                    if(typeof apps.webAppMaker.vars.trustedApps[msg.origin][msgData[1]] === "string"){
+                                        apps.webAppMaker.vars.postReply("permission:" + msgData[1] + ":" + apps.webAppMaker.vars.trustedApps[msg.origin][msgData[1]], msg.origin, msg.source);
+                                    }else{doLog(typeof apps.webAppMaker.vars.trustedApps[msg.origin][msgData[1]]);
+                                        apps.webAppMaker.vars.askPermission(msg.origin, msgData[1]);
+                                    }
+                                }else{
+                                    apps.webAppMaker.vars.postReply("error:permission not found:" + msgData[1], msg.origin, msg.source);
+                                }
+                            }else{
+                                if(apps.webAppMaker.vars.trustedApps[msg.origin]){
+                                    if(apps.webAppMaker.vars.actions[msgData[0]]){
+                                        if(apps.webAppMaker.vars.trustedApps[msg.origin][msgData[0]] === "true"){
+                                            if(apps.webAppMaker.vars.actions[msgData[0]][msgData[1]]){
+                                                try{
+                                                    apps.webAppMaker.vars.postReply(apps.webAppMaker.vars.actions[msgData.shift()][msgData.shift()](msgData), msg.origin, msg.source);
+                                                }catch(err){
+                                                    apps.webAppMaker.vars.postReply("error:failed to execute command:" + err, msg.origin, msg.source);
+                                                };
+                                            }else{
+                                                apps.webAppMaker.vars.postReply("error:command not found:" + msgData[1], msg.origin, msg.source);
+                                            }
+                                        }else{
+                                            apps.webAppMaker.vars.postReply("error:permission not granted:" + msgData[0], msg.origin, msg.source);
+                                        }
+                                    }else{
+                                        apps.webAppMaker.vars.postReply("error:command group not found:" + msgData[0], msg.origin, msg.source);
+                                    }
+                                }else{
+                                    apps.webAppMaker.vars.postReply("error:origin not trusted:" + msg.origin.split("https://")[1], msg.origin, msg.source);
+                                }
+                            }
+                        }else{
+                            apps.webAppMaker.vars.postReply("error:invalid message", msg.origin, msg.source);
+                        }
+                    }else if(msg.data.indexOf("aosreply:") === 0){
+                        doLog(apps.webAppMaker.vars.sanitize(msg.data), '#ACE');
+                    }else{
+                        doLog("postMessage from " + msg.origin + ": " + apps.webAppMaker.vars.sanitize(msg.data), "#ACE");
+                    }
+                }else{
+                    if(typeof msg.data === "object"){
+                        doLog("postMessage object from " + msg.origin + ":");
+                        debugArray(msg.data, 1);
+                    }else{
+                        doLog("postMessage from " + msg.origin + ": " + apps.webAppMaker.vars.sanitize(msg.data), "#ACE");
+                    }
+                }
+            },
+            postReply: function(message, origin, src){
+                src.postMessage("aosreply:" + message, origin);
+            },
+            askPermission: function(origin, permission){
+                apps.prompt.vars.confirm("<span id='WAPpermissionOrigin'>" + origin + "</span> is requesting permission to " + this.actionDesc[permission] + "." + "<br><br>Permission Code: <span id='WAPpermissionType'>" + permission + "</span>", ['Deny', 'Allow'], function(btn){
+                    apps.webAppMaker.vars.trustedApps[getId("WAPpermissionOrigin").innerHTML][getId("WAPpermissionType").innerHTML] = "" + numtf(btn);
+                    apps.webAppMaker.vars.updatePermissions();
+                    //apps.webAppMaker.vars.postReply("permission:" + getId("WAPpermissionType").innerHTML + ":" + numtf(btn), getId("WAPpermissionOrigin").innerHTML);
+                }, 'AaronOS');
+            },
+            sanitize: function(text){
+                return String(text).split("<").join("&lt;").split(">").join("&gt;");
+            },
             numberOfApps: 0,
             addApp: function(){
                 var tempObj = {
@@ -8962,7 +9271,6 @@ c(function(){
                 '<p id="SRCfiles">Search Results in "files"</p>' +
                 '<p id="SRCuserfiles">Search Results in "USERFILES"</p>'
             );
-            addEditContext('SRCfield');
             getId('win_search_html').style.overflowY = 'scroll';
             this.appWindow.openWindow();
         },
@@ -9054,7 +9362,6 @@ c(function(){
                 this.vars.lastMsgRecieved = this.vars.lastMsgStart;
                 getId('MSGinput').setAttribute('onkeyup', 'if(event.keyCode === 13){apps.messaging.vars.sendMessage();}');
             }
-            addEditContext('MSGinput');
             this.appWindow.openWindow();
             this.vars.requestMessage();
         },
@@ -9111,7 +9418,7 @@ c(function(){
             doFormatting: function(){
                 tempStr = '';
                 for(var i in apps.messaging.vars.objTypes){
-                    tempStr += '<hr><span style="background:#CCC;padding:3px;border-radius:3px;">[' + i + ']</span><br><br>' + (apps.messaging.vars.objDesc[i] || 'No description.') + '<br><br>Example:<br><br><span style="background:#CCC;padding:3px;border-radius:3px;">' + (apps.messaging.vars.objExamp[i] || 'No example.') + '</span><br><br>' + apps.messaging.vars.parseBB(apps.messaging.vars.objExamp[i] || '');
+                    tempStr += '<hr><span style="background:#CCC;padding:3px;border-radius:3px;">[' + i + ']</span><br><br>' + (apps.messaging.vars.objDesc[i] || 'No description.') + '<br><br>Example:<br><br><span style="background:#CCC;padding:3px;border-radius:3px;">' + (apps.messaging.vars.objExamp[i] || 'No examples.') + '</span><br><br>' + apps.messaging.vars.parseBB(apps.messaging.vars.objExamp[i] || '');
                 }
                 apps.prompt.vars.alert('Here are all the installed formatting tools:' + tempStr, 'Okay', function(){}, 'Messaging');
             },
@@ -9223,138 +9530,181 @@ c(function(){
             soundToPlay: 0,
             canLookethOverThereSound: 0,
             objTypes: {
-                img: function(str){
+                img: function(str, param){
                     return '<img onclick="this.classList.toggle(\'MSGdivGrowPic\');this.parentNode.classList.toggle(\'MSGdivGrowPicParent\')" style="max-width:calc(100% - 6px);max-height:400px;padding-left:3px;padding-right:3px;" src="' + str + '">';
                 },
-                url: function(str){
+                url: function(str, param){
                     if(str.indexOf('http://') !== 0 && str.indexOf('https://') !== 0 && str.indexOf('/') !== 0){
-                        str = 'https://' + str;
+                        str = 'https://' + encodeURI(str);
                     }
                     return '<a target="_blank" href="' + str + '">' + str + '</a>';
                 },
-                site: function(str){
+                b: function(str, param){
+                    return '<b>' + str + '</b>';
+                },
+                i: function(str, param){
+                    return '<i>' + str + '</i>';
+                },
+                u: function(str, param){
+                    return '<u>' + str + '</u>';
+                },
+                br: function(param){
+                    return '<br>';
+                },
+                hr: function(param){
+                    return '<hr>';
+                },
+                font: function(str, param){
+                    if(param){
+                        return '<span style="font-family:' + param.split(';')[0] + ', monospace;">' + str + '</span>';
+                    }else{
+                        var strComma = str.indexOf(',');
+                        var strCommaSpace = str.indexOf(', ');
+                        var strSplit = '';
+                        if(strComma > -1){
+                            if(strCommaSpace === strComma){
+                                strSplit = str.split(', ');
+                                return '<span style="font-family:' + strSplit.shift().split(';')[0] + ', monospace;">' + strSplit.join(', ') + '</span>';
+                            }else{
+                                strSplit = str.split(',');
+                                return '<span style="font-family:' + strSplit.shift().split(';')[0] + ', monospace;">' + strSplit.join(',') + '</span>';
+                            }
+                        }else{
+                            return '[font]' + str + '[/font]';
+                        }
+                    }
+                },
+                color: function(str, param){
+                    if(param){
+                        return '<span style="color:' + param.split(';')[0] + ';">' + str + '</span>';
+                    }else{
+                        var strComma = str.indexOf(',');
+                        var strCommaSpace = str.indexOf(', ');
+                        var strSplit = '';
+                        if(strComma > -1){
+                            if(strCommaSpace === strComma){
+                                strSplit = str.split(', ');
+                                return '<span style="color:' + strSplit.shift().split(';')[0] + ';">' + strSplit.join(', ') + '</span>';
+                            }else{
+                                strSplit = str.split(',');
+                                return '<span style="color:' + strSplit.shift().split(';')[0] + ';">' + strSplit.join(',') + '</span>';
+                            }
+                        }else{
+                            return '[color]' + str + '[/color]';
+                        }
+                    }
+                },
+                glow: function(str, param){
+                    if(param){
+                        return '<span style="text-shadow:0 0 5px ' + param.split(';')[0].split(' ').join('') + ';">' + str + '</span>';
+                    }else{
+                        var strComma = str.indexOf(',');
+                        var strCommaSpace = str.indexOf(', ');
+                        var strSplit = '';
+                        if(strComma > -1){
+                            if(strCommaSpace === strComma){
+                                strSplit = str.split(', ');
+                                return '<span style="text-shadow:0 0 5px ' + strSplit.shift().split(';')[0].split(' ').join('') + ';">' + strSplit.join(', ') + '</span>';
+                            }else{
+                                strSplit = str.split(',');
+                                return '<span style="text-shadow:0 0 5px ' + strSplit.shift().split(';')[0].split(' ').join('') + ';">' + strSplit.join(',') + '</span>';
+                            }
+                        }else{
+                            return '[glow]' + str + '[/glow]';
+                        }
+                    }
+                },
+                outline: function(str, param){
+                    if(param){
+                        return '<span style="text-shadow:1px 0 0 ' + param.split(';')[0].split(' ').join('') + ', -1px 0 0 ' + param.split(';')[0].split(' ').join('') + ', 0 1px 0 ' + param.split(';')[0].split(' ').join('') + ', 0 -1px 0 ' + param.split(';')[0].split(' ').join('') + ';">' + str + '</span>';
+                    }else{
+                        var strComma = str.indexOf(',');
+                        var strCommaSpace = str.indexOf(', ');
+                        var strSplit = '';
+                        if(strComma > -1){
+                            if(strCommaSpace === strComma){
+                                strSplit = str.split(', ');
+                                strShift = strSplit.shift().split(';')[0].split(' ').join('');
+                                return '<span style="text-shadow:1px 0 0 ' + strShift + ', -1px 0 0 ' + strShift + ', 0 1px 0 ' + strShift + ', 0 -1px 0 ' + strShift + ';">' + strSplit.join(', ') + '</span>';
+                            }else{
+                                strSplit = str.split(',');
+                                strShift = strSplit.shift().split(';')[0].split(' ').join('');
+                                return '<span style="text-shadow:1px 0 0 ' + strShift + ', -1px 0 0 ' + strShift + ', 0 1px 0 ' + strShift + ', 0 -1px 0 ' + strShift + ';">' + strSplit.join(',') + '</span>';
+                            }
+                        }else{
+                            return '[outline]' + str + '[/outline]';
+                        }
+                    }
+                },
+                flip: function(str, param){
+                    return '<div style="transform:rotate(180deg);display:inline-block;position:relative">' + str + '</div>';
+                },
+                site: function(str, param){
                     if(str.indexOf('http://') !== 0 && str.indexOf('https://') !== 0 && str.indexOf('/') !== 0){
                         str = 'https://' + encodeURI(str);
                     }
                     return '<div style="position:relative;display:block;width:100%;border:none;background:#FFF;margin-top:-3px;margin-bottom:-3px;border-radius:10px;box-shadow:inset 0 0 5px #000;height:400px;" onclick="if(event.target.tagName.toLowerCase() === \'button\'){this.outerHTML = \'<iframe src=\\\'\' + this.getAttribute(\'aosMessagingSiteURL\') + \'\\\' style=\\\'\' + this.getAttribute(\'style\') + \'\\\'></iframe>\'}" aosMessagingSiteURL="' + str + '"><p style="margin-top:188px;text-align:center;"><button>Click to load site:<br>' + str + '</button></p></div>';
                 },
-                b: function(str){
-                    return '<b>' + str + '</b>';
-                },
-                i: function(str){
-                    return '<i>' + str + '</i>';
-                },
-                u: function(str){
-                    return '<u>' + str + '</u>';
-                },
-                font: function(str){
-                    var strComma = str.indexOf(',');
-                    var strCommaSpace = str.indexOf(', ');
-                    var strSplit = '';
-                    if(strComma > -1){
-                        if(strCommaSpace === strComma){
-                            strSplit = str.split(', ');
-                            return '<span style="font-family:' + strSplit.shift().split(';')[0] + ', monospace;">' + strSplit.join(', ') + '</span>';
-                        }else{
-                            strSplit = str.split(',');
-                            return '<span style="font-family:' + strSplit.shift().split(';')[0] + ', monospace;">' + strSplit.join(',') + '</span>';
-                        }
-                    }else{
-                        return '[font]' + str + '[/font]';
-                    }
-                },
-                color: function(str){
-                    var strComma = str.indexOf(',');
-                    var strCommaSpace = str.indexOf(', ');
-                    var strSplit = '';
-                    if(strComma > -1){
-                        if(strCommaSpace === strComma){
-                            strSplit = str.split(', ');
-                            return '<span style="color:' + strSplit.shift().split(';')[0] + ';">' + strSplit.join(', ') + '</span>';
-                        }else{
-                            strSplit = str.split(',');
-                            return '<span style="color:' + strSplit.shift().split(';')[0] + ';">' + strSplit.join(',') + '</span>';
-                        }
-                    }else{
-                        return '[color]' + str + '[/color]';
-                    }
-                },
-                glow: function(str){
-                    var strComma = str.indexOf(',');
-                    var strCommaSpace = str.indexOf(', ');
-                    var strSplit = '';
-                    if(strComma > -1){
-                        if(strCommaSpace === strComma){
-                            strSplit = str.split(', ');
-                            return '<span style="text-shadow:0 0 5px ' + strSplit.shift().split(';')[0].split(' ')[0] + ';">' + strSplit.join(', ') + '</span>';
-                        }else{
-                            strSplit = str.split(',');
-                            return '<span style="text-shadow:0 0 5px ' + strSplit.shift().split(';')[0].split(' ')[0] + ';">' + strSplit.join(',') + '</span>';
-                        }
-                    }else{
-                        return '[glow]' + str + '[/glow]';
-                    }
-                },
-                outline: function(str){
-                    var strComma = str.indexOf(',');
-                    var strCommaSpace = str.indexOf(', ');
-                    var strSplit = '';
-                    if(strComma > -1){
-                        if(strCommaSpace === strComma){
-                            strSplit = str.split(', ');
-                            strShift = strSplit.shift().split(';')[0].split(' ')[0];
-                            return '<span style="text-shadow:1px 0 0 ' + strShift + ', -1px 0 0 ' + strShift + ', 0 1px 0 ' + strShift + ', 0 -1px 0 ' + strShift + ';">' + strSplit.join(', ') + '</span>';
-                        }else{
-                            strSplit = str.split(',');
-                            strShift = strSplit.shift().split(';')[0].split(' ')[0];
-                            return '<span style="text-shadow:1px 0 0 ' + strShift + ', -1px 0 0 ' + strShift + ', 0 1px 0 ' + strShift + ', 0 -1px 0 ' + strShift + ';">' + strSplit.join(',') + '</span>';
-                        }
-                    }else{
-                        return '[outline]' + str + '[/outline]';
-                    }
-                },
-                flip: function(str){
-                    return '<div style="transform:rotate(180deg);display:inline-block;position:relative">' + str + '</div>';
-                }
             },
             objSafe: {
                 img: 0,
                 url: 0,
-                site: 0,
                 b: 1,
                 i: 1,
                 u: 1,
+                br: 0,
+                hr: 0,
                 font: 1,
                 color: 1,
                 glow: 1,
                 outline: 1,
-                flip: 1
+                flip: 1,
+                site: 0
+            },
+            objShort: {
+                img: 0,
+                url: 0,
+                b: 0,
+                i: 0,
+                u: 0,
+                br: 1,
+                hr: 1,
+                font: 0,
+                color: 0,
+                glow: 0,
+                outline: 0,
+                flip: 0,
+                site: 0
             },
             objDesc: {
                 img: 'Embed an image via URL.',
                 url: 'Format your text as a clickable URL.',
-                site: 'Embed a website via URL',
                 b: 'Format your text as bold.',
                 i: 'Format your text as italics.',
                 u: 'Format your text as underlined.',
+                br: 'Insert a line break.',
+                hr: 'Insert a horizontal line.',
                 font: 'Format your text with a font.',
                 color: 'Format your text with a color.',
                 glow: 'Format your text with a colorful glow.',
                 outline: 'Format your text with an outline.',
-                flip: 'Flip your text upside-down.'
+                flip: 'Flip your text upside-down.',
+                site: 'Embed a website via URL'
             },
             objExamp: {
-                img: '[img]https://image.prntscr.com/image/jcPyuzbNTNu1cHgg18yaZg.png[/img]',
+                img: '[img]https://aaron-os-mineandcraft12.c9.io/appicons/aOS.png[/img]',
                 url: '[url]https://duckduckgo.com[/url]',
-                site: '[site]https://bing.com[/site]',
                 b: '[b]This is bold text.[/b]',
                 i: '[i]This is italic text.[/i]',
                 u: '[u]This is underlined text.[/u]',
-                font: '[font]Comic Sans MS, This text has a custom font.[/font]',
-                color: '[color]red, This is red text via name.[/color]<br><br>[color]#00AA00, This is green text via hex.[/color]',
-                glow: '[glow]red, This is glowy red text.[/glow]',
-                outline: '[outline]red, This is red outlined text.[/outline]',
-                flip: '[flip]This is upside-down text.[/flip]'
+                br: 'Hello[br]World',
+                hr: 'Hello[hr]World',
+                font: '[font=Comic Sans MS]This text has a custom font.[/font]',
+                color: '[color=red]This is red text via name.[/color]<br><br>[color=#00AA00]This is green text via hex.[/color]',
+                glow: '[glow=red]This is glowy red text.[/glow]',
+                outline: '[outline=red]This is red outlined text.[/outline]',
+                flip: '[flip]This is upside-down text.[/flip]',
+                site: '[site]https://bing.com[/site]'
             },
             parseBB: function(text, safe){
                 var tempIn = text;
@@ -9365,13 +9715,26 @@ c(function(){
                         var nextEnd = tempIn.indexOf(']', nextObj);
                         if(nextEnd > -1){
                             var nextType = tempIn.toLowerCase().substring(nextObj + 1, nextEnd);
+                            var nextParam = 0;
+                            if(nextType.indexOf('=') > -1){
+                                nextParam = nextType.split('=');
+                                nextType = nextParam.shift();
+                                nextParam = nextParam.join('=');
+                            }
                             if(this.objTypes[nextType]){
-                                var nextClose = tempIn.toLowerCase().indexOf('[/' + nextType + ']', nextEnd);
-                                if(nextClose > -1){
+                                if(this.objShort[nextType]){
                                     if(!(safe && !this.objSafe[nextType])){
-                                        var replaceStr = tempIn.substring(nextEnd + 1, nextClose);
-                                        var newStr = this.objTypes[nextType](replaceStr);
-                                        tempIn = tempIn.substring(0, nextObj) + newStr + tempIn.substring(nextClose + 3 + nextType.length, tempIn.length);
+                                        var newStr = this.objTypes[nextType](nextParam);
+                                        tempIn = tempIn.substring(0, nextObj) + newStr + tempIn.substring(nextObj + 2 + nextType.length, tempIn.length);
+                                    }
+                                }else{
+                                    var nextClose = tempIn.toLowerCase().indexOf('[/' + nextType + ']', nextEnd);
+                                    if(nextClose > -1){
+                                        if(!(safe && !this.objSafe[nextType])){
+                                            var replaceStr = tempIn.substring(nextEnd + 1, nextClose);
+                                            var newStr = this.objTypes[nextType](replaceStr, nextParam);
+                                            tempIn = tempIn.substring(0, nextObj) + newStr + tempIn.substring(nextClose + 3 + nextType.length, tempIn.length);
+                                        }
                                     }
                                 }
                             }
@@ -9996,11 +10359,6 @@ c(function(){
                             helpPage: 'This is the stored value of wether or not an app is present on the desktop or apps list.<br><br>A value of 0 means it appears in both the desktop and apps list.<br>A value of 1 means it appears in the apps list but not the desktop.<br>A value of 2 means it does not appear in either location.'
                         }
                     },
-                    addEditContext: {
-                        '1': 'land',
-                        '2': 'addEditContext(element)',
-                        helpPage: 'Adds the copy-paste context menu to an element. Works only given the following are true.<br><ul><li>Element has an ID; you need to pass the ID of your element to addEditContext.</li><li>Element must be an input or a textarea.</li></ul>'
-                    },
                     c: {
                         '1': 'land',
                         '2': 'c(code(arg), args)',
@@ -10453,7 +10811,6 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims(10, 10, 200, 200);
                 this.appWindow.setContent('<textarea id="stickyNotePad" onblur="apps.postit.vars.savePost()" style="padding:0;color:#000;font-family:Comic Sans MS;font-weight:bold;border:none;resize:none;display:block;width:100%;height:100%;background-color:#FF7;"></textarea>');
-                addEditContext('stickyNotePad');
                 if(typeof USERFILES.APP_SNt_stickyNoteSave === "string"){
                     getId('stickyNotePad').value = USERFILES.APP_SNt_stickyNoteSave;
                 }
@@ -12002,7 +12359,6 @@ var baseCtx = {
 };
 getId("hideall").setAttribute('oncontextmenu', 'ctxMenu(baseCtx.hideall, 1, event);');
 //getId("desktop").setAttribute('oncontextmenu', 'ctxMenu(baseCtx.desktop, 1, event);return false');
-addEditContext('desktop', 1);
 getId("taskbar").setAttribute('oncontextmenu', 'ctxMenu(baseCtx.taskbar, 1, event);');
 getId("monitor").setAttribute('oncontextmenu', 'if(event.target !== getId("ctxMenu")){return false}');
 
