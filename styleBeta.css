@@ -261,6 +261,9 @@ div{
                 /*cursor:url(cursors/move.png) 14 14, move;*/
                 transition: opacity .5s;
             }
+                .leftCaptionButtons .winCap{
+                    padding-left:69px;
+                }
             .winHTML{
                 width:calc(100% - 9px);
                 height:276px;
@@ -416,6 +419,10 @@ div{
                 color:#E55;
                 background-color:#C00;
             }
+                .leftCaptionButtons .winExit{
+                    left:3px;
+                    right:initial;
+                }
             .winShrink, .winBig, .winFld{
                 height:16px;
                 width:16px;
@@ -445,13 +452,25 @@ div{
             .winShrink{
                 right:49px;
             }
+                .leftCaptionButtons .winShrink{
+                    left:49px;
+                    right:initial;
+                }
             .winBig{
                 right:26px;
             }
+                .leftCaptionButtons .winBig{
+                    left:26px;
+                    right:initial;
+                }
             .winFld{
                 left: 3px;
                 line-height:24px;
             }
+                .leftCaptionButtons .winFld{
+                    right:3px;
+                    left:initial;
+                }
             .winShrink, .winBig, .winExit , .winFld{
                 transition: .2s;
             }
@@ -875,11 +894,14 @@ div{
     bottom:0px;
     width:300px;
     height:300px;
+    /*
     border-top-left-radius:5px;
     border-top-right-radius:5px;
+    */
+    border-radius:5px;
     background-color:#FFF;
     border:2px solid #000;
-    border-bottom:none;
+    /*border-bottom:none;*/
     color:#000;
     font-family:aosProFont, monospace;
     font-size:12px;

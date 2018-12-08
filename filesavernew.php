@@ -100,7 +100,7 @@
                     }else{
                         echo 'Admin username not discovered   ';
                         $mNamefile = fopen('messageUsernames/n_'.$_POST['k'].'.txt', 'w');
-                        fwrite($mNamefile,  join('&gt;', explode('>', join('&lt;', explode('<', $_POST['c'])))));
+                        fwrite($mNamefile,  join('&gt;', explode('>', join('&lt;', explode('<', join('&amp;', explode('&', $_POST['c'])))))));
                         fclose($mNamefile);
                         if($_POST['c'] === "" || $_POST['c'] === "Anonymous"){
                             unlink('messageUsernames/n_'.$_POST['k'].'.txt');
