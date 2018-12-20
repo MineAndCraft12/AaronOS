@@ -1,10 +1,10 @@
 @font-face{
     font-family: "aosProFont";
     src:
-        url('/ProFont/ProFontOnline.ttf') format('truetype'),
-        url('/ProFont/ProFontOnline.woff') format('woff'),
-        url('/ProFont/ProFontOnline.eot'),
-        url('/ProFont/ProFontOnline.svg') format('svg');
+        url('ProFont/ProFontOnline.ttf') format('truetype'),
+        url('ProFont/ProFontOnline.woff') format('woff'),
+        url('ProFont/ProFontOnline.eot'),
+        url('ProFont/ProFontOnline.svg') format('svg');
 }
 /* Default aOS styling */
 ::-webkit-scrollbar{
@@ -127,7 +127,7 @@ hr{
     width:100%;
     height:2px;
     border:none;
-    background-image:url(/hr.png);
+    background-image:url(hr.png);
     background-size:100% 2px;
 }
 a{

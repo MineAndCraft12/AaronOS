@@ -9,7 +9,7 @@
     ?>
     
     <link rel="icon" href="faviconBeta.ico" type="image/x-icon">
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <style id="cursorStyle"></style>
     <style id="aosCustomStyle"></style>
     <style id="mobileStyle"></style>
@@ -62,7 +62,7 @@
                 <div id="notifTitle">Notification</div>
                 <div id="notifContent">Content</div>
                 <div id="notifButtons"><button>Button 1</button> <button>Button 2</button></div>
-                <img id="notifImage" src="/appicons/aOS.png">
+                <img id="notifImage" src="appicons/aOS.png">
                 <div class="winExit cursorPointer" onClick="getId('notifWindow').style.opacity='0';getId('notifWindow').style.pointerEvents='none';getId('notifWindow').style.right = '-350px';window.setTimeout(function(){apps.prompt.vars.checkPrompts();}, 300);apps.prompt.vars.currprompt[3](-1);">x</div>
             </div>
         </div>
@@ -115,7 +115,7 @@
                 <a href="?safeMode"><button>Safe Mode</button></a><br><br>
                 <button onclick="document.getElementById('aOSisLoading').style.display = 'none';document.getElementById('aOSloadingBg').style.display = 'none';document.getElementById('desktop').style.display = '';document.getElementById('taskbar').style.display = '';">Force Boot</button><br><br>
                 <?php if(isset($_COOKIE['keyword'])){echo 'Your OS ID is <span id="aOSloadingKey">'.$_COOKIE['keyword'].'</span>';}else{echo 'You will get a new OS ID.';} ?>
-                <img id="aosLoadingImage" src="/appicons/ds/aOS.png" style="display:none"><!--<br>-->
+                <img id="aosLoadingImage" src="appicons/ds/aOS.png" style="display:none"><!--<br>-->
             </div>
         </div>
     </div>

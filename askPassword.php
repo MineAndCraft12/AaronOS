@@ -184,7 +184,7 @@
             };
         </script>
         <?php
-            echo '<link rel="stylesheet" href="/askPassword.css?ms='.time().'">';
+            echo '<link rel="stylesheet" href="askPassword.css?ms='.time().'">';
         ?>
     </head>
     <body>

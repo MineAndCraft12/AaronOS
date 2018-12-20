@@ -112,7 +112,7 @@
     echo 'loadInterval=window.setInterval(function(){if(window.initStatus){m("init fileloader");SRVRKEYWORD="'.$_COOKIE['keyword'].'";IPADDRESS="'.$_SERVER['HTTP_X_FORWARDED_FOR'].'";getId("aOSloadingInfo").innerHTML += "<br>Your OS key is " + SRVRKEYWORD;';
     // if it needs to be refreshed, tell the client via js
     if($needtorefresh){
-        echo 'window.location = "/";doLog("Moving");';
+        echo 'window.location = "aosBeta.php?refreshed="+Math.round(Math.random()*1000);doLog("Moving");';
     }
     // if user folder not exist, create it
     if(!(is_dir('USERFILES/'.$_COOKIE['keyword']))){
