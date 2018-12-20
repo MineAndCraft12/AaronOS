@@ -1,5 +1,5 @@
 <?php
-    if(isset($_POST['k']) && isset($_COOKIE['keyword']) && substr($_SERVER['HTTP_REFERER'], 0, 37) === 'https://aaron-os-mineandcraft12.c9.io'){
+    if(isset($_POST['k']) && isset($_COOKIE['keyword']) && substr($_SERVER['HTTP_REFERER'], 0, 37) === 'https://'.$_SERVER['SERVER_NAME']){
         if($_POST['k'] === $_COOKIE['keyword']){
             $onlineUsers = fopen('USERFILES/online.txt', 'r');
             if(filesize('USERFILES/online.txt') === 0){

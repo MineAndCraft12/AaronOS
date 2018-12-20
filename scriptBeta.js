@@ -19,8 +19,11 @@ Looking under the hood?
         \|/           Do mind this actual comment that I need, though --->      d(1, ''); d(2, ''); */
 console.log("------------------------------");
 console.log("Starting to intialize aOS.");
-if(window.location.href.indexOf('https://') < 0){
-    window.location = 'https://aaron-os-mineandcraft12.c9.io/aosBeta.php';
+if(window.location.href.indexOf('http://') === 0){
+    //window.location = 'https://aaron-os-mineandcraft12.c9.io/aosBeta.php';
+    var tempLoc = window.location.href.split('http://');
+    tempLoc.shift();
+    window.location = 'https://' + tempLoc.join('http://');
     makeAnErrorToQuit();
 }
 
@@ -1230,6 +1233,8 @@ function makeLiveElement(str){
 // Application class
 m('init Application class');
 var apps = {};
+var appsSorted = [];
+var appsSortedSafe = [];
 var appTotal = 0;
 var appPosX = 8;
 var appPosY = 8;
@@ -2245,12 +2250,12 @@ c(function(){
                                 getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
-                                for(var appy in apps){
+                                for(var appHandle in appsSorted){
                                     c(function(app){
                                         if(apps[app].keepOffDesktop < 2){
                                             apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:64px;height:64px;" src="' + (apps[app].appWindow.appImg || '/appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
                                         }
-                                    }, appy);
+                                    }, appsSorted[appHandle]);
                                 }
                                 c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
@@ -2272,12 +2277,12 @@ c(function(){
                                 getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
-                                for(var appy in apps){
+                                for(var appHandle in appsSorted){
                                     c(function(app){
                                         if(apps[app].keepOffDesktop < 2){
                                             apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:32px;height:32px;" src="' + (apps[app].appWindow.appImg || '/appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
                                         }
-                                    }, appy);
+                                    }, appsSorted[appHandle]);
                                 }
                                 c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
@@ -2299,12 +2304,12 @@ c(function(){
                                 getId('appDsBtable').innerHTML = '<img src="loadLight.gif" style="width:100%;">';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
-                                for(var appy in apps){
+                                for(var appHandle in appsSorted){
                                     c(function(app){
                                         if(apps[app].keepOffDesktop < 2){
                                             apps.startMenu.vars.listOfApps += '<div class="cursorPointer" style="min-height:96px;max-height:96px;display:inline-block;position:static;text-align:center;min-width:25%;max-width:25%" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><img style="width:32px;" src="' + (apps[app].appWindow.appImg || '/appicons/ds/redx.png') + '"><br>' + apps[app].appDesc + '</div>';
                                         }
-                                    }, appy);
+                                    }, appsSorted[appHandle]);
                                 }
                                 c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
@@ -2326,12 +2331,12 @@ c(function(){
                                 getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
-                                for(var appy in apps){
+                                for(var appHandle in appsSorted){
                                     c(function(app){
                                         if(apps[app].keepOffDesktop < 2){
                                             apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" style="background-color:rgba(' + darkSwitch('255, 255, 255', '0, 0, 0') + ', 0.5);color:' + darkSwitch('#000', '#FFF') + ';" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th>' + apps[app].dsktpIcon + '</th><td>' + apps[app].appDesc + '</td></tr>';
                                         }
-                                    }, appy);
+                                    }, appsSorted[appHandle]);
                                 }
                                 c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
@@ -3842,55 +3847,7 @@ c(function(){
             appInfo: 'This app is used to show information and help pages for AaronOS apps.'
         }, 2, 'appInfo', '/appicons/ds/systemApp.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Beta Testing App...'; 
-});
-c(function(){
-    m('init BTA');
-    apps.betaTest = new Application(
-        'BTA',
-        'Beta Testing App',
-        0,
-        function(launchType){
-            this.appWindow.setDims(20, 20, 600, 500);
-            this.appWindow.setCaption('Beta Testing App');
-            getId('win_betaTest_html').style.overflow = 'scroll';
-            this.appWindow.setContent('App for developer to test UI changes brought to the Beta Update of aOS.<br>&nbsp;<input value="Input"> <input value="disabled" disabled><br>&nbsp;<button>Button</button> <button disabled>disabled</button><br>HR on white background:<hr>HR on black background:<br><div style="background-color:#000;position:static">You found the secret message!<hr>This line was very hard to make!</div><br><img src="/appicons/ds/aOS.png" width="16"> 16<br><img src="/appicons/ds/aOS.png" width="32"> 32<br><img src="/appicons/ds/aOS.png" width="64"> 64<br><img src="/appicons/ds/aOS.png" width="128"> 128<br><img src="/appicons/ds/aOS.png" width="256"> 256 NATIVE<br><img src="/appicons/ds/aOS.png" width="512"> 512');
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
-            appInfo: 'This is an app used by the developer to test UI changed brought to the Beta Update of aOS.'
-        }, 1, 'betaTest', '/appicons/ds/systemApp.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Modding Tutorials...';
+    getId('aOSloadingInfo').innerHTML = 'Initializing Mod Tutorials app...'; 
 });
 c(function(){
     m('init MOD');
@@ -7001,7 +6958,7 @@ c(function(){
                                     if(logout){
                                         document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
-                                    window.location = 'https://aaron-os-mineandcraft12.c9.io/blackScreen.html#restart-beta';
+                                    window.location = 'blackScreen.html#restart-beta';
                                 });
                             }, 1005);
                         }
@@ -7040,7 +6997,7 @@ c(function(){
                                     if(logout){
                                         document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
-                                    window.location = 'https://aaron-os-mineandcraft12.c9.io/blackScreen.html#beta';
+                                    window.location = 'blackScreen.html#beta';
                                 });
                             }, 1005);
                         }
@@ -7714,10 +7671,13 @@ c(function(){
             "11/29/2018: B0.9.1.1\n + Widget Menu now correctly positions itself on non-bottom taskbar position.\n : Window hover frame correctly positions itself on non-bottom taskbar position.\n - Removed clutter, useless or abandoned options from Settings.\n : Rearranged some Settings items, more important options at the top.\n + JSPaint loading is opaque.\n\n" +
             "12/01/2018: B0.9.1.2\n + Log Out option added to power menu.\n : Shut Down option now logs you out.\n\n" +
             "12/03/2018: B0.9.1.3\n + exit command in Bash.\n : Fixed HTML Entities in Messaging names.\n\n" +
-            "12/08/2018: B0.9.1.4\n : Fixed WindowBlur rendering the wrong part of the background when custom taskbar positions are selected.\n : Fixed windows minimize animation going to wrong place when custom taskbar position is set.",
+            "12/08/2018: B0.9.1.4\n : Fixed WindowBlur rendering the wrong part of the background when custom taskbar positions are selected.\n : Fixed windows minimize animation going to wrong place when custom taskbar position is set.\n\n" +
+            "12/13/2018: B0.9.1.5\n - Removed Beta Testing App, Search App (implemented elsewhere), Mathway App\n\n" +
+            "12/17/2018: B0.9.1.6\n : Dashboard and Apps Browser are now alphabetized. How did I miss that?\n\n" +
+            "12/20/2018: B0.9.1.7\n : aOS now checks that requests come from the actual current server, rather than checking specifically for the aOS official server. This means aOS should now, in theory, be portable.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.1.4 (12/08/2018) r1';
+    window.aOSversion = 'B0.9.1.7 (12/20/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -8965,6 +8925,17 @@ c(function(){
                                 apps.webAppMaker.vars.compileApp(USERFILES[file], file);
                             }
                         }
+                        // alphabetized array of apps
+                        appsSorted = [];
+                        for(var i in apps){
+                            appsSorted.push(apps[i].appDesc + "|WAP_apps_sort|" + i);
+                        }
+                        appsSorted.sort();
+                        for(var i in appsSorted){
+                            var tempStr = appsSorted[i].split("|WAP_apps_sort|");
+                            tempStr = tempStr[tempStr.length - 1];
+                            appsSorted[i] = tempStr;
+                        }
                     }
                     doLog("Done.", "#ACE");
                     doLog("Initializing WAP Message Listener and Permission system...", "#ACE");
@@ -9410,95 +9381,6 @@ c(function(){
         {
             appInfo: 'This is the official AaronOS Calculator. It supports simple calculator functions as well as custom advanced functions by the developer.'
         }, 1, "calculator", "/appicons/ds/Clc.png"
-    );
-    getId('aOSloadingInfo').innerHTML = 'Initializing aOS Search';
-});
-c(function(){
-    m('init SRC');
-    apps.search = new Application(
-        "SRC",
-        "Search",
-        0,
-        function(){
-            if(!this.appWindow.appIcon){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 250, parseInt(getId('desktop').style.height, 10) / 2 - 200, 500, 400);
-            }
-            this.appWindow.setCaption("Search aOS");
-            this.appWindow.setContent(
-                '<input id="SRCfield"><button onClick="apps.search.vars.search()">Go</button>' +
-                '<p id="SRCapps">Search Results in "apps"</p>' +
-                '<p id="SRCfiles">Search Results in "files"</p>' +
-                '<p id="SRCuserfiles">Search Results in "USERFILES"</p>'
-            );
-            getId('win_search_html').style.overflowY = 'scroll';
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'This app can be used to search for apps and files within aOS.',
-            lastsearch: "",
-            search: function(){
-                m('Searching aOS');
-                this.lastsearch = getId("SRCfield").value;
-                getId("SRCapps").innerHTML = 'Search Results in "apps"';
-                for(var app in apps){
-                    if(apps[app].appDesc.toLowerCase().indexOf(this.lastsearch.toLowerCase()) > -1 && app !== 'startMenu'){
-                        getId("SRCapps").innerHTML += '<br><span class="cursorPointer" style="font-family:monospace" onclick="openapp(apps.' + app + ', \'dsktp\');window.setTimeout(function(){toTop(apps.' + app + ')},0);">' + apps[app].appDesc + '</span>';
-                    }
-                }
-                getId("SRCfiles").innerHTML = 'Search Results in "files"';
-                for(var file in files){
-                    if(file.toLowerCase().indexOf(this.lastsearch.toLowerCase()) > -1){
-                        getId("SRCfiles").innerHTML += '<br><span class="cursorPointer" style="font-family:monospace" onclick="openapp(apps.files, \'dsktp\');window.setTimeout(function(){toTop(apps.files);apps.files.vars.next(\'files\')},0);">' + file + '</span>';
-                    }
-                    if(typeof files[file] === 'object'){
-                        for(var innerfile in files[file]){
-                            if(innerfile.toLowerCase().indexOf(this.lastsearch.toLowerCase()) > -1){
-                                getId("SRCfiles").innerHTML += '<br><span class="cursorPointer" style="font-family:monospace" onclick="openapp(apps.files, \'dsktp\');window.setTimeout(function(){toTop(apps.files);apps.files.vars.next(\'files.' + file + '\')},0);"">' + file + '.' + innerfile + '</span>';
-                            }
-                        }
-                    }
-                }
-                
-                getId("SRCuserfiles").innerHTML = 'Search Results in "USERFILES"';
-                for(var file in USERFILES){
-                    if(file.toLowerCase().indexOf(this.lastsearch.toLowerCase()) > -1){
-                        getId("SRCuserfiles").innerHTML += '<br><span class="cursorPointer" style="font-family:monospace" onclick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + file + '\');requestAnimationFrame(function(){toTop(apps.notepad)})">' + file + '</span>';
-                    }else if(USERFILES[file].toLowerCase().indexOf(this.lastsearch.toLowerCase()) > -1){
-                        getId("SRCuserfiles").innerHTML += '<br><span class="cursorPointer" style="color:#7F7F7F;font-family:monospace" onclick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + file + '\');requestAnimationFrame(function(){toTop(apps.notepad)})">' + file + ' [' + USERFILES[file].toLowerCase().indexOf(this.lastsearch.toLowerCase()) + ']</span>';
-                    }
-                }
-            }
-        }, 1, "search", "/appicons/ds/SRC.png"
     );
     getId('aOSloadingInfo').innerHTML = 'Initializing Messaging';
 });
@@ -10700,57 +10582,6 @@ c(function(){
             }
         }, 0, 'musicVis', '/appicons/ds/MSC.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Mathway';
-});
-c(function(){
-    apps.mathway = new Application(
-        'MWy',
-        'Mathway',
-        0,
-        function(){
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                apps.prompt.vars.notify('This app is just a quick-access link to mathway.com and I do not claim ownership of Mathway.', [], function(){}, 'Mathway', '/appicons/MWy.png');
-                this.appWindow.setContent('<iframe src="https://mathway.com" style="width:100%;height:100%;border:none;display:block;position:absolute;"></iframe>');
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 400, parseInt(getId('monitor').style.height, 10) / 2 - 250, 800, 500);
-                this.appWindow.setCaption('Mathway');
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'This app simply links the Mathway website inside a frame for use on aOS. I CLAIM NO OWNERSHIP OR AFFILIATION WITH MATHWAY!'
-        }, 1, "mathway", "/appicons/MWy.png"
-    );
     getId('aOSloadingInfo').innerHTML = 'Initializing Apps Browser';
 });
 c(function(){
@@ -10763,9 +10594,10 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 200, parseInt(getId('monitor').style.height, 10) / 2 - 250, 400, 500);
                 this.appWindow.setCaption('Apps Browser');
-                this.appWindow.setContent('<div id="APBdiv" style="width:100%;height:100%;overflow-y:auto;font-family:aosProFont;"><div style="overflow-y:auto;font-size:12px;width:100%;height:128px;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';">This is a list of EVERY SINGLE APP installed on your copy of aOS, in the order that they were installed in (believe it or not, being in the wrong order can cause issues); including those that are hidden from your desktop and applications list.<br><br>WARNING - If an app is not available in the Apps List, it\'s probably for a reason. Some apps not available in the applications list may break if you launch them.<br><br>Note - if nothing happens when you try to open a certain app, do not worry. A window is <b>not</b> a requirement for an app to work. It probably is not designed for you to access.</div></div>');
+                this.appWindow.setContent('<div id="APBdiv" style="width:100%;height:100%;overflow-y:auto;font-family:aosProFont;"><div style="overflow-y:auto;font-size:12px;width:100%;height:128px;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';">This is a list of EVERY SINGLE APP installed on your copy of aOS, including those that are hidden from your desktop and dashboard.<br><br>WARNING - If an app is not available in the Dashboard, it\'s probably for a reason. Some apps not available in the Dashboard may break if you launch them.<br><br>Note - if nothing happens when you try to open a certain app, do not worry. A window is <b>not</b> a requirement for an app to work. It probably is not designed for you to access.</div></div>');
                 this.vars.appsListed = 1;
-                for(var app in apps){
+                for(var appHandle in appsSorted){
+                    var app = appsSorted[appHandle];
                     this.vars.currAppImg = apps[app].appWindow.appImg;
                     this.vars.currAppIcon = apps[app].dsktpIcon;
                     this.vars.currAppName = apps[app].appDesc;

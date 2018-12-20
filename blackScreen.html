@@ -32,9 +32,9 @@
         <script>
             var aosSuffix = '';
             if(String(window.location).indexOf('#restart-beta') > -1){
-                window.location = 'https://aaron-os-mineandcraft12.c9.io/aosBeta.php';
+                window.location = 'aosBeta.php';
             }else if(String(window.location).indexOf('#restart') > -1){
-                window.location = 'https://aaron-os-mineandcraft12.c9.io/aos.php';
+                window.location = 'aos.php';
             }else if(String(window.location).indexOf('#beta') > -1){
                 aosSuffix = 'Beta';
             }
@@ -49,7 +49,7 @@
     <body>
         <div id="hiddendiv">
             <br>
-            Device has shut down.<br><br><button id="reboot" onclick="window.location = 'https://aaron-os-mineandcraft12.c9.io/aos' + aosSuffix + '.php'">Reboot</button>
+            Device has shut down.<br><br><button id="reboot" onclick="window.location = 'aos' + aosSuffix + '.php'">Reboot</button>
         </div>
     </body>
 </html>
