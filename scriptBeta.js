@@ -7679,10 +7679,12 @@ c(function(){
             "12/08/2018: B0.9.1.4\n : Fixed WindowBlur rendering the wrong part of the background when custom taskbar positions are selected.\n : Fixed windows minimize animation going to wrong place when custom taskbar position is set.\n\n" +
             "12/13/2018: B0.9.1.5\n - Removed Beta Testing App, Search App (implemented elsewhere), Mathway App\n\n" +
             "12/17/2018: B0.9.1.6\n : Dashboard and Apps Browser are now alphabetized. How did I miss that?\n\n" +
-            "12/20/2018: B0.9.1.7\n : aOS now checks that requests come from the actual current server, rather than checking specifically for the aOS official server. This means aOS should now, in theory, be portable.\n : aOS now checks for images in the folder (if any) that it resides in, instead of automatically picking the root folder.",
+            "12/20/2018: B0.9.1.7\n : aOS now checks that requests come from the actual current server, rather than checking specifically for the aOS official server. This means aOS should now, in theory, be portable.\n : aOS now checks for images in the folder (if any) that it resides in, instead of automatically picking the root folder.\n\n" +
+            "12/22/2018: B0.9.1.8\n : IE11 no longer rejects aOS for containing spread notation (...) in its source code.\n + On Internet Explorer, Windowblur defaults to off.\n : Fixed double prompts appearing on non-Chrome browsers; should only appear once now.\n\n"  +
+            "12/23/2018: B0.9.1.9\n : Fixed issue that caused portability to not actually work.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.1.7 (12/20/2018) r2';
+    window.aOSversion = 'B0.9.1.9 (12/23/2018) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });

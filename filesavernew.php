@@ -1,5 +1,5 @@
 <?php
-    if(isset($_POST['c']) && substr($_SERVER['HTTP_REFERER'], 0, 37) === 'https://'.$_SERVER['SERVER_NAME']){ //aaron-os-mineandcraft12.c9.io'){
+    if(isset($_POST['c']) && strpos($_SERVER['HTTP_REFERER'], 'https://'.$_SERVER['SERVER_NAME']) === 0){ //aaron-os-mineandcraft12.c9.io'){
         function error($errno, $errstr){
             echo "Error - [" + $errno + '] ' + $errstr;
         }

@@ -1,5 +1,5 @@
 <?php
-    if(isset($_POST['k']) && isset($_COOKIE['keyword']) && substr($_SERVER['HTTP_REFERER'], 0, 37) === 'https://'.$_SERVER['SERVER_NAME']){
+    if(isset($_POST['k']) && isset($_COOKIE['keyword']) && strpos($_SERVER['HTTP_REFERER'], 'https://'.$_SERVER['SERVER_NAME']) === 0){
         if($_POST['k'] === $_COOKIE['keyword']){
             $onlineUsers = fopen('USERFILES/online.txt', 'r');
             if(filesize('USERFILES/online.txt') === 0){

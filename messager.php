@@ -1,6 +1,6 @@
 <?php
 // recieve message from client
-if(isset($_COOKIE['keyword']) && isset($_POST['c']) && substr($_SERVER['HTTP_REFERER'], 0, 37) === 'https://aaron-os-mineandcraft12.c9.io'){
+if(isset($_COOKIE['keyword']) && isset($_POST['c']) && strpos($_SERVER['HTTP_REFERER'], 'https://'.$_SERVER['SERVER_NAME']) === 0){
     if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){
         if(isset($_COOKIE['password'])){
             if(!password_verify($_COOKIE['password'], file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt'))){
