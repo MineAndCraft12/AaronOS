@@ -5125,6 +5125,11 @@ c(function(){
                                 if(USERFILES.APP_STN_SETTING_AERO === "0"){
                                     apps.settings.vars.togAero(1);
                                 }
+                            }else{
+                                if((navigator.userAgent.indexOf("Trident") > -1 && navigator.userAgent.indexOf("rv:") > -1) || navigator.userAgent.indexOf("MSIE") > -1){
+                                    // browser is IE and does not support blurring
+                                    apps.settings.vars.togAero(1);
+                                }
                             }
                             if(typeof USERFILES.APP_STN_SETTING_WINCOLOR === "string"){
                                 getId("STNwinColorInput").value = USERFILES.APP_STN_SETTING_WINCOLOR;
@@ -8193,7 +8198,24 @@ c(function(){
                 }
             },
             startGame: function(){
-                this.workingSet = [...this.currentSet];
+                try{
+                    /*
+                        before you ask what the hell this is --
+                        this line of code causes IE to reject the entire script
+                            even in a try-catch!
+                        so my workaround was to run this line of code in an eval statement
+                            and include the surrounding try-catch
+                        original line of code:
+                            this.workingSet = [...this.currentSet];
+                    */
+                    this.workingSet = eval("[...apps.flashCards.vars.currentSet]");
+                }catch(err){
+                    doLog('Browser does not support JS spread syntax', '#F00');
+                    this.workingSet = [];
+                    for(var i in this.currentSet){
+                        this.workingSet.push(this.currentSet[i]);
+                    }
+                }
                 this.correct = 0;
                 this.chooseCard(1);
             },
@@ -12799,8 +12821,8 @@ c(function(){
         doLog('Looks like you are not using Google Chrome. Make sure you use Google Chrome to access aOS. Otherwise, certain features will be missing or broken.', '#F00;text-decoration:underline');
         try{
             if(localStorage.getItem('notifyChrome') !== "1"){
+                localStorage.setItem('notifyChrome', "1");
                 apps.prompt.vars.notify('It appears that you\'re not using Google Chrome. Make sure you use Chrome to access aOS. Otherwise, certain features will be missing or broken.', [], function(){}, 'Google Chrome', 'appicons/ds/aOS.png');
-                localStorage.setItem('notifyChrome');
             }
         }catch(localStorageNotSupported){
             apps.prompt.vars.notify('It appears that you\'re not using Google Chrome. Make sure you use Chrome to access aOS. Otherwise, certain features will be missing or broken.', [], function(){}, 'Google Chrome', 'appicons/ds/aOS.png');
