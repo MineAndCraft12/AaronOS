@@ -4,6 +4,21 @@
         echo "alert('Serverside error. [$errno]: $errstr | Contact mineandcraft12@gmail.com or else the file broken and every other file you save from now on will be lost. Reference error code ".$_COOKIE['keyword']." in the email.');";
     }
     set_error_handler("error");
+    
+    // if USERFILES and such does not exist, create it (first time setup)
+    if(!is_dir('USERFILES')){
+        mkdir('USERFILES');
+        mkdir('USERFILES/!ERROR');
+        mkdir('USERFILES/!MESSAGE');
+        if(!file_exists('setting.txt')){
+            file_put_contents('USERFILES/!MESSAGE/m0.txt', '{"i":" ","n":" ","c":"This is the beginning of the message history.","t":"1","l":"0"}');
+            file_put_contents('setting.txt', '0');
+        }
+        if(!is_dir('messageUsernames')){
+            mkdir('messageUsernames');
+        }
+    }
+    
     // if the page needs to be refreshed
     $needtorefresh = false;
     // if a user change was requested
