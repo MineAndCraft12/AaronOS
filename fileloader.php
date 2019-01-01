@@ -17,6 +17,7 @@
         if(!is_dir('messageUsernames')){
             mkdir('messageUsernames');
         }
+        echo 'alert("By hosting AaronOS or otherwise using its code or resources, you are agreeing to the End User License Agreement which will open in a new window/tab when you click anywhere on the aOS desktop.");window.tosClick=function(){window.open("terms.txt","_blank");window.removeEventListener("click",window.tosClick)};window.addEventListener("click",window.tosClick);';
     }
     
     // if the page needs to be refreshed

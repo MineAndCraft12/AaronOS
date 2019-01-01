@@ -6,6 +6,10 @@ This is where all the open-source bits of aOS will reside, so the public can rea
 
 AaronOS is usable at https://aaron-os-mineandcraft12.c9.io/aosBeta.php
 
+If you wish to deploy AaronOS on your own server, you MUST read and follow the End User License Agreement at /eula.txt
+By downloading or otherwise using this source code in any way, you agree to the terms listed in that file.
+Upon hosting AaronOS, the first connection to the project (which performs first-time setup) will also prompt you with this file.
+
 You may be wondering, what is and isn't included here?
 
 Included:

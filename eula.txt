@@ -1,0 +1,102 @@
+AaronOS End User License Agreement
+
+
+Please read this EULA before downloading, hosting, or otherwise using the code and resources of the AaronOS project.
+AaronOS was created and is maintained by Aaron Adams (contact at mineandcraft12@gmail.com), who is also the copyright holder of AaronOS.
+
+
+This agreement is between:
+    - Aaron Adams ("Me", "I")
+    - You
+This agreement pertains to:
+    - AaronOS ("Project", "aOS")
+    - AaronOS's Code
+    - AaronOS's Resources (including images, sound files, etc) (not including placeholder resources which Aaron did not create or pay for)
+Some examples of such resources that Aaron is not claiming ownership or responsibility of (and are solely the intellectual property of their respective owners) are:
+    - Profont (/ProFont/)
+    - Breeze Cursors (/cursors/beta/)
+    - Minecraft Textures (/mc/)
+    - Messaging Notification Sounds (/messagingSounds/)
+    - Original Beta Background (/bgBeta.png)
+    - /loadDark.gif, /loadLight.gif
+    - /winimg.png
+    - Alpha Icons (/appicons/) (EXCLUDING /appicons/ds/ which were made by Hasan Shahrier and paid for by Aaron)
+    - /customStyles/macos/
+
+
+By deploying or otherwise using the AaronOS project's code and resources, you are agreeing to the agreement laid out in this document.
+
+
+The EULA (this document) may be updated at any time, which will be reflected when the project is updated.
+When downloading a GitHub update of AaronOS to your server, this updated file will be carried in that update. Aaron will also attempt to notify
+    deployers of this change, should it occur.
+
+
+LIABILITY
+
+While it is highly unlikely that it should occur, you agree that Aaron is not responsible for any damage caused by this software and its resources,
+    whether direct or indirect. You agree that Aaron holds no liability should this occur, and will not pursue legal or non-legal action against him or the project.
+
+
+INTELLECTUAL PROPERTY
+
+All code, designs, and resources (excluding those owned by others, such as placeholder resources listed near the beginning of the document) are owned by Aaron, and
+    you agree not to claim them to be your own.
+You may not charge your users in any way for the use of or anything else pertaining to code written by Aaron, or resources created or owned by Aaron.
+What you are allowed to charge users for, if you wish, is for code or resources you have created or own yourself (for example, an application or extension to aOS).
+Note that the aforementioned charging shall not pertain to code or resources that Aaron created or owns. Aaron's work may not be locked behind a paywall of any kind,
+    users must not be required to pay to access my work, you may not accept payment pertaining to my work, and my work must be provided free of charge to all of your users.
+
+There is a copyright notice in the Settings application's Information menu that reads as following:
+
+--- QUOTE ---
+AaronOS is (c) 2016 Aaron Adams
+By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server
+    for your convenience (and, mostly, for technical reasons).
+This project is a fork of AaronOS. The official AaronOS project is hosted at https://aaron-os-mineandcraft12.c9.io/aosBeta.php
+The above copyright notice applies to all code and original resources carried over from Aaron Adams' original, official AaronOS project.
+--- END QUOTE ---
+
+This notice's text is not to be modified in any way whatsoever, aside from the following:
+    - moved to another location that is:
+        - at the top of its page
+        - easily accessible by all users
+        - in a location which one would sensibly expect it to be found
+        - in a location where it is easily readable
+    - changed to another font, font size, or styling that:
+        - is clearly readable
+        - does not distort the meaning of the text in any way
+You are allowed to place your own, separate copyright notice anywhere you wish, but it must:
+    - not claim ownership or responsibility of AaronOS or its resources
+    - not attempt to override Aaron's copyright notice
+    - not mislead users into believing AaronOS was your original work
+    - only pertain to code or resources which you created or own
+
+
+SHARE ALIKE
+
+If you use your own agreements (EULA, Terms of Service, etc) pertaining to a fork or other distribution this project, you must use the same or a similar agreement to this.
+
+
+EXTERNAL RESOURCES
+
+AaronOS will occasionally communicate with or reference other websites, such as DuckDuckGo, for example.
+Aaron does not claim ownership of or affiliation with this and other external sites, in any way whatsoever.
+Aaron is not responsible for the content of other sites.
+
+
+PRIVACY
+
+The original AaronOS project does not knowingly collect or use any personal information, except for
+    the purpose of providing this information back to the user.
+Aaron does not read, modify or use this information in any way without the express, personally given permission of the user who the information belongs to.
+It is highly recommended that you follow the same procedure yourself with your users.
+
+
+DISCLAIMER
+
+The AaronOS project's code and resources are provided as-is, and Aaron is not in any way responsible for it being modified, tampered with, or
+    otherwise changed by people or services beyond Aaron himself.
+
+
+Last updated 1/1/2019 at 1:32pm

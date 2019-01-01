@@ -5310,7 +5310,15 @@ c(function(){
                             if(USERFILES.APP_STN_SETTING_AERO !== "0"){
                                 apps.settings.vars.togAero(1);
                             }
-                            apps.prompt.vars.notify('Looks like you logged in through Google Play!<br>These settings were automatically set for you...<br><br>Performance Mode is on.<br>Screen scaling set to 1/2 if your device is 1080p or higher.<br>Tap a titlebar on a window, and then click somewhere else again, to move  a window. You can also resize them on the bottom-right corner.', [], function(){}, 'Google Play', 'appicons/ds/aOS.png');
+                            
+                            try{
+                                if(localStorage.getItem('notifyGPlay') !== "1"){
+                                    localStorage.setItem('notifyGPlay', "1");
+                                    apps.prompt.vars.notify('Looks like you logged in through Google Play!<br>These settings were automatically set for you...<br><br>Performance Mode is on.<br>Screen scaling set to 1/2 if your device is 1080p or higher.<br>Tap a titlebar on a window, and then click somewhere else again, to move  a window. You can also resize them on the bottom-right corner.', [], function(){}, 'Google Play', 'appicons/ds/aOS.png');
+                                }
+                            }catch(localStorageNotSupported){
+                                apps.prompt.vars.notify('Looks like you logged in through Google Play!<br>These settings were automatically set for you...<br><br>Performance Mode is on.<br>Screen scaling set to 1/2 if your device is 1080p or higher.<br>Tap a titlebar on a window, and then click somewhere else again, to move  a window. You can also resize them on the bottom-right corner.', [], function(){}, 'Google Play', 'appicons/ds/aOS.png');
+                            }
                         }
                         
                         if(sessionStorage.getItem('fullscreen') === 'true'){
@@ -5473,8 +5481,8 @@ c(function(){
                     image: 'settingIcons/beta/info.png',
                     copyright: {
                         option: 'Copyright Notice',
-                        description: function(){return '&copy; <i>2016 Aaron Adams</i>'}, //         <-- COPYRIGHT NOTICE
-                        buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).'}
+                        description: function(){return 'AaronOS is &copy; <i>2016 Aaron Adams</i>'}, //         <-- COPYRIGHT NOTICE
+                        buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' + function(){if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0){return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaron-os-mineandcraft12.c9.io/aosBeta.php">https://aaron-os-mineandcraft12.c9.io/aosBeta.php</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';}else{return '';}}()}
                     },
                     osID: {
                         option: 'aOS ID',
@@ -7681,10 +7689,12 @@ c(function(){
             "12/17/2018: B0.9.1.6\n : Dashboard and Apps Browser are now alphabetized. How did I miss that?\n\n" +
             "12/20/2018: B0.9.1.7\n : aOS now checks that requests come from the actual current server, rather than checking specifically for the aOS official server. This means aOS should now, in theory, be portable.\n : aOS now checks for images in the folder (if any) that it resides in, instead of automatically picking the root folder.\n\n" +
             "12/22/2018: B0.9.1.8\n : IE11 no longer rejects aOS for containing spread notation (...) in its source code.\n + On Internet Explorer, Windowblur defaults to off.\n : Fixed double prompts appearing on non-Chrome browsers; should only appear once now.\n\n"  +
-            "12/23/2018: B0.9.1.9\n : Fixed issue that caused portability to not actually work.",
+            "12/23/2018: B0.9.1.9\n : Fixed issue that caused portability to not actually work.\n\n" +
+            "12/24/2018: B0.9.1.10\n + Begun work on experimental replacement file manager.\n\n" +
+            "01/01/2019: B0.9.1.11\n + AaronOS now has an EULA for those who wish to deploy aOS on their own server or otherwise use its code, available at /eula.txt\n + If the code is hosted on an unofficial server, a note will be dynamically added next to the Copyright Notice in Settings -> Information, with a link to the official AaronOS server. AaronOS deployers - this note is not under any circumstances to be removed or its text altered in any way, with the exception of being moved to another location at the top of an easily-accessible menu in Settings, alongside its Copyright Notice.\n : Google Play prompt now only occurs once.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.1.9 (12/23/2018) r0';
+    window.aOSversion = 'B0.9.1.11 (01/01/2019) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -8041,6 +8051,228 @@ c(function(){
                 c(function(){getId('FILtbl').innerHTML += apps.files.vars.currContentStr;getId("FILgreen").className = '';getId('FILgreen').style.backgroundColor = "#FFF";getId("FILgreen").style.display = "none";getId("FILcntn").style.backgroundImage="";getId('FILcntn').classList.remove('cursorLoadDark')});
             }
         }, 0, "files", "appicons/ds/FIL.png"
+    );
+    getId('aOSloadingInfo').innerHTML = 'Initializing Files 2';
+});
+c(function(){
+    m('init FIL');
+    apps.files2 = new Application(
+        "FIL",
+        "File Manager 2",
+        1,
+        function(launchType){
+            if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
+                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 350, parseInt(getId('desktop').style.height, 10) / 2 - 200, 700, 400, 1);
+            }
+            this.appWindow.setCaption("File Manager 2");
+            this.appWindow.openWindow();
+            if(launchType === 'dsktp'){
+                this.vars.currLoc = '';
+                getId('win_files2_html').style.background = "none";
+                this.appWindow.setContent(
+                    '<div id="FIL2topdiv" style="width:694px; height:25px;">' +
+                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.back()">&larr;&nbsp;</div>' +
+                    '<div class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.home()">H</div>' +
+                    '<div class="cursorPointer" style="width:24px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">?</div>' +
+                    '</div>' +
+                    '<div style="width:694px; height:368px; top:25px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow:scroll; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>' +
+                    '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:' + (25 + scrollHeight) + 'px; line-height:25px; vertical-align:middle; width:609px; border-top-left-radius:5px; border-top-right-radius:5px; overflow-x:scroll;"><div id="FIL2green" style="width:0;height:100%;"></div>this.is.a.file.path.example.for.the.thingy.and.it.is.very.useful.because.it.tells.you.where.you.are.in.the.thing</div>'
+                );
+            }
+            if(typeof this.appWindow.dimsSet !== 'function'){
+                this.appWindow.dimsSet = function(){
+                    getId('FIL2topdiv').style.width = this.windowH - 6 + 'px';
+                    getId('FIL2cntn').style.width = this.windowH - 6 + 'px';
+                    getId('FIL2cntn').style.height = this.windowV - 32 + 'px';
+                    getId('FIL2path').style.width = this.windowH - 91 + 'px';
+                    getId('FIL2tbl').style.width = this.windowH - 5 - scrollHeight + 'px';
+                };
+            }
+            this.vars.update();
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    if(getId("FIL2green").style.backgroundColor !== "rgb(170, 255, 170)"){
+                        this.appWindow.closeWindow();
+                        this.appWindow.setContent("");
+                    }else{
+                        apps.prompt.vars.alert('Please allow Files to finish searching the current folder.', 'Oops, I almost broke stuff.', function(){}, 'Files');
+                    }
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        },
+        {
+            appInfo: 'The official AaronOS File Manager, version 2. Use it to manage your personal files and to view aOS code. At the moment, only plain-text userfiles are supported.',
+            currLoc: '',
+            back: function(){
+                this.currLoc = this.currLoc.split(".");
+                this.currLoc.pop();
+                this.currLoc = this.currLoc.join(".");
+                this.update();
+            },
+            home: function(){
+                this.currLoc = '';
+                this.update();
+            },
+            next: function(nextName){
+                if(getId("FIL2green").style.backgroundColor !== "rgb(170, 255, 170)"){
+                    if(this.currLoc === ''){
+                        this.currLoc = nextName;
+                    }else{
+                        this.currLoc += "." + nextName;
+                    }
+                    this.update();
+                }else{
+                    apps.prompt.vars.alert('Please allow Files to finish searching the current folder.', 'Oops, I almost broke stuff.', function(){}, 'Files');
+                }
+            },
+            filetype: function(type){
+                switch(type){
+                    case 'object':
+                        return 'folder';
+                    case 'string':
+                        return 'text';
+                    case 'function':
+                        return 'code';
+                    case 'boolean':
+                        return 'T/F';
+                    case 'undefined':
+                        return 'nothing';
+                    case 'number':
+                        return 'value';
+                    default:
+                        return type;
+                }
+            },
+            currTotal: 0,
+            currItem: 0,
+            currEffect: 0,
+            currContentStr: '',
+            update: function(){
+                this.currContentStr = '';
+                getId("FIL2green").style.backgroundColor = 'rgb(170, 255, 170)';
+                getId("FIL2green").style.width = "0";
+                getId("FIL2cntn").style.backgroundImage = 'url(/loadDark.gif)';
+                // getId("FILcntn").style.cursor = cursors.loadDark;
+                getId('FIL2cntn').classList.add('cursorLoadDark');
+                getId("FIL2cntn").innerHTML =
+                    '<table id="FIL2tbl" style="width:' + (apps.files2.appWindow.windowH - 5 - scrollHeight) + 'px; position:absolute; top:' + scrollHeight + 'px; margin:auto; font-family:monospace;">' +
+                    '<tr>' +
+                    '<th>Filename</th>' +
+                    '<th>Filetype</th>' +
+                    '</tr>' +
+                    '</table>';
+                getId("FIL2tbl").style.marginTop = scrollHeight;
+                if(this.currLoc === ''){
+                    getId("FIL2path").innerHTML = '<div id="FIL2green" style="height:100%;background-color:rgb(170, 255, 170)"></div>';
+                    getId("FIL2tbl").innerHTML +=
+                        '<tr class="cursorPointer" onClick="apps.files2.vars.next(\'files\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'files\\\');toTop(apps.properties)\'])">' +
+                        '<td>files</td>' +
+                        '<td>folder</td>' +
+                        '</tr><tr class="cursorPointer" onClick="apps.files2.vars.next(\'apps\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'apps\\\');toTop(apps.properties)\'])">' +
+                        '<td>apps</td>' +
+                        '<td>folder</td>' +
+                        '</tr><tr class="cursorPointer" onClick="apps.files2.vars.next(\'widgets\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'widgets\\\');toTop(apps.properties)\'])">' +
+                        '<td>widgets</td>' +
+                        '<td>folder</td>' +
+                        '</tr><tr class="cursorPointer" onClick="apps.files2.vars.next(\'USERFILES\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'USERFILES\\\');toTop(apps.properties)\'])">' +
+                        '<td>USERFILES</td>' +
+                        '<td>folder</td>' +
+                        function(){
+                            if(apps.settings.vars.FILcanWin){
+                                return '</tr><tr class="cursorPointer" onClick="apps.files2.vars.next(\'window\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'window\\\');toTop(apps.properties)\'])">' +
+                                    '<td style="color:#F00">Everything</td>' +
+                                    '<td>Debug</td>';
+                            }else{
+                                return '';
+                            }
+                        }() +
+                        '</tr>';
+                }else{
+                    getId("FIL2path").innerHTML = '<div id="FIL2green" class="liveElement" liveTarget="style.width" liveVar="apps.files2.vars.currItem/apps.files2.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div>' + this.currLoc + '</div>';
+                    this.currTotal = objLength(eval(this.currLoc));
+                    this.currItem = 0;
+                    for(var findElem in eval(this.currLoc)){
+                        if(typeof(eval(this.currLoc)[findElem]) === "string" || typeof(eval(this.currLoc)[findElem]) === "number" || typeof(eval(this.currLoc)[findElem]) === "function" || typeof(eval(this.currLoc)[findElem]) === "boolean" || typeof(eval(this.currLoc)[findElem]) === "undefined"){
+                            if((this.currLoc + "." + findElem).substring(0, 20) !== "USERFILES.MOUSEDATA_"){
+                                if(this.currLoc === "USERFILES"){
+                                    c(function(arg){
+                                        //getId("FILtbl").innerHTML +=
+                                        apps.files2.vars.currContentStr +=
+                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.delete(\\\'' + arg + '\\\');\'])">' +
+                                            '<td>' + arg + '</td>' +
+                                            '<td>' + apps.files2.vars.filetype(typeof(eval(apps.files2.vars.currLoc)[arg])) + '</td>' +
+                                            '</tr>';
+                                        apps.files2.vars.currItem++;
+                                        //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
+                                    }, findElem);
+                                }else{
+                                    c(function(arg){
+                                        // getId("FILtbl").innerHTML +=
+                                        apps.files2.vars.currContentStr +=
+                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.files2.vars.currLoc + '.' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                            '<td>' + arg + '</td>' +
+                                            '<td>' + apps.files2.vars.filetype(typeof(eval(apps.files2.vars.currLoc)[arg])) + '</td>' +
+                                            '</tr>';
+                                        apps.files2.vars.currItem++;
+                                        //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
+                                    }, findElem);
+                                }
+                            }
+                        }else{
+                            if(this.currLoc === "apps"){
+                                c(function(arg){
+                                    // getId("FILtbl").innerHTML +=
+                                    apps.files2.vars.currContentStr +=
+                                        '<tr class="cursorPointer" onClick="apps.files2.vars.next(\'' + arg + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'\'], \' Launch App\', \'openapp(apps.' + arg + ', \\\'dsktp\\\')\', \'+Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\'])">' +
+                                        '<td>' + arg + '</td>' +
+                                        '<td>' + apps.files2.vars.filetype(typeof(eval(apps.files2.vars.currLoc)[arg])) + '</td>' +
+                                        '</tr>';
+                                    apps.files2.vars.currItem++;
+                                    //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
+                                }, findElem);
+                            }else{
+                                c(function(arg){
+                                    // getId("FILtbl").innerHTML +=
+                                    apps.files2.vars.currContentStr +=
+                                        '<tr class="cursorPointer" onClick="apps.files2.vars.next(\'' + arg + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                        '<td>' + arg + '</td>' +
+                                        '<td>' + apps.files2.vars.filetype(typeof(eval(apps.files2.vars.currLoc)[arg])) + '</td>' +
+                                        '</tr>';
+                                    apps.files2.vars.currItem++;
+                                    //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
+                                }, findElem);
+                            }
+                        }
+                    }
+                }
+                c(function(){getId('FIL2tbl').innerHTML += apps.files2.vars.currContentStr;getId("FIL2green").className = '';getId('FIL2green').style.backgroundColor = "#FFF";getId("FIL2green").style.display = "none";getId("FIL2cntn").style.backgroundImage="";getId('FIL2cntn').classList.remove('cursorLoadDark')});
+            }
+        }, 0, "files2", "appicons/ds/FIL.png"
     );
     getId('aOSloadingInfo').innerHTML = 'Initializing Changelog';
 });

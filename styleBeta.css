@@ -313,6 +313,19 @@ div{
                     .darkMode #FILtbl tr:hover{
                         background-color:#555;
                     }
+                #FIL2tbl td{
+                    border-top:1px solid #000;
+                    /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
+                }
+                    .darkMode #FIL2tbl td{
+                        border-top:1px solid #FFF;
+                    }
+                #FIL2tbl tr:hover{
+                    background-color:#AAA;
+                }
+                    .darkMode #FIL2tbl tr:hover{
+                        background-color:#555;
+                    }
                 #tMgMemTable{
                     width: 100%;
                     font-family:aosProFont, monospace;
