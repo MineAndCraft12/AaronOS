@@ -12,7 +12,7 @@ This agreement pertains to:
     - AaronOS ("Project", "aOS")
     - AaronOS's Code
     - AaronOS's Resources (including images, sound files, etc) (not including placeholder resources which Aaron did not create or pay for)
-Some examples of such resources that Aaron is not claiming ownership or responsibility of (and are solely the intellectual property of their respective owners) are:
+Some examples of such resources that Aaron is not claiming ownership or responsibility of (and are the sole intellectual property of their respective owners) are:
     - Profont (/ProFont/)
     - Breeze Cursors (/cursors/beta/)
     - Minecraft Textures (/mc/)
