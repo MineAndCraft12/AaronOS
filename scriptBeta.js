@@ -1230,6 +1230,16 @@ function logLiveElement(str){
 function makeLiveElement(str){
     return '<span class="liveElement" liveVar="' + str + '"></span>';
 }
+// list of pinned apps
+var pinnedApps = [];
+function pinApp(app){
+    if(pinnedApps.indexOf(app) === -1){
+        pinnedApps.push(app);
+    }else{
+        pinnedApps.splice(pinnedApps.indexOf(app), 1);
+    }
+    apps.savemaster.vars.save('APP_STN_PINNEDAPPS', JSON.stringify(pinnedApps), 1);
+}
 // Application class
 m('init Application class');
 var apps = {};
@@ -1445,7 +1455,9 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 //getId("win" + this.dsktpIcon).style.display = "none";
                 //getId("win" + this.dsktpIcon).style.opacity = "0";
                 
-                getId("icn_" + this.objName).style.display = "none";
+                if(pinnedApps.indexOf(this.objName) === -1){
+                    getId("icn_" + this.objName).style.display = "none";
+                }
                 this.fullscreen = 0;
                 if(this.folded){
                     this.foldWindow();
@@ -1453,7 +1465,9 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 toTop({dsktpIcon: 'CLOSING'}, 1);
             },
             closeIcon: function(){
-                getId('icn_' + this.objName).style.display = 'none';
+                if(pinnedApps.indexOf(this.objName) === -1){
+                    getId("icn_" + this.objName).style.display = "none";
+                }
             },
             folded: 0,
             foldWindow: function(){
@@ -1618,11 +1632,11 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
         getId("win_" + appPath + "_cap").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winmove(event);}event.preventDefault();return false;}");
         getId("win_" + appPath + "_size").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winrot(event);}event.preventDefault();return false;}");
         getId("app_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", 'dsktp')");
-        getId("icn_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", 'tskbr')");
+        getId("icn_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", function(){if(apps." + appPath + ".appWindow.appIcon){return 'tskbr'}else{return 'dsktp'}}())");
         getId("win_" + appPath + "_top").setAttribute("onClick", "toTop(apps." + appPath + ")");
         if(appPath !== 'startMenu' && appPath !== 'nora'){
             getId("icn_" + appPath).setAttribute("oncontextmenu", "ctxMenu(baseCtx.icnXXX, 1, event, '" + appPath + "')");
-            getId("icn_" + appPath).setAttribute("onmouseenter", "highlightWindow('" + appPath + "')");
+            getId("icn_" + appPath).setAttribute("onmouseenter", "if(apps." + appPath + ".appWindow.appIcon){highlightWindow('" + appPath + "')}");
             getId("icn_" + appPath).setAttribute("onmouseleave", "highlightHide()");
         }
         getId("win_" + appPath + "_exit").setAttribute("onClick", "apps." + appPath + ".signalHandler('close');event.stopPropagation()");
@@ -5300,6 +5314,12 @@ c(function(){
                                     apps.settings.vars.setFadeDistance("0.5", 1);
                                 }, 1000);
                             }
+                            if(typeof USERFILES.APP_STN_PINNEDAPPS === "string"){
+                                pinnedApps = JSON.parse(USERFILES.APP_STN_PINNEDAPPS);
+                                for(var i in pinnedApps){
+                                    getId('icn_' + pinnedApps[i]).style.display = 'inline-block';
+                                }
+                            }
                         }
                         
                         // google play settings
@@ -7691,10 +7711,10 @@ c(function(){
             "12/22/2018: B0.9.1.8\n : IE11 no longer rejects aOS for containing spread notation (...) in its source code.\n + On Internet Explorer, Windowblur defaults to off.\n : Fixed double prompts appearing on non-Chrome browsers; should only appear once now.\n\n"  +
             "12/23/2018: B0.9.1.9\n : Fixed issue that caused portability to not actually work.\n\n" +
             "12/24/2018: B0.9.1.10\n + Begun work on experimental replacement file manager.\n\n" +
-            "01/01/2019: B0.9.1.11\n + AaronOS now has an EULA for those who wish to deploy aOS on their own server or otherwise use its code, available at /eula.txt\n + If the code is hosted on an unofficial server, a note will be dynamically added next to the Copyright Notice in Settings -> Information, with a link to the official AaronOS server. AaronOS deployers - this note is not under any circumstances to be removed or its text altered in any way, with the exception of being moved to another location at the top of an easily-accessible menu in Settings, alongside its Copyright Notice.\n : Google Play prompt now only occurs once.",
+            "01/01/2019: B0.9.1.11\n + AaronOS now has an EULA for those who wish to deploy aOS on their own server or otherwise use its code, available at /eula.txt\n + If the code is hosted on an unofficial server, a note will be dynamically added next to the Copyright Notice in Settings -> Information, with a link to the official AaronOS server. AaronOS deployers - this note is not under any circumstances to be removed or its text altered in any way, with the exception of being moved to another location at the top of an easily-accessible menu in Settings, alongside its Copyright Notice.\n + Apps can now be pinned to the taskbar.\n : Fixed Camera app.\n : Changed question mark in File Manager to refresh symbol.\n : Adjusted Mint-Y theme.\n : Google Play prompt now only occurs once.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.1.11 (01/01/2019) r1';
+    window.aOSversion = 'B0.9.1.11 (01/01/2019) r4';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -7852,7 +7872,7 @@ c(function(){
                     '<div id="FILtopdiv" style="width:694px; height:25px;">' +
                     '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files.vars.back()">&larr;&nbsp;</div>' +
                     '<div class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files.vars.home()">H</div>' +
-                    '<div class="cursorPointer" style="width:24px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files.vars.update()">?</div>' +
+                    '<div class="cursorPointer" style="width:24px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files.vars.update()">&#x21BB;</div>' +
                     '</div>' +
                     '<div style="width:694px; height:368px; top:25px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow:scroll; background-repeat:no-repeat; background-position:center" id="FILcntn"></div>' +
                     '<div id="FILpath" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:' + (25 + scrollHeight) + 'px; line-height:25px; vertical-align:middle; width:609px; border-top-left-radius:5px; border-top-right-radius:5px; overflow-x:scroll;"><div id="FILgreen" style="width:0;height:100%;"></div>this.is.a.file.path.example.for.the.thingy.and.it.is.very.useful.because.it.tells.you.where.you.are.in.the.thing</div>'
@@ -8074,7 +8094,7 @@ c(function(){
                     '<div id="FIL2topdiv" style="width:694px; height:25px;">' +
                     '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.back()">&larr;&nbsp;</div>' +
                     '<div class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.home()">H</div>' +
-                    '<div class="cursorPointer" style="width:24px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">?</div>' +
+                    '<div class="cursorPointer" style="width:24px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">&#x21BB;</div>' +
                     '</div>' +
                     '<div style="width:694px; height:368px; top:25px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow:scroll; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>' +
                     '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:' + (25 + scrollHeight) + 'px; line-height:25px; vertical-align:middle; width:609px; border-top-left-radius:5px; border-top-right-radius:5px; overflow-x:scroll;"><div id="FIL2green" style="width:0;height:100%;"></div>this.is.a.file.path.example.for.the.thingy.and.it.is.very.useful.because.it.tells.you.where.you.are.in.the.thing</div>'
@@ -10164,7 +10184,8 @@ c(function(){
                 window.navigator.mediaDevices.getUserMedia({"video": true}).then(
                     function(stream){
                         apps.camera.vars.streamObj = stream;
-                        getId('CAMvideo').src = window.webkitURL.createObjectURL(stream);
+                        //getId('CAMvideo').src = window.webkitURL.createObjectURL(stream);
+                        getId('CAMvideo').srcObject = stream;
                         getId('CAMvideo').play();
                     }
                 ).catch(
@@ -12607,13 +12628,41 @@ var baseCtx = {
         }]
     ],
     icnXXX: [
-        [' ' + lang('ctxMenu', 'showApp'), function(arg){
-            openapp(apps[arg], 'tskbr');
+        [function(arg){
+            if(apps[arg].appWindow.appIcon){
+                return ' ' + lang('ctxMenu', 'showApp');
+            }else{
+                return ' ' + lang('ctxMenu', 'openApp');
+            }
+        }, function(arg){
+            if(apps[arg].appWindow.appIcon){
+                openapp(apps[arg], 'tskbr');
+            }else{
+                openapp(apps[arg], 'dsktp');
+            }
         }, 'ctxMenu/beta/window.png'],
-        [' ' + lang('ctxMenu', 'hideApp'), function(arg){
+        [function(arg){
+            if(apps[arg].appWindow.appIcon){
+                return ' ' + lang('ctxMenu', 'hideApp');
+            }else{
+                return '-' + lang('ctxMenu', 'hideApp');
+            }
+        }, function(arg){
             apps[arg].signalHandler('shrink');
         }, 'ctxMenu/beta/minimize.png'],
-        [' ' + lang('ctxMenu', 'closeApp'), function(arg){
+        [function(arg){
+            if(pinnedApps.indexOf(arg) === -1){
+                return '+Pin App';
+            }else{
+                return '+Unpin App';
+            }
+        }, function(arg){
+            pinApp(arg);
+            if(pinnedApps.indexOf(arg) === -1 && !apps[arg].appWindow.appIcon){
+                getId('icn_' + arg).style.display = 'none';
+            }
+        }, 'ctxMenu/beta/minimize.png'],
+        ['+' + lang('ctxMenu', 'closeApp'), function(arg){
             apps[arg].signalHandler('close');
         }, 'ctxMenu/beta/x.png']
     ],
