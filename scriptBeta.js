@@ -7711,10 +7711,11 @@ c(function(){
             "12/22/2018: B0.9.1.8\n : IE11 no longer rejects aOS for containing spread notation (...) in its source code.\n + On Internet Explorer, Windowblur defaults to off.\n : Fixed double prompts appearing on non-Chrome browsers; should only appear once now.\n\n"  +
             "12/23/2018: B0.9.1.9\n : Fixed issue that caused portability to not actually work.\n\n" +
             "12/24/2018: B0.9.1.10\n + Begun work on experimental replacement file manager.\n\n" +
-            "01/01/2019: B0.9.1.11\n + AaronOS now has an EULA for those who wish to deploy aOS on their own server or otherwise use its code, available at /eula.txt\n + If the code is hosted on an unofficial server, a note will be dynamically added next to the Copyright Notice in Settings -> Information, with a link to the official AaronOS server. AaronOS deployers - this note is not under any circumstances to be removed or its text altered in any way, with the exception of being moved to another location at the top of an easily-accessible menu in Settings, alongside its Copyright Notice.\n + Apps can now be pinned to the taskbar.\n : Fixed Camera app.\n : Changed question mark in File Manager to refresh symbol.\n : Adjusted Mint-Y theme.\n : Google Play prompt now only occurs once.",
+            "01/01/2019: B0.9.1.11\n + AaronOS now has an EULA for those who wish to deploy aOS on their own server or otherwise use its code, available at /eula.txt\n + If the code is hosted on an unofficial server, a note will be dynamically added next to the Copyright Notice in Settings -> Information, with a link to the official AaronOS server. AaronOS deployers - this note is not under any circumstances to be removed or its text altered in any way, with the exception of being moved to another location at the top of an easily-accessible menu in Settings, alongside its Copyright Notice.\n + Apps can now be pinned to the taskbar.\n : Fixed Camera app.\n : Changed question mark in File Manager to refresh symbol.\n : Adjusted Mint-Y theme.\n : Google Play prompt now only occurs once.\n\n" +
+            "01/02/2019: B0.9.2.0\n + Added Text To Binary app.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.1.11 (01/01/2019) r4';
+    window.aOSversion = 'B0.9.2.0 (01/02/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -12094,16 +12095,21 @@ c(function(){
             }
         }, 0, 'minesweeper', 'appicons/ds/aOS.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Finalizing...';
+    getId('aOSloadingInfo').innerHTML = 'Initializing Text to Binary...';
 });
-/*
 c(function(){
-    apps.clicker = new Application(
-        'Clk',
-        'aOS Clicker',
+    apps.textBinary = new Application(
+        'BIN',
+        'Text to Binary',
         0,
         function(){
-            
+            if(!this.appIcon){
+                this.appWindow.setDims("auto", "auto", 800, 500);
+                this.appWindow.setCaption('Text to Binary');
+                getId('win_textBinary_html').style.overflow = 'auto';
+                this.appWindow.setContent('Use this tool to convert text into either binary text or a binary image. (WORK IN PROGRESS)<br><br><button onclick="apps.textBinary.vars.textToBW(0)">BW Image (large)</button> <button onclick="apps.textBinary.vars.textToGS(0)">GS Image (medium)</button> <button onclick="apps.textBinary.vars.textToRGB(0)">RGB Image (small)</button><br><button onclick="apps.textBinary.vars.textToBW(1)">BW Image (invert)</button> <button onclick="apps.textBinary.vars.textToGS(255)">GS Image (invert)</button> <button onclick="apps.textBinary.vars.textToRGB(255)">RGB Image (invert)</button><br><button onclick="apps.textBinary.vars.textToBin(1)">Plain Binary</button> <button onclick="apps.textBinary.vars.textToBin(0)">Plain Binary (no spaces)</button><br><textarea id="textToBinInput" placeholder="Type or paste text here"></textarea><hr><div id="textToBinOutput"></div>');
+            }
+            this.appWindow.openWindow();
         },
         function(signal){
             switch(signal){
@@ -12126,9 +12132,7 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    if(typeof USERFILES.APP_Clk_save === "string"){
-                        apps.clicker.vars.game = JSON.parse(USERFILES.APP_Clk_save)
-                    }
+                    
                     break;
                 case 'shutdown':
                         
@@ -12138,17 +12142,144 @@ c(function(){
             }
         },
         {
-            game: {
-                clicks: 0
+            appInfo: 'Convert text into binary or an image.',
+            textToBin: function(useSpaces){
+                var binFile = getId('textToBinInput').value;
+                var binFinal = '';
+                for(var byte in binFile){
+                    binStr = binFile.charCodeAt(byte).toString(2);
+                    while(binStr.length < 8){
+                        binStr = '0' + binStr;
+                    }
+                    if(useSpaces){
+                        binFinal += binStr + ' ';
+                    }else{
+                        binFinal += binStr;
+                    }
+                }
+                getId('textToBinOutput').innerHTML = '<textarea style="width:750px;height:300px;" display="block">' + binFinal + '</textarea>';
+            },
+            textToBW: function(invert){
+                var binFile = getId('textToBinInput').value;
+                var binFinal = [];
+                var binLength = 0;
+                for(var byte in binFile){
+                    binStr = binFile.charCodeAt(byte);
+                    binFinal.push(binStr);
+                    binLength++;
+                } // using decimals, not binary!
+                getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
+                var bincnv = getId('textToBinCanvas');
+                var binctx = bincnv.getContext('2d');
+                var imageSize = Math.floor(Math.sqrt(binLength * 8) + 1);
+                getId('textToBinImgSize').innerHTML = imageSize + 'x' + imageSize;
+                bincnv.width = imageSize;
+                bincnv.height = imageSize;
+                bincnv.style.width = imageSize + "px";
+                bincnv.style.height = imageSize + "px";
+                // for each pixel (increment through bytes of string by 3)
+                // make pixel on image equal to the 3 current byte items as rgb
+                var imgRow = 0;
+                var imgColumn = 0;
+                for(var byte = 0; byte < binLength; byte++){
+                    var currByte = (binFinal[byte] || 0).toString(2);
+                    while(currByte.length < 8){
+                        currByte = '0' + currByte;
+                    }
+                    var brightness = 0;
+                    for(var i = 0; i < 8; i++){
+                        if(invert){
+                            brightness = (1 - parseInt(currByte[i])) * 255;
+                        }else{
+                            brightness = (parseInt(currByte[i])) * 255;
+                        }
+                        binctx.fillStyle = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
+                        binctx.fillRect(imgColumn, imgRow, 1, 1);
+                        imgColumn++;
+                        if(imgColumn >= imageSize){
+                            imgColumn = 0;
+                            imgRow++;
+                        }
+                    }
+                }
+            },
+            textToGS: function(invert){
+                var binFile = getId('textToBinInput').value;
+                var binFinal = [];
+                var binLength = 0;
+                for(var byte in binFile){
+                    binStr = binFile.charCodeAt(byte);
+                    binFinal.push(binStr);
+                    binLength++;
+                } // using decimals, not binary!
+                getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
+                var bincnv = getId('textToBinCanvas');
+                var binctx = bincnv.getContext('2d');
+                var imageSize = Math.floor(Math.sqrt(binLength) + 1);
+                getId('textToBinImgSize').innerHTML = imageSize + 'x' + imageSize;
+                bincnv.width = imageSize;
+                bincnv.height = imageSize;
+                bincnv.style.width = imageSize + "px";
+                bincnv.style.height = imageSize + "px";
+                // for each pixel (increment through bytes of string by 3)
+                // make pixel on image equal to the 3 current byte items as rgb
+                var imgRow = 0;
+                var imgColumn = 0;
+                for(var byte = 0; byte < binLength; byte++){
+                    if(invert){
+                        var brightness = 255 - (binFinal[byte] || 0);
+                    }else{
+                        var brightness = (binFinal[byte] || 0);
+                    }
+                    binctx.fillStyle = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
+                    binctx.fillRect(imgColumn, imgRow, 1, 1);
+                    imgColumn++;
+                    if(imgColumn >= imageSize){
+                        imgColumn = 0;
+                        imgRow++;
+                    }
+                }
+            },
+            textToRGB: function(invert){
+                var binFile = getId('textToBinInput').value;
+                var binFinal = [];
+                var binLength = 0;
+                for(var byte in binFile){
+                    binStr = binFile.charCodeAt(byte);
+                    binFinal.push(binStr);
+                    binLength++;
+                } // using decimals, not binary!
+                getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
+                var bincnv = getId('textToBinCanvas');
+                var binctx = bincnv.getContext('2d');
+                var imageSize = Math.floor(Math.sqrt(binLength / 3) + 1);
+                getId('textToBinImgSize').innerHTML = imageSize + 'x' + imageSize;
+                bincnv.width = imageSize;
+                bincnv.height = imageSize;
+                bincnv.style.width = imageSize + "px";
+                bincnv.style.height = imageSize + "px";
+                // for each pixel (increment through bytes of string by 3)
+                // make pixel on image equal to the 3 current byte items as rgb
+                var imgRow = 0;
+                var imgColumn = 0;
+                for(var byte = 0; byte < binLength; byte += 3){
+                    if(invert){
+                        binctx.fillStyle = 'rgb(' + (255 - (binFinal[byte] || 0)) + ',' + (255 - (binFinal[byte + 1] || 0)) + ',' + (255 - (binFinal[byte + 2] || 0)) + ')';
+                    }else{
+                        binctx.fillStyle = 'rgb(' + (binFinal[byte] || 0) + ',' + (binFinal[byte + 1] || 0) + ',' + (binFinal[byte + 2] || 0) + ')';
+                    }
+                    binctx.fillRect(imgColumn, imgRow, 1, 1);
+                    imgColumn++;
+                    if(imgColumn >= imageSize){
+                        imgColumn = 0;
+                        imgRow++;
+                    }
+                }
             }
-            saveGame: function(){
-                apps.savemaster.vars.save('APP_Clk_save', JSON.stringify(apps.clicker.vars.game), 1);
-            }
-        }, 1, 'aOS Clicker', '/appicons/ds/CCl.png'
+        }, 1, 'textBinary', 'appicons/ds/CAM.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Finalizing...';
-})
-*/
+});
 m('init finalizing');
 //function to open apps
 function toTop(appToNudge, dsktpClick){
