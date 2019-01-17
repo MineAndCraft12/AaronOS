@@ -7802,10 +7802,10 @@ c(function(){
             "01/04/2019: B0.9.3.0\n + Text To Binary app can now decode images.\n\n" +
             "01/05/2019: B0.9.3.1\n : Minor memory fixes in Text To Binary\n + Text To Binary now has a standalone page at binary.php\n\n" +
             "01/07/2019: B0.9.3.2\n : Battery widget is hidden on devices/browsers that don't support it.\n\n" +
-            "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n + Two new battery widget modes, Text and Old.\n + JS Console now sanitizes input and catches errors.\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.",
+            "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n : Windows can now be correctly resized by any edge.\n + Two new battery widget modes, Text and Old.\n + JS Console now sanitizes input and catches errors.\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.4.0 (01/17/2019) r2';
+    window.aOSversion = 'B0.9.4.0 (01/17/2019) r3';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -12805,6 +12805,9 @@ function icnmoving(e){
 }
 var tempwinrot = "";
 var tempwinrota = "";
+var tempwinrotmode = [1, 1];
+var winrotOrX = 0;
+var winrotOrY = 0;
 function winrot(e){
     if(e.currentTarget !== getId("winrot")){
         getId("winrot").style.display = "block";
@@ -12831,11 +12834,46 @@ function winrot(e){
             getId('windowFrameOverlay').style.width = winmoveOrX + 'px';
             getId('windowFrameOverlay').style.height = winmoveOrY + 'px';
         }
+        tempwinrotmode = [1, 1];
+        if(winmovex - apps[winmovecurrapp].appWindow.windowX < 20){
+            tempwinrotmode[0] = 0;
+            winrotOrX = apps[winmovecurrapp].appWindow.windowX;
+        }else if(winmovex - apps[winmovecurrapp].appWindow.windowX - apps[winmovecurrapp].appWindow.windowH > -20){
+            tempwinrotmode[0] = 2;
+        }
+        if(winmovey - apps[winmovecurrapp].appWindow.windowY < 20){
+            tempwinrotmode[1] = 0;
+            winrotOrY = apps[winmovecurrapp].appWindow.windowY;
+        }else if(winmovey - apps[winmovecurrapp].appWindow.windowY - apps[winmovecurrapp].appWindow.windowV > -20){
+            tempwinrotmode[1] = 2;
+        }
     }else{
         getId("winrot").style.display = "none";
+        var newWidth = apps[winmovecurrapp].appWindow.windowH;
+        var newHeight = apps[winmovecurrapp].appWindow.windowV;
+        var newLeft = apps[winmovecurrapp].appWindow.windowX;
+        var newTop = apps[winmovecurrapp].appWindow.windowY;
+        if(tempwinrotmode[0] === 2){
+            newWidth = winmoveOrX + (e.pageX - winmovex) * (1 / screenScale);
+        }else if(tempwinrotmode[0] === 0){
+            newWidth = winmoveOrX - (e.pageX - winmovex) * (1 / screenScale);
+            newLeft = winrotOrX + (e.pageX - winmovex) * (1 / screenScale);
+        }
+        if(tempwinrotmode[1] === 2){
+            newHeight = winmoveOrY + (e.pageY - winmovey) * (1 / screenScale);
+        }else if(tempwinrotmode[1] === 0){
+            newHeight = winmoveOrY - (e.pageY - winmovey) * (1 / screenScale);
+            newTop = winrotOrY + (e.pageY - winmovey) * (1 / screenScale)
+        }
+        /*
         apps[winmovecurrapp].appWindow.setDims(
             apps[winmovecurrapp].appWindow.windowX, apps[winmovecurrapp].appWindow.windowY,
             winmoveOrX + (e.pageX - winmovex) * (1 / screenScale), winmoveOrY + (e.pageY - winmovey) * (1 / screenScale)
+        );
+        */
+        apps[winmovecurrapp].appWindow.setDims(
+            newLeft, newTop,
+            newWidth, newHeight
         );
         if(apps.settings.vars.performanceMode){
             getId('windowFrameOverlay').style.display = 'none';
@@ -12847,13 +12885,35 @@ function winrot(e){
 }
 getId("winrot").addEventListener("click", winrot);
 function winroting(e){
+    var newWidth = apps[winmovecurrapp].appWindow.windowH;
+    var newHeight = apps[winmovecurrapp].appWindow.windowV;
+    var newLeft = apps[winmovecurrapp].appWindow.windowX;
+    var newTop = apps[winmovecurrapp].appWindow.windowY;
+    if(tempwinrotmode[0] === 2){
+        newWidth = winmoveOrX + (e.pageX - winmovex) * (1 / screenScale);
+    }else if(tempwinrotmode[0] === 0){
+        newWidth = winmoveOrX - (e.pageX - winmovex) * (1 / screenScale);
+        newLeft = winrotOrX + (e.pageX - winmovex) * (1 / screenScale);
+    }
+    if(tempwinrotmode[1] === 2){
+        newHeight = winmoveOrY + (e.pageY - winmovey) * (1 / screenScale);
+    }else if(tempwinrotmode[1] === 0){
+        newHeight = winmoveOrY - (e.pageY - winmovey) * (1 / screenScale);
+        newTop = winrotOrY + (e.pageY - winmovey) * (1 / screenScale)
+    }
     if(apps.settings.vars.performanceMode){
         getId('windowFrameOverlay').style.width = winmoveOrX + (e.pageX - winmovex) * (1 / screenScale) + 'px';
         getId('windowFrameOverlay').style.height = winmoveOrY + (e.pageY - winmovey) * (1 / screenScale) + 'px';
     }else{
+        /*
         apps[winmovecurrapp].appWindow.setDims(
             apps[winmovecurrapp].appWindow.windowX, apps[winmovecurrapp].appWindow.windowY,
             winmoveOrX + (e.pageX - winmovex) * (1 / screenScale), winmoveOrY + (e.pageY - winmovey) * (1 / screenScale)
+        );
+        */
+        apps[winmovecurrapp].appWindow.setDims(
+            newLeft, newTop,
+            newWidth, newHeight
         );
     }
     //getId(winmoveSelect).style.transform = "rotateY(" + (e.pageX - winmovex) + "deg)rotateX(" + (e.pageY - winmovey) + "deg)";

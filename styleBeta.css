@@ -255,7 +255,7 @@ div{
                 background-image:url(winimg.png);
             }
             .winRot{
-                height:50%;
+                height:100%;
                 bottom:0;
                 width:100%;
                 /*cursor:url(cursors/move.png) 14 14, move;*/
