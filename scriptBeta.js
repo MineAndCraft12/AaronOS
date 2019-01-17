@@ -42,9 +42,9 @@ function darkSwitch(light, dark){
 var autoMobile = 0;
 function checkMobileSize(){
     if(autoMobile){
-        if(!mobileMode && parseInt(getId('monitor').style.width) < 768){
+        if(!mobileMode && (screen.width < 768 || parseInt(getId('monitor').style.width) < 768)){
             setMobile(1);
-        }else if(mobileMode && parseInt(getId('monitor').style.width) >= 768){
+        }else if(mobileMode && (screen.width >= 768 && parseInt(getId('monitor').style.width) >= 768)){
             setMobile(0);
         }
     }
@@ -1888,23 +1888,27 @@ widgets.battery = new Widget(
     },
     function(){
         widgets.battery.vars.running = 1;
-        getId('widget_battery').innerHTML = '<div id="batteryWidgetFrame">????</div><div style="position:static;margin-top:-8px;border:1px solid #FFF;width:0;height:3px;margin-left:32px"></div>';
+        widgets.battery.vars.styles[USERFILES.WGT_BATTERY_STYLE || "def"][0]();
+        /*
         widgets.battery.vars.previousAmount = batteryLevel;
         widgets.battery.vars.previousAmountChange = 0;
         widgets.battery.vars.amountChange = 0;
         perfStart('batteryWidget');
+        */
         widgets.battery.frame();
     },
     function(){
         if(widgets.battery.vars.running){
             if(batteryLevel !== -1){
-                getId('batteryWidgetFrame').innerHTML = taskbarBatteryStr;
+                widgets.battery.vars.styles[USERFILES.WGT_BATTERY_STYLE || "def"][1]();
+                /*
                 if(perfCheck('batteryWidget') > 120000000){
                     widgets.battery.vars.amountChange = widgets.battery.vars.previousAmountChange;
                     widgets.battery.vars.amountChange = batteryLevel - widgets.battery.vars.previousAmount;
                     widgets.battery.vars.previousAmount = batteryLevel;
                     perfStart('batteryWidget');
                 }
+                */
             }
             requestAnimationFrame(widgets.battery.frame);
         }
@@ -1914,18 +1918,54 @@ widgets.battery = new Widget(
     },
     {
         running: 0,
+        /*
         previousPreviousAmount: 0,
         previousAmount: 0,
         amountChange: 0,
+        */
+        styles: {
+            def: [
+                function(){
+                    getId('widget_battery').innerHTML = '<div id="batteryWidgetFrame">????</div><div style="position:static;margin-top:-8px;border:1px solid #FFF;width:0;height:3px;margin-left:32px"></div>';
+                },
+                function(){
+                    getId('batteryWidgetFrame').innerHTML = taskbarBatteryStr;
+                }
+            ],
+            text: [
+                function(){
+                    getId('widget_battery').innerHTML = '[???]';
+                },
+                function(){
+                    if(cpuBattery.charging){
+                        getId('widget_battery').innerHTML = '<div style="pointer-events:none;line-height:150%;position:relative;padding-left:3px;padding-right:3px">{' + taskbarBatteryStr.substring(0, 3) + '}</div>';
+                    }else{
+                        getId('widget_battery').innerHTML = '<div style="pointer-events:none;line-height:150%;position:relative;padding-left:3px;padding-right:3px">[' + taskbarBatteryStr.substring(0, 3) + ']</div>';
+                    }
+                }
+            ],
+            old: [
+                function(){
+                    getId('widget_battery').innerHTML = '<div style="pointer-events:none;position:relative;margin-left:3px;margin-right:3px;margin-top:3px;border:1px solid #FFF;background:rgb(0, 0, 0);width:50px;height:21px;"><div style="overflow:visible;width:0px;height:21px;background-color:rgb(255, 0, 0);text-align:center;">???</div></div>';
+                },
+                function(){
+                    getId('widget_battery').innerHTML = '<div style="pointer-events:none;position:relative;margin-left:3px;margin-right:3px;margin-top:3px;border:1px solid #FFF;background:rgb(0, 0, ' + (batteryCharging * 255) + ');width:50px;height:21px;"><div style="overflow:visible;width:' + Math.round(batteryLevel * 50) + 'px;height:21px;background-color:rgb(' + Math.round(255 - (batteryLevel * 255)) + ',' + Math.round(batteryLevel * 255) + ',0);text-align:center;">' + Math.round(batteryLevel * 100) + '</div></div>';
+                }
+            ],
+        },
+        changeStyle: function(newStyle){
+            apps.savemaster.vars.save("WGT_BATTERY_STYLE", newStyle, 1);
+            widgets.battery.vars.styles[newStyle][0]();
+        },
         generateMenu: function(){
             if(batteryCharging){
                 return "<div style='font-size:24px'>Current battery level:<br>" + (batteryLevel * 100) + "%<br><br>" +
                     "Battery is charging.<br><br>" +
-                    "Time to full charge:<br>" + Math.round((1 - widgets.battery.vars.previousAmount) / ((widgets.battery.vars.amountChange + widgets.battery.vars.previousAmountChange) / 2) * 2) + " minutes</div>";
+                    'Battery Style:<br><button onclick="widgets.battery.vars.changeStyle(\'def\')">Default</button> <button onclick="widgets.battery.vars.changeStyle(\'text\')">Text</button> <button onclick="widgets.battery.vars.changeStyle(\'old\')">Old</button></div>'
             }else{
                 return "<div style='font-size:24px'><br>Current battery level:<br>" + (batteryLevel * 100) + "%<br><br>" +
                     "Battery is not charging.<br><br>" +
-                    "Time remaining:<br>" + Math.round(widgets.battery.vars.previousAmount / (-1 * ((widgets.battery.vars.amountChange + widgets.battery.vars.previousAmountChange) / 2)) * 2) + " minutes</div>";
+                    'Battery Style:<br><button onclick="widgets.battery.vars.changeStyle(\'def\')">Default</button> <button onclick="widgets.battery.vars.changeStyle(\'text\')">Text</button> <button onclick="widgets.battery.vars.changeStyle(\'old\')">Old</button></div>'
             }
         }
     }
@@ -4239,10 +4279,15 @@ c(function(){
                 m('Running jsC Input');
                 d(1, 'Running jsC input');
                 this.lastInputUsed = getId("cnsIn").value;
-                doLog("-> " + getId("cnsIn").value, "#0D0");
-                this.tempOutput = eval(getId("cnsIn").value);
-                doLog("=> " + this.tempOutput, "#DD0");
-                doLog("?> " + typeof this.tempOutput, "#DD0");
+                doLog("-> " + cleanStr(getId("cnsIn").value), "#0D0");
+                try{
+                    this.tempOutput = eval(getId("cnsIn").value);
+                    doLog("=> " + this.tempOutput, "#DD0");
+                    doLog("?> " + typeof this.tempOutput, "#DD0");
+                }catch(err){
+                    doLog("=> " + err, "#F00");
+                    doLog("?> Module: " + module, "#F00");
+                }
             }
         }, 0, "jsConsole", "appicons/ds/jsC.png"
     );
@@ -7757,10 +7802,10 @@ c(function(){
             "01/04/2019: B0.9.3.0\n + Text To Binary app can now decode images.\n\n" +
             "01/05/2019: B0.9.3.1\n : Minor memory fixes in Text To Binary\n + Text To Binary now has a standalone page at binary.php\n\n" +
             "01/07/2019: B0.9.3.2\n : Battery widget is hidden on devices/browsers that don't support it.\n\n" +
-            "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.",
+            "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n + Two new battery widget modes, Text and Old.\n + JS Console now sanitizes input and catches errors.\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.4.0 (01/17/2019) r0';
+    window.aOSversion = 'B0.9.4.0 (01/17/2019) r2';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
