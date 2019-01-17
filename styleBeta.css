@@ -216,6 +216,13 @@ div{
             transform-origin:50%;
             opacity:0;
         }
+            .mobileMode .window{
+                border-radius:0;
+                left:0 !important;
+                top:0 !important;
+                width:100% !important;
+                height:100% !important;
+            }
             .winAero{
                 width:605px;
                 height:360px;
@@ -231,6 +238,11 @@ div{
                 /*background-blend-mode:screen;*/
                 background-blend-mode:screen;
             }
+                .mobileMode .winAero:not(#tskbrAero){
+                    width: calc(100% + 80px) !important;
+                    height: calc(100% + 80px) !important;
+                    background-position: 40px 40px !important;
+                }
                 #tskbrAero{
                     height: 70px;
                     width: 1090px;
@@ -274,10 +286,20 @@ div{
                 border-bottom-right-radius: 5px;
                 padding-left:3px;
             }
-                .noPadding{
+                .mobileMode .winHTML{
+                    width:calc(100% - 3px) !important;
+                    height:calc(100% - 21px) !important;
+                    bottom: 0;
+                    left:0 !important;
+                    border-radius:0;
+                }
+                .winHTML.noPadding{
                     padding-left:0;
                     width:calc(100% - 6px);
                 }
+                    .mobileMode .winHTML.noPadding{
+                        width:100% !important;
+                    }
                 .darkMode .winHTML{
                     background-color:#000;
                     color:#FFF;
@@ -472,6 +494,9 @@ div{
             .winBig{
                 right:26px;
             }
+                .mobileMode .winBig{
+                    display:none !important;
+                }
                 .leftCaptionButtons .winBig{
                     left:26px;
                     right:initial;
@@ -480,6 +505,9 @@ div{
                 left: 3px;
                 line-height:24px;
             }
+                .mobileMode .winFld{
+                    display:none !important;
+                }
                 .leftCaptionButtons .winFld{
                     right:3px;
                     left:initial;
@@ -585,7 +613,7 @@ div{
 }
 	#icons{
 		height:30px;
-		width:600px;
+		/*width:600px;*/
 	}
         .icon{
             height:30px;
@@ -823,6 +851,9 @@ div{
     background:linear-gradient(0deg, rgba(0, 0, 0, 0.2) 0, rgba(0, 0, 0, 0) 45%, rgba(255, 255, 255, 0) 55%, rgba(255, 255, 255, 0.2) 100%);
     border-radius:5px;
 }
+    .mobileMode #windowFrameOverlay{
+        display:none !important;
+    }
 
 .cursorDefault{
     cursor:url(cursors/beta/default.png) 3 3, default;
@@ -1006,9 +1037,15 @@ div{
     left:0px !important;
     top:0px !important;
     display:inline-block !important;
+    /*
     width:0;
     height:0;
+    */
     opacity:1 !important;
+}
+.flowDesktop .window.closedWindow{
+    width: 0 !important;
+    height: 0 !important;
 }
 .flowDesktop #winDsB, .flowDesktop #winNRA{
     display:none !important;

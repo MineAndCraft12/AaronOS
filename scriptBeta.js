@@ -39,6 +39,33 @@ function darkSwitch(light, dark){
         return light;
     }
 }
+var autoMobile = 0;
+function checkMobileSize(){
+    if(autoMobile){
+        if(!mobileMode && parseInt(getId('monitor').style.width) < 768){
+            setMobile(1);
+        }else if(mobileMode && parseInt(getId('monitor').style.width) >= 768){
+            setMobile(0);
+        }
+    }
+}
+var mobileMode = 0;
+function mobileSwitch(no, yes){
+    if(mobileMode){
+        return yes;
+    }else{
+        return no;
+    }
+}
+function setMobile(type){
+    if(type){
+        mobileMode = 1;
+        getId('monitor').classList.add('mobileMode');
+    }else{
+        mobileMode = 0;
+        getId('monitor').classList.remove('mobileMode');
+    }
+}
 
 // sanitize a string to make html safe
 function cleanStr(str){
@@ -97,8 +124,6 @@ function checkMonitorMovement(){
     requestAnimationFrame(checkMonitorMovement);
 }
 requestAnimationFrame(checkMonitorMovement);
-
-var mobileMode = false;
 
 /*
     // each section will be separated by newlines and begin with a comment like this
@@ -1064,6 +1089,9 @@ for(i = 1000; i < 5500; i += 500){
 function failBattery(){
     if(cpuBattery === undefined || cpuBattery.level === ' ? ' || objLength(cpuBattery) === 0){
         doLog('Battery setup aborted. [' + [(cpuBattery === undefined), (cpuBattery.level === ' ? '), (objLength(cpuBattery) === 0)] + ']', '#F00');
+        if(!USERFILES.WIDGETLIST){
+            removeWidget('battery', 1);
+        }
     }else if(!batterySetupSuccess){
         doLog('Battery setup success! [' + [(cpuBattery === undefined), (cpuBattery.level === ' ? '), (objLength(cpuBattery) === 0)] + ']', '#FF0');
         batterySetupSuccess = 1;
@@ -1318,79 +1346,39 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             },
             setDims: function(xOff, yOff, xSiz, ySiz, ignoreDimsSet){
                 d(2, 'Setting dims of window.');
-                if(!mobileMode){
-                    if(!this.fullscreen){
-                        if(xOff === "auto"){
-                            xOff = Math.round(parseInt(getId('desktop').style.width) / 2 - (xSiz / 2));
-                        }
-                        if(yOff === "auto"){
-                            yOff = Math.round(parseInt(getId('desktop').style.height) / 2 - (ySiz / 2));
-                        }
-                        xOff = Math.round(xOff);
-                        yOff = Math.round(yOff);
-                        if(this.windowX !== xOff){
-                            getId("win_" + this.objName + "_top").style.left = xOff + "px";
-                            //getId('win' + this.dsktpIcon).style.transform = 'translateX(' + xOff + 'px) translateY(' + yOff + 'px)';
-                            this.windowX = Math.round(xOff);
-                        }
-                        if(this.windowY !== yOff){
-                            getId("win_" + this.objName + "_top").style.top = (yOff * (yOff > -1)) + "px";
-                            //getId('win' + this.dsktpIcon).style.transform = 'translateX(' + xOff + 'px) translateY(' + yOff + 'px)';
-                            this.windowY = Math.round(yOff);
-                        }
-                        if(this.windowH !== xSiz){
-                            getId("win_" + this.objName + "_top").style.width = xSiz + "px";
-                            getId("win_" + this.objName + "_cap").style.width = xSiz - 29 + "px";
-                            //getId("win" + this.dsktpIcon + "h").style.width = xSiz - 9 + "px";
-                            getId("win_" + this.objName + "_aero").style.width = xSiz + 80 + "px";
-                            this.windowH = xSiz;
-                        }
-                        if(this.windowV !== ySiz){
-                            if(!this.folded){
-                                getId("win_" + this.objName + "_top").style.height = ySiz + "px";
-                            }
-                            getId("win_" + this.objName + "_html").style.height = ySiz - 24 + "px";
-                            getId("win_" + this.objName + "_aero").style.height = ySiz + 80 + "px";
-                            this.windowV = ySiz;
-                        }
-                        var aeroOffset = [0, 0];
-                        if(tskbrToggle.tskbrPos === 1){
-                            aeroOffset[1] = -30;
-                        }else if(tskbrToggle.tskbrPos === 2){
-                            aeroOffset[0] = -30;
-                        }
-                        getId("win_" + this.objName + "_aero").style.backgroundPosition = (-1 * xOff + 40 + aeroOffset[0]) + "px " + (-1 * (yOff * (yOff > -1)) + 40 + aeroOffset[1]) + "px";
-                        //getId("win" + this.dsktpIcon + "a").style.width = xSiz + 80 + "px";
-                        //getId("win" + this.dsktpIcon + "a").style.height = ySiz + 80 + "px";
-                        if(typeof this.dimsSet === 'function' && !ignoreDimsSet){
-                            this.dimsSet();
-                        }
+                if(!this.fullscreen){
+                    if(xOff === "auto"){
+                        xOff = Math.round(parseInt(getId('desktop').style.width) / 2 - (xSiz / 2));
                     }
-                }else{ // mobile mode
-                    if(this.windowX !== 0){
-                        getId("win_" + this.objName + "_top").style.left = 0 + "px";
+                    if(yOff === "auto"){
+                        yOff = Math.round(parseInt(getId('desktop').style.height) / 2 - (ySiz / 2));
+                    }
+                    xOff = Math.round(xOff);
+                    yOff = Math.round(yOff);
+                    if(this.windowX !== xOff){
+                        getId("win_" + this.objName + "_top").style.left = xOff + "px";
                         //getId('win' + this.dsktpIcon).style.transform = 'translateX(' + xOff + 'px) translateY(' + yOff + 'px)';
-                        this.windowX = 0;
+                        this.windowX = Math.round(xOff);
                     }
-                    if(this.windowY !== 0){
-                        getId("win_" + this.objName + "_top").style.top = (0 * (0 > -1)) + "px";
+                    if(this.windowY !== yOff){
+                        getId("win_" + this.objName + "_top").style.top = (yOff * (yOff > -1)) + "px";
                         //getId('win' + this.dsktpIcon).style.transform = 'translateX(' + xOff + 'px) translateY(' + yOff + 'px)';
-                        this.windowY = 0;
+                        this.windowY = Math.round(yOff);
                     }
-                    if(this.windowH !== parseInt(getId('desktop').style.width)){
-                        getId("win_" + this.objName + "_top").style.width = parseInt(getId('desktop').style.width) + "px";
-                        getId("win_" + this.objName + "_cap").style.width = parseInt(getId('desktop').style.width) - 29 + "px";
+                    if(this.windowH !== xSiz){
+                        getId("win_" + this.objName + "_top").style.width = xSiz + "px";
+                        getId("win_" + this.objName + "_cap").style.width = xSiz - 29 + "px";
                         //getId("win" + this.dsktpIcon + "h").style.width = xSiz - 9 + "px";
-                        getId("win_" + this.objName + "_aero").style.width = parseInt(getId('desktop').style.width) + 80 + "px";
-                        this.windowH = parseInt(getId('desktop').style.width);
+                        getId("win_" + this.objName + "_aero").style.width = xSiz + 80 + "px";
+                        this.windowH = xSiz;
                     }
-                    if(this.windowV !== parseInt(getId('desktop').style.height)){
+                    if(this.windowV !== ySiz){
                         if(!this.folded){
-                            getId("win_" + this.objName + "_top").style.height = parseInt(getId('desktop').style.height) + "px";
+                            getId("win_" + this.objName + "_top").style.height = ySiz + "px";
                         }
                         getId("win_" + this.objName + "_html").style.height = ySiz - 24 + "px";
-                        getId("win_" + this.objName + "_aero").style.height = parseInt(getId('desktop').style.height) + 80 + "px";
-                        this.windowV = parseInt(getId('desktop').style.height);
+                        getId("win_" + this.objName + "_aero").style.height = ySiz + 80 + "px";
+                        this.windowV = ySiz;
                     }
                     var aeroOffset = [0, 0];
                     if(tskbrToggle.tskbrPos === 1){
@@ -1398,9 +1386,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     }else if(tskbrToggle.tskbrPos === 2){
                         aeroOffset[0] = -30;
                     }
-                    getId("win_" + this.objName + "_aero").style.backgroundPosition = (-1 * 0 + 40 + aeroOffset[0]) + "px " + (-1 * (0 * (0 > -1)) + 40 + aeroOffset[1]) + "px";
-                    if(parseInt(getId('desktop').style.width) !== xSiz && parseInt(getId('desktop').style.height) !== ySiz)
-                    getId("win_" + this.objName + "_html").style.transform = "scale(" + ((parseInt(getId('desktop').style.width) - 6) / (xSiz - 6)) + ", " + ((parseInt(getId('desktop').style.height) - 24) / (ySiz - 24)) + ")";
+                    getId("win_" + this.objName + "_aero").style.backgroundPosition = (-1 * xOff + 40 + aeroOffset[0]) + "px " + (-1 * (yOff * (yOff > -1)) + 40 + aeroOffset[1]) + "px";
                     //getId("win" + this.dsktpIcon + "a").style.width = xSiz + 80 + "px";
                     //getId("win" + this.dsktpIcon + "a").style.height = ySiz + 80 + "px";
                     if(typeof this.dimsSet === 'function' && !ignoreDimsSet){
@@ -1410,6 +1396,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             },
             openWindow: function(){
                 this.appIcon = 1;
+                getId("win_" + this.objName + "_top").classList.remove('closedWindow');
                 getId("win_" + this.objName + "_top").style.display = "block";
                 getId("icn_" + this.objName).style.display = "inline-block";
                 getId("win_" + this.objName + "_top").style.pointerEvents = "";
@@ -1429,6 +1416,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             },
             closeWindow: function(){
                 this.appIcon = 0;
+                getId("win_" + this.objName + "_top").classList.add('closedWindow');
                 
                 // experimental
                 getId('win_' + this.objName + '_top').style.transformOrigin = '';
@@ -1484,34 +1472,66 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             closeKeepTask: function(){
                 // experimental
                 if(this.objName !== 'startMenu'){
-                    switch(tskbrToggle.tskbrPos){
-                        case 1:
-                            try{
-                                getId("win_" + this.objName + "_top").style.transformOrigin = getId("icn_" + this.objName).getBoundingClientRect().left - this.windowX + 23 + 'px ' + (0 - this.windowY) + 'px';
-                            }catch(err){
-                                getId("win_" + this.objName + "_top").style.transformOrigin = '50% -' + window.innerHeight + 'px';
-                            }
-                            break;
-                        case 2:
-                            try{
-                                getId("win_" + this.objName + "_top").style.transformOrigin = (0 - this.windowX - 30) + 'px ' + (getId("icn_" + this.objName).getBoundingClientRect().top - this.windowY + 23) + 'px';
-                            }catch(err){
-                                getId("win_" + this.objName + "_top").style.transformOrigin = '-' + window.innerWidth + 'px 50%';
-                            }
-                            break;
-                        case 3:
-                            try{
-                                getId("win_" + this.objName + "_top").style.transformOrigin = (parseInt(getId('monitor').style.width, 10) - this.windowX - 30) + 'px ' + (getId("icn_" + this.objName).getBoundingClientRect().top - this.windowY + 23) + 'px';
-                            }catch(err){
-                                getId("win_" + this.objName + "_top").style.transformOrigin = '50% ' + window.innerWidth + 'px';
-                            }
-                            break;
-                        default:
-                            try{
-                                getId("win_" + this.objName + "_top").style.transformOrigin = getId("icn_" + this.objName).getBoundingClientRect().left - this.windowX + 23 + 'px ' + (parseInt(getId('monitor').style.height, 10) - this.windowY - 30) + 'px';
-                            }catch(err){
-                                getId("win_" + this.objName + "_top").style.transformOrigin = '50% ' + window.innerHeight + 'px';
-                            }
+                    if(!mobileMode){
+                        switch(tskbrToggle.tskbrPos){
+                            case 1:
+                                try{
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = getId("icn_" + this.objName).getBoundingClientRect().left - this.windowX + 23 + 'px ' + (0 - this.windowY) + 'px';
+                                }catch(err){
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = '50% -' + window.innerHeight + 'px';
+                                }
+                                break;
+                            case 2:
+                                try{
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = (0 - this.windowX - 30) + 'px ' + (getId("icn_" + this.objName).getBoundingClientRect().top - this.windowY + 23) + 'px';
+                                }catch(err){
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = '-' + window.innerWidth + 'px 50%';
+                                }
+                                break;
+                            case 3:
+                                try{
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = (parseInt(getId('monitor').style.width, 10) - this.windowX - 30) + 'px ' + (getId("icn_" + this.objName).getBoundingClientRect().top - this.windowY + 23) + 'px';
+                                }catch(err){
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = '50% ' + window.innerWidth + 'px';
+                                }
+                                break;
+                            default:
+                                try{
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = getId("icn_" + this.objName).getBoundingClientRect().left - this.windowX + 23 + 'px ' + (parseInt(getId('monitor').style.height, 10) - this.windowY - 30) + 'px';
+                                }catch(err){
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = '50% ' + window.innerHeight + 'px';
+                                }
+                        }
+                    }else{
+                        switch(tskbrToggle.tskbrPos){
+                            case 1:
+                                try{
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = getId("icn_" + this.objName).getBoundingClientRect().left + 23 + 'px 0px';
+                                }catch(err){
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = '50% -' + window.innerHeight + 'px';
+                                }
+                                break;
+                            case 2:
+                                try{
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = '-30px ' + (getId("icn_" + this.objName).getBoundingClientRect().top + 23) + 'px';
+                                }catch(err){
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = '-' + window.innerWidth + 'px 50%';
+                                }
+                                break;
+                            case 3:
+                                try{
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = (parseInt(getId('monitor').style.width, 10) - 30) + 'px ' + (getId("icn_" + this.objName).getBoundingClientRect().top + 23) + 'px';
+                                }catch(err){
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = '50% ' + window.innerWidth + 'px';
+                                }
+                                break;
+                            default:
+                                try{
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = getId("icn_" + this.objName).getBoundingClientRect().left + 23 + 'px ' + (parseInt(getId('monitor').style.height, 10) - 30) + 'px';
+                                }catch(err){
+                                    getId("win_" + this.objName + "_top").style.transformOrigin = '50% ' + window.innerHeight + 'px';
+                                }
+                        }
                     }
                     //try{
                         getId("win_" + this.objName + "_top").style.transform = 'scale(0.1)'; //'scale(' + apps.settings.vars.winFadeDistance + ')';
@@ -1548,17 +1568,15 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             },
             fullscreentempvars: [0, 0, 0, 0],
             toggleFullscreen: function(){
-                if(!mobileMode){
-                    d(1, 'Setting Maximise.');
-                    if(this.fullscreen){
-                        this.fullscreen = 0;
-                        this.setDims(this.fullscreentempvars[0], this.fullscreentempvars[1], this.fullscreentempvars[2], this.fullscreentempvars[3]);
-                    }else{
-                        this.fullscreentempvars = [this.windowX, this.windowY, this.windowH, this.windowV];
-                        this.setDims(-3, 0, parseInt(getId('desktop').style.width, 10) + 6, parseInt(getId('desktop').style.height, 10) + 3);
-                        this.fullscreen = 1;
-                        //getId("win" + this.dsktpIcon).style.transform = 'scale(' + (parseInt(getId("desktop").style.width) / this.windowH) + ',' + (parseInt(getId("desktop").style.height) / this.windowV) + ')';
-                    }
+                d(1, 'Setting Maximise.');
+                if(this.fullscreen){
+                    this.fullscreen = 0;
+                    this.setDims(this.fullscreentempvars[0], this.fullscreentempvars[1], this.fullscreentempvars[2], this.fullscreentempvars[3]);
+                }else{
+                    this.fullscreentempvars = [this.windowX, this.windowY, this.windowH, this.windowV];
+                    this.setDims(-3, 0, parseInt(getId('desktop').style.width, 10) + 6, parseInt(getId('desktop').style.height, 10) + 3);
+                    this.fullscreen = 1;
+                    //getId("win" + this.dsktpIcon).style.transform = 'scale(' + (parseInt(getId("desktop").style.width) / this.windowH) + ',' + (parseInt(getId("desktop").style.height) / this.windowV) + ')';
                 }
             }
         };
@@ -1600,7 +1618,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             getId("app_" + appPath).style.display = "none";
         }
         getId("desktop").innerHTML +=
-            '<div class="window" id="win_' + appPath + '_top">' +
+            '<div class="window closedWindow" id="win_' + appPath + '_top">' +
             '<div class="winAero" id="win_' + appPath + '_aero"></div>' +
             '<div class="winBimg" id="win_' + appPath + '_img"></div>' +
             '<div class="winRot cursorOpenHand" id="win_' + appPath + '_size"></div>' +
@@ -1840,12 +1858,18 @@ widgets.fps = new Widget(
     function(){ // start function
         widgets.fps.vars.running = 1;
         //widgets.time.setWidth('58px');
-        getId('widget_fps').innerHTML = '<div id="compactFPS"></div><div style="position:static;margin-left:26px;margin-right:6px;margin-top:-25px;font-family:Courier,monospace;font-size:21px">' + lang('aOS', 'framesPerSecond') + '</div>';
+        getId('widget_fps').innerHTML = '<div id="compactFPS"></div><div id="postCompactFPS" style="position:static;margin-left:26px;margin-right:6px;margin-top:-25px;font-family:Courier,monospace;font-size:21px">' + lang('aOS', 'framesPerSecond') + '</div>';
         widgets.fps.frame();
     },
     function(){ // frame function (this.vars.frame())
         if(widgets.fps.vars.running){
-            getId('compactFPS').innerHTML = stringFPS.substring(0, stringFPS.length - 1) + '<br>' + stringVFPS.substring(0, stringVFPS.length - 4);
+            if(!mobileMode){
+                getId('compactFPS').innerHTML = stringFPS.substring(0, stringFPS.length - 1) + '<br>' + stringVFPS.substring(0, stringVFPS.length - 4);
+                getId('postCompactFPS').innerHTML = lang('aOS', 'framesPerSecond');
+            }else{
+                getId('compactFPS').innerHTML = '';
+                getId('postCompactFPS').innerHTML = '';
+            }
             requestAnimationFrame(widgets.fps.frame);
         }
     },
@@ -1921,7 +1945,11 @@ widgets.network = new Widget(
     },
     function(){
         if(widgets.network.vars.running){
-            getId('widget_network').innerHTML = taskbarOnlineStr;
+            if(!mobileMode){
+                getId('widget_network').innerHTML = taskbarOnlineStr;
+            }else{
+                getId('widget_network').innerHTML = '';
+            }
             requestAnimationFrame(widgets.network.frame);
         }
     },
@@ -1947,7 +1975,11 @@ widgets.cpu = new Widget(
     },
     function(){
         if(widgets.cpu.vars.running){
-            getId('widget_cpu').innerHTML = stringFPSload;
+            if(!mobileMode){
+                getId('widget_cpu').innerHTML = stringFPSload;
+            }else{
+                getId('widget_cpu').innerHTML = '';
+            }
             requestAnimationFrame(widgets.cpu.frame);
         }
     },
@@ -5264,6 +5296,9 @@ c(function(){
                                     apps.settings.vars.togDarkMode(1);
                                 }
                             }
+                            if(typeof USERFILES.APP_STN_MOBILEMODE === "string"){
+                                apps.settings.vars.setMobileMode(USERFILES.APP_STN_MOBILEMODE, 1)
+                            }
                             if(typeof USERFILES.APP_STN_LIVEBG_ENABLED === "string"){
                                 if(USERFILES.APP_STN_LIVEBG_ENABLED === "1"){
                                     apps.settings.vars.togLiveBg(1);
@@ -5486,11 +5521,6 @@ c(function(){
                         option: 'Test Performance',
                         description: function(){return 'Use the Function Grapher app to measure performance OS performance. The information displayed is the time in total since the graph had started, to completion. The bottom of the graph is millisecond 0. Each 1 bar higher is 1 millisecond.'},
                         buttons: function(){return '<button onClick="openapp(apps.graph,\'dsktp\');getId(\'GphInput\').value=\'perfCheck(\\\'graph\\\')/1000-10\';getId(\'GphColor\').value=\'#FF7F00\';perfStart(\'graph\');apps.graph.vars.graph();getId(\'GphStatus\').innerHTML+=\'PerfCheck took \'+(perfCheck(\'graph\')/1000)+\' milliseconds<br>\'">Do Performance Test</button>'}
-                    },
-                    mobileMode: {
-                        option: 'Mobile Mode',
-                        description: function(){return 'Extremely experimental mobile mode for aOS. aOS will likely be very unstable with this enabled, so the setting will not be saved.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.toggleMobileMode()">Toggle</button>'}
                     }
                     */
                 },
@@ -5652,6 +5682,11 @@ c(function(){
                         option: 'Dark Mode',
                         description: function(){return 'Makes your aOS apps use either a light or dark background. Some apps may need to be restarted to see changes.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togDarkMode()">Toggle</button>'}
+                    },
+                    mobileMode: {
+                        option: 'Mobile Mode',
+                        description: function(){return 'Changes various bits of AaronOS to be better suited for phones and small screens. EXPERIMENTAL'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.setMobileMode(0)">Turn Off</button> <button onclick="apps.settings.vars.setMobileMode(1)">Turn On</button> <button onclick="apps.settings.vars.setMobileMode(2)">Automatic</button>'}
                     },
                     windowColor: {
                         option: 'Window Color',
@@ -6138,15 +6173,6 @@ c(function(){
                     apps.savemaster.vars.save('APP_STN_screenscale', newScale, 1);
                 }
             },
-            toggleMobileMode: function(){
-                if(mobileMode){
-                    getId('mobileStyle').innerHTML = "";
-                    mobileMode = 0;
-                }else{
-                    getId('mobileStyle').innerHTML = "button,input{padding:1em !important;}.winHTML{transform-origin:0 100%;}";
-                    mobileMode = 1;
-                }
-            },
             togDarkMode: function(nosave){
                 if(darkMode){
                     darkMode = 0;
@@ -6158,6 +6184,21 @@ c(function(){
                 if(!nosave){
                     apps.savemaster.vars.save('APP_STN_DARKMODE', darkMode, 1);
                 }
+            },
+            setMobileMode: function(type, nosave){
+                if(type == 1){
+                    setMobile(1);
+                    autoMobile = 0;
+                }else if(type == 2){
+                    autoMobile = 1;
+                }else{
+                    setMobile(0);
+                    autoMobile = 0;
+                }
+                if(!nosave){
+                    apps.savemaster.vars.save('APP_STN_MOBILEMODE', type, 1);
+                }
+                checkMobileSize();
             },
             liveBackgroundEnabled: 0,
             liveBackgroundURL: '',
@@ -7712,10 +7753,14 @@ c(function(){
             "12/23/2018: B0.9.1.9\n : Fixed issue that caused portability to not actually work.\n\n" +
             "12/24/2018: B0.9.1.10\n + Begun work on experimental replacement file manager.\n\n" +
             "01/01/2019: B0.9.1.11\n + AaronOS now has an EULA for those who wish to deploy aOS on their own server or otherwise use its code, available at /eula.txt\n + If the code is hosted on an unofficial server, a note will be dynamically added next to the Copyright Notice in Settings -> Information, with a link to the official AaronOS server. AaronOS deployers - this note is not under any circumstances to be removed or its text altered in any way, with the exception of being moved to another location at the top of an easily-accessible menu in Settings, alongside its Copyright Notice.\n + Apps can now be pinned to the taskbar.\n : Fixed Camera app.\n : Changed question mark in File Manager to refresh symbol.\n : Adjusted Mint-Y theme.\n : Google Play prompt now only occurs once.\n\n" +
-            "01/02/2019: B0.9.2.0\n + Added Text To Binary app.",
+            "01/02/2019: B0.9.2.0\n + Added Text To Binary app.\n\n" +
+            "01/04/2019: B0.9.3.0\n + Text To Binary app can now decode images.\n\n" +
+            "01/05/2019: B0.9.3.1\n : Minor memory fixes in Text To Binary\n + Text To Binary now has a standalone page at binary.php\n\n" +
+            "01/07/2019: B0.9.3.2\n : Battery widget is hidden on devices/browsers that don't support it.\n\n" +
+            "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.2.0 (01/02/2019) r0';
+    window.aOSversion = 'B0.9.4.0 (01/17/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -12107,7 +12152,7 @@ c(function(){
                 this.appWindow.setDims("auto", "auto", 800, 500);
                 this.appWindow.setCaption('Text to Binary');
                 getId('win_textBinary_html').style.overflow = 'auto';
-                this.appWindow.setContent('Use this tool to convert text into either binary text or a binary image. (WORK IN PROGRESS)<br><br><button onclick="apps.textBinary.vars.textToBW(0)">BW Image (large)</button> <button onclick="apps.textBinary.vars.textToGS(0)">GS Image (medium)</button> <button onclick="apps.textBinary.vars.textToRGB(0)">RGB Image (small)</button><br><button onclick="apps.textBinary.vars.textToBW(1)">BW Image (invert)</button> <button onclick="apps.textBinary.vars.textToGS(255)">GS Image (invert)</button> <button onclick="apps.textBinary.vars.textToRGB(255)">RGB Image (invert)</button><br><button onclick="apps.textBinary.vars.textToBin(1)">Plain Binary</button> <button onclick="apps.textBinary.vars.textToBin(0)">Plain Binary (no spaces)</button><br><textarea id="textToBinInput" placeholder="Type or paste text here"></textarea><hr><div id="textToBinOutput"></div>');
+                this.appWindow.setContent('Use this tool to convert text into either binary text or a binary image. (WORK IN PROGRESS)<br><br><button onclick="apps.textBinary.vars.textToBW(0)">BW Image (large)</button> <button onclick="apps.textBinary.vars.textToGS(0)">GS Image (medium)</button> <button onclick="apps.textBinary.vars.textToRGB(0)">RGB Image (small)</button><br><button onclick="apps.textBinary.vars.textToBW(1)">BW Image (invert)</button> <button onclick="apps.textBinary.vars.textToGS(255)">GS Image (invert)</button> <button onclick="apps.textBinary.vars.textToRGB(255)">RGB Image (invert)</button><br><button onclick="apps.textBinary.vars.textToBin(1)">Plain Binary</button> <button onclick="apps.textBinary.vars.textToBin(0)">Plain Binary (no spaces)</button><br><textarea id="textToBinInput" placeholder="Type or paste text here"></textarea> <div style="position:relative;display:inline-block"><label><input type="checkbox" id="textToBinAlign">Align images to binary</label><label><input type="checkbox" id="textToBinDecode">Decode PNG</label> <input type="file" id="textToBinDecodeImg" accept="image/x-png"><br><label><input type="checkbox" id="textToBinLineAlign">Align images to newlines</label></div><hr><div id="textToBinOutput"></div>');
             }
             this.appWindow.openWindow();
         },
@@ -12160,43 +12205,84 @@ c(function(){
                 getId('textToBinOutput').innerHTML = '<textarea style="width:750px;height:300px;" display="block">' + binFinal + '</textarea>';
             },
             textToBW: function(invert){
-                var binFile = getId('textToBinInput').value;
-                var binFinal = [];
-                var binLength = 0;
-                for(var byte in binFile){
-                    binStr = binFile.charCodeAt(byte);
-                    binFinal.push(binStr);
-                    binLength++;
-                } // using decimals, not binary!
-                getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
-                var bincnv = getId('textToBinCanvas');
-                var binctx = bincnv.getContext('2d');
-                var imageSize = Math.floor(Math.sqrt(binLength * 8) + 1);
-                getId('textToBinImgSize').innerHTML = imageSize + 'x' + imageSize;
-                bincnv.width = imageSize;
-                bincnv.height = imageSize;
-                bincnv.style.width = imageSize + "px";
-                bincnv.style.height = imageSize + "px";
-                // for each pixel (increment through bytes of string by 3)
-                // make pixel on image equal to the 3 current byte items as rgb
-                var imgRow = 0;
-                var imgColumn = 0;
-                for(var byte = 0; byte < binLength; byte++){
-                    var currByte = (binFinal[byte] || 0).toString(2);
-                    while(currByte.length < 8){
-                        currByte = '0' + currByte;
-                    }
-                    var brightness = 0;
-                    for(var i = 0; i < 8; i++){
-                        if(invert){
-                            brightness = (1 - parseInt(currByte[i])) * 255;
-                        }else{
-                            brightness = (parseInt(currByte[i])) * 255;
+                if(getId('textToBinDecode').checked && getId('textToBinDecodeImg').files.length !== 0){
+                    this.bwToText(invert);
+                }else{
+                    var alignBin = getId('textToBinAlign').checked;
+                    var alignLines = getId('textToBinLineAlign').checked;
+                    var binFile = getId('textToBinInput').value;
+                    var binFinal = [];
+                    var binLength = 0;
+                    for(var byte in binFile){
+                        var binStr = binFile.charCodeAt(byte);
+                        binFinal.push(binStr);
+                        binLength++;
+                    } // using decimals, not binary!
+                    getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
+                    var bincnv = getId('textToBinCanvas');
+                    var binctx = bincnv.getContext('2d');
+                    if(alignLines){
+                        var imageSize = [0,0];
+                        var lastNewline = 0;
+                        for(var i = 0; i < binFinal.length; i++){
+                            if(binFinal[i] === 10){
+                                imageSize[1]++;
+                                if(i - lastNewline > imageSize[0]){
+                                    imageSize[0] = i - lastNewline;
+                                }
+                                lastNewline = i;
+                            }
                         }
-                        binctx.fillStyle = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
-                        binctx.fillRect(imgColumn, imgRow, 1, 1);
-                        imgColumn++;
-                        if(imgColumn >= imageSize){
+                        imageSize[0]++;
+                        imageSize[1]++;
+                        
+                        imageSize[0] *= 8;
+                    }else{
+                        var imageSize = Math.floor(Math.sqrt(binLength * 8) + 1);
+                        imageSize = [imageSize,imageSize];
+                        if(alignBin && imageSize[0] % 8 !== 0){
+                            imageSize[1] += imageSize[0] % 8;
+                            imageSize[0] -= imageSize[0] % 8;
+                        }
+                    }
+                    getId('textToBinImgSize').innerHTML = imageSize[0] + 'x' + imageSize[1];
+                    bincnv.width = imageSize[0];
+                    bincnv.height = imageSize[1];
+                    bincnv.style.width = imageSize[0] + "px";
+                    bincnv.style.height = imageSize[1] + "px";
+                    // for each pixel (increment through bytes of string by 3)
+                    // make pixel on image equal to the 3 current byte items as rgb
+                    var imgRow = 0;
+                    var imgColumn = 0;
+                    var dontGoDown = 0;
+                    for(var byte = 0; byte < binLength; byte++){
+                        var currByte = (binFinal[byte] || 0).toString(2);
+                        while(currByte.length < 8){
+                            currByte = '0' + currByte;
+                        }
+                        var brightness = 0;
+                        for(var i = 0; i < 8; i++){
+                            if(invert){
+                                brightness = (1 - parseInt(currByte[i])) * 255;
+                            }else{
+                                brightness = (parseInt(currByte[i])) * 255;
+                            }
+                            binctx.fillStyle = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
+                            binctx.fillRect(imgColumn, imgRow, 1, 1);
+                            imgColumn++;
+                            dontGoDown = 0;
+                            if(imgColumn >= imageSize[0]){
+                                dontGoDown = 1;
+                                imgColumn = 0;
+                                imgRow++;
+                            }
+                        }
+                        if(alignLines && !dontGoDown){
+                            if(binFinal[byte] === 10){
+                                imgColumn = 0;
+                                imgRow++;
+                            }
+                        }else if(imgColumn >= imageSize[0] && !dontGoDown){
                             imgColumn = 0;
                             imgRow++;
                         }
@@ -12204,79 +12290,276 @@ c(function(){
                 }
             },
             textToGS: function(invert){
-                var binFile = getId('textToBinInput').value;
-                var binFinal = [];
-                var binLength = 0;
-                for(var byte in binFile){
-                    binStr = binFile.charCodeAt(byte);
-                    binFinal.push(binStr);
-                    binLength++;
-                } // using decimals, not binary!
-                getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
-                var bincnv = getId('textToBinCanvas');
-                var binctx = bincnv.getContext('2d');
-                var imageSize = Math.floor(Math.sqrt(binLength) + 1);
-                getId('textToBinImgSize').innerHTML = imageSize + 'x' + imageSize;
-                bincnv.width = imageSize;
-                bincnv.height = imageSize;
-                bincnv.style.width = imageSize + "px";
-                bincnv.style.height = imageSize + "px";
-                // for each pixel (increment through bytes of string by 3)
-                // make pixel on image equal to the 3 current byte items as rgb
-                var imgRow = 0;
-                var imgColumn = 0;
-                for(var byte = 0; byte < binLength; byte++){
-                    if(invert){
-                        var brightness = 255 - (binFinal[byte] || 0);
+                if(getId('textToBinDecode').checked && getId('textToBinDecodeImg').files.length !== 0){
+                    this.gsToText(invert);
+                }else{
+                    var alignBin = getId('textToBinAlign').checked;
+                    var alignLines = getId('textToBinLineAlign').checked;
+                    var binFile = getId('textToBinInput').value;
+                    var binFinal = [];
+                    var binLength = 0;
+                    for(var byte in binFile){
+                        var binStr = binFile.charCodeAt(byte);
+                        binFinal.push(binStr);
+                        binLength++;
+                    } // using decimals, not binary!
+                    getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
+                    var bincnv = getId('textToBinCanvas');
+                    var binctx = bincnv.getContext('2d');
+                    if(alignLines){
+                        var imageSize = [0,0];
+                        var lastNewline = 0;
+                        for(var i = 0; i < binFinal.length; i++){
+                            if(binFinal[i] === 10){
+                                imageSize[1]++;
+                                if(i - lastNewline > imageSize[0]){
+                                    imageSize[0] = i - lastNewline;
+                                }
+                                lastNewline = i;
+                            }
+                        }
+                        imageSize[0]++;
+                        imageSize[1]++;
                     }else{
-                        var brightness = (binFinal[byte] || 0);
+                        var imageSize = Math.floor(Math.sqrt(binLength) + 1);
+                        imageSize = [imageSize,imageSize];
                     }
-                    binctx.fillStyle = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
-                    binctx.fillRect(imgColumn, imgRow, 1, 1);
-                    imgColumn++;
-                    if(imgColumn >= imageSize){
-                        imgColumn = 0;
-                        imgRow++;
+                    getId('textToBinImgSize').innerHTML = imageSize[0] + 'x' + imageSize[1];
+                    bincnv.width = imageSize[0];
+                    bincnv.height = imageSize[1];
+                    bincnv.style.width = imageSize[0] + "px";
+                    bincnv.style.height = imageSize[1] + "px";
+                    // for each pixel (increment through bytes of string by 3)
+                    // make pixel on image equal to the 3 current byte items as rgb
+                    var imgRow = 0;
+                    var imgColumn = 0;
+                    for(var byte = 0; byte < binLength; byte++){
+                        if(invert){
+                            var brightness = 255 - (binFinal[byte] || 0);
+                        }else{
+                            var brightness = (binFinal[byte] || 0);
+                        }
+                        binctx.fillStyle = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
+                        binctx.fillRect(imgColumn, imgRow, 1, 1);
+                        imgColumn++;
+                        if(alignLines){
+                            if(binFinal[byte] === 10){
+                                imgColumn = 0;
+                                imgRow++;
+                            }
+                        }else if(imgColumn >= imageSize[0]){
+                            imgColumn = 0;
+                            imgRow++;
+                        }
                     }
                 }
             },
             textToRGB: function(invert){
-                var binFile = getId('textToBinInput').value;
-                var binFinal = [];
-                var binLength = 0;
-                for(var byte in binFile){
-                    binStr = binFile.charCodeAt(byte);
-                    binFinal.push(binStr);
-                    binLength++;
-                } // using decimals, not binary!
-                getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
-                var bincnv = getId('textToBinCanvas');
-                var binctx = bincnv.getContext('2d');
-                var imageSize = Math.floor(Math.sqrt(binLength / 3) + 1);
-                getId('textToBinImgSize').innerHTML = imageSize + 'x' + imageSize;
-                bincnv.width = imageSize;
-                bincnv.height = imageSize;
-                bincnv.style.width = imageSize + "px";
-                bincnv.style.height = imageSize + "px";
-                // for each pixel (increment through bytes of string by 3)
-                // make pixel on image equal to the 3 current byte items as rgb
-                var imgRow = 0;
-                var imgColumn = 0;
-                for(var byte = 0; byte < binLength; byte += 3){
-                    if(invert){
-                        binctx.fillStyle = 'rgb(' + (255 - (binFinal[byte] || 0)) + ',' + (255 - (binFinal[byte + 1] || 0)) + ',' + (255 - (binFinal[byte + 2] || 0)) + ')';
+                if(getId('textToBinDecode').checked && getId('textToBinDecodeImg').files.length !== 0){
+                    this.rgbToText(invert);
+                }else{
+                    var alignBin = getId('textToBinAlign').checked;
+                    var alignLines = getId('textToBinLineAlign').checked;
+                    var binFile = getId('textToBinInput').value;
+                    var binFinal = [];
+                    var binLength = 0;
+                    for(var byte in binFile){
+                        var binStr = binFile.charCodeAt(byte);
+                        binFinal.push(binStr);
+                        binLength++;
+                    } // using decimals, not binary!
+                    getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
+                    var bincnv = getId('textToBinCanvas');
+                    var binctx = bincnv.getContext('2d');
+                    if(alignLines){
+                        var imageSize = [0,0];
+                        var lastNewline = 0;
+                        for(var i = 0; i < binFinal.length; i++){
+                            if(binFinal[i] === 10){
+                                imageSize[1]++;
+                                if(i - lastNewline > imageSize[0]){
+                                    imageSize[0] = i - lastNewline;
+                                }
+                                lastNewline = i;
+                            }
+                        }
+                        imageSize[0]++;
+                        imageSize[1]++;
+                        
+                        imageSize[0] = Math.floor(imageSize[0] * 0.3) + 1;
                     }else{
-                        binctx.fillStyle = 'rgb(' + (binFinal[byte] || 0) + ',' + (binFinal[byte + 1] || 0) + ',' + (binFinal[byte + 2] || 0) + ')';
+                        var imageSize = Math.floor(Math.sqrt(binLength / 3) + 1);
+                        imageSize = [imageSize,imageSize];
                     }
-                    binctx.fillRect(imgColumn, imgRow, 1, 1);
-                    imgColumn++;
-                    if(imgColumn >= imageSize){
-                        imgColumn = 0;
-                        imgRow++;
+                    if(alignBin && imageSize[0] % 3 !== 0){
+                        imageSize[1] += imageSize[0] % 3;
+                        imageSize[0] -= imageSize[0] % 3;
+                    }
+                    getId('textToBinImgSize').innerHTML = imageSize[0] + 'x' + imageSize[1];
+                    bincnv.width = imageSize[0];
+                    bincnv.height = imageSize[1];
+                    bincnv.style.width = imageSize[0] + "px";
+                    bincnv.style.height = imageSize[1] + "px";
+                    // for each pixel (increment through bytes of string by 3)
+                    // make pixel on image equal to the 3 current byte items as rgb
+                    var imgRow = 0;
+                    var imgColumn = 0;
+                    for(var byte = 0; byte < binLength; byte += 3){
+                        if(invert){
+                            binctx.fillStyle = 'rgb(' + (255 - (binFinal[byte] || 0)) + ',' + (255 - (binFinal[byte + 1] || 0)) + ',' + (255 - (binFinal[byte + 2] || 0)) + ')';
+                        }else{
+                            binctx.fillStyle = 'rgb(' + (binFinal[byte] || 0) + ',' + (binFinal[byte + 1] || 0) + ',' + (binFinal[byte + 2] || 0) + ')';
+                        }
+                        binctx.fillRect(imgColumn, imgRow, 1, 1);
+                        imgColumn++;
+                        if(alignLines){
+                            if(binFinal[byte] === 10){
+                                imgColumn = 0;
+                                imgRow++;
+                            }else if(binFinal[byte + 1] === 10){
+                                imgColumn = 0;
+                                imgRow++;
+                            }else if(binFinal[byte + 2] === 10){
+                                imgColumn = 0;
+                                imgRow++;
+                            }
+                        }else if(imgColumn >= imageSize[0]){
+                            imgColumn = 0;
+                            imgRow++;
+                        }
                     }
                 }
+            },
+            bwToText: function(invert){
+                var binFile = getId('textToBinDecodeImg').files[0];
+                var binUrl = URL.createObjectURL(binFile);
+                var binElement = new Image();
+                binElement.src = binUrl;
+                binElement.onload = function(){
+                    var bincnv = document.createElement('canvas');
+                    var binctx = bincnv.getContext('2d');
+                    bincnv.width = this.width;
+                    bincnv.height = this.height;
+                    binctx.drawImage(binElement, 0, 0);
+                    var binData = binctx.getImageData(0, 0, bincnv.width, bincnv.height);
+                    var binFinal = binData.data;
+                    var binStr = "";
+                    for(var i = 0; i < binFinal.length; i += 32){
+                        if(binFinal[i + 3] === 255){
+                            var binValue = 0;
+                            for(var j = i; j < i + 32; j += 4){
+                                if(invert){
+                                    var brightness = Math.round((255 - (binFinal[j] + binFinal[j + 1] + binFinal[j + 2]) / 3) / 255);
+                                }else{
+                                    var brightness = Math.round((binFinal[j] + binFinal[j + 1] + binFinal[j + 2]) / 3 / 255);
+                                }
+                                binValue += brightness * Math.pow(2, 7 - ((j - i) / 4));
+                            }
+                            if(binValue > 0 && binValue < 256){
+                                binStr += String.fromCharCode(binValue);
+                            }
+                        }
+                    }
+                    getId('textToBinOutput').innerHTML = '<textarea style="width:750px;height:300px;" id="binToTextOutput" display="block"></textarea>';
+                    getId('binToTextOutput').value = binStr;
+                    /*
+                    binFinal = null;
+                    binData = null;
+                    binctx = null;
+                    bincnv = null;
+                    binElement = null;
+                    URL.revokeObjectURL(binUrl);
+                    binUrl = null;
+                    binFile = null;
+                    */
+                    URL.revokeObjectURL(this.src);
+                }
+            },
+            gsToText: function(invert){
+                var binFile = getId('textToBinDecodeImg').files[0];
+                var binUrl = URL.createObjectURL(binFile);
+                var binElement = new Image();
+                binElement.src = binUrl;
+                binElement.onload = function(){
+                    var bincnv = document.createElement('canvas');
+                    var binctx = bincnv.getContext('2d');
+                    bincnv.width = this.width;
+                    bincnv.height = this.height;
+                    binctx.drawImage(binElement, 0, 0);
+                    var binData = binctx.getImageData(0, 0, bincnv.width, bincnv.height);
+                    var binFinal = binData.data;
+                    var binStr = "";
+                    for(var i = 0; i < binFinal.length; i += 4){
+                        if(binFinal[i + 3] === 255){
+                            if(invert){
+                                var brightness = 255 - (binFinal[i] + binFinal[i + 1] + binFinal[i + 2]) / 3;
+                            }else{
+                                var brightness =  (binFinal[i] + binFinal[i + 1] + binFinal[i + 2]) / 3;
+                            }
+                            if(brightness > 0 && brightness < 256){
+                                binStr += String.fromCharCode(brightness);
+                            }
+                        }
+                    }
+                    getId('textToBinOutput').innerHTML = '<textarea style="width:750px;height:300px;" id="binToTextOutput" display="block"></textarea>';
+                    getId('binToTextOutput').value = binStr;
+                    /*
+                    binFinal = null;
+                    binData = null;
+                    binctx = null;
+                    bincnv = null;
+                    binElement = null;
+                    URL.revokeObjectURL(binUrl);
+                    binUrl = null;
+                    binFile = null;
+                    */
+                    URL.revokeObjectURL(this.src);
+                }
+            },
+            rgbToText: function(invert){
+                var binFile = getId('textToBinDecodeImg').files[0];
+                var binUrl = URL.createObjectURL(binFile);
+                var binElement = new Image();
+                binElement.src = binUrl;
+                binElement.onload = function(){
+                    var bincnv = document.createElement('canvas');
+                    var binctx = bincnv.getContext('2d');
+                    bincnv.width = this.width;
+                    bincnv.height = this.height;
+                    binctx.drawImage(binElement, 0, 0);
+                    var binData = binctx.getImageData(0, 0, bincnv.width, bincnv.height);
+                    var binFinal = binData.data;
+                    var binStr = "";
+                    for(var i = 0; i < binFinal.length; i += 4){
+                        if(binFinal[i + 3] === 255){
+                            for(var j = 0; j < 3; j++){
+                                if(invert){
+                                    var brightness = 255 - binFinal[i + j];
+                                }else{
+                                    var brightness = binFinal[i + j];
+                                }
+                                if(brightness > 0 && brightness < 256){
+                                    binStr += String.fromCharCode(brightness);
+                                }
+                            }
+                        }
+                    }
+                    getId('textToBinOutput').innerHTML = '<textarea style="width:750px;height:300px;" id="binToTextOutput" display="block"></textarea>';
+                    getId('binToTextOutput').value = binStr;
+                    /*
+                    binFinal = null;
+                    binData = null;
+                    binctx = null;
+                    bincnv = null;
+                    binElement = null;
+                    URL.revokeObjectURL(binUrl);
+                    binUrl = null;
+                    binFile = null;
+                    */
+                    URL.revokeObjectURL(this.src);
+                }
             }
-        }, 1, 'textBinary', 'appicons/ds/CAM.png'
+        }, 0, 'textBinary', 'appicons/ds/CAM.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Finalizing...';
 });
@@ -12386,10 +12669,12 @@ function winmove(e){
         }
     }else{
         getId("winmove").style.display = "none";
-        apps[winmovecurrapp].appWindow.setDims(
-            winmoveOrX + (e.pageX - winmovex) * (1 / screenScale), winmoveOrY + (e.pageY - winmovey) * (1 / screenScale),
-            apps[winmovecurrapp].appWindow.windowH, apps[winmovecurrapp].appWindow.windowV
-        );
+        if(!mobileMode){
+            apps[winmovecurrapp].appWindow.setDims(
+                winmoveOrX + (e.pageX - winmovex) * (1 / screenScale), winmoveOrY + (e.pageY - winmovey) * (1 / screenScale),
+                apps[winmovecurrapp].appWindow.windowH, apps[winmovecurrapp].appWindow.windowV
+            );
+        }
         if(apps.settings.vars.performanceMode){
             getId('windowFrameOverlay').style.display = 'none';
         }
@@ -12407,7 +12692,7 @@ function winmoving(e){
     if(apps.settings.vars.performanceMode){
         getId('windowFrameOverlay').style.left = winmoveOrX + (e.pageX - winmovex) * (1 / screenScale) + 'px';
         getId('windowFrameOverlay').style.top = winmoveOrY + (e.pageY - winmovey) * (1 / screenScale) + 'px';
-    }else{
+    }else if(!mobileMode){
         apps[winmovecurrapp].appWindow.setDims(
             winmoveOrX + (e.pageX - winmovex) * (1 / screenScale), winmoveOrY + (e.pageY - winmovey) * (1 / screenScale),
             apps[winmovecurrapp].appWindow.windowH, apps[winmovecurrapp].appWindow.windowV
@@ -12841,7 +13126,7 @@ getId("monitor").setAttribute('oncontextmenu', 'if(event.target !== getId("ctxMe
 
 //OLD function to fit monitor to window size
 /*
-fitWindow = function(){
+ function(){
     apps.settings.vars.sH();
     apps.settings.vars.sV();
     if(window.innerWidth < 1050 * apps.settings.vars.sX || window.innerHeight < 600 * apps.settings.vars.sV){
@@ -12908,7 +13193,7 @@ function fitWindow(){
     getId("tskbrAero").style.height = '';
     getId('tskbrAero').style.transform = '';
     getId('tskbrAero').style.transformOrigin = '';
-    getId("icons").style.width = window.innerWidth * (1 / numberOfScreenScale) + "px";
+    //getId("icons").style.width = window.innerWidth * (1 / numberOfScreenScale) + "px";
     //doLog(perfCheck('fitWindow') + '&micro;s to fit aOS to window');
     
     // taskbar position checking
@@ -12972,6 +13257,7 @@ function fitWindow(){
             getId('taskbar').style.transform = '';
             getId('taskbar').style.width = getId('monitor').style.width;
     }
+    checkMobileSize();
 }
 function fitWindowOuter(){
     perfStart('fitWindow');
@@ -12990,7 +13276,7 @@ function fitWindowOuter(){
     //getId("taskbar").style.top = window.outerHeight - 30 + "px";
     getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (window.outerHeight * (1 / numberOfScreenScale)) + 50) + "px";
     getId("tskbrAero").style.width = window.outerWidth * (1 / numberOfScreenScale) + 40 + "px";
-    getId("icons").style.width = window.outerWidth * (1 / numberOfScreenScale) + "px";
+    //getId("icons").style.width = window.outerWidth * (1 / numberOfScreenScale) + "px";
     //doLog(perfCheck('fitWindow') + '&micro;s to fit aOS to screen');
     
     // taskbar position checking
@@ -13043,6 +13329,7 @@ function fitWindowOuter(){
             getId('taskbar').style.transform = '';
             getId('taskbar').style.width = getId('monitor').style.width;
     }
+    checkMobileSize();
 }
 function fitWindowRes(newmonX, newmonY){
     perfStart('fitWindow');
@@ -13061,7 +13348,7 @@ function fitWindowRes(newmonX, newmonY){
     //getId("taskbar").style.top = newmonY - 30 + "px";
     getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (newmonY * (1 / numberOfScreenScale)) + 50) + "px";
     getId("tskbrAero").style.width = newmonX * (1 / numberOfScreenScale) + 40 + "px";
-    getId("icons").style.width = newmonX * (1 / numberOfScreenScale) + "px";
+    //getId("icons").style.width = newmonX * (1 / numberOfScreenScale) + "px";
     //doLog(perfCheck('fitWindow') + '&micro;s to fit aOS to custom size');
     
     // taskbar position checking
@@ -13114,6 +13401,7 @@ function fitWindowRes(newmonX, newmonY){
             getId('taskbar').style.transform = '';
             getId('taskbar').style.width = getId('monitor').style.width;
     }
+    checkMobileSize();
 }
 var sessionStorageSupported = 1;
 if(!sessionStorage){

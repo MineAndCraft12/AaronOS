@@ -79,8 +79,8 @@
         <div id="taskbar">
             <div id="tskbrAero" class="winAero"></div>
             <div id="tskbrBimg" class="winBimg"></div>
-            <div id="icons">Loading, please wait.</div>
             <div id="time"></div>
+            <div id="icons">Loading, please wait.</div>
         </div>
         <canvas id="aDE"></canvas>
         <div id="ctxMenu" onclick="getId('ctxMenu').style.display='none'"></div>
