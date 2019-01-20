@@ -2329,6 +2329,7 @@ c(function(){
                             requestAnimationFrame(function(){apps.startMenu.appWindow.setDims(0, parseInt(getId('desktop').style.height, 10) - 370, 300, 370)});
                     }
                     this.appWindow.openWindow();
+                    //getId('win_startMenu_top').style.transform = '';
                     switch(USERFILES.APP_STN_DASHBOARD){
                         case 'whisker':
                             this.appWindow.setContent('<span style="color:#FFF;font-family:aosProFont,monospace;font-size:12px">User: ' + apps.messaging.vars.parseBB(apps.messaging.vars.name) + '</span><div style="left:0;bottom:0;height:calc(100% - 3em);overflow-y:scroll;width:calc(70% - 2px);background:' + darkSwitch('#FFF', '#000') + ';color:' + darkSwitch('#000', '#FFF') + ';"><table style="position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table></div><div style="right:0;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);text-align:right"><img class="cursorPointer" style="width:10px;height:10px;" src="ctxMenu/beta/gear.png" onclick="openapp(apps.settings,\'dsktp\')"> <img class="cursorPointer" style="width:10px;height:10px;" src="ctxMenu/beta/power.png" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})"><br><br><br><button style="width:100%" onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button><br><button style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button><br><button style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button><br><button style="width:100%" onclick="openapp(apps.files, \'dsktp\')">' + lang('startMenu', 'files') + '</button><br><button style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br><button style="width:100%" onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button></div><input style="position:absolute;left:0;top:1.5em;width:calc(100% - 2px);" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>');
@@ -2385,7 +2386,7 @@ c(function(){
                             }
                             break;
                         case 'android':
-                            this.appWindow.setContent('<div style="width:100%;height:100%;overflow-y:scroll"><span style="padding-bottom:4px;">&nbsp;<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  <button onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button> <button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> <button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> <button onclick="openapp(apps.files, \'dsktp\')">' + lang('startMenu', 'files') + '</button> <button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button> <button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br><input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch"></span><hr style="margin:0;margin-top:2px"><div id="appDsBtable" style="background-color:' + darkSwitch('#FFF', '#000') + ';color:' + darkSwitch('#000', '#FFF') + ';font-family:aosProFont, monospace; font-size:12px; width:' + (294 - scrollWidth) + 'px;"></div></div>');
+                            this.appWindow.setContent('<div style="width:100%;height:100%;overflow-y:scroll"><span style="padding-bottom:4px;">&nbsp;<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  <button onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button> <button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> <button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> <button onclick="openapp(apps.files, \'dsktp\')">' + lang('startMenu', 'files') + '</button> <button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button> <button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br><input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch"></span><hr style="margin:0;margin-top:2px"><div id="appDsBtable" style="background-color:' + darkSwitch('#FFF', '#000') + ';color:' + darkSwitch('#000', '#FFF') + ';font-family:aosProFont, monospace; font-size:12px; width:calc(100% - 2px);"></div></div>');
                             if(this.vars.listOfApps.length === 0){
                                 getId('appDsBtable').innerHTML = '<img src="loadLight.gif" style="width:100%;">';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
@@ -2412,7 +2413,7 @@ c(function(){
                             }
                             break;
                         default:
-                            this.appWindow.setContent('<div style="width:100%;height:100%;overflow-y:scroll;"><span style="padding-bottom:4px;">&nbsp;<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  <button onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button> <button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> <button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> <button onclick="openapp(apps.files, \'dsktp\')">' + lang('startMenu', 'files') + '</button> <button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button> <button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br><input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span><hr style="margin:0;margin-top:2px"><table id="appDsBtable" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:' + (294 - scrollWidth) + 'px;"></table></div>');
+                            this.appWindow.setContent('<div style="width:100%;height:100%;overflow-y:scroll;"><span style="padding-bottom:4px;">&nbsp;<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  <button onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button> <button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> <button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> <button onclick="openapp(apps.files, \'dsktp\')">' + lang('startMenu', 'files') + '</button> <button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button> <button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br><input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span><hr style="margin:0;margin-top:2px"><table id="appDsBtable" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;"></table></div>');
                             if(this.vars.listOfApps.length === 0){
                                 getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
@@ -2455,15 +2456,27 @@ c(function(){
                     switch(tskbrToggle.tskbrPos){
                         case 1:
                             this.appWindow.setDims(-305, 0, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
                             break;
                         case 2:
                             this.appWindow.setDims(-305, 0, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
                             break;
                         case 3:
                             this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) - 300, parseInt(getId('desktop').style.height, 10) + 5, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(0, ' + getId('desktop').style.height + ')';
+                            }
                             break;
                         default:
                             this.appWindow.setDims(-305, parseInt(getId('desktop').style.height, 10) - 370, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
                     }
                     break;
                 case "checkrunning":
@@ -2477,15 +2490,27 @@ c(function(){
                     switch(tskbrToggle.tskbrPos){
                         case 1:
                             this.appWindow.setDims(-305, 0, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
                             break;
                         case 2:
                             this.appWindow.setDims(-305, 0, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
                             break;
                         case 3:
                             this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) - 300, parseInt(getId('desktop').style.height, 10) + 5, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(0, ' + getId('desktop').style.height + ')';
+                            }
                             break;
                         default:
                             this.appWindow.setDims(-305, parseInt(getId('desktop').style.height, 10) - 370, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
                     }
                     break;
                 case "USERFILES_DONE":
@@ -4323,7 +4348,7 @@ c(function(){
                 this.appWindow.setCaption(lang('appNames', 'bash'));
                 this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 331, parseInt(getId('desktop').style.height, 10) / 2 - 252, 662, 504);
                 this.appWindow.setContent(
-                    '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;width:100%;">aOS Psuedo-Bash Terminal (Beta)<br>Not all commands included and they may not work properly<br>root is assumed; therefore su and sudo command does nothing</span>' +
+                    '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;width:100%;">aOS Psuedo-Bash Terminal (Beta)<br>THIS APP IS CURRENTLY BEING REWORKED AND MOST FUNCTIONALITY IS NOT PRESENT</span>' +
                     '<input id="bashInput" onkeydown="apps.bash.vars.checkPrefix()" onkeypress="apps.bash.vars.checkPrefix()" onkeyup="apps.bash.vars.checkPrefix();if(event.keyCode === 13){apps.bash.vars.execute()}" style="background:none;color:inherit;box-shadow:none;display:block;line-height:1em;font-family:aosProFont;font-size:12px;border:none;outline:none;padding:0;width:100%;">'
                 );
                 this.vars.checkPrefix();
@@ -4432,52 +4457,173 @@ c(function(){
                 if(this.piping){
                     this.pipeOut += '<br>' + String(message);
                 }else{
-                    getId('bashContent').innerHTML += '<br>' + String(message).split('  ').join(' &nbsp;') + '&nbsp;';
+                    getId('bashContent').innerHTML += '<br>' + cleanStr(String(message)).split('  ').join(' &nbsp;').split('\n').join('<br>') + '&nbsp;';
                     getId('win_bash_html').scrollTop = getId('win_bash_html').scrollHeight;
                 }
             },
             piping: 0,
             commandPipeline: 0,
             pipeOut: '',
+            getAlias: function(search, doSearch){
+                if(doSearch){
+                    var found = -1;
+                    for(var item in this.alias){
+                        if(item === search){
+                            found = item;
+                            return this.alias[item];
+                        }
+                    }
+                    return search;
+                }else{
+                    return search;
+                }
+            },
+            getCmdObjects: function(command, alias){
+                var cmdObjects = [];
+                    
+                // doublequotes
+                var i = 0;
+                // singlequotes
+                var j = 0;
+                // spaces
+                var s = 0;
+                // current cursor
+                var curr = 0;
+                // end of potential quote sequence
+                var next = 0;
+                // previous cursor
+                var prev = 0;
+                while(prev < command.length) {
+                    i = command.indexOf('"', prev);
+                    j = command.indexOf("'", prev);
+                    s = command.indexOf(' ', prev);
+                    
+                    // if no quotes or spaces found
+                    if(i === -1 && j === -1 && s === -1){
+                        // add remainder of string to commands list
+                        cmdObjects.push(this.getAlias(command.substring(prev, command.length), alias));
+                        // quit
+                        break;
+                    }
+                    
+                    // if space found and comes before quotes or there are no quotes
+                    if(s !== -1 && (s < i || i === -1) && (s < j || j === -1)){
+                        // if space is not current character
+                        if(s !== prev){
+                            // push this "word" to object list
+                            cmdObjects.push(this.getAlias(command.substring(prev, s), alias));
+                        }
+                        prev = s + 1;
+                    }else{
+                        // if both types of quotes are found
+                        if(i !== -1 && j !== -1){
+                            // place cursor at closest quote
+                            curr = Math.min(i, j);
+                        // else if doublequotes are found
+                        }else if(i !== -1){
+                            // place cursor at doublequote
+                            curr = i;
+                        // else if singlequotes are found
+                        }else if(j !== -1){
+                            // place cursor at singlequote
+                            curr = j;
+                        }
+                        // if there is a character between previous "word" and this bit
+                        if(curr !== prev){
+                            // add the preceding "word" to object list
+                            cmdObjects.push(this.getAlias(command.substring(prev, curr), alias));
+                        }
+                        // try to find end of quotes
+                        var tempCurr = curr;
+                        tempCurr = command.indexOf(command[curr], tempCurr + 1);
+                        while(command[tempCurr - 1] === "\\"){
+                            command = command.substring(0, tempCurr - 1) + command.substring(tempCurr, command.length);
+                            tempCurr = command.indexOf(command[curr], tempCurr);
+                            if(tempCurr === -1){
+                                break;
+                            }
+                        }
+                        var next = tempCurr;
+                        // if no end is found, assume it's at the end of the string
+                        if(next === -1){
+                            // add the remainder of the string to command objects
+                            cmdObjects.push(command.substring(curr + 1, command.length));
+                            // break loop
+                            break;
+                        }else{
+                            // add this quotation to list
+                            cmdObjects.push(command.substring(curr + 1, next));
+                            prev = next + 1;
+                        }
+                    }
+                }
+                doLog(cmdObjects);
+                return cmdObjects;
+            },
             execute: function(cmd, silent){
                 if(cmd){
                     this.command = cmd;
                     if(!silent){
-                        this.echo('[aOS]$ ' + cmd.split('<').join('&lt;').split('>').join('&gt;'));
+                        this.echo('[aOS]$ ' + cleanStr(cmd));
                     }
+                    var commandObjects = this.getCmdObjects(this.command);
                 }else{
                     this.command = getId('bashInput').value.substring(getId('bashInput').value.indexOf('$') + 2, getId('bashInput').value.length);
-                    this.echo(getId('bashInput').value.split('<').join('&lt;').split('>').join('&gt;'));
+                    this.echo(cleanStr(getId('bashInput').value));
                     getId('bashInput').value = this.prefix;
                     this.pastValue = this.prefix;
-                    for(var i in this.alias){
-                        if(this.command.indexOf(i) > -1){
-                            this.command = this.command.split(i).join(this.alias[i]);
-                        }
-                    }
-                    if(this.command.indexOf(' | ') > -1){
-                        this.commandPipeline = this.command.split(' | ');
-                        this.piping = 1;
-                        for(var i = 0; i < this.commandPipeline.length; i++){
-                            if(i === this.commandPipeline.length - 1){
-                                this.piping = 0;
-                            }
-                            this.pipeOutTemp = this.pipeOut;
-                            this.pipeOut = '';
-                            this.execute(this.commandPipeline[i] + ' ' + this.pipeOutTemp, 1);
-                        }
-                        return;
-                    }
+                    var commandObjects = this.getCmdObjects(this.command, 1);
                 }
-                try{
-                    this.commands.filter(function(cmnd){
-                        return (apps.bash.vars.command.indexOf(cmnd.name) === 0);
-                    })[0].action(this.command.substring(((this.command.indexOf(' ', this.command.indexOf('$') + 1) + 1) || this.command.length), this.command.length));
-                }catch(err){
-                    if(String(err) === "TypeError: Cannot read property 'action' of undefined"){
-                        this.echo('-bash: command not found: ' + err);
+                if(this.command.length !== 0){
+                    var pipeGroups = [];
+                    if(commandObjects.indexOf('|') !== -1){
+                        for(var i = 0; commandObjects.indexOf('|', i) !== -1; i = commandObjects.indexOf('|', i) + 1){
+                            var pipeGroup = [];
+                            for(var j = i; j < commandObjects.indexOf('|', i); j++){
+                                pipeGroup.push(commandObjects[j]);
+                            }
+                            pipeGroups.push(pipeGroup);
+                        }
+                        var pipeGroup = [];
+                        for(var j = commandObjects.lastIndexOf('|') + 1; j < commandObjects.length; j++){
+                            pipeGroup.push(commandObjects[j]);
+                        }
+                        pipeGroups.push(pipeGroup);
                     }else{
-                        this.echo('-bash: ' + err);
+                        pipeGroups.push(commandObjects);
+                    }
+                    
+                    var cmdResult = "";
+                    for(var i = 0; i < pipeGroups.length; i++){
+                        var currCmd = pipeGroups[i].shift();
+                        var cmdID = -1;
+                        for(var j = 0; j < this.commands.length; j++){
+                            if(this.commands[j].name === currCmd){
+                                cmdID = j;
+                                break;
+                            }
+                        }
+                        if(cmdID !== -1){
+                            try{
+                                cmdResult = this.commands[cmdID].action(pipeGroups[i]);
+                            }catch(err){
+                                this.echo(currCmd + ': ' + err);
+                                break;
+                            }
+                            if(cmdResult){
+                                if(i !== pipeGroups.length - 1){
+                                    pipeGroups[i + 1].push(cmdResult);
+                                }
+                            }
+                        }else{
+                            this.echo(currCmd + ": command not found");
+                            break;
+                        }
+                    }
+                    if(cmdResult && !cmd){
+                        this.echo(cmdResult);
+                    }else if(cmd){
+                        return cmdResult
                     }
                 }
             },
@@ -4488,14 +4634,16 @@ c(function(){
                     usage: 'help [command]',
                     desc: 'Prints the usage and help doc for a command.',
                     action: function(args){
-                        apps.bash.vars.currHelpSearch = args;
+                        apps.bash.vars.currHelpSearch = args.join(" ");
                         this.vars.foundCmds = apps.bash.vars.commands.filter(function(i){
                             return apps.bash.vars.currHelpSearch.indexOf(i.name) > -1 || i.name.indexOf(apps.bash.vars.currHelpSearch) > -1;
                         });
+                        var str = "";
                         for(var i in this.vars.foundCmds){
-                            apps.bash.vars.echo('<br>' + this.vars.foundCmds[i].name + ': ' + this.vars.foundCmds[i].usage);
-                            apps.bash.vars.echo(this.vars.foundCmds[i].desc);
+                            str += '\n\n' + this.vars.foundCmds[i].name + ': ' + this.vars.foundCmds[i].usage;
+                            str += '\n' + this.vars.foundCmds[i].desc;
                         }
+                        return str.substring(2, str.length);
                     },
                     vars: {
                         foundCmds: []
@@ -4506,20 +4654,41 @@ c(function(){
                     usage: 'echo [message]',
                     desc: 'Prints message to console.',
                     action: function(args){
-                        apps.bash.vars.echo(args);
+                        str = args.join(" ");
+                        return str;
                     }
                 },
                 {
                     name: 'alias',
-                    usage: 'alias &lt;shorthand&gt;=&lt;result&gt;',
-                    desc: 'Creates a persistent alias for the user. Quotes are not needed around alias definitions and will be included in the definition, if provided',
+                    usage: 'alias [shorthand]="[definition]"',
+                    desc: 'Creates a persistent alias for the user. Make sure to use quotes if there are spaces or quotes in your definition!',
                     action: function(args){
-                        this.vars.keypair = args.split('=');
-                        apps.bash.vars.alias[this.vars.keypair[0]] = this.vars.keypair[1];
-                        apps.savemaster.vars.save('APP_SH_ALIAS', JSON.stringify(apps.bash.vars.alias), 1);
+                        if(args.length > 0){
+                            if((args[0].length > 0 && args[1] === "=") || args[0].length > 1){
+                                if(args[0].indexOf('=') === args[0].length - 1){
+                                    var shifted = args.shift();
+                                    apps.bash.vars.alias[shifted.substring(0, shifted.length - 1)] = args.join(" ");
+                                }else if(args[1] === "="){
+                                    var shifted = args.shift();
+                                    args.shift();
+                                    apps.bash.vars.alias[shifted] = args.join(" ");
+                                }else{
+                                    throw "AliasError: The alias command appears to be malformed. Make sure your alias is only one word and the = is in the correct place.";
+                                }
+                            }else{
+                                throw "AliasError: The alias command appears to be malformed. Make sure your alias is only one word and the = is in the correct place.";
+                            }
+                            apps.savemaster.vars.save('APP_SH_ALIAS', JSON.stringify(apps.bash.vars.alias), 1);
+                        }else{
+                            var str = "";
+                            for(var i in apps.bash.vars.alias){
+                                str += '\n' + i + " = " + apps.bash.vars.alias[i];
+                            }
+                            return str.substring(1, str.length);
+                        }
                     },
                     vars: {
-                        keypair: []
+                        
                     }
                 },
                 {
@@ -4527,7 +4696,7 @@ c(function(){
                     usage: 'js [code]',
                     desc: 'Run JavaScript code and echo the returned value',
                     action: function(args){
-                        apps.bash.vars.echo(eval(args));
+                        return eval(args.join(" "));
                     }
                 },
                 {
@@ -4535,11 +4704,15 @@ c(function(){
                     usage: 'pwd [-J]',
                     desc: 'Prints the current working directory. If -J is specified, also prints the JavaScript-equivalent directory.',
                     action: function(args){
-                        if(args.toLowerCase().indexOf('-j') > -1){
-                            apps.bash.vars.echo('shdir: ' + apps.bash.vars.workdir);
-                            apps.bash.vars.echo('jsdir: ' + apps.bash.vars.translateDir(apps.bash.vars.workdir));
+                        if(args.length > 0){
+                            if(args[0].toLowerCase() === '-j'){
+                                return 'shdir: ' + apps.bash.vars.workdir + '\n' +
+                                    'jsdir: ' + apps.bash.vars.translateDir(apps.bash.vars.workdir);
+                            }else{
+                                return apps.bash.vars.workdir;
+                            }
                         }else{
-                            apps.bash.vars.echo(apps.bash.vars.workdir);
+                            return apps.bash.vars.workdir;
                         }
                     },
                     vars: {
@@ -4551,11 +4724,11 @@ c(function(){
                     usage: 'cd [dirname]',
                     desc: 'Move working directory to specified directory.',
                     action: function(args){
-                        if(args !== ''){
+                        if(args.length > 0){
                             this.vars.prevworkdir = apps.bash.vars.workdir;
-                            this.vars.tempadd = args.split('/');
+                            this.vars.tempadd = args[0].split('/');
                             this.vars.tempstart = (apps.bash.vars.workdir[0] === '/');
-                            if(args[0] === '/' || apps.bash.vars.workdir === '/'){
+                            if(args[0][0] === '/' || apps.bash.vars.workdir === '/'){
                                 this.vars.tempdir = [];
                                 this.vars.tempstart = 1;
                             }else{
@@ -4575,10 +4748,10 @@ c(function(){
                             this.vars.temppath = this.vars.temppath.split('\\').join('/').split('//').join('/');
                             apps.bash.vars.workdir = this.vars.temppath;
                             if(apps.bash.vars.getRealDir('') === undefined){
-                                apps.bash.vars.echo('Failed to change workdir - ' + apps.bash.vars.workdir + ' does not exist');
+                                throw "" + apps.bash.vars.workdir + ': No such file or directory';
                                 apps.bash.vars.workdir = this.vars.prevworkdir;
                             }else if(typeof apps.bash.vars.getRealDir('') !== 'object'){
-                                apps.bash.vars.echo('Failed to change workdir - ' + apps.bash.vars.workdir + ' is a file');
+                                throw "" + apps.bash.vars.workdir + ': Not a directory';
                                 apps.bash.vars.workdir = this.vars.prevworkdir;
                             }
                             //apps.bash.vars.echo(this.vars.temppath);
@@ -4601,18 +4774,18 @@ c(function(){
                 },
                 {
                     name: 'grep',
-                    usage: 'grep [target] <- [source]',
+                    usage: 'grep [needle] ',
                     desc: 'List lines of a source that contain a target string.',
                     action: function(args){
-                        this.vars.target = args.split(' <- ')[0];
-                        this.vars.lines = args.split(' <- ')[1].split('<br>');
+                        this.vars.target = args.shift();
+                        this.vars.lines = args.join("\n").split('\n');
                         this.vars.out = '';
                         for(var i in this.vars.lines){
                             if(this.vars.lines[i].indexOf(this.vars.target) > -1){
-                                this.vars.out += '<br>' + this.vars.lines[i];
+                                this.vars.out += '\n' + this.vars.lines[i];
                             }
                         }
-                        apps.bash.vars.echo(this.vars.out);
+                        return this.vars.out.substring(1, this.vars.out.length);
                     },
                     vars: {
                         target: '',
@@ -4626,36 +4799,54 @@ c(function(){
                     desc: 'List files in a directory.<br>-R prints subdirectories up to 1 layer deep<br>If no directory is provided, current directory is used.<br>WARNING: -s can be dangerous in large directories like /',
                     action: function(args){
                         //if(apps.bash.vars.translateDir(args) !== 'window'){
-                        this.vars.printBuffer = '';
-                        if(args.indexOf('-R') === 0){
-                            try{
-                                this.vars.selectedDir = apps.bash.vars.getRealDir(args.split(' ')[1]);
-                            }catch(err){
-                                this.vars.selectedDir = apps.bash.vars.getRealDir('');
+                        if(args.length > 0){
+                            if(args[0] === "-R"){
+                                try{
+                                    this.vars.selectedDir = apps.bash.vars.getRealDir(args[1]);
+                                }catch(err){
+                                    this.vars.selectedDir = apps.bash.vars.getRealDir('');
+                                }
+                                this.vars.printSub = 1;
+                            }else{
+                                this.vars.selectedDir = apps.bash.vars.getRealDir(args[0]);
+                                this.vars.printSub = 0;
                             }
-                            this.vars.printSub = 1;
                         }else{
-                            this.vars.selectedDir = apps.bash.vars.getRealDir(args);
+                            this.vars.selectedDir = apps.bash.vars.getRealDir('');
                             this.vars.printSub = 0;
                         }
                         // apps.bash.vars.echo('Contents of directory ' + args);
                         var dirSize = 0;
-                        for(var item in this.vars.selectedDir){
-                                dirSize++;
-                                if(dirSize > 1){
-                                    this.vars.printBuffer += item + '<br>';
-                                }else{
-                                    this.vars.printBuffer += item;
+                        var printBuffer = "";
+                        if(typeof this.vars.selectedDir){
+                            if(typeof this.vars.selectedDir === 'object'){
+                                for(var item in this.vars.selectedDir){
+                                    dirSize++;
+                                    if(dirSize > 1){
+                                        printBuffer += '\n' + item;
+                                    }else{
+                                        printBuffer += item;
+                                    }
+                                    if(typeof this.vars.selectedDir[item] === 'object'){
+                                        printBuffer += '/';
+                                        if(this.vars.printSub){
+                                            for(var subitem in this.vars.selectedDir[item]){
+                                                printBuffer += '\n' + item + '/' + subitem;
+                                                if(typeof this.vars.selectedDir[item][subitem] === 'object'){
+                                                    printBuffer += '/';
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
-                            if(typeof this.vars.selectedDir[item] === 'object' && this.vars.printSub){
-                                for(var subitem in this.vars.selectedDir[item]){
-                                    this.vars.printBuffer += '&nbsp; ' + subitem + '<br>';
-                                }
+                            }else{
+                                throw args.join(' ') + ': Not a directory';
                             }
+                        }else{
+                            throw 'Cannot access ' + args.join(' ') + ': No such file or directory';
                         }
-                        this.vars.printBuffer += '<br>Size of directory: ' + dirSize + ' items';
-                        apps.bash.vars.echo(this.vars.printBuffer);
-                        this.vars.printBuffer = '';
+                        //this.vars.printBuffer += '<br>Size of directory: ' + dirSize + ' items';
+                        return printBuffer;
                         //}else{
                         //    apps.bash.vars.echo('Warning - root directory "/" cannot be scanned.');
                         //}
@@ -4663,17 +4854,20 @@ c(function(){
                     vars: {
                         printSub: 0,
                         selectedDir: {},
-                        printBuffer: ''
                     }
                 },
                 {
                     name: 'mv',
-                    usage: 'mv &lt;path&gt; &lt;newpath&gt;',
+                    usage: 'mv [path] [newpath]',
                     desc: 'Moves a file or directory to a new path.',
                     action: function(args){
-                        this.vars.currSet = args.split(' ');
-                        eval(apps.bash.vars.translateDir(this.vars.currSet[1]) + '=' + apps.bash.vars.translateDir(this.vars.currSet[0]));
-                        eval('delete ' + apps.bash.vars.translateDir(this.vars.currSet[0]));
+                        if(args.length > 1){
+                            this.vars.currSet = [args[0], args[1]];
+                            eval(apps.bash.vars.translateDir(this.vars.currSet[1]) + '=' + apps.bash.vars.translateDir(this.vars.currSet[0]));
+                            eval('delete ' + apps.bash.vars.translateDir(currSet[0]));
+                        }else{
+                            throw "Missing a file, must specify two";
+                        }
                     },
                     vars: {
                         currSet: [],
@@ -4682,11 +4876,15 @@ c(function(){
                 },
                 {
                     name: 'cp',
-                    usage: 'cp &lt;path&gt; &lt;newpath&gt;',
+                    usage: 'cp [path] [newpath]',
                     desc: 'Copies a file or directory to a new path.',
                     action: function(args){
-                        this.vars.currSet = args.split(' ');
-                        eval(apps.bash.vars.translateDir(this.vars.currSet[1]) + '=' + apps.bash.vars.translateDir(this.vars.currSet[0]));
+                        if(args.length > 1){
+                            this.vars.currSet = [args[0], args[1]];
+                            eval(apps.bash.vars.translateDir(this.vars.currSet[1]) + '=' + apps.bash.vars.translateDir(this.vars.currSet[0]));
+                        }else{
+                            throw "Missing a file, must specify two";
+                        }
                     },
                     vars: {
                         currSet: [],
@@ -4695,25 +4893,56 @@ c(function(){
                 },
                 {
                     name: 'rm',
-                    usage: 'rm &lt;file&gt;',
-                    desc: 'Deletes a file or directory.',
+                    usage: 'rm [file]...',
+                    desc: 'Deletes files.',
                     action: function(args){
-                        eval('delete ' + apps.bash.vars.translateDir(args));
+                        if(args.length > 0){
+                            for(var i in args){
+                                if(typeof apps.bash.vars.getRealDir(args[i]) !== 'object'){
+                                    eval('delete ' + apps.bash.vars.translateDir(args[i]));
+                                }else{
+                                    throw 'Cannot delete ' + args[i] + ': is a directory';
+                                }
+                            }
+                        }else{
+                            throw 'No files provided';
+                        }
                     }
                 },
                 {
                     name: 'rmdir',
-                    usage: 'rmdir &lt;file&gt;',
+                    usage: 'rmdir [directory]',
                     desc: 'Deletes a file or directory.',
                     action: function(args){
-                        eval('delete ' + apps.bash.vars.translateDir(args));
+                        if(args.length > 0){
+                            for(var i in args){
+                                if(typeof apps.bash.vars.getRealDir(args[i]) === 'object'){
+                                    eval('delete ' + apps.bash.vars.translateDir(args[i]));
+                                }else{
+                                    throw 'Cannot delete ' + args[i] + ': is not a directory';
+                                }
+                            }
+                        }else{
+                            throw 'No files provided';
+                        }
                     }
                 },
                 {
                     name: 'touch',
-                    usage: 'touch &lt;file&gt;',
-                    desc: 'Creates an empty file.',
+                    usage: 'touch [file]...',
+                    desc: 'Creates empty files',
                     action: function(args){
+                        if(args.length > 0){
+                            for(var i in args){
+                                if(!apps.bash.vars.getRealDir(args[i])){
+                                    eval(apps.bash.vars.translateDir(args[i]) + '=""');
+                                }else{
+                                    throw 'Cannot create ' + args[i] + ': already exists';
+                                }
+                            }
+                        }else{
+                            throw 'No files provided';
+                        }
                         if(!eval(apps.bash.vars.translateDir(args))){
                             eval(apps.bash.vars.translateDir(args) + '= ""');
                         }
@@ -4729,28 +4958,32 @@ c(function(){
                 },
                 {
                     name: 'mkdir',
-                    usage: 'mkdir &lt;dirname&gt;',
-                    desc: 'Creates a blank directory.',
+                    usage: 'mkdir [directory]...',
+                    desc: 'Creates blank directories.',
                     action: function(args){
-                        this.vars.first = 1;
-                        this.vars.stack = args.split('/');
-                        for(var i in this.vars.stack){
-                            if(this.vars.first){
-                                this.vars.trace = this.vars.stack[i];
-                                this.vars.first = 0;
-                            }else{
-                                this.vars.trace += '/' + this.vars.stack[i];
-                            }
-                            if(typeof apps.bash.vars.getRealDir(this.vars.trace) !== 'object'){
-                                if(apps.bash.vars.getRealDir(this.vars.trace) === undefined){
-                                    eval(apps.bash.vars.translateDir(this.vars.trace) + ' = {}');
-                                    apps.bash.vars.echo('Created dir ' + this.vars.trace);
-                                }else{
-                                    apps.bash.vars.echo('Failed to create dir - traced into file');
-                                    break;
+                        if(args.length > 0){
+                            for(var item in args){
+                                this.vars.first = 1;
+                                this.vars.stack = args[item].split('/');
+                                for(var i in this.vars.stack){
+                                    if(this.vars.first){
+                                        this.vars.trace = this.vars.stack[i];
+                                        this.vars.first = 0;
+                                    }else{
+                                        this.vars.trace += '/' + this.vars.stack[i];
+                                    }
+                                    if(typeof apps.bash.vars.getRealDir(this.vars.trace) !== 'object'){
+                                        if(apps.bash.vars.getRealDir(this.vars.trace) === undefined){
+                                            eval(apps.bash.vars.translateDir(this.vars.trace) + ' = {}');
+                                        }else{
+                                            throw 'Failed to create ' + args[item] + ": " + this.vars.trace + ' already exists';
+                                        }
+                                    }
                                 }
                             }
-                        } 
+                        }else{
+                            throw 'No names given';
+                        }
                     },
                     vars: {
                         first: 1,
@@ -4763,8 +4996,7 @@ c(function(){
                     usage: 'sudo [command]',
                     desc: 'obselete function to run command as root; all users already root but the function still works',
                     action: function(args){
-                        apps.bash.vars.echo('Root access already permitted...');
-                        apps.bash.vars.execute(args);
+                        return apps.bash.vars.execute(args.join(' '), 1);
                     }
                 },
                 {
@@ -4772,15 +5004,23 @@ c(function(){
                     usage: 'su',
                     desc: 'Obselete function to go root; does not work on aOS because all users are root',
                     action: function(args){
-                        apps.bash.vars.echo('Root access already permitted.');
+                        
                     }
                 },
                 {
                     name: 'cat',
                     usage: 'cat &lt;file&gt;',
-                    desc: 'All this supports so far is printing the contents of a file, as it appears to JavacScript.',
+                    desc: 'Get the contents of a file, as it appears to JavaScript.',
                     action: function(args){
-                        apps.bash.vars.echo(apps.bash.vars.getRealDir(args));
+                        if(args.length > 0){
+                            if(typeof apps.bash.vars.getRealDir(args[0]) !== "undefined"){
+                                return apps.bash.vars.getRealDir(args[0]);
+                            }else{
+                                throw args[0] + ': No such file or directory';
+                            }
+                        }else{
+                            throw 'No file provided';
+                        }
                     }
                 },
                 {
@@ -4789,7 +5029,7 @@ c(function(){
                     desc: 'Displays a fortune for you!',
                     action: function(args){
                         var rand = Math.floor(Math.random() * this.vars.fortunes.length);
-                        apps.bash.vars.echo(this.vars.fortunes[rand]);
+                        return this.vars.fortunes[rand];
                     },
                     vars: {
                         fortunes: [
@@ -5577,7 +5817,16 @@ c(function(){
                     copyright: {
                         option: 'Copyright Notice',
                         description: function(){return 'AaronOS is &copy; <i>2016 Aaron Adams</i>'}, //         <-- COPYRIGHT NOTICE
-                        buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' + function(){if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0){return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaron-os-mineandcraft12.c9.io/aosBeta.php">https://aaron-os-mineandcraft12.c9.io/aosBeta.php</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';}else{return '';}}()}
+                        buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' +
+                            function(){
+                                if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0){
+                                    return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaron-os-mineandcraft12.c9.io/aosBeta.php">https://aaron-os-mineandcraft12.c9.io/aosBeta.php</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';
+                                }else{
+                                    return '';
+                                    //return '<br><br>The AaronOS project is sponsored by Spiderling Studios, which is in turn sponsored by your Patreon Pledge. Thank you for supporting aOS!<br>[image here]';
+                                }
+                            }()
+                        }
                     },
                     osID: {
                         option: 'aOS ID',
@@ -7802,10 +8051,11 @@ c(function(){
             "01/04/2019: B0.9.3.0\n + Text To Binary app can now decode images.\n\n" +
             "01/05/2019: B0.9.3.1\n : Minor memory fixes in Text To Binary\n + Text To Binary now has a standalone page at binary.php\n\n" +
             "01/07/2019: B0.9.3.2\n : Battery widget is hidden on devices/browsers that don't support it.\n\n" +
-            "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n : Windows can now be correctly resized by any edge.\n + Two new battery widget modes, Text and Old.\n + JS Console now sanitizes input and catches errors.\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.",
+            "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n : Windows can now be correctly resized by any edge.\n + Two new battery widget modes, Text and Old.\n + JS Console now sanitizes input and catches errors.\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.\n\n" +
+            "01/20/2019: B0.9.5.0\n : The Psuedo-Bash Console has had a complete rewrite!\n + Apps can now run psuedo-bash code on their own with apps.bash.vars.execute()\n : Pipes now work correctly in Bash.\n ",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.4.0 (01/17/2019) r3';
+    window.aOSversion = 'B0.9.5.0 (01/20/2019) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -12865,12 +13115,6 @@ function winrot(e){
             newHeight = winmoveOrY - (e.pageY - winmovey) * (1 / screenScale);
             newTop = winrotOrY + (e.pageY - winmovey) * (1 / screenScale)
         }
-        /*
-        apps[winmovecurrapp].appWindow.setDims(
-            apps[winmovecurrapp].appWindow.windowX, apps[winmovecurrapp].appWindow.windowY,
-            winmoveOrX + (e.pageX - winmovex) * (1 / screenScale), winmoveOrY + (e.pageY - winmovey) * (1 / screenScale)
-        );
-        */
         apps[winmovecurrapp].appWindow.setDims(
             newLeft, newTop,
             newWidth, newHeight
@@ -12902,15 +13146,11 @@ function winroting(e){
         newTop = winrotOrY + (e.pageY - winmovey) * (1 / screenScale)
     }
     if(apps.settings.vars.performanceMode){
-        getId('windowFrameOverlay').style.width = winmoveOrX + (e.pageX - winmovex) * (1 / screenScale) + 'px';
-        getId('windowFrameOverlay').style.height = winmoveOrY + (e.pageY - winmovey) * (1 / screenScale) + 'px';
+        getId('windowFrameOverlay').style.left = newLeft + 'px';
+        getId('windowFrameOverlay').style.top = newTop + 'px';
+        getId('windowFrameOverlay').style.width = newWidth + 'px';
+        getId('windowFrameOverlay').style.height = newHeight + 'px';
     }else{
-        /*
-        apps[winmovecurrapp].appWindow.setDims(
-            apps[winmovecurrapp].appWindow.windowX, apps[winmovecurrapp].appWindow.windowY,
-            winmoveOrX + (e.pageX - winmovex) * (1 / screenScale), winmoveOrY + (e.pageY - winmovey) * (1 / screenScale)
-        );
-        */
         apps[winmovecurrapp].appWindow.setDims(
             newLeft, newTop,
             newWidth, newHeight
