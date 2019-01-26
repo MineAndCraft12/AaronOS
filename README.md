@@ -10,6 +10,8 @@ If you wish to deploy AaronOS on your own server, you MUST read and follow the E
 By downloading or otherwise using this source code in any way, you agree to the terms listed in that file.
 Upon hosting AaronOS, the first connection to the project (which performs first-time setup) will also prompt you with this file.
 
+The official AaronOS Privacy Policy can be found at /privacy.txt
+
 You may be wondering, what is and isn't included here?
 
 Included:

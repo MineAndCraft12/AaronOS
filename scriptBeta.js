@@ -4470,12 +4470,12 @@ c(function(){
                     for(var item in this.alias){
                         if(item === search){
                             found = item;
-                            return this.alias[item];
+                            return this.getCmdObjects(this.alias[item]);
                         }
                     }
-                    return search;
+                    return [search];
                 }else{
-                    return search;
+                    return [search];
                 }
             },
             getCmdObjects: function(command, alias){
@@ -4501,7 +4501,10 @@ c(function(){
                     // if no quotes or spaces found
                     if(i === -1 && j === -1 && s === -1){
                         // add remainder of string to commands list
-                        cmdObjects.push(this.getAlias(command.substring(prev, command.length), alias));
+                        var postAlias = this.getAlias(command.substring(prev, command.length), alias);
+                        for(var l in postAlias){
+                            cmdObjects.push(postAlias[l]);
+                        }
                         // quit
                         break;
                     }
@@ -4511,7 +4514,10 @@ c(function(){
                         // if space is not current character
                         if(s !== prev){
                             // push this "word" to object list
-                            cmdObjects.push(this.getAlias(command.substring(prev, s), alias));
+                            var postAlias = this.getAlias(command.substring(prev, s), alias);
+                            for(var l in postAlias){
+                                cmdObjects.push(postAlias[l]);
+                            }
                         }
                         prev = s + 1;
                     }else{
@@ -4531,7 +4537,10 @@ c(function(){
                         // if there is a character between previous "word" and this bit
                         if(curr !== prev){
                             // add the preceding "word" to object list
-                            cmdObjects.push(this.getAlias(command.substring(prev, curr), alias));
+                            var postAlias = this.getAlias(command.substring(prev, curr), alias);
+                            for(var l in postAlias){
+                                cmdObjects.push(postAlias[l]);
+                            }
                         }
                         // try to find end of quotes
                         var tempCurr = curr;
@@ -4781,7 +4790,7 @@ c(function(){
                         this.vars.lines = args.join("\n").split('\n');
                         this.vars.out = '';
                         for(var i in this.vars.lines){
-                            if(this.vars.lines[i].indexOf(this.vars.target) > -1){
+                            if(this.vars.lines[i].toLowerCase().indexOf(this.vars.target.toLowerCase()) > -1){
                                 this.vars.out += '\n' + this.vars.lines[i];
                             }
                         }
@@ -5822,8 +5831,7 @@ c(function(){
                                 if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0){
                                     return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaron-os-mineandcraft12.c9.io/aosBeta.php">https://aaron-os-mineandcraft12.c9.io/aosBeta.php</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';
                                 }else{
-                                    return '';
-                                    //return '<br><br>The AaronOS project is sponsored by Spiderling Studios, which is in turn sponsored by your Patreon Pledge. Thank you for supporting aOS!<br>[image here]';
+                                    return '<br><br>The AaronOS project is sponsored by Spiderling Studios, which is in turn sponsored by your generous Patreon Pledge. Click the Spiderling banner to donate!<br><br><a target="_blank" href="https://www.patreon.com/spiderlingstudio" class="cursorPointer"><img src="spiderling.png" style="box-shadow:0 0 3px #000;width:100%;margin-left:-3px;"></a>';
                                 }
                             }()
                         }
@@ -5847,6 +5855,14 @@ c(function(){
                         option: 'Contact',
                         description: function(){return 'Having issues? Need help? Something broken on aOS? Want to suggest changes or features? Have some other need to contact me? Feel free to contact me below!'},
                         buttons: function(){return 'Email: <a href="mailto:mineandcraft12@gmail.com">mineandcraft12@gmail.com</a> | Messaging app: my username is "{ADMIN} MineAndCraft12"'}
+                    },
+                    dataCollect: {
+                        option: 'Anonymous Data Collection',
+                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.collectData)">' + numtf(apps.settings.vars.collectData) + '</span>'},
+                        buttons: function(){return '<a href="privacy.txt" target="_blank">Privacy Policy</a><br>' +
+                            '<button onclick="apps.settings.vars.collectData = -1 * apps.settings.vars.collectData + 1">Toggle</button><br>' +
+                            'All ongoing data collection campaigns will be detailed in full here:' +
+                            apps.settings.vars.getDataCampaigns()}
                     },
                     /*
                     googlePlay: {
@@ -5904,11 +5920,6 @@ c(function(){
                         option: 'Network and Battery Status',
                         description: function(){return 'Network Online: <span class="liveElement" liveVar="window.navigator.onLine">' + window.navigator.onLine + '</span>. Battery Level (if -100, battery not detected): <span class="liveElement" liveVar="Math.round(batteryLevel * 100)">' + Math.round(batteryLevel * 100) + '</span>'},
                         buttons: function(){return 'These values are updated live as of aOS A1.2.8'}
-                    },
-                    dataCollect: {
-                        option: 'Anonymous Data Collection',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.collectData)">' + numtf(apps.settings.vars.collectData) + '</span>'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.collectData = -1 * apps.settings.vars.collectData + 1">Toggle</button>'}
                     },
                     textLanguage: {
                         option: 'Text Language',
@@ -6610,7 +6621,7 @@ c(function(){
                 }
             },
             noraHelpTopics: 1,
-            collectData: 1,
+            collectData: 0,
             currVoiceStr: '',
             currLangStr: '',
             currNoraPhrase: 'listen computer',
@@ -6640,6 +6651,27 @@ c(function(){
             },
             setDebugLevel: function(level){
                 dbgLevel = level;
+            },
+            dataCampaigns: [
+                [
+                    'Example Campaign <i>(not real)</i>',
+                    ['Session Error Logs', 'etc other useful stuff']
+                ]
+            ],
+            getDataCampaigns: function(){
+                if(this.dataCampaigns.length > 0){
+                    var str = "";
+                    for(var i in this.dataCampaigns){
+                        str += '<br>' + this.dataCampaigns[i][0];
+                        for(var j in this.dataCampaigns[i][1]){
+                            str += '<br>-&nbsp;' + this.dataCampaigns[i][1][j];
+                        }
+                    }
+                    str += '<br>';
+                    return str;
+                }else{
+                    return '<i>None found.</i><br>';
+                }
             },
             FILcanWin: 0,
             togFILwin: function(){
@@ -8052,10 +8084,11 @@ c(function(){
             "01/05/2019: B0.9.3.1\n : Minor memory fixes in Text To Binary\n + Text To Binary now has a standalone page at binary.php\n\n" +
             "01/07/2019: B0.9.3.2\n : Battery widget is hidden on devices/browsers that don't support it.\n\n" +
             "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n : Windows can now be correctly resized by any edge.\n + Two new battery widget modes, Text and Old.\n + JS Console now sanitizes input and catches errors.\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.\n\n" +
-            "01/20/2019: B0.9.5.0\n : The Psuedo-Bash Console has had a complete rewrite!\n + Apps can now run psuedo-bash code on their own with apps.bash.vars.execute()\n : Pipes now work correctly in Bash.\n ",
+            "01/20/2019: B0.9.5.0\n : The Psuedo-Bash Console has had a complete rewrite!\n + Apps can now run psuedo-bash code on their own with apps.bash.vars.execute()\n : Pipes now work correctly in Bash.\n : grep is now case insensitive\n\n" +
+            "01/26/2019: B0.9.5.1\n : Data Collection is now false by default, oops.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.5.0 (01/20/2019) r1';
+    window.aOSversion = 'B0.9.5.1 (01/26/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
