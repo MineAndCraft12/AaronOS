@@ -2,13 +2,12 @@ AaronOS Privacy Policy
 
 Last updated: 1/26/2019
 
-This Privacy Policy is in reguards to AaronOS, as it pertains to the official server
+This Privacy Policy is in regards to AaronOS, as it pertains to the official server
 	hosted at https://aaron-os-mineandcraft12.c9.io/
 For any who deploy AaronOS on their own, it is highly recommended that you follow a
 	policy similar to this one.
 
-I will only ever collect information that is directly relied upon to improve or work
-	with AaronOS.
+AaronOS only collects information that is directly relied upon for AaronOS development.
 
 INFORMATION COLLECTION AND USE
 
@@ -25,11 +24,11 @@ PERSONAL FILES
 
 Part of AaronOS's core functionality is that you have your own set of files hosted
 	on the AaronOS server.
-While it is possible for me to access this data at any time, I am holding myself to
-	this policy to never access these files, except with your express permission
-	or for the sake of fixing a serious issue.
-If for any reason I must access these files, I will do my best to make you aware that
-	this has occurred.
+While it is possible for us to access this data at any time, we will only do so in
+	accordance with this Privacy Policy. We will only access this data with your
+	explicit permission, with the exception of any data accession required to fix a
+	major issue in AaronOS. We guarantee that you will be notified of your data being
+	accessed in any case.
 
 Keep in mind that no web security is perfect. If someone breaches my account or the
 	AaronOS server, they may be able to force access to your files.
@@ -51,7 +50,7 @@ COOKIES
 AaronOS leverages web cookies for parts of its core functionality.
 The main cookie AaronOS uses is a unique identifier that tells AaronOS what filesystem
 	to grab from the server when loading aOS.
-If you wish, you may instruct your browser to deny cookies from AaronOS, though do note
+If you wish, you may configure your browser to deny cookies from AaronOS, though do note
 	that this will prevent its filesystem from persisting between sessions.
 
 CHANGES TO PRIVACY POLICY

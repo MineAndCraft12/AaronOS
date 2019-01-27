@@ -13,6 +13,8 @@
     <style id="cursorStyle"></style>
     <style id="aosCustomStyle"></style>
     <style id="mobileStyle"></style>
+    
+
     <!--
     <script defer src="html2canvas.js"></script>
     html2canvas(document.body, {onrendered:function(canvas){getId('winjsCa').style.backgroundImage = 'url(' + canvas.toDataURL('image/png') + ')'}})

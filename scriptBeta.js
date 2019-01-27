@@ -12,20 +12,86 @@ Looking under the hood?
     And I have no way to keep you from doing so?
         Let's dive straight into business then, shall we?
 
-    Here's a completely useless log to the console to start us off!
+    Here's a bunch of IE compatibility fixes to start us off!
                                  |
           _______________________|
          |
-        \|/           Do mind this actual comment that I need, though --->      d(1, ''); d(2, ''); */
-console.log("------------------------------");
-console.log("Starting to intialize aOS.");
-if(window.location.href.indexOf('http://') === 0){
-    //window.location = 'https://aaron-os-mineandcraft12.c9.io/aosBeta.php';
+        \|/                                    */
+if(typeof console === "undefined"){
+    console = {
+        log: function(){
+            /*this is for IE compatibility because console apparently doesn't exist*/
+        }
+    };
+}
+
+// see if animationframe is supported - if not, substitute it
+var requestAnimationFrameIntact = 1;
+if(window.requestAnimationFrame === undefined){
+    requestAnimationFrameIntact = 0;
+    window.requestAnimationFrame = function(func){
+        window.setTimeout(func, 0);
+    };
+    window.requestAnimationFrame(function(){console.log('requestAnimationFrame is not supported by your browser. It has been replaced by function(func){setTimeout(func, 0)}', '#F00')});
+}
+
+// same for performance.now
+var windowperformancenowIntact = 1;
+if(window.performance === undefined){
+    window.performance = {
+        now: function(){
+            return (new Date).getTime() * 1000;
+        }
+    };
+    window.requestAnimationFrame(function(){console.log('performance.now is not supported by your browser. It has been replaced by function(){return (new Date).getTime() * 1000}', '#F00')});
+}else if(window.performance.now === undefined){
+    window.performance.now = function(){
+        return (new Date).getTime() * 1000;
+    };
+    window.requestAnimationFrame(function(){console.log('performance.now is not supported by your browser. It has been replaced by function(){return (new Date).getTime() * 1000}', '#F00')});
+}
+if(window.location.href.indexOf('http://') === 0 && navigator.userAgent.indexOf('MSIE') === -1){
     var tempLoc = window.location.href.split('http://');
     tempLoc.shift();
     window.location = 'https://' + tempLoc.join('http://');
     makeAnErrorToQuit();
 }
+
+(function(win, doc){
+	if(win.addEventListener)return;		//No need to polyfill
+
+	function docHijack(p){var old = doc[p];doc[p] = function(v){return addListen(old(v))}}
+	function addEvent(on, fn, self){
+		return (self = this).attachEvent('on' + on, function(e){
+			var e = e || win.event;
+			e.preventDefault  = e.preventDefault  || function(){e.returnValue = false}
+			e.stopPropagation = e.stopPropagation || function(){e.cancelBubble = true}
+			fn.call(self, e);
+		});
+	}
+	function addListen(obj, i){
+		if(i = obj.length)while(i--)obj[i].addEventListener = addEvent;
+		else obj.addEventListener = addEvent;
+		return obj;
+	}
+
+	addListen([doc, win]);
+	if('Element' in win)win.Element.prototype.addEventListener = addEvent;			//IE8
+	else{		//IE < 8
+		doc.attachEvent('onreadystatechange', function(){addListen(doc.all)});		//Make sure we also init at domReady
+		docHijack('getElementsByTagName');
+		docHijack('getElementById');
+		docHijack('createElement');
+		addListen(doc.all);	
+	}
+})(window, document);
+
+if(typeof document.getElementsByClassName === 'undefined'){
+    document.getElementsByClassName = function(){return [];}
+}
+
+
+// end of IE compatibility fixes
 
 // safe mode
 var safeMode = (window.location.href.indexOf('safe=true') > -1);
@@ -311,40 +377,13 @@ var Elm0p2s_cat = {
 
 // cursors
 var cursors = {
-    default: 'url(cursors/default.png) 3 3, default',
+    def: 'url(cursors/default.png) 3 3, default',
     loadLightGif: 'url(cursors/loadLight.gif) 16 16, url(cursors/loadLight.png) 16 16, wait',
     loadDarkGif: 'url(cursors/loadDark.gif) 16 16, url(cursors/loadDark.png) 16 16, wait',
     loadLight: 'url(cursors/loadLight.png) 16 16, wait',
     loadDark: 'url(cursors/loadDark.png) 16 16, wait',
     move: 'url(cursors/move.png) 14 14, move',
     pointer: 'url(cursors/pointer.png) 9 3, pointer'
-}
-
-// see if animationframe is supported - if not, substitute it
-m('Checking window.getAnimationFrame');
-var requestAnimationFrameIntact = 1;
-if(window.requestAnimationFrame === undefined){
-    requestAnimationFrameIntact = 0;
-    window.requestAnimationFrame = function(func){
-        window.setTimeout(func, 0);
-    };
-    window.requestAnimationFrame(function(){doLog('requestAnimationFrame is not supported by your browser. It has been replaced by function(func){setTimeout(func, 0)}', '#F00')});
-}
-// same for performance.now
-m('checking window.performance.now');
-var windowperformancenowIntact = 1;
-if(window.performance === undefined){
-    window.performance = {
-        now: function(){
-            return (new Date).getTime() * 1000;
-        }
-    };
-    window.requestAnimationFrame(function(){doLog('performance.now is not supported by your browser. It has been replaced by function(){return (new Date).getTime() * 1000}', '#F00')});
-}else if(window.performance.now === undefined){
-    window.performance.now = function(){
-        return (new Date).getTime() * 1000;
-    };
-    window.requestAnimationFrame(function(){doLog('performance.now is not supported by your browser. It has been replaced by function(){return (new Date).getTime() * 1000}', '#F00')});
 }
 
 // performance measuring functions
@@ -446,6 +485,7 @@ function markUserKbActive(){
 }
 // pretend the keyboard was clicked - they just logged in so they must have been active
 markUserKbActive();
+
 // add the event listeners to the monitor
 getId("monitor").addEventListener('click', markUserKbActive);
 getId("monitor").addEventListener('mousemove', markUserMouseActive);
@@ -478,7 +518,7 @@ var languagepacks = {
     en: 'US English',
     uv: 'Ultra-Verbose',
     //uv: 'Ultra Verbose'
-    ch: '&#x4E2D;&#x6587; (Chinese)',
+    ch: '&#x4E2D;&#x6587; (Chinese)'
 };
 var langContent = { // LANGUAGES
     en: {
@@ -594,7 +634,7 @@ var langContent = { // LANGUAGES
             confirmText: 'wants a choice from you', // lowercase
             confirmUnnamed: 'Pick a choice for an anonymous app',
             promptText: 'wants some info from you', // lowercase
-            promptUnnamed: 'Enter some info for an anonymous app',
+            promptUnnamed: 'Enter some info for an anonymous app'
         },
         notepad: {
             caption: 'Text Editor',
@@ -1226,25 +1266,23 @@ var liveElements = [];
 // checks for live elements
 function checkLiveElements(){
     liveElements = document.getElementsByClassName('liveElement');
-    if(liveElements.length > 0){
-        for(var elem in liveElements){
-            if(elem == parseInt(elem)){
-                if(liveElements[elem].getAttribute('liveTarget') === null){
-                    try{
-                        liveElements[elem].innerHTML = eval(liveElements[elem].getAttribute('liveVar'));
-                    }catch(err){
-                        liveElements[elem].innerHTML = 'LiveElement Error: ' + error;
-                    }
-                }else{
-                    try{
-                        eval('liveElements[' + elem + '].' + liveElements[elem].getAttribute('liveTarget') + ' = "' + eval(liveElements[elem].getAttribute('liveVar')) + '"');
-                    }catch(err){
-                        doLog(' ');
-                        doLog('LiveElement Error: ' + err, '#F00');
-                        doLog('Element #' + elem, '#F00');
-                        doLog('Target ' + liveElements[elem].getAttribute('liveTarget'), '#F00');
-                        doLog('Value ' + liveElements[elem].getAttribute('liveVar'), '#F00');
-                    }
+    for(var elem in liveElements){
+        if(elem == parseInt(elem)){
+            if(liveElements[elem].getAttribute('liveTarget') === null){
+                try{
+                    liveElements[elem].innerHTML = eval(liveElements[elem].getAttribute('liveVar'));
+                }catch(err){
+                    liveElements[elem].innerHTML = 'LiveElement Error: ' + error;
+                }
+            }else{
+                try{
+                    eval('liveElements[' + elem + '].' + liveElements[elem].getAttribute('liveTarget') + ' = "' + eval(liveElements[elem].getAttribute('liveVar')) + '"');
+                }catch(err){
+                    doLog(' ');
+                    doLog('LiveElement Error: ' + err, '#F00');
+                    doLog('Element #' + elem, '#F00');
+                    doLog('Target ' + liveElements[elem].getAttribute('liveTarget'), '#F00');
+                    doLog('Value ' + liveElements[elem].getAttribute('liveVar'), '#F00');
                 }
             }
         }
@@ -1846,7 +1884,7 @@ widgets.time = new Widget(
     },
     {
         running: 0,
-        lastTime: String(new Date()),
+        lastTime: String(new Date())
     }
 );
 widgets.fps = new Widget(
@@ -1951,7 +1989,7 @@ widgets.battery = new Widget(
                 function(){
                     getId('widget_battery').innerHTML = '<div style="pointer-events:none;position:relative;margin-left:3px;margin-right:3px;margin-top:3px;border:1px solid #FFF;background:rgb(0, 0, ' + (batteryCharging * 255) + ');width:50px;height:21px;"><div style="overflow:visible;width:' + Math.round(batteryLevel * 50) + 'px;height:21px;background-color:rgb(' + Math.round(255 - (batteryLevel * 255)) + ',' + Math.round(batteryLevel * 255) + ',0);text-align:center;">' + Math.round(batteryLevel * 100) + '</div></div>';
                 }
-            ],
+            ]
         },
         changeStyle: function(newStyle){
             apps.savemaster.vars.save("WGT_BATTERY_STYLE", newStyle, 1);
@@ -2122,7 +2160,7 @@ function showEditContext(event){
     if((event.target.tagName === "INPUT" && (event.target.getAttribute("type") === "text" || event.target.getAttribute("type") === "password" || event.target.getAttribute("type") === null)) || event.target.tagName === "TEXTAREA"){
         canPasteHere = 1;
     }
-    textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "ctxMenu/beta/happy.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
+    textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "ctxMenu/beta/happy.png", "ctxmenu/beta/load.png", "ctxmenu/beta/save.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
     for(var i = 1; i <= textEditorTools.slots; i++){
         if(currentSelection.length === 0){
             textEditorTools.tempvar = '-';
@@ -2967,7 +3005,7 @@ c(function(){
                     function(){
                         return 'Thank you so much, ' + apps.nora.vars.getUserName() + '!';
                     }
-                ],
+                ]
             },
             commands: [ // https://techranker.net/cortana-commands-list-microsoft-voice-commands-video/
                 [
@@ -3222,7 +3260,7 @@ c(function(){
                         }
                     },
                     {
-                        cmdFound: -1,
+                        cmdFound: -1
                     }
                 ],
                 [
@@ -4862,7 +4900,7 @@ c(function(){
                     },
                     vars: {
                         printSub: 0,
-                        selectedDir: {},
+                        selectedDir: {}
                     }
                 },
                 {
@@ -4997,7 +5035,7 @@ c(function(){
                     vars: {
                         first: 1,
                         trace: '',
-                        stack: [],
+                        stack: []
                     }
                 },
                 {
@@ -5710,7 +5748,7 @@ c(function(){
                     cookies: 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).',
                     networkOn: 'Network Online',
                     batteryLevel: 'Battery Level',
-                    batteryDesc: 'If the amount above is -100, then your computer either has no battery or the battery could not be found.',
+                    batteryDesc: 'If the amount above is -100, then your computer either has no battery or the battery could not be found.'
                     
                 },
                 uv: {
@@ -5960,7 +5998,7 @@ c(function(){
                     saveRes: {
                         option: 'Save Resolution',
                         description: function(){return 'Have aOS automatically load to a specified resolution (enter in boxes above)'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save</button> <button onclick="apps.savemaster.vars.delete(\'APP_STN_SAVESCREENRES\')">Delete</button>'}
+                        buttons: function(){return '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save</button> <button onclick="apps.savemaster.vars.del(\'APP_STN_SAVESCREENRES\')">Delete</button>'}
                     },
                     currWin: {
                         option: 'Current Browser Window Resolution',
@@ -7590,7 +7628,7 @@ c(function(){
                 apps.prompt.vars.confirm('Are you sure you wish to delete this icon?', ['No, Keep Icon', 'Yes, Delete Icon'], function(btn){
                     if(btn){
                         getId('app' + apps.iconMaker.vars.deleteElem).style.display = 'none';
-                        apps.savemaster.vars.delete('APP_IcM_ICON_' + apps.iconMaker.vars.deleteElem);
+                        apps.savemaster.vars.del('APP_IcM_ICON_' + apps.iconMaker.vars.deleteElem);
                     }
                 }, 'aOS');
             }
@@ -7625,7 +7663,7 @@ c(function(){
                 this.appWindow.setContent(
                     '<textarea id="npScreen" style="white-space:no-wrap; width:100%; height:359px; position:absolute; padding:0; border:none; bottom: 0px; left: 0px; font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000;"></textarea>' +
                     '<div style="width:100%; border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + '; height:16px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#000', '#FFF') + ';">' +
-                    '<input id="npLoad" style="border:none; height:16px; border-right:1px solid ' + darkSwitch('#000', '#FFF') + '; position:absolute; left:0; top:0; width:75%;"></input>' +
+                    '<input id="npLoad" placeholder="filename" style="border:none; height:16px; border-right:1px solid ' + darkSwitch('#000', '#FFF') + '; position:absolute; left:0; top:0; width:75%;"></input>' +
                     //'<div onclick="apps.notepad.vars.saveFile(getId(\'npLoad\').value)" style="cursor:url(cursors/pointer.png) 9 3, pointer;top:0; right:10%; border-left:1px solid #557; border-right:1px solid #557;">Save</div> ' +
                     //'<div onclick="apps.notepad.vars.openFile(getId(\'npLoad\').value)" style="cursor:url(cursors/pointer.png) 9 3, pointer;top:0; right:1%; border-left:1px solid #557; border-right:1px solid #557;">Load</div>' +
                     '<div onclick="requestAnimationFrame(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/save.png\', \'ctxMenu/beta/load.png\'], \' Save\', \'apps.notepad.vars.saveFile(getId(\\\'npLoad\\\').value)\', \' Load\', \'apps.notepad.vars.openFile(getId(\\\'npLoad\\\').value)\'])})" class="cursorPointer" style="top:0; right:1%; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + ';">&nbsp;File&nbsp;</div> ' +
@@ -8085,10 +8123,11 @@ c(function(){
             "01/07/2019: B0.9.3.2\n : Battery widget is hidden on devices/browsers that don't support it.\n\n" +
             "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n : Windows can now be correctly resized by any edge.\n + Two new battery widget modes, Text and Old.\n + JS Console now sanitizes input and catches errors.\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.\n\n" +
             "01/20/2019: B0.9.5.0\n : The Psuedo-Bash Console has had a complete rewrite!\n + Apps can now run psuedo-bash code on their own with apps.bash.vars.execute()\n : Pipes now work correctly in Bash.\n : grep is now case insensitive\n\n" +
-            "01/26/2019: B0.9.5.1\n : Data Collection is now false by default, oops.",
+            "01/26/2019: B0.9.5.1\n : Mutiple windows are now fit onscreen in Flow Mode with Mobile Mode.\n : Caption bars are no longer semitransparent in Flow Mode\n : Data Collection is now false by default, oops.\n\n" +
+            "01/27/2019: B0.9.5.2\n + Added some polyfills, extended browser support back just a little bit further.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.5.1 (01/26/2019) r0';
+    window.aOSversion = 'B0.9.5.2 (01/27/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -8395,7 +8434,7 @@ c(function(){
                                     c(function(arg){
                                         //getId("FILtbl").innerHTML +=
                                         apps.files.vars.currContentStr +=
-                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.delete(\\\'' + arg + '\\\');\'])">' +
+                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + arg + '\\\');\'])">' +
                                             '<td>' + arg + '</td>' +
                                             '<td>' + apps.files.vars.filetype(typeof(eval(apps.files.vars.currLoc)[arg])) + '</td>' +
                                             '</tr>';
@@ -8617,7 +8656,7 @@ c(function(){
                                     c(function(arg){
                                         //getId("FILtbl").innerHTML +=
                                         apps.files2.vars.currContentStr +=
-                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.delete(\\\'' + arg + '\\\');\'])">' +
+                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + arg + '\\\');\'])">' +
                                             '<td>' + arg + '</td>' +
                                             '<td>' + apps.files2.vars.filetype(typeof(eval(apps.files2.vars.currLoc)[arg])) + '</td>' +
                                             '</tr>';
@@ -9088,7 +9127,7 @@ c(function(){
                 m(modulelast);
             },
             latestDel: '',
-            delete: function(filepath){
+            del: function(filepath){
                 this.savePerf = Math.floor(performance.now());
                 /*
                 this.latestDel = '';
@@ -9245,8 +9284,8 @@ c(function(){
                     'This is how we save persistent files on aOS. Keep in mind that a working internet connection must be available, and we <span style="text-decoration:line-through">CANNOT</span> can, as of aOS A1.2.8, save more than one file at once. <span style="text-decoration:line-through">You must wait some time before saving the next one to allow the previous to finish saving.</span> Ensure the name of the file does not break JavaScript variable naming rules, and that the third argument is ALWAYS the number 1. The only working savetype is 1 and if you forget to include it, your file will not be saved.'
                 );});
                 c(function(){apps.appAPI.vars.newdoc(
-                    'apps.savemaster.vars.delete(filename)',
-                    'apps.savemaster.vars.delete("persistentFile")',
+                    'apps.savemaster.vars.del(filename)',
+                    'apps.savemaster.vars.del("persistentFile")',
                     'This will delete a file from the USERFILES folder. Keep in mind that the user will ALWAYS be asked for permission and, as such, it will take time to do. My recommendation is to include each separate file to delete as a separate button, as there is no telling how long the user will take.'
                 );});
                 c(function(){apps.appAPI.vars.newdoc(
@@ -9720,7 +9759,7 @@ c(function(){
             commandDescriptions: {
                 fs: {
                     read: "Read a file from USERFILES",
-                    write: "Write a file to USERFILES",
+                    write: "Write a file to USERFILES"
                 },
                 prompt: {
                     alert: "unimplemented",
@@ -9978,7 +10017,7 @@ c(function(){
                     }, 0, 'webApp' + apps.webAppMaker.vars.numberOfApps, tempObj.icon
                 );
                 apps.webAppMaker.vars.numberOfApps++;
-            },
+            }
         }, 0, "webAppMaker", "appicons/ds/APM.png"
     );
     getId('aOSloadingInfo').innerHTML = 'Initializing Calculator';
@@ -10335,7 +10374,7 @@ c(function(){
                         str = 'https://' + encodeURI(str);
                     }
                     return '<div style="position:relative;display:block;width:100%;border:none;background:#FFF;margin-top:-3px;margin-bottom:-3px;border-radius:10px;box-shadow:inset 0 0 5px #000;height:400px;" onclick="if(event.target.tagName.toLowerCase() === \'button\'){this.outerHTML = \'<iframe src=\\\'\' + this.getAttribute(\'aosMessagingSiteURL\') + \'\\\' style=\\\'\' + this.getAttribute(\'style\') + \'\\\'></iframe>\'}" aosMessagingSiteURL="' + str + '"><p style="margin-top:188px;text-align:center;"><button>Click to load site:<br>' + str + '</button></p></div>';
-                },
+                }
             },
             objSafe: {
                 img: 0,
@@ -10555,19 +10594,26 @@ c(function(){
                     '<canvas id="CAMcanvas" width="640" height="480" style="display:none"></canvas>'
                 );
                 getId('win_camera_html').style.background = 'none';
-                window.navigator.mediaDevices.getUserMedia({"video": true}).then(
-                    function(stream){
-                        apps.camera.vars.streamObj = stream;
-                        //getId('CAMvideo').src = window.webkitURL.createObjectURL(stream);
-                        getId('CAMvideo').srcObject = stream;
-                        getId('CAMvideo').play();
-                    }
-                ).catch(
-                    function(err){
-                        doLog('Error starting camera!', '#F00');
-                        doLog(err, '#F00');
-                    }
-                );
+                try{
+                    eval( // this was a necessary evil for IE compatibility. IE crashes the script because of ").catch("
+                        "window.navigator.mediaDevices.getUserMedia({'video': true}).then(" +
+                            "function(stream){" +
+                                "apps.camera.vars.streamObj = stream;" +
+                                //getId('CAMvideo').src = window.webkitURL.createObjectURL(stream);
+                                "getId('CAMvideo').srcObject = stream;" +
+                                "getId('CAMvideo').play();" +
+                            "}" +
+                        ").catch(" +
+                            "function(err){" +
+                                "doLog('Error starting camera!', '#F00');" +
+                                "doLog(err, '#F00');" +
+                            "}" +
+                        ");"
+                    );
+                }catch(err){ // error is expected on IE
+                    doLog('Error starting camera!', '#F00');
+                    doLog(err, '#F00');
+                }
                 this.vars.cnv = getId('CAMcanvas');
                 this.vars.ctx = this.vars.cnv.getContext('2d');
             }
@@ -10862,7 +10908,7 @@ c(function(){
                                 },
                                 sDelete: {
                                     '1': 'land',
-                                    '2': 'apps.savemaster.vars.delete(filepath)',
+                                    '2': 'apps.savemaster.vars.del(filepath)',
                                     helpPage:
                                         'Delete a persistent file from the USERFILES server. A network connection and connection to the aOS server is required.<br><br>' +
                                         'The function expects 1 mandatory argument, <code>filepath</code>.<br><br>' +
@@ -13782,12 +13828,12 @@ function fitWindowRes(newmonX, newmonY){
     checkMobileSize();
 }
 var sessionStorageSupported = 1;
-if(!sessionStorage){
+if(typeof sessionStorage === "undefined"){
     sessionStorage = {getItem: function(){return false}, setItem: function(){return false}, removeItem: function(){return false}};
     sessionStorageSupported = 0;
 }
 var localStorageSupported = 1;
-if(!localStorage){
+if(typeof localStorage === "undefined"){
     localStorage = {getItem: function(){return false}, setItem: function(){return false}, removeItem: function(){return false}};
     localStorageSupported = 0;
 }
