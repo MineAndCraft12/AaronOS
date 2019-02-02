@@ -70,12 +70,12 @@
         <!-- old window move/resize and icon move elements
         <div id="winmove" onclick="winmove(event)" onmousemove="winmoving(event)"></div>
         <div id="icomove" onclick="icomove(event)" onmousemove="icomoving(event)"></div>
-        <div id="winrot" onclick="winrot(event)" onmousemove="winroting(event)"></div>
+        <div id="winres" onclick="winres(event)" onmousemove="winresing(event)"></div>
         -->
         <div id="winmove" class="cursorOpenHand" onmouseup="winmove(event)" onmousemove="winmoving(event)"></div>
         <div id="icomove" class="cursorOpenHand" onclick="icomove(event)" onmousemove="icomoving(event)"></div>
         <div id="icnmove" class="cursorOpenHand" onclick="icnmove(event)" onmousemove="icnmoving(event)"></div>
-        <div id="winrot" class="cursorOpenHand" onmouseup="winrot(event)" onmousemove="winroting(event)"></div>
+        <div id="winres" class="cursorOpenHand" onmouseup="winres(event)" onmousemove="winresing(event)"></div>
         <div id="windowFrameOverlay"></div>
         <div id="taskbar">
             <div id="tskbrAero" class="winAero"></div>

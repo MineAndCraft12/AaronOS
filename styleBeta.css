@@ -261,7 +261,7 @@ div{
                 height:100%;
                 background-image:url(winimg.png);
             }
-            .winRot{
+            .winRes{
                 height:100%;
                 bottom:0;
                 width:100%;
@@ -594,7 +594,7 @@ div{
         display:none;
         /*cursor:url(cursors/move.png) 14 14, move;*/
     }
-    #winrot{
+    #winres{
         left:0;
         top:0;
         width:100%;
@@ -1063,7 +1063,7 @@ div{
 .flowDesktop #win_startMenu_top, .flowDesktop #win_nora_top{
     display:none !important;
 }
-.flowDesktop .winHTML, .flowDesktop .winCap, .flowDesktop .winRot{
+.flowDesktop .winHTML, .flowDesktop .winCap, .flowDesktop .winRes{
     pointer-events:none !important;
 }
 .flowDesktop .winShrink, .flowDesktop .winFld, .flowDesktop .winBig{

@@ -1347,7 +1347,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 div .window #win_settings_top           Topmost window div, contains entire window
                     div .winAero   #win_settings_aero       Windowblur background of window (compare to Aero effect of Win7)
                     div .winBimg   #win_settings_img        Texture of window borders
-                    div .winRot    #win_settings_size       Handle to resize window
+                    div .winres    #win_settings_size       Handle to resize window
                     div .winCap    #win_settings_cap        Window caption with title and icon
                     div .winFld    #win_settings_fold       Button to fold window (compare to Shade in linux)
                     div .winHTML   #win_settings_html       HTML content of window, this is where your actual content goes
@@ -1659,7 +1659,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             '<div class="window closedWindow" id="win_' + appPath + '_top">' +
             '<div class="winAero" id="win_' + appPath + '_aero"></div>' +
             '<div class="winBimg" id="win_' + appPath + '_img"></div>' +
-            '<div class="winRot cursorOpenHand" id="win_' + appPath + '_size"></div>' +
+            '<div class="winRes cursorOpenHand" id="win_' + appPath + '_size"></div>' +
             '<div class="winCap cursorOpenHand" id="win_' + appPath + '_cap">' +
             '</div>' +
             '<div class="winFld cursorPointer" id="win_' + appPath + '_fold">^' +
@@ -1684,9 +1684,9 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 '</div></div>';
         }
         getId("win_" + appPath + "_cap").setAttribute("onmousedown", "if(!apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winmove(event);}event.preventDefault();return false;}");
-        getId("win_" + appPath + "_size").setAttribute("onmousedown", "if(!apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winrot(event);}event.preventDefault();return false;}");
+        getId("win_" + appPath + "_size").setAttribute("onmousedown", "if(!apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winres(event);}event.preventDefault();return false;}");
         getId("win_" + appPath + "_cap").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winmove(event);}event.preventDefault();return false;}");
-        getId("win_" + appPath + "_size").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winrot(event);}event.preventDefault();return false;}");
+        getId("win_" + appPath + "_size").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winres(event);}event.preventDefault();return false;}");
         getId("app_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", 'dsktp')");
         getId("icn_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", function(){if(apps." + appPath + ".appWindow.appIcon){return 'tskbr'}else{return 'dsktp'}}())");
         getId("win_" + appPath + "_top").setAttribute("onClick", "toTop(apps." + appPath + ")");
@@ -8141,10 +8141,11 @@ c(function(){
             "01/20/2019: B0.9.5.0\n : The Psuedo-Bash Console has had a complete rewrite!\n + Apps can now run psuedo-bash code on their own with apps.bash.vars.execute()\n : Pipes now work correctly in Bash.\n : grep is now case insensitive\n\n" +
             "01/26/2019: B0.9.5.1\n : Mutiple windows are now fit onscreen in Flow Mode with Mobile Mode.\n : Caption bars are no longer semitransparent in Flow Mode\n : Data Collection is now false by default, oops.\n\n" +
             "01/27/2019: B0.9.5.2\n + Added some polyfills, extended browser support back just a little bit further.\n\n" +
-            "02/01/2019: B0.9.6.0\n + Users can now set a custom Window Border Width.",
+            "02/01/2019: B0.9.6.0\n + Users can now set a custom Window Border Width.\n\n" +
+            "02/02/2019: B0.9.6.1\n : Renamed variables for window resizing from winRot* to winRes* (was leftover from old window rotation).",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.6.0 (02/01/2019) r0';
+    window.aOSversion = 'B0.9.6.1 (02/02/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -13149,14 +13150,14 @@ function icnmoving(e){
     getId(icomoveSelect).style.left = icomoveOrX + (e.pageX - icomovex) * (1 / screenScale) + "px";
     getId(icomoveSelect).style.top = icomoveOrY + (e.pageY - icomovey) * (1 / screenScale) + "px";
 }
-var tempwinrot = "";
-var tempwinrota = "";
-var tempwinrotmode = [1, 1];
-var winrotOrX = 0;
-var winrotOrY = 0;
-function winrot(e){
-    if(e.currentTarget !== getId("winrot")){
-        getId("winrot").style.display = "block";
+var tempwinres = "";
+var tempwinresa = "";
+var tempwinresmode = [1, 1];
+var winresOrX = 0;
+var winresOrY = 0;
+function winres(e){
+    if(e.currentTarget !== getId("winres")){
+        getId("winres").style.display = "block";
         //winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 1);
         winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 5);
         console.log(winmoveSelect);
@@ -13180,36 +13181,36 @@ function winrot(e){
             getId('windowFrameOverlay').style.width = winmoveOrX + 'px';
             getId('windowFrameOverlay').style.height = winmoveOrY + 'px';
         }
-        tempwinrotmode = [1, 1];
+        tempwinresmode = [1, 1];
         if(winmovex - apps[winmovecurrapp].appWindow.windowX < apps.settings.vars.winBorder * 5){
-            tempwinrotmode[0] = 0;
-            winrotOrX = apps[winmovecurrapp].appWindow.windowX;
+            tempwinresmode[0] = 0;
+            winresOrX = apps[winmovecurrapp].appWindow.windowX;
         }else if(winmovex - apps[winmovecurrapp].appWindow.windowX - apps[winmovecurrapp].appWindow.windowH > apps.settings.vars.winBorder * -5){
-            tempwinrotmode[0] = 2;
+            tempwinresmode[0] = 2;
         }
         if(winmovey - apps[winmovecurrapp].appWindow.windowY < apps.settings.vars.winBorder * 5){
-            tempwinrotmode[1] = 0;
-            winrotOrY = apps[winmovecurrapp].appWindow.windowY;
+            tempwinresmode[1] = 0;
+            winresOrY = apps[winmovecurrapp].appWindow.windowY;
         }else if(winmovey - apps[winmovecurrapp].appWindow.windowY - apps[winmovecurrapp].appWindow.windowV > apps.settings.vars.winBorder * -5){
-            tempwinrotmode[1] = 2;
+            tempwinresmode[1] = 2;
         }
     }else{
-        getId("winrot").style.display = "none";
+        getId("winres").style.display = "none";
         var newWidth = apps[winmovecurrapp].appWindow.windowH;
         var newHeight = apps[winmovecurrapp].appWindow.windowV;
         var newLeft = apps[winmovecurrapp].appWindow.windowX;
         var newTop = apps[winmovecurrapp].appWindow.windowY;
-        if(tempwinrotmode[0] === 2){
+        if(tempwinresmode[0] === 2){
             newWidth = winmoveOrX + (e.pageX - winmovex) * (1 / screenScale);
-        }else if(tempwinrotmode[0] === 0){
+        }else if(tempwinresmode[0] === 0){
             newWidth = winmoveOrX - (e.pageX - winmovex) * (1 / screenScale);
-            newLeft = winrotOrX + (e.pageX - winmovex) * (1 / screenScale);
+            newLeft = winresOrX + (e.pageX - winmovex) * (1 / screenScale);
         }
-        if(tempwinrotmode[1] === 2){
+        if(tempwinresmode[1] === 2){
             newHeight = winmoveOrY + (e.pageY - winmovey) * (1 / screenScale);
-        }else if(tempwinrotmode[1] === 0){
+        }else if(tempwinresmode[1] === 0){
             newHeight = winmoveOrY - (e.pageY - winmovey) * (1 / screenScale);
-            newTop = winrotOrY + (e.pageY - winmovey) * (1 / screenScale)
+            newTop = winresOrY + (e.pageY - winmovey) * (1 / screenScale)
         }
         apps[winmovecurrapp].appWindow.setDims(
             newLeft, newTop,
@@ -13223,23 +13224,23 @@ function winrot(e){
         //getId(winmoveSelect + "a").style.transform = "rotateY(" + -1 * (e.pageX - winmovex) + "deg)rotateX(" + -1 * (e.pageY - winmovey) + "deg)";
     }
 }
-getId("winrot").addEventListener("click", winrot);
-function winroting(e){
+getId("winres").addEventListener("click", winres);
+function winresing(e){
     var newWidth = apps[winmovecurrapp].appWindow.windowH;
     var newHeight = apps[winmovecurrapp].appWindow.windowV;
     var newLeft = apps[winmovecurrapp].appWindow.windowX;
     var newTop = apps[winmovecurrapp].appWindow.windowY;
-    if(tempwinrotmode[0] === 2){
+    if(tempwinresmode[0] === 2){
         newWidth = winmoveOrX + (e.pageX - winmovex) * (1 / screenScale);
-    }else if(tempwinrotmode[0] === 0){
+    }else if(tempwinresmode[0] === 0){
         newWidth = winmoveOrX - (e.pageX - winmovex) * (1 / screenScale);
-        newLeft = winrotOrX + (e.pageX - winmovex) * (1 / screenScale);
+        newLeft = winresOrX + (e.pageX - winmovex) * (1 / screenScale);
     }
-    if(tempwinrotmode[1] === 2){
+    if(tempwinresmode[1] === 2){
         newHeight = winmoveOrY + (e.pageY - winmovey) * (1 / screenScale);
-    }else if(tempwinrotmode[1] === 0){
+    }else if(tempwinresmode[1] === 0){
         newHeight = winmoveOrY - (e.pageY - winmovey) * (1 / screenScale);
-        newTop = winrotOrY + (e.pageY - winmovey) * (1 / screenScale)
+        newTop = winresOrY + (e.pageY - winmovey) * (1 / screenScale)
     }
     if(apps.settings.vars.performanceMode){
         getId('windowFrameOverlay').style.left = newLeft + 'px';
