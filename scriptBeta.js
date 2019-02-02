@@ -1405,8 +1405,8 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     }
                     if(this.windowH !== xSiz){
                         getId("win_" + this.objName + "_top").style.width = xSiz + "px";
-                        getId("win_" + this.objName + "_cap").style.width = xSiz - 29 + "px";
-                        //getId("win" + this.dsktpIcon + "h").style.width = xSiz - 9 + "px";
+                        //getId("win_" + this.objName + "_cap").style.width = xSiz - 29 + "px";
+                        //getId("win_" + this.objName + "_html").style.width = xSiz - 9 + "px";
                         getId("win_" + this.objName + "_aero").style.width = xSiz + 80 + "px";
                         this.windowH = xSiz;
                     }
@@ -1414,7 +1414,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                         if(!this.folded){
                             getId("win_" + this.objName + "_top").style.height = ySiz + "px";
                         }
-                        getId("win_" + this.objName + "_html").style.height = ySiz - 24 + "px";
+                        //getId("win_" + this.objName + "_html").style.height = ySiz - 24 + "px";
                         getId("win_" + this.objName + "_aero").style.height = ySiz + 80 + "px";
                         this.windowV = ySiz;
                     }
@@ -1503,7 +1503,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     this.folded = 0;
                 }else{
                     getId('win_' + this.objName + '_html').style.display = 'none';
-                    getId('win_' + this.objName + '_top').style.height = '24px';
+                    getId('win_' + this.objName + '_top').style.height = 21 + apps.settings.vars.winBorder + 'px';
                     this.folded = 1;
                 }
             },
@@ -1612,7 +1612,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     this.setDims(this.fullscreentempvars[0], this.fullscreentempvars[1], this.fullscreentempvars[2], this.fullscreentempvars[3]);
                 }else{
                     this.fullscreentempvars = [this.windowX, this.windowY, this.windowH, this.windowV];
-                    this.setDims(-3, 0, parseInt(getId('desktop').style.width, 10) + 6, parseInt(getId('desktop').style.height, 10) + 3);
+                    this.setDims(-1 * apps.settings.vars.winBorder, 0, parseInt(getId('desktop').style.width, 10) + (apps.settings.vars.winBorder * 2), parseInt(getId('desktop').style.height, 10) + apps.settings.vars.winBorder);
                     this.fullscreen = 1;
                     //getId("win" + this.dsktpIcon).style.transform = 'scale(' + (parseInt(getId("desktop").style.width) / this.windowH) + ',' + (parseInt(getId("desktop").style.height) / this.windowV) + ')';
                 }
@@ -5525,6 +5525,9 @@ c(function(){
                                 getId("STNwinblurRadius").value = USERFILES.APP_STN_SETTING_AERORAD;
                                 apps.settings.vars.setAeroRad(1);
                             }
+                            if(typeof USERFILES.APP_STN_SETTING_WINBORDER === "string"){
+                                apps.settings.vars.setWinBorder(USERFILES.APP_STN_SETTING_WINBORDER, 1);
+                            }
                             if(typeof USERFILES.APP_STN_SETTING_CAPBTNLEFT === "string"){
                                 if(USERFILES.APP_STN_SETTING_CAPBTNLEFT === "1"){
                                     apps.settings.vars.togCaptionButtonsLeft(1);
@@ -6025,6 +6028,11 @@ c(function(){
                         option: 'Dark Mode',
                         description: function(){return 'Makes your aOS apps use either a light or dark background. Some apps may need to be restarted to see changes.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togDarkMode()">Toggle</button>'}
+                    },
+                    windowBorderWidth: {
+                        option: 'Window Border Width',
+                        description: function(){return 'Set the width of the borders of windows.'},
+                        buttons: function(){return '<input id="STNwinBorderInput" placeholder="3" value="' + apps.settings.vars.winBorder + '"> <button onclick="apps.settings.vars.setWinBorder(getId(\'STNwinBorderInput\').value)">Set</button>'}
                     },
                     mobileMode: {
                         option: 'Mobile Mode',
@@ -6689,6 +6697,14 @@ c(function(){
             },
             setDebugLevel: function(level){
                 dbgLevel = level;
+            },
+            winBorder: 3,
+            setWinBorder: function(newValue, nosave){
+                this.winBorder = parseInt(newValue);
+                getId('windowBorderStyle').innerHTML = '#monitor{--windowBorderWidth:' + this.winBorder + 'px;}';
+                if(!nosave){
+                    apps.savemaster.vars.save('APP_STN_SETTING_WINBORDER', this.winBorder, 1);
+                }
             },
             dataCampaigns: [
                 [
@@ -8124,10 +8140,11 @@ c(function(){
             "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n : Windows can now be correctly resized by any edge.\n + Two new battery widget modes, Text and Old.\n + JS Console now sanitizes input and catches errors.\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.\n\n" +
             "01/20/2019: B0.9.5.0\n : The Psuedo-Bash Console has had a complete rewrite!\n + Apps can now run psuedo-bash code on their own with apps.bash.vars.execute()\n : Pipes now work correctly in Bash.\n : grep is now case insensitive\n\n" +
             "01/26/2019: B0.9.5.1\n : Mutiple windows are now fit onscreen in Flow Mode with Mobile Mode.\n : Caption bars are no longer semitransparent in Flow Mode\n : Data Collection is now false by default, oops.\n\n" +
-            "01/27/2019: B0.9.5.2\n + Added some polyfills, extended browser support back just a little bit further.",
+            "01/27/2019: B0.9.5.2\n + Added some polyfills, extended browser support back just a little bit further.\n\n" +
+            "02/01/2019: B0.9.6.0\n + Users can now set a custom Window Border Width.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.5.2 (01/27/2019) r0';
+    window.aOSversion = 'B0.9.6.0 (02/01/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -13164,16 +13181,16 @@ function winrot(e){
             getId('windowFrameOverlay').style.height = winmoveOrY + 'px';
         }
         tempwinrotmode = [1, 1];
-        if(winmovex - apps[winmovecurrapp].appWindow.windowX < 20){
+        if(winmovex - apps[winmovecurrapp].appWindow.windowX < apps.settings.vars.winBorder * 5){
             tempwinrotmode[0] = 0;
             winrotOrX = apps[winmovecurrapp].appWindow.windowX;
-        }else if(winmovex - apps[winmovecurrapp].appWindow.windowX - apps[winmovecurrapp].appWindow.windowH > -20){
+        }else if(winmovex - apps[winmovecurrapp].appWindow.windowX - apps[winmovecurrapp].appWindow.windowH > apps.settings.vars.winBorder * -5){
             tempwinrotmode[0] = 2;
         }
-        if(winmovey - apps[winmovecurrapp].appWindow.windowY < 20){
+        if(winmovey - apps[winmovecurrapp].appWindow.windowY < apps.settings.vars.winBorder * 5){
             tempwinrotmode[1] = 0;
             winrotOrY = apps[winmovecurrapp].appWindow.windowY;
-        }else if(winmovey - apps[winmovecurrapp].appWindow.windowY - apps[winmovecurrapp].appWindow.windowV > -20){
+        }else if(winmovey - apps[winmovecurrapp].appWindow.windowY - apps[winmovecurrapp].appWindow.windowV > apps.settings.vars.winBorder * -5){
             tempwinrotmode[1] = 2;
         }
     }else{

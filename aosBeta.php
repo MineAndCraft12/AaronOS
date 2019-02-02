@@ -10,10 +10,9 @@
     
     <link rel="icon" href="faviconBeta.ico" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
+    <style id="windowBorderStyle"></style>
     <style id="cursorStyle"></style>
     <style id="aosCustomStyle"></style>
-    <style id="mobileStyle"></style>
-    
 
     <!--
     <script defer src="html2canvas.js"></script>
