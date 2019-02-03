@@ -3943,11 +3943,11 @@ c(function(){
         1,
         function(launchtype){
             if(launchtype === 'dsktp'){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 250, 400, 500);
+                this.appWindow.setDims("auto", "auto", 400, 500);
                 this.appWindow.setCaption('Application Info');
                 this.appWindow.setContent('This app is used to display information about apps. Try right-clicking a title bar and clicking "about apps" to access this menu.');
             }else if(launchtype !== 'tskbr'){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 250, 400, 500);
+                this.appWindow.setDims("auto", "auto", 400, 500);
                 getId('win_appInfo_html').style.overflowY = 'auto';
                 try{
                     this.appWindow.setCaption('App Info: ' + apps[launchtype].appDesc);
@@ -4006,7 +4006,7 @@ c(function(){
         0,
         function(launchType){
             if(!this.appWindow.appIcon){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 250, 600, 500);
+                this.appWindow.setDims("auto", "auto", 600, 500);
                 this.appWindow.setCaption('Modding Tutorials');
                 this.appWindow.setContent(
                     '<h1>Modding Tutorials</h1>' +
@@ -4096,7 +4096,7 @@ c(function(){
         function(launchType){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 250, 600, 500);
+                this.appWindow.setDims("auto", "auto", 600, 500);
             }
             this.appWindow.setCaption("aOS Task Manager");
             perfStart('tMgPerfBench');
@@ -4278,7 +4278,7 @@ c(function(){
         function(launchType){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 500, parseInt(getId('desktop').style.height, 10) / 2 - 250, 1000, 500);
+                this.appWindow.setDims("auto", "auto", 1000, 500);
             }
             this.appWindow.setCaption(lang('jsConsole', 'caption'));
             this.appWindow.setContent(
@@ -4384,7 +4384,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setCaption(lang('appNames', 'bash'));
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 331, parseInt(getId('desktop').style.height, 10) / 2 - 252, 662, 504);
+                this.appWindow.setDims("auto", "auto", 662, 504);
                 this.appWindow.setContent(
                     '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;width:100%;">aOS Psuedo-Bash Terminal (Beta)<br>THIS APP IS CURRENTLY BEING REWORKED AND MOST FUNCTIONALITY IS NOT PRESENT</span>' +
                     '<input id="bashInput" onkeydown="apps.bash.vars.checkPrefix()" onkeypress="apps.bash.vars.checkPrefix()" onkeyup="apps.bash.vars.checkPrefix();if(event.keyCode === 13){apps.bash.vars.execute()}" style="background:none;color:inherit;box-shadow:none;display:block;line-height:1em;font-family:aosProFont;font-size:12px;border:none;outline:none;padding:0;width:100%;">'
@@ -5119,7 +5119,7 @@ c(function(){
                         apps.cpuMon.vars.height = apps.cpuMon.appWindow.windowV - 24;
                     }
                 }
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 103, parseInt(getId('desktop').style.height, 10) / 2 - 62, 206, 124);
+                this.appWindow.setDims("auto", "auto", 206, 124);
                 this.vars.cnv = getId('cpuMonCnv');
                 this.vars.ctx = this.vars.cnv.getContext('2d');
                 this.vars.drawInt = setInterval(this.vars.draw, 1000);
@@ -5183,7 +5183,7 @@ c(function(){
         function(launchtype){
             if(launchtype === 'dsktp'){
                 if(!this.appWindow.appIcon){
-                    this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 4, parseInt(getId('desktop').style.height, 10) / 4, parseInt(getId('desktop').style.width, 10) / 2, parseInt(getId('desktop').style.height, 10) / 2);
+                    this.appWindow.setDims("auto", "auto", parseInt(getId('desktop').style.width, 10) / 2, parseInt(getId('desktop').style.height, 10) / 2);
                 }
                 this.appWindow.setCaption('Application Prompt');
                 this.appWindow.setContent('<div id="PMTdescription" style="text-align:center;width:100%;height:calc(100% - 4em);padding-top:16px;font-family:monospace;overflow-y:auto">This app is used for alerts and prompts in aOS apps.</div><div id="PMTbuttons" style="font-family:monospace;padding-bottom:16px;text-align:center;width:100%;bottom:0;"><button onClick="apps.prompt.signalHandler(\'close\')">OK</button></div></div>');
@@ -5313,7 +5313,7 @@ c(function(){
                                 doLog(this.currprompt[0] + ' is not a valid prompt window.', '#ACE');
                         }
                         if(this.currprompt[0] !== 4){
-                            apps.prompt.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 4, parseInt(getId('desktop').style.height, 10) / 4, parseInt(getId('desktop').style.width, 10) / 2, parseInt(getId('desktop').style.height, 10) / 2);
+                            apps.prompt.appWindow.setDims("auto", "auto", parseInt(getId('desktop').style.width, 10) / 2, parseInt(getId('desktop').style.height, 10) / 2);
                             apps.prompt.appWindow.openWindow();
                             window.setTimeout(function(){
                                 apps.prompt.appWindow.alwaysOnTop(1);
@@ -5377,7 +5377,7 @@ c(function(){
         1,
         function(launchtype){
             if(!this.appWindow.appIcon){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 350, parseInt(getId('desktop').style.height, 10) / 2 - 200, 700, 400);
+                this.appWindow.setDims("auto", "auto", 700, 400);
             }
             this.appWindow.setCaption("Settings");
             if(launchtype === 'oldMenu'){
@@ -7471,7 +7471,7 @@ c(function(){
         function(launchtype){
             if(launchtype.indexOf('newicon') === 0){
                 this.newlaunch = launchtype.split(' ');
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 250, 400, 500);
+                this.appWindow.setDims("auto", "auto", 400, 500);
                 this.appWindow.setCaption('Desktop Icon Maker');
                 this.appWindow.setContent(
                     '<h1>Desktop Icon Maker</h1><hr>' +
@@ -7488,7 +7488,7 @@ c(function(){
                 getId('win_iconMaker_html').style.overflowY = 'auto';
                 this.appWindow.openWindow();
             }else{
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 250, 400, 500);
+                this.appWindow.setDims("auto", "auto", 400, 500);
                 this.appWindow.setCaption('Desktop Icon Maker');
                 this.appWindow.setContent(
                     '<h1>Desktop Icon Maker</h1><hr>' +
@@ -7665,7 +7665,7 @@ c(function(){
             if(launchType !== "tskbr"){
                 this.appWindow.setCaption("Text Editor");
                 if(!this.appWindow.appIcon){
-                    this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 325, parseInt(getId('desktop').style.height, 10) / 2 - 200, 650, 400);
+                    this.appWindow.setDims("auto", "auto", 650, 400);
                 }
                 
                 /* old UI
@@ -8142,10 +8142,11 @@ c(function(){
             "01/26/2019: B0.9.5.1\n : Mutiple windows are now fit onscreen in Flow Mode with Mobile Mode.\n : Caption bars are no longer semitransparent in Flow Mode\n : Data Collection is now false by default, oops.\n\n" +
             "01/27/2019: B0.9.5.2\n + Added some polyfills, extended browser support back just a little bit further.\n\n" +
             "02/01/2019: B0.9.6.0\n + Users can now set a custom Window Border Width.\n\n" +
-            "02/02/2019: B0.9.6.1\n : Renamed variables for window resizing from winRot* to winRes* (was leftover from old window rotation).",
+            "02/02/2019: B0.9.6.1\n : Renamed variables for window resizing from winRot* to winRes* (was leftover from old window rotation).\n\n" +
+            "02/03/2019: B0.9.6.2\n : All built-in apps now use the \"auto\" flag when centering their windows, and now consistently center on the same point.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.6.1 (02/02/2019) r0';
+    window.aOSversion = 'B0.9.6.2 (02/03/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
 });
@@ -8158,7 +8159,7 @@ c(function(){
         function(launchtype, fileToOpen){
             getId('win_properties_html').style.overflow = 'auto';
             if(!this.appWindow.appIcon){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 250, 400, 500, 1);
+                this.appWindow.setDims("auto", "auto", 400, 500, 1);
             }
             this.appWindow.setCaption('Properties Viewer');
             if(launchtype !== 'openFile' && launchtype !== 'tskbr'){
@@ -8292,7 +8293,7 @@ c(function(){
         function(launchType){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 350, parseInt(getId('desktop').style.height, 10) / 2 - 200, 700, 400, 1);
+                this.appWindow.setDims("auto", "auto", 700, 400, 1);
             }
             this.appWindow.setCaption("File Explorer");
             this.appWindow.openWindow();
@@ -8514,7 +8515,7 @@ c(function(){
         function(launchType){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 350, parseInt(getId('desktop').style.height, 10) / 2 - 200, 700, 400, 1);
+                this.appWindow.setDims("auto", "auto", 700, 400, 1);
             }
             this.appWindow.setCaption("File Manager 2");
             this.appWindow.openWindow();
@@ -8735,7 +8736,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 350, parseInt(getId('desktop').style.height, 10) / 2 - 200, 700, 400, 1);
+                this.appWindow.setDims("auto", "auto", 700, 400, 1);
                 this.appWindow.setCaption("Changelog");
                 this.vars.cLogSplit = files.changelog.split('\n\n');
                 for(var i in this.vars.cLogSplit){
@@ -8811,7 +8812,7 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 350, parseInt(getId('desktop').style.height, 10) / 2 - 200, 700, 400, 1);
+                this.appWindow.setDims("auto", "auto", 700, 400, 1);
                 this.appWindow.setCaption("Flash Cards");
                 this.appWindow.setContent(
                     'Type the name of a flashcard set:<br>' +
@@ -8944,7 +8945,7 @@ c(function(){
         function(){
             this.appWindow.setCaption("Windowblur Performance Test Window");
             if(!this.appWindow.appIcon){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 200, parseInt(getId('desktop').style.height, 10) / 2 - 150, 400, 300);
+                this.appWindow.setDims("auto", "auto", 400, 300);
             }
             //this.appWindow.setContent('<button onClick="apps.aerotest.appWindow.setDims(50, 50, prompt(\'New window width?\'), prompt(\'New window height?\'))">Change Window Size</button>');
             getId("win_aerotest_html").style.background = "none";
@@ -8998,7 +8999,7 @@ c(function(){
         function(launchtype){
             this.appWindow.setCaption("SaveMaster");
             if(!this.appWindow.appIcon){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 25, 600, 50);
+                this.appWindow.setDims("auto", "auto", 600, 50);
             }
             this.appWindow.setContent("This app handles filesaving. It does nothing aside from that.");
             this.appWindow.openWindow();
@@ -9196,7 +9197,7 @@ c(function(){
             this.appWindow.setCaption("aOS API Documentation");
             this.appWindow.setContent('<div id="appAPIdiv"></div>');
             if(!this.appWindow.appIcon){
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 200, 600, 400);
+                this.appWindow.setDims("auto", "auto", 600, 400);
             }
             getId('win_appAPI_html').style.overflowY = 'scroll';
             this.appWindow.openWindow();
@@ -9361,7 +9362,7 @@ c(function(){
             if(launchtype === "dsktp"){
                 this.appWindow.setCaption("App Maker");
                 if(!this.appWindow.appIcon){
-                    this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 500, parseInt(getId('desktop').style.height, 10) / 2 - 300, 1000, 600);
+                    this.appWindow.setDims("auto", "auto", 1000, 600);
                 }
                 this.vars.div = getId("win_appmaker_html");
                 this.vars.div.style.overflow = "auto";
@@ -9553,7 +9554,7 @@ c(function(){
             if(launchtype === "dsktp"){
                 this.appWindow.setCaption("Web App Maker");
                 if(!this.appWindow.appIcon){
-                    this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 500, parseInt(getId('desktop').style.height, 10) / 2 - 300, 1000, 600);
+                    this.appWindow.setDims("auto", "auto", 1000, 600);
                 }
             }
             getId('win_webAppMaker_html').style.overflow = 'auto';
@@ -9993,7 +9994,7 @@ c(function(){
                         if(!this.appWindow.appIcon){
                             this.appWindow.paddingMode(0);
                             this.appWindow.setContent('<iframe style="width:100%;height:100%;border:none;" src="' + this.vars.appURL + '"></iframe>');
-                            this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - (this.vars.sizeX / 2), parseInt(getId('desktop').style.height, 10) / 2 - (this.vars.sizeY / 2), this.vars.sizeX, this.vars.sizeY);
+                            this.appWindow.setDims("auto", "auto", this.vars.sizeX, this.vars.sizeY);
                         }
                         this.appWindow.openWindow();
                     },
@@ -10051,7 +10052,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setContent('<iframe id="CalcFrame" style="width:100%;height:100%;border:none;font-family:aosProFont, monospace;font-size:12px;" src="Calculator/"></iframe>');
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 300, parseInt(getId('desktop').style.height, 10) / 2 - 200, 600, 400);
+                this.appWindow.setDims("auto", "auto", 600, 400);
             }
             this.appWindow.openWindow();
         },
@@ -10101,7 +10102,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.vars.lastUserRecieved = '';
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 400, parseInt(getId('desktop').style.height, 10) / 2 - 250, 800, 500);
+                this.appWindow.setDims("auto", "auto", 800, 500);
             }
             this.appWindow.setCaption('Messaging');
             getId('win_messaging_html').setAttribute('onclick', 'if(apps.messaging.vars.soundToPlay && apps.messaging.vars.canLookethOverThereSound){apps.messaging.vars.notifClick.play(); apps.messaging.vars.soundToPlay = 0;}');
@@ -10637,7 +10638,7 @@ c(function(){
             }
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) / 2 - 321, parseInt(getId('desktop').style.height, 10) / 2 - 251, 643, 502);
+                this.appWindow.setDims("auto", "auto", 643, 502);
             }
             blockScreensaver("apps.camera");
             this.appWindow.openWindow();
@@ -10710,7 +10711,7 @@ c(function(){
         1,
         function(launchtype){
             if(!this.appWindow.appIcon){
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 400, parseInt(getId('monitor').style.height, 10) / 2 - 255, 800, 500);
+                this.appWindow.setDims("auto", "auto", 800, 500);
                 this.appWindow.setCaption('aOS Help');
                 getId('win_help_h').style.overflow = 'auto';
                 this.vars.populateList();
@@ -11228,7 +11229,7 @@ c(function(){
                 makeInterval('MSC', 'winColorCheck', 'apps.musicVis.vars.checkColors()', 1);
             }
             this.appWindow.setCaption('Music Visualizer');
-            this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 515, parseInt(getId('monitor').style.height, 10) / 2 - 143, 1030, 309);
+            this.appWindow.setDims("auto", "auto", 1030, 309);
             blockScreensaver("apps.musicVis");
             this.appWindow.openWindow();
         },
@@ -11307,7 +11308,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 200, parseInt(getId('monitor').style.height, 10) / 2 - 250, 400, 500);
+                this.appWindow.setDims("auto", "auto", 400, 500);
                 this.appWindow.setCaption('Apps Browser');
                 this.appWindow.setContent('<div id="APBdiv" style="width:100%;height:100%;overflow-y:auto;font-family:aosProFont;"><div style="overflow-y:auto;font-size:12px;width:100%;height:128px;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';">This is a list of EVERY SINGLE APP installed on your copy of aOS, including those that are hidden from your desktop and dashboard.<br><br>WARNING - If an app is not available in the Dashboard, it\'s probably for a reason. Some apps not available in the Dashboard may break if you launch them.<br><br>Note - if nothing happens when you try to open a certain app, do not worry. A window is <b>not</b> a requirement for an app to work. It probably is not designed for you to access.</div></div>');
                 this.vars.appsListed = 1;
@@ -11402,7 +11403,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 323, parseInt(getId('monitor').style.height, 10) / 2 - 251, 646, 502);
+                this.appWindow.setDims("auto", "auto", 646, 502);
                 this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'ICrFrame\').contentDocument.title">');
                 this.appWindow.setContent('<iframe id="ICrFrame" src="INDYCAR/index.html" style="border:none;width:640px;height:480px;overflow:hidden;"></iframe>');
                 apps.prompt.vars.alert("Controls:<br><br>Player 1: WASD for driving, X for brakes<br><br>Player 2: IJKL or &uarr;&larr;&darr;&rarr; for driving, M for brakes<br><br>Camera: Press T to change camera modes.", "Okay", function(){}, "Indycar");
@@ -11458,7 +11459,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 507, parseInt(getId('monitor').style.height, 10) / 2 - 316, 1015, 633);
+                this.appWindow.setDims("auto", "auto", 1015, 633);
                 this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'HsGFrame\').contentDocument.title">');
                 this.appWindow.setContent('<iframe id="HsGFrame" src="HOUSEGAME/index.html" style="border:none;width:1009px;height:609px;overflow:hidden;"></iframe>');
                 apps.prompt.vars.notify("Controls:<br>Up: W<br>Down: D<br>Shoot: Space<br>Reinforcements: T", ["Close"], function(){}, "House Game", "appicons/HsG.png");
@@ -11574,7 +11575,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 200, parseInt(getId('monitor').style.height, 10) / 2 - 200, 400, 400);
+                this.appWindow.setDims("auto", "auto", 400, 400);
                 this.appWindow.setCaption('Boot Script');
                 this.appWindow.setContent('<textarea id="BtStextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:100%;height:90%;resize:none;"></textarea><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.bootScript.vars.saveBootScript()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.bootScript.vars.helpBootScript()">Help</button>');
                 if(typeof USERFILES.APP_BtS_BOOTSCRIPT === "string"){
@@ -11657,7 +11658,8 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 200, parseInt(getId('monitor').style.height, 10) / 2 - 200, 400, 400);
+                this.appWindow.setDims("auto", "auto", 400, 400);
+                this.appWindow.toggleFullscreen();
                 this.appWindow.setCaption('Custom Style Editor');
                 this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe src="csePreview.html" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
                 if(typeof USERFILES.aosCustomStyle === "string"){
@@ -11723,7 +11725,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setCaption('GTK2aOS');
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 200, parseInt(getId('monitor').style.height, 10) / 2 - 200, 400, 400);
+                this.appWindow.setDims("auto", "auto", 400, 400);
                 this.appWindow.setContent('<iframe src="gtk/" style="border:none;width:100%;height:100%;display:block;"></iframe>');
             }
             this.appWindow.openWindow();
@@ -11772,7 +11774,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 203, parseInt(getId('monitor').style.height, 10) / 2 - 262, 406, 524);
+                this.appWindow.setDims("auto", "auto", 406, 524);
                 this.appWindow.setCaption('Function Grapher');
                 this.appWindow.setContent('<canvas width="400" height="400" style="width:400px;height:400px;position:absolute;border:none;" id="GphGraph"></canvas><div id="GphControls" style="white-space:nowrap;width:400px;height:99px;border-top:1px solid #000;bottom:0;font-family:monospace;overflow:auto;"></div>');
                 getId('GphControls').innerHTML = '&nbsp;f(x) = <input id="GphInput"><br>xStep = <input id="GphStep" value="0.05" size="6"> (must be &gt; 0.005)<br>Color = <input id="GphColor" value="#000"><br><button onclick="apps.graph.vars.graph()">Graph</button><br>Calculate at X: <input id="GphCalc" size="5"> <button onclick="apps.graph.vars.calculate()">Calculate</button><hr><span id="GphStatus"></span>';
@@ -12007,7 +12009,7 @@ c(function(){
         function(){
             if(!this.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 400, parseInt(getId('monitor').style.height, 10) / 2 - 300, 800, 600);
+                this.appWindow.setDims("auto", "auto", 800, 600);
                 this.appWindow.setCaption('Cookie Clicker');
                 this.appWindow.setContent('<iframe src="COOKIE" style="border:none; width:100%; height:100%; display:block;"></iframe>');
             }
@@ -12106,7 +12108,7 @@ c(function(){
         0,
         function(){
             if(!this.appIcon){
-                this.appWindow.setDims(parseInt(getId('monitor').style.width, 10) / 2 - 246, parseInt(getId('monitor').style.height, 10) / 2 - 280, 492, 561);
+                this.appWindow.setDims("auto", "auto", 492, 561);
                 this.appWindow.setCaption('Minesweeper');
                 getId("win_minesweeper_html").style.overflow = "auto";
                 this.appWindow.setContent('<div id="MSwField" style="margin-bottom:3px;"></div><div id="MSwControls"><button onclick="apps.minesweeper.vars.firstTurn = 1;apps.minesweeper.vars.newGame()">New Game</button> <button onclick="apps.minesweeper.vars.difficulty()">Difficulty</button> <button onclick="apps.minesweeper.vars.settings()">Settings</button> <span style="font-family:aosProFont;font-size:12px;">B: <span id="MSwMines">0</span>, F: <span id="MSwFlags">0</span></span><br>Dig = Left Click | Flag = Right Click</div>');
