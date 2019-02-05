@@ -2263,6 +2263,8 @@ function c(code, args){
     }
 }
 var workingcodetorun = [];
+var totalWaitingCodes = 0;
+var finishedWaitingCodes = 0;
 function checkWaitingCode(){
     if(codeToRun.length !== 0){
         m('Running Waiting Code');
@@ -2272,6 +2274,7 @@ function checkWaitingCode(){
         }else{
             workingcodetorun[0](workingcodetorun[1]);
         }
+        finishedWaitingCodes++;
     }
 }
 var waitingCodeInterval = window.setInterval(checkWaitingCode, 0);
@@ -2282,7 +2285,7 @@ function startWaitingCodeInterval(){
     waitingCodeInterval = window.setInterval(checkWaitingCode, 0);
 }
 
-getId('aOSloadingInfo').innerHTML = 'Initializing Applications List';
+getId('aOSloadingInfo').innerHTML = 'Applications List';
 c(function(){
     apps.startMenu = new Application(
         "DsB",
@@ -2664,7 +2667,7 @@ c(function(){
         }, 2, "startMenu", "appicons/ds/aOS.png"
     );
     apps.startMenu.main('srtup');
-    getId('aOSloadingInfo').innerHTML = 'Initializing NORAA';
+    getId('aOSloadingInfo').innerHTML = 'NORAA';
 });
 // all Applications go here
 c(function(){
@@ -3932,8 +3935,8 @@ c(function(){
         }, 2, "nora", "appicons/ds/NRA.png"
     );
     apps.nora.main('srtup');
-    // getId('aOSloadingInfo').innerHTML = 'Initializing aDE';
-    getId('aOSloadingInfo').innerHTML = 'Initializing Info Viewer...';
+    // getId('aOSloadingInfo').innerHTML = 'aDE';
+    getId('aOSloadingInfo').innerHTML = 'Info Viewer...';
 });
 c(function(){
     m('init Nfo');
@@ -3996,7 +3999,7 @@ c(function(){
             appInfo: 'This app is used to show information and help pages for AaronOS apps.'
         }, 2, 'appInfo', 'appicons/ds/systemApp.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Mod Tutorials app...'; 
+    getId('aOSloadingInfo').innerHTML = 'Mod Tutorials app...'; 
 });
 c(function(){
     m('init MOD');
@@ -4085,7 +4088,7 @@ c(function(){
             appInfo: 'This app is a database of mods that the developer himself encourages or supports.'
         }, 1, 'modding', 'appicons/ds/HLP.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Modding Tutorials...';
+    getId('aOSloadingInfo').innerHTML = 'Modding Tutorials...';
 });
 c(function(){
     m('init tMg');
@@ -4213,7 +4216,7 @@ c(function(){
             }
         }, 1, "taskManager", "appicons/ds/systemApp.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing JavaScript Console';
+    getId('aOSloadingInfo').innerHTML = 'JavaScript Console';
 });
 function makeTimeout(appname, taskname, functionname, functiontime){
     if(!apps.taskManager.vars.running[appname]){
@@ -4373,7 +4376,7 @@ c(function(){
         }
         return "Length: " + debugArraySize;
     }
-    getId('aOSloadingInfo').innerHTML = 'Initializing Bash Console';
+    getId('aOSloadingInfo').innerHTML = 'Bash Console';
 });
 c(function(){
     apps.bash = new Application(
@@ -5099,7 +5102,7 @@ c(function(){
             ]
         }, 1, 'bash', 'appicons/ds/sh.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing CPU Monitor';
+    getId('aOSloadingInfo').innerHTML = 'CPU Monitor';
 });
 c(function(){
     apps.cpuMon = new Application(
@@ -5172,7 +5175,7 @@ c(function(){
             }
         }, 1, "cpuMon", "appicons/ds/systemApp.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Prompt System';
+    getId('aOSloadingInfo').innerHTML = 'Prompt System';
 });
 c(function(){
     m('init PMT');
@@ -5367,7 +5370,7 @@ c(function(){
     requestAnimationFrame(function(){
         apps.prompt.signalHandler('close');
     });
-    getId('aOSloadingInfo').innerHTML = 'Initializing Settings';
+    getId('aOSloadingInfo').innerHTML = 'Settings';
 });
 c(function(){
     m('init STN');
@@ -7460,7 +7463,7 @@ c(function(){
             }
         }, 0, "settings", "appicons/ds/STN.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Desktop Icon Maker';
+    getId('aOSloadingInfo').innerHTML = 'Desktop Icon Maker';
 });
 c(function(){
     m('init icon maker');
@@ -7650,7 +7653,7 @@ c(function(){
             }
         }, 1, 'iconMaker', 'appicons/ds/IcM.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Text Editor';
+    getId('aOSloadingInfo').innerHTML = 'Text Editor';
 });
 var files;
 c(function(){
@@ -7862,7 +7865,7 @@ c(function(){
             }
         }, 1, "notepad", "appicons/ds/TE.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Files';
+    getId('aOSloadingInfo').innerHTML = 'Files';
 });
 c(function(){
     m('init files');
@@ -8143,12 +8146,13 @@ c(function(){
             "01/27/2019: B0.9.5.2\n + Added some polyfills, extended browser support back just a little bit further.\n\n" +
             "02/01/2019: B0.9.6.0\n + Users can now set a custom Window Border Width.\n\n" +
             "02/02/2019: B0.9.6.1\n : Renamed variables for window resizing from winRot* to winRes* (was leftover from old window rotation).\n\n" +
-            "02/03/2019: B0.9.6.2\n : All built-in apps now use the \"auto\" flag when centering their windows, and now consistently center on the same point.",
+            "02/03/2019: B0.9.6.2\n : All built-in apps now use the \"auto\" flag when centering their windows, and now consistently center on the same point.\n\n" +
+            "02/04/2019: B0.9.7.0\n + Approximate loading percentage bar on boot.\n : Loading messages are shorter.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.6.2 (02/03/2019) r0';
+    window.aOSversion = 'B0.9.7.0 (02/04/2019) r0';
     document.title = 'aOS ' + aOSversion;
-    getId('aOSloadingInfo').innerHTML = 'Initializing Properties Viewer';
+    getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
 c(function(){
     m('init PPT');
@@ -8282,7 +8286,7 @@ c(function(){
             }
         }, 2, "properties", "appicons/ds/PPT.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing File Manager';
+    getId('aOSloadingInfo').innerHTML = 'File Manager';
 });
 c(function(){
     m('init FIL');
@@ -8504,7 +8508,7 @@ c(function(){
             }
         }, 0, "files", "appicons/ds/FIL.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Files 2';
+    getId('aOSloadingInfo').innerHTML = 'Files 2';
 });
 c(function(){
     m('init FIL');
@@ -8726,7 +8730,7 @@ c(function(){
             }
         }, 0, "files2", "appicons/ds/FIL.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Changelog';
+    getId('aOSloadingInfo').innerHTML = 'Changelog';
 });
 c(function(){
     apps.changelog = new Application(
@@ -8802,7 +8806,7 @@ c(function(){
             cLogGroup: ''
         }, 1, "changelog", "appicons/ds/CLg.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Flash Cards';
+    getId('aOSloadingInfo').innerHTML = 'Flash Cards';
 });
 c(function(){
     m('init FC');
@@ -8934,7 +8938,7 @@ c(function(){
             }
         }, 1, "flashCards"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Windowblur Test';
+    getId('aOSloadingInfo').innerHTML = 'Windowblur Test';
 });
 c(function(){
     m('init WbT');
@@ -8985,7 +8989,7 @@ c(function(){
             appInfo: 'This application is used for testing the performance and effect quality of WindowBlur. This app is great for testing or playing with new window colors and background blend modes.'
         }, 2, "aerotest", "appicons/WbT.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing File Saving System';
+    getId('aOSloadingInfo').innerHTML = 'File Saving System';
 });
 c(function(){
     window.SRVRKEYWORD = "";
@@ -9185,7 +9189,7 @@ c(function(){
             }
         }, 2, "savemaster", "appicons/ds/SAV.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing aOS API';
+    getId('aOSloadingInfo').innerHTML = 'aOS API';
 });
 c(function(){
     m('init API');
@@ -9350,7 +9354,7 @@ c(function(){
             }
         }, 1, "appAPI", "appicons/ds/API.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing App Maker';
+    getId('aOSloadingInfo').innerHTML = 'App Maker';
 });
 c(function(){
     m('init APM');
@@ -9543,7 +9547,7 @@ c(function(){
             }
         }, 1, "appmaker", "appicons/ds/APM.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Web App Maker';
+    getId('aOSloadingInfo').innerHTML = 'Web App Maker';
 });
 c(function(){
     apps.webAppMaker = new Application(
@@ -10039,7 +10043,7 @@ c(function(){
             }
         }, 0, "webAppMaker", "appicons/ds/APM.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Calculator';
+    getId('aOSloadingInfo').innerHTML = 'Calculator';
 });
 c(function(){
     m('init Clc');
@@ -10090,7 +10094,7 @@ c(function(){
             appInfo: 'This is the official AaronOS Calculator. It supports simple calculator functions as well as custom advanced functions by the developer.'
         }, 1, "calculator", "appicons/ds/Clc.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Messaging';
+    getId('aOSloadingInfo').innerHTML = 'Messaging';
 });
 c(function(){
     m('init MSG');
@@ -10592,7 +10596,7 @@ c(function(){
             }
         }, 0, "messaging", "appicons/ds/MSG.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Camera';
+    getId('aOSloadingInfo').innerHTML = 'Camera';
 });
 c(function(){
     m('init CAM');
@@ -10701,7 +10705,7 @@ c(function(){
             }
         }, 1, "camera", "appicons/ds/CAM.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Help App';
+    getId('aOSloadingInfo').innerHTML = 'Help App';
 });
 c(function(){
     m('init HLP');
@@ -11206,7 +11210,7 @@ c(function(){
             }
         }, 1, 'help', 'appicons/ds/HLP.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Music Visualizer';
+    getId('aOSloadingInfo').innerHTML = 'Music Visualizer';
 });
 c(function(){
     m('init MSC');
@@ -11298,7 +11302,7 @@ c(function(){
             }
         }, 0, 'musicVis', 'appicons/ds/MSC.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Apps Browser';
+    getId('aOSloadingInfo').innerHTML = 'Apps Browser';
 });
 c(function(){
     apps.appsbrowser = new Application(
@@ -11393,7 +11397,7 @@ c(function(){
             currAppBuiltIn: ''
         }, 1, 'appsbrowser', 'appicons/ds/APB.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Indy Car';
+    getId('aOSloadingInfo').innerHTML = 'Indy Car';
 });
 c(function(){
     apps.indycar = new Application(
@@ -11449,7 +11453,7 @@ c(function(){
             appInfo: 'An IndyCar-based game made by the developer in GameMaker: Studio'
         }, 1, "indycar", 'appicons/ICr.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing House Game';
+    getId('aOSloadingInfo').innerHTML = 'House Game';
 });
 c(function(){
     apps.housegame = new Application(
@@ -11505,7 +11509,7 @@ c(function(){
             appInfo: 'A house defense game made by the developer with GameMaker: Studio'
         }, 1, "housegame", 'appicons/HsG.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Sticky Notes';
+    getId('aOSloadingInfo').innerHTML = 'Sticky Notes';
 });
 c(function(){
     apps.postit = new Application(
@@ -11565,7 +11569,7 @@ c(function(){
             }
         }, 1, 'postit', 'appicons/ds/SNt.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Bootscript App';
+    getId('aOSloadingInfo').innerHTML = 'Bootscript App';
 });
 c(function(){
     apps.bootScript = new Application(
@@ -11648,7 +11652,7 @@ c(function(){
             }
         }, 1, 'bootScript', 'appicons/ds/BtS.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Custom Style Editor';
+    getId('aOSloadingInfo').innerHTML = 'Custom Style Editor';
 });
 c(function(){
     apps.styleEditor = new Application(
@@ -11714,7 +11718,7 @@ c(function(){
             }
         }, 1, 'styleEditor', 'appicons/ds/CSE.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing GTK2aOS';
+    getId('aOSloadingInfo').innerHTML = 'GTK2aOS';
 });
 c(function(){
     apps.gtk2aOS = new Application(
@@ -11764,7 +11768,7 @@ c(function(){
             appInfo: 'This app turns GTK3 themes into themes compatible with AaronOS. It is still a work in progress and results may vary in quality. My favorite themes to convert are Mint-Y-Dark and Arc-Dark.'
         }, 1, 'gtk2aOS', 'appicons/ds/GTK.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Function Grapher';
+    getId('aOSloadingInfo').innerHTML = 'Function Grapher';
 });
 c(function(){
     apps.graph = new Application(
@@ -11921,7 +11925,7 @@ c(function(){
             }
         }, 1, 'graph', 'appicons/ds/Gph.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Magnifier';
+    getId('aOSloadingInfo').innerHTML = 'Magnifier';
 });
 c(function(){
     apps.magnifier = new Application(
@@ -11999,7 +12003,7 @@ c(function(){
             }
         }, 1, "magnifier", 'appicons/ds/Mag.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Cookie Clicker';
+    getId('aOSloadingInfo').innerHTML = 'Cookie Clicker';
 });
 c(function(){
     apps.cookieClicker = new Application(
@@ -12049,7 +12053,7 @@ c(function(){
             appInfo: 'The Cookie Clicker clone written by Aaron, the aOS developer, and Joseph, the developer of JAOS. It\'s actually pretty addicting.'
         }, 1, 'cookieClicker', 'appicons/ds/CCl.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing JS Paint';
+    getId('aOSloadingInfo').innerHTML = 'JS Paint';
 });
 c(function(){
     apps.jsPaint = new Application(
@@ -12099,7 +12103,7 @@ c(function(){
             appInfo: 'JS Paint was developed by Isaiah Odhner and embedded into an aOS app with his permission.<br><br>Full site at <a target="_blank" href="https://jspaint.app">jspaint.app</a>'
         }, 0, 'jsPaint', 'appicons/ds/CSE.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Minesweeper';
+    getId('aOSloadingInfo').innerHTML = 'Minesweeper';
 });
 c(function(){
     apps.minesweeper = new Application(
@@ -12534,7 +12538,7 @@ c(function(){
             }
         }, 0, 'minesweeper', 'appicons/ds/aOS.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Initializing Text to Binary...';
+    getId('aOSloadingInfo').innerHTML = 'Text to Binary...';
 });
 c(function(){
     apps.textBinary = new Application(
@@ -13984,6 +13988,7 @@ c(function(){
     
     console.log("Done initializing aOS.");
 });
+totalWaitingCodes = codeToRun.length;
 // 2000 lines of code! 9/18/2015
 // 51 lines of code to go for 3000! 12/16/2015
 // 3000 lines of code! 1/6/2016

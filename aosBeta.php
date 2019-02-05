@@ -108,10 +108,12 @@
             }
         ?>
         <div id="aOSisLoading" class="cursorLoadLight">
-            <div>
+            <div id="aOSisLoadingDiv">
                 <h1>AaronOS</h1>
                 <hr>
-                <span id="aOSloadingInfo">Initializing...</span><br><br>
+                <div id="aOSloadingInfoDiv">
+                    <div id="aOSloadingInfo" class="liveElement" liveVar="finishedWaitingCodes / totalWaitingCodes * 100 + '%'" liveTarget="style.width">Initializing...</div>
+                </div><br><br>
                 &nbsp;<br>
                 <a href="?safeMode"><button>Safe Mode</button></a><br><br>
                 <button onclick="document.getElementById('aOSisLoading').style.display = 'none';document.getElementById('aOSloadingBg').style.display = 'none';document.getElementById('desktop').style.display = '';document.getElementById('taskbar').style.display = '';">Force Boot</button><br><br>
