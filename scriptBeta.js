@@ -1317,9 +1317,11 @@ var appPosY = 8;
 var finishedMakingAppClicks = 0;
 var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, signalHandlerFunction, appVariables, keepOffDesktop, appPath, appImg){
     try{
+        /*
         if(doLog && appIcon){
             doLog('Init app ' + appIcon, '#D60');
         }
+        */
         // this used to be used in HTML elements but now is just an abbreviation
         this.dsktpIcon = appIcon;
         // now HTML elements match the codename of apps
@@ -4498,8 +4500,12 @@ c(function(){
                 if(this.piping){
                     this.pipeOut += '<br>' + String(message);
                 }else{
-                    getId('bashContent').innerHTML += '<br>' + cleanStr(String(message)).split('  ').join(' &nbsp;').split('\n').join('<br>') + '&nbsp;';
-                    getId('win_bash_html').scrollTop = getId('win_bash_html').scrollHeight;
+                    try{
+                        getId('bashContent').innerHTML += '<br>' + cleanStr(String(message)).split('  ').join(' &nbsp;').split('\n').join('<br>') + '&nbsp;';
+                        getId('win_bash_html').scrollTop = getId('win_bash_html').scrollHeight;
+                    }catch(err){
+                        // the window is not open and cannot recieve the echo
+                    }
                 }
             },
             piping: 0,
@@ -8147,10 +8153,11 @@ c(function(){
             "02/01/2019: B0.9.6.0\n + Users can now set a custom Window Border Width.\n\n" +
             "02/02/2019: B0.9.6.1\n : Renamed variables for window resizing from winRot* to winRes* (was leftover from old window rotation).\n\n" +
             "02/03/2019: B0.9.6.2\n : All built-in apps now use the \"auto\" flag when centering their windows, and now consistently center on the same point.\n\n" +
-            "02/04/2019: B0.9.7.0\n + Approximate loading percentage bar on boot.\n : Loading messages are shorter.",
+            "02/04/2019: B0.9.7.0\n + Approximate loading percentage bar on boot.\n : Loading messages are shorter.\n : Fixed error that occurred when using the touchscreen during boot.\n\n" +
+            "02/05/2019: B0.9.8.0\n + Begun work on rewriting the new replacement file manager.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.7.0 (02/04/2019) r0';
+    window.aOSversion = 'B0.9.8.0 (02/05/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -8524,26 +8531,17 @@ c(function(){
             this.appWindow.setCaption("File Manager 2");
             this.appWindow.openWindow();
             if(launchType === 'dsktp'){
-                this.vars.currLoc = '';
+                this.vars.currLoc = '/';
                 getId('win_files2_html').style.background = "none";
                 this.appWindow.setContent(
-                    '<div id="FIL2topdiv" style="width:694px; height:25px;">' +
+                    '<div id="FIL2topdiv" style="width:100%; height:25px;">' +
                     '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.back()">&larr;&nbsp;</div>' +
                     '<div class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.home()">H</div>' +
                     '<div class="cursorPointer" style="width:24px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">&#x21BB;</div>' +
                     '</div>' +
-                    '<div style="width:694px; height:368px; top:25px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow:scroll; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>' +
-                    '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:' + (25 + scrollHeight) + 'px; line-height:25px; vertical-align:middle; width:609px; border-top-left-radius:5px; border-top-right-radius:5px; overflow-x:scroll;"><div id="FIL2green" style="width:0;height:100%;"></div>this.is.a.file.path.example.for.the.thingy.and.it.is.very.useful.because.it.tells.you.where.you.are.in.the.thing</div>'
+                    '<div style="width:100%; height:calc(100% - 25px); top:25px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow-x:auto; overflow-y:scroll; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>' +
+                    '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:' + (25 + scrollHeight) + 'px; line-height:25px; vertical-align:middle; width:calc(100% - 85px); border-top-left-radius:5px; border-top-right-radius:5px; overflow-x:scroll;"><div id="FIL2green" style="width:0;height:100%;"></div>/</div>'
                 );
-            }
-            if(typeof this.appWindow.dimsSet !== 'function'){
-                this.appWindow.dimsSet = function(){
-                    getId('FIL2topdiv').style.width = this.windowH - 6 + 'px';
-                    getId('FIL2cntn').style.width = this.windowH - 6 + 'px';
-                    getId('FIL2cntn').style.height = this.windowV - 32 + 'px';
-                    getId('FIL2path').style.width = this.windowH - 91 + 'px';
-                    getId('FIL2tbl').style.width = this.windowH - 5 - scrollHeight + 'px';
-                };
             }
             this.vars.update();
         },
@@ -8583,24 +8581,21 @@ c(function(){
         },
         {
             appInfo: 'The official AaronOS File Manager, version 2. Use it to manage your personal files and to view aOS code. At the moment, only plain-text userfiles are supported.',
-            currLoc: '',
+            currLoc: '/',
             back: function(){
-                this.currLoc = this.currLoc.split(".");
+                this.currLoc = this.currLoc.split("/");
                 this.currLoc.pop();
-                this.currLoc = this.currLoc.join(".");
+                this.currLoc.pop();
+                this.currLoc = this.currLoc.join("/") + '/';
                 this.update();
             },
             home: function(){
-                this.currLoc = '';
+                this.currLoc = '/';
                 this.update();
             },
             next: function(nextName){
                 if(getId("FIL2green").style.backgroundColor !== "rgb(170, 255, 170)"){
-                    if(this.currLoc === ''){
-                        this.currLoc = nextName;
-                    }else{
-                        this.currLoc += "." + nextName;
-                    }
+                    this.currLoc += nextName;
                     this.update();
                 }else{
                     apps.prompt.vars.alert('Please allow Files to finish searching the current folder.', 'Oops, I almost broke stuff.', function(){}, 'Files');
@@ -8628,6 +8623,7 @@ c(function(){
             currItem: 0,
             currEffect: 0,
             currContentStr: '',
+            currDirList: [],
             update: function(){
                 this.currContentStr = '';
                 getId("FIL2green").style.backgroundColor = 'rgb(170, 255, 170)';
@@ -8636,97 +8632,77 @@ c(function(){
                 // getId("FILcntn").style.cursor = cursors.loadDark;
                 getId('FIL2cntn').classList.add('cursorLoadDark');
                 getId("FIL2cntn").innerHTML =
-                    '<table id="FIL2tbl" style="width:' + (apps.files2.appWindow.windowH - 5 - scrollHeight) + 'px; position:absolute; top:' + scrollHeight + 'px; margin:auto; font-family:monospace;">' +
-                    '<tr>' +
-                    '<th>Filename</th>' +
-                    '<th>Filetype</th>' +
-                    '</tr>' +
-                    '</table>';
+                    '<div id="FIL2tbl" style="width:100%; position:absolute; top:' + scrollHeight + 'px; margin:auto;"></div>';
                 getId("FIL2tbl").style.marginTop = scrollHeight;
-                if(this.currLoc === ''){
-                    getId("FIL2path").innerHTML = '<div id="FIL2green" style="height:100%;background-color:rgb(170, 255, 170)"></div>';
-                    getId("FIL2tbl").innerHTML +=
-                        '<tr class="cursorPointer" onClick="apps.files2.vars.next(\'files\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'files\\\');toTop(apps.properties)\'])">' +
-                        '<td>files</td>' +
-                        '<td>folder</td>' +
-                        '</tr><tr class="cursorPointer" onClick="apps.files2.vars.next(\'apps\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'apps\\\');toTop(apps.properties)\'])">' +
-                        '<td>apps</td>' +
-                        '<td>folder</td>' +
-                        '</tr><tr class="cursorPointer" onClick="apps.files2.vars.next(\'widgets\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'widgets\\\');toTop(apps.properties)\'])">' +
-                        '<td>widgets</td>' +
-                        '<td>folder</td>' +
-                        '</tr><tr class="cursorPointer" onClick="apps.files2.vars.next(\'USERFILES\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'USERFILES\\\');toTop(apps.properties)\'])">' +
-                        '<td>USERFILES</td>' +
-                        '<td>folder</td>' +
+                if(this.currLoc === '/'){
+                    getId("FIL2path").innerHTML = '<div id="FIL2green" style="height:100%;background-color:rgb(170, 255, 170)"></div><div>/</div>';
+                    getId("FIL2tbl").innerHTML =
+                        '<div class="cursorPointer" onClick="apps.files2.vars.next(\'apps/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'apps\\\');toTop(apps.properties)\'])">' +
+                        'apps/' +
+                        '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'widgets/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'widgets\\\');toTop(apps.properties)\'])">' +
+                        'widgets/' +
+                        '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'USERFILES/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'USERFILES\\\');toTop(apps.properties)\'])">' +
+                        'USERFILES/' +
                         function(){
                             if(apps.settings.vars.FILcanWin){
-                                return '</tr><tr class="cursorPointer" onClick="apps.files2.vars.next(\'window\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'window\\\');toTop(apps.properties)\'])">' +
-                                    '<td style="color:#F00">Everything</td>' +
-                                    '<td>Debug</td>';
+                                return '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'window/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'window\\\');toTop(apps.properties)\'])">' +
+                                    '<span style="color:#F00">window/</span>';
                             }else{
                                 return '';
                             }
                         }() +
-                        '</tr>';
+                        '</div>';
+                    getId("FIL2green").className = '';
+                    getId('FIL2green').style.backgroundColor = "#FFF";
+                    getId("FIL2green").style.display = "none";
+                    getId("FIL2cntn").style.backgroundImage="";
+                    getId('FIL2cntn').classList.remove('cursorLoadDark');
                 }else{
                     getId("FIL2path").innerHTML = '<div id="FIL2green" class="liveElement" liveTarget="style.width" liveVar="apps.files2.vars.currItem/apps.files2.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div>' + this.currLoc + '</div>';
-                    this.currTotal = objLength(eval(this.currLoc));
-                    this.currItem = 0;
-                    for(var findElem in eval(this.currLoc)){
-                        if(typeof(eval(this.currLoc)[findElem]) === "string" || typeof(eval(this.currLoc)[findElem]) === "number" || typeof(eval(this.currLoc)[findElem]) === "function" || typeof(eval(this.currLoc)[findElem]) === "boolean" || typeof(eval(this.currLoc)[findElem]) === "undefined"){
-                            if((this.currLoc + "." + findElem).substring(0, 20) !== "USERFILES.MOUSEDATA_"){
-                                if(this.currLoc === "USERFILES"){
-                                    c(function(arg){
-                                        //getId("FILtbl").innerHTML +=
-                                        apps.files2.vars.currContentStr +=
-                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + arg + '\\\');\'])">' +
-                                            '<td>' + arg + '</td>' +
-                                            '<td>' + apps.files2.vars.filetype(typeof(eval(apps.files2.vars.currLoc)[arg])) + '</td>' +
-                                            '</tr>';
-                                        apps.files2.vars.currItem++;
-                                        //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
-                                    }, findElem);
-                                }else{
-                                    c(function(arg){
-                                        // getId("FILtbl").innerHTML +=
-                                        apps.files2.vars.currContentStr +=
-                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.files2.vars.currLoc + '.' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                            '<td>' + arg + '</td>' +
-                                            '<td>' + apps.files2.vars.filetype(typeof(eval(apps.files2.vars.currLoc)[arg])) + '</td>' +
-                                            '</tr>';
-                                        apps.files2.vars.currItem++;
-                                        //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
-                                    }, findElem);
-                                }
+                    this.currDirList = apps.bash.vars.execute("ls '" + this.currLoc + "'", 1).split('\n');
+                    this.currDirList.sort(function(a, b){
+                        var aLow = a.toLowerCase();
+                        var bLow = b.toLowerCase();
+                        if(aLow === bLow){
+                            return 0;
+                        }
+                        if(aLow > bLow){
+                            return 1;
+                        }
+                        return -1;
+                    });
+                    var temphtml = '';
+                    if(this.currLoc === "/USERFILES/"){
+                        for(var item in this.currDirList){
+                            if(this.currDirList[item]){
+                                temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'USERFILES.' + this.currDirList[item] + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + this.currDirList[item] + '\\\');\'])">' +
+                                    this.currDirList[item] +
+                                    '</div>';
                             }
-                        }else{
-                            if(this.currLoc === "apps"){
-                                c(function(arg){
-                                    // getId("FILtbl").innerHTML +=
-                                    apps.files2.vars.currContentStr +=
-                                        '<tr class="cursorPointer" onClick="apps.files2.vars.next(\'' + arg + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'\'], \' Launch App\', \'openapp(apps.' + arg + ', \\\'dsktp\\\')\', \'+Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\'])">' +
-                                        '<td>' + arg + '</td>' +
-                                        '<td>' + apps.files2.vars.filetype(typeof(eval(apps.files2.vars.currLoc)[arg])) + '</td>' +
-                                        '</tr>';
-                                    apps.files2.vars.currItem++;
-                                    //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
-                                }, findElem);
-                            }else{
-                                c(function(arg){
-                                    // getId("FILtbl").innerHTML +=
-                                    apps.files2.vars.currContentStr +=
-                                        '<tr class="cursorPointer" onClick="apps.files2.vars.next(\'' + arg + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files2.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                        '<td>' + arg + '</td>' +
-                                        '<td>' + apps.files2.vars.filetype(typeof(eval(apps.files2.vars.currLoc)[arg])) + '</td>' +
-                                        '</tr>';
-                                    apps.files2.vars.currItem++;
-                                    //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
-                                }, findElem);
+                        }
+                    }else{
+                        for(var item in this.currDirList){
+                            if(this.currDirList[item]){
+                                // if item is a folder
+                                if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
+                                    temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                        this.currDirList[item] +
+                                        '</div>';
+                                }else{
+                                    temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\'") + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                        this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
+                                        '</div>';
+                                }
                             }
                         }
                     }
+                    getId('FIL2tbl').innerHTML = temphtml;
+                    getId("FIL2green").className = '';
+                    getId('FIL2green').style.backgroundColor = "#FFF";
+                    getId("FIL2green").style.display = "none";
+                    getId("FIL2cntn").style.backgroundImage="";
+                    getId('FIL2cntn').classList.remove('cursorLoadDark');
                 }
-                c(function(){getId('FIL2tbl').innerHTML += apps.files2.vars.currContentStr;getId("FIL2green").className = '';getId('FIL2green').style.backgroundColor = "#FFF";getId("FIL2green").style.display = "none";getId("FIL2cntn").style.backgroundImage="";getId('FIL2cntn').classList.remove('cursorLoadDark')});
             }
         }, 0, "files2", "appicons/ds/FIL.png"
     );
@@ -13895,7 +13871,7 @@ function monMouseCheck(){
     }
 }
 function monMouseDown(evt){
-    if(apps.settings.vars.longTap && evt.touches.length > 1){
+    if(vartry("apps.settings.vars.longTap") === 1 && evt.touches.length > 1){
         evt.preventDefault();
         monMouseEvent = {pageX: evt.touches[0].pageX, pageY: evt.touches[0].pageY};
         monMouseCheck();
@@ -13960,7 +13936,7 @@ c(function(){
     getId('aOSisLoading').classList.add('cursorLoadDark');
     
     initStatus = 1;
-    doLog('Took ' + perfCheck('masterInitAOS') + '&micro;s to initialize.');
+    doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to initialize.');
     aOSping(function(text){
         doLog('aOS server ping: ' + text[0] + ' &micro;s with status ' + text[1]);
     });

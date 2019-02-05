@@ -342,17 +342,28 @@ div{
                     .darkMode #FILtbl tr:hover{
                         background-color:#555;
                     }
-                #FIL2tbl td{
-                    border-top:1px solid #000;
+                #FIL2tbl div{
+                    font-family:aosProFont, monospace;
+                    font-size:12px;
+                    width:298px;
+                    height:18px;
+                    line-height:18px;
+                    position:relative;
+                    display:inline-block;
+                    margin-left:3px;
+                    margin-top:3px;
+                    margin-bottom:-4px;
+                    border:1px solid #000;
+                    padding:1px;
                     /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
                 }
-                    .darkMode #FIL2tbl td{
-                        border-top:1px solid #FFF;
+                    .darkMode #FIL2tbl div{
+                        border:1px solid #FFF;
                     }
-                #FIL2tbl tr:hover{
+                #FIL2tbl div:hover{
                     background-color:#AAA;
                 }
-                    .darkMode #FIL2tbl tr:hover{
+                    .darkMode #FIL2tbl div:hover{
                         background-color:#555;
                     }
                 #tMgMemTable{
