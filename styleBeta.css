@@ -342,30 +342,103 @@ div{
                     .darkMode #FILtbl tr:hover{
                         background-color:#555;
                     }
+                    
                 #FIL2tbl div{
                     font-family:aosProFont, monospace;
-                    font-size:12px;
-                    width:298px;
-                    height:18px;
-                    line-height:18px;
                     position:relative;
-                    display:inline-block;
-                    margin-left:3px;
-                    margin-top:3px;
-                    margin-bottom:-4px;
-                    border:1px solid #000;
-                    padding:1px;
+                    white-space:nowrap;
                     /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
                 }
-                    .darkMode #FIL2tbl div{
-                        border:1px solid #FFF;
-                    }
                 #FIL2tbl div:hover{
                     background-color:#AAA;
                 }
                     .darkMode #FIL2tbl div:hover{
                         background-color:#555;
                     }
+                    
+                #FIL2tbl img{
+                    display:inline-block;
+                    margin-top:2px;
+                    margin-bottom:-2px;
+                    margin-left:3px;
+                }
+                    .darkMode #FIL2tbl img{
+                        filter:invert(1);
+                    }
+                
+                #FIL2tbl .FIL2aosAppIcon{
+                    width:16px;
+                    height:16px;
+                    margin-top:0;
+                    margin-bottom:-5px;
+                    margin-left:1px;
+                }
+                    .darkMode #FIL2tbl .FIL2aosAppIcon{
+                        filter:none;
+                    }
+                
+                .FIL2viewCompact div{
+                    font-size:12px;
+                    width:148px;
+                    height:18px;
+                    line-height:18px;
+                    display:inline-block;
+                    margin-left:3px;
+                    margin-top:3px;
+                    margin-bottom:-4px;
+                    border:1px solid #000;
+                    padding:1px;
+                }
+                    .darkMode .FIL2viewCompact div{
+                        border:1px solid #FFF;
+                    }
+                
+                .FIL2viewSmall div{
+                    font-size:12px;
+                    width:298px;
+                    height:18px;
+                    line-height:18px;
+                    display:inline-block;
+                    margin-left:3px;
+                    margin-top:3px;
+                    margin-bottom:-4px;
+                    border:1px solid #000;
+                    padding:1px;
+                }
+                    .darkMode .FIL2viewSmall div{
+                        border:1px solid #FFF;
+                    }
+                
+                .FIL2viewMedium div{
+                    font-size:12px;
+                    width:calc(100% - 8px);
+                    height:14px;
+                    line-height:14px;
+                    display:block;
+                    margin-left:3px;
+                    margin-top:1px;
+                    padding:1px;
+                }
+                    #FIL2tbl.FIL2viewMedium .FIL2aosAppIcon{
+                        margin-top:-1px;
+                        margin-bottom:-5px;
+                    }
+                
+                .FIL2viewLarge div{
+                    font-size:12px;
+                    width:calc(100% - 10px);
+                    height:18px;
+                    line-height:18px;
+                    display:block;
+                    margin-left:3px;
+                    margin-top:3px;
+                    border:1px solid #000;
+                    padding:1px;
+                }
+                    .darkMode .FIL2viewLarge div{
+                        border:1px solid #FFF;
+                    }
+                
                 #tMgMemTable{
                     width: 100%;
                     font-family:aosProFont, monospace;
