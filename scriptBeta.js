@@ -8159,10 +8159,10 @@ c(function(){
             "02/05/2019: B0.9.8.0\n + Begun work on rewriting the new replacement file manager.\n\n" +
             "02/06/2019: B0.9.9.0\n + Added view modes to experimental file manager.\n + Added file icons to experimental file manager.\n\n" +
             "02/08/2019: B0.9.9.1\n + Added experimental subpixel antialiasing to icons in Files 2\n\n" +
-            "02/09/2019: B0.9.9.2\n : Your USERFILES are now loaded separately from the page source, and are initialized in a better way. In some ways this is faster, in other ways it's slower. But in all ways it appears to be more stable than before.",
+            "02/09/2019: B0.9.9.2\n : Function Grapher no longer requires 'Math.'\n : Function Grapher informs user of ^ operator.\n : Your USERFILES are now loaded separately from the page source, and are initialized in a better way. In some ways this is faster, in other ways it's slower. But in all ways it appears to be more stable than before.\n : Fixed USERFILES sometimes being set to null when your folder is empty.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.9.2 (02/09/2019) r0';
+    window.aOSversion = 'B0.9.9.2 (02/09/2019) r2';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11962,9 +11962,12 @@ c(function(){
                 }else{
                     getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#00F">&nbsp;</span> xStep ' + this.currStep + '<br>';
                 }
+                if(this.currFunc.indexOf('^') > -1){
+                    apps.prompt.vars.notify("Warning; the ^ symbol is the BITWISE-XOR operator.<br>If you wish to use exponents, instead use pow(x, e)", ["Okay"], function(){}, "Function Grapher", "appicons/ds/Gph.png");
+                }
                 for(var x = -10; x <= 10; x = Math.round((x + this.currStep) * 100) / 100){
                     try{
-                        this.currY = eval(this.currFunc);
+                        with(Math){ this.currY = eval(this.currFunc) };
                         if(isNaN(this.currY) || this.currY === Infinity || this.currY === -Infinity){
                             if(!this.failed){
                                 this.failed = 1;
@@ -11976,7 +11979,7 @@ c(function(){
                             if(this.failed){
                                 //this.lastY = eval(this.currFunc);
                                 this.failed = 0;
-                                this.ctx.moveTo((x + 10) * 20 + 0.5, 400 - (eval(this.currFunc) + 10) * 20);
+                                with(Math){ this.ctx.moveTo((x + 10) * 20 + 0.5, 400 - (eval(this.currFunc) * 20)); }
                                 if(x !== -10){
                                     getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#0F0">&nbsp;</span> Start at ' + x + '<br>';
                                 }
@@ -11984,7 +11987,7 @@ c(function(){
                             this.ctx.lineTo((x + 10) * 20 + 0.5, 400 - (this.currY + 10) * 20);
                         }
                     }catch(err){
-                        getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#F00">&nbsp;</span> Break at ' + x + ' : Parse Error<br>';
+                        getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#F00">&nbsp;</span> Break at ' + x + ' : ' + err + '<br>';
                         break;
                     }
                 }
@@ -11996,9 +11999,12 @@ c(function(){
                 this.currX = getId('GphCalc').value;
                 this.ctx.strokeStyle = this.currColor;
                 getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#7F00FF">&nbsp;</span> f(x) = ' + this.currFunc + '<br>';
+                if(this.currFunc.indexOf('^') > -1){
+                    apps.prompt.vars.notify("Warning; the ^ symbol is the BITWISE-XOR operator.<br>If you wish to use exponents, instead use pow(x, e)", ["Okay"], function(){}, "Function Grapher", "appicons/ds/Gph.png");
+                }
                 try{
                     var x = parseFloat(this.currX);
-                    this.currY = eval(this.currFunc);
+                    with(Math){ this.currY = eval(this.currFunc) };
                     if(isNaN(this.currY) || this.currY === Infinity || this.currY === -Infinity){
                         getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#F00">&nbsp;</span> Break at f(' + x + ') : ' + this.getBreak(this.currY) + '<br>';
                     }else{
@@ -12006,7 +12012,7 @@ c(function(){
                         this.ctx.strokeRect(Math.floor((x + 10) * 20) - 1.5, Math.round(400 - (this.currY + 10) * 20) - 1.5, 4, 4);
                     }
                 }catch(err){
-                    getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#F00">&nbsp;</span> Break at f(' + x + ') : Parse Error<br>';
+                    getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#F00">&nbsp;</span> Break at f(' + x + ') : ' + err + '<br>';
                 }
             }
         }, 1, 'graph', 'appicons/ds/Gph.png'
