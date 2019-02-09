@@ -2801,7 +2801,7 @@ c(function(){
                         apps.nora.vars.finishDDG();
                     }
                     if(typeof USERFILES.NORAA_MOOD === 'string'){
-                        this.vars.updateMood(USERFILES.NORAA_MOOD);
+                        this.vars.updateMood(USERFILES.NORAA_MOOD, 1);
                     }
                     if(typeof USERFILES.NORAA_NOTES === 'string'){
                         this.vars.notes = USERFILES.NORAA_NOTES.split(',');
@@ -2836,7 +2836,7 @@ c(function(){
             initing: 1,
             voices: [],
             lang: 'Chrome OS US English',
-            updateMood: function(newMood){
+            updateMood: function(newMood, nosave){
                 d(1, 'NORAAs mood is changing...');
                 this.mood = parseInt(newMood, 10);
                 if(this.mood < 1){
@@ -2845,7 +2845,9 @@ c(function(){
                     this.mood = 10;
                 }
                 USERFILES.NORAA_MOOD = this.mood + "";
-                apps.savemaster.vars.save("NORAA_MOOD", this.mood, 1);
+                if(!nosave){
+                    apps.savemaster.vars.save("NORAA_MOOD", this.mood, 1);
+                }
             },
             contRecog: {},
             currContTrans: [],
@@ -8155,10 +8157,12 @@ c(function(){
             "02/03/2019: B0.9.6.2\n : All built-in apps now use the \"auto\" flag when centering their windows, and now consistently center on the same point.\n\n" +
             "02/04/2019: B0.9.7.0\n + Approximate loading percentage bar on boot.\n : Loading messages are shorter.\n : Fixed error that occurred when using the touchscreen during boot.\n\n" +
             "02/05/2019: B0.9.8.0\n + Begun work on rewriting the new replacement file manager.\n\n" +
-            "02/06/2019: B0.9.9.0\n + Added view modes to experimental file manager.\n + Added file icons to experimental file manager.",
+            "02/06/2019: B0.9.9.0\n + Added view modes to experimental file manager.\n + Added file icons to experimental file manager.\n\n" +
+            "02/08/2019: B0.9.9.1\n + Added experimental subpixel antialiasing to icons in Files 2\n\n" +
+            "02/09/2019: B0.9.9.2\n : Your USERFILES are now loaded separately from the page source, and are initialized in a better way. In some ways this is faster, in other ways it's slower. But in all ways it appears to be more stable than before.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.9.0 (02/06/2019) r0';
+    window.aOSversion = 'B0.9.9.2 (02/09/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -8721,13 +8725,13 @@ c(function(){
                     getId("FIL2path").innerHTML = '<div id="FIL2green" style="height:100%;background-color:rgb(170, 255, 170)"></div><div>&nbsp;/</div>';
                     getId("FIL2tbl").innerHTML =
                         '<div class="cursorPointer" onClick="apps.files2.vars.next(\'apps/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'apps\\\');toTop(apps.properties)\'])">' +
-                        '<img src="ctxMenu/beta/folder.png"> ' +
+                        '<img src="files2/small/folder.png"> ' +
                         'apps/' +
                         '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'widgets/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'widgets\\\');toTop(apps.properties)\'])">' +
-                        '<img src="ctxMenu/beta/folder.png"> ' +
+                        '<img src="files2/small/folder.png"> ' +
                         'widgets/' +
                         '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'USERFILES/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'USERFILES\\\');toTop(apps.properties)\'])">' +
-                        '<img src="ctxMenu/beta/folder.png"> ' +
+                        '<img src="files2/small/folder.png"> ' +
                         'USERFILES/' +
                         function(){
                             if(apps.settings.vars.FILcanWin){
@@ -8762,7 +8766,7 @@ c(function(){
                         for(var item in this.currDirList){
                             if(this.currDirList[item]){
                                 temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'USERFILES.' + this.currDirList[item] + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + this.currDirList[item] + '\\\');\'])">' +
-                                    '<img src="ctxMenu/beta/file.png"> ' +
+                                    '<img src="files2/small/file.png"> ' +
                                     this.currDirList[item] +
                                     '</div>';
                             }
@@ -8778,7 +8782,7 @@ c(function(){
                                         '</div>';
                                 }else{
                                     temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\'") + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                        '<img src="ctxMenu/beta/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
+                                        '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
                                         this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
                                         '</div>';
                                 }
@@ -8790,12 +8794,12 @@ c(function(){
                                 // if item is a folder
                                 if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
                                     temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                        '<img src="ctxMenu/beta/folder.png"> ' +
+                                        '<img src="files2/small/folder.png"> ' +
                                         this.currDirList[item] +
                                         '</div>';
                                 }else{
                                     temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\'") + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                        '<img src="ctxMenu/beta/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
+                                        '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
                                         this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
                                         '</div>';
                                 }
@@ -9074,7 +9078,7 @@ c(function(){
     getId('aOSloadingInfo').innerHTML = 'File Saving System';
 });
 c(function(){
-    window.SRVRKEYWORD = "";
+    window.SRVRKEYWORD = window.SRVRKEYWORD || "";
     m('init SAV');
     /*var cansaveyet = 0;
     window.setTimeout(function(){cansaveyet = 1}, 500);*/
@@ -14069,6 +14073,32 @@ c(function(){
     }
     
     console.log("Done initializing aOS.");
+});
+var bootFileHTTP = new XMLHttpRequest();
+bootFileHTTP.onreadystatechange = function(){
+    if(bootFileHTTP.readyState === 4){
+        if(bootFileHTTP.status === 200){
+            USERFILES = JSON.parse(bootFileHTTP.responseText);
+        }else{
+            alert("Failed to fetch your files. Web error " + bootFileHTTP.status);
+        }
+        m("init fileloader");
+        getId("aOSloadingInfo").innerHTML += "<br>Your OS key is " + SRVRKEYWORD;
+        for(var app in apps){
+            getId("aOSloadingInfo").innerHTML="Loading your files...<br>Your OS key is" + SRVRKEYWORD + "<br>Loading " + app;
+            try{
+                apps[app].signalHandler("USERFILES_DONE");
+            }catch(err){
+                alert("Error initializing " + app + ":\n\n" + err);
+            }
+        }
+        requestAnimationFrame(function(){bootFileHTTP = null;});
+        console.log("Load successful, apps alerted, and bootFileHTTP deleted.");
+    }
+};
+c(function(){
+    bootFileHTTP.open('GET', 'fileloaderBeta.php');
+    bootFileHTTP.send();
 });
 totalWaitingCodes = codeToRun.length;
 // 2000 lines of code! 9/18/2015

@@ -108,7 +108,7 @@
                     }
                 }
             }else{
-                echo "Error - User ID malformed, or your user ID is incorrect.";
+                echo "Error - User ID malformed, or your user ID is incorrect. ".$_POST['k'].', '.$_COOKIE['keyword'];
                 die();
             }
         }else{

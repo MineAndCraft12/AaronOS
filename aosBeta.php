@@ -142,7 +142,7 @@
         $changePass = $_GET['changePass'];
     }
     echo '<script defer>';
-    require 'fileloader.php';
+    require 'filepreloaderBeta.php';
     echo '</script>';
 ?>
 </html>

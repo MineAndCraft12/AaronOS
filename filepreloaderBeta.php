@@ -1,7 +1,4 @@
 <?php
-
-    // THIS FILE IS DEPRECATED, see filepreloaderBeta.php and fileloaderBeta.php
-    
     // error handler
     function error($errno, $errstr){
         echo "alert('Serverside error. [$errno]: $errstr | Contact mineandcraft12@gmail.com or else the file broken and every other file you save from now on will be lost. Reference error code ".$_COOKIE['keyword']." in the email.');";
@@ -127,8 +124,8 @@
             }
         }
     }
-    // push javascript to begin file loading on client side
-    echo 'loadInterval=window.setInterval(function(){if(window.initStatus){m("init fileloader");SRVRKEYWORD="'.$_COOKIE['keyword'].'";IPADDRESS="'.$_SERVER['HTTP_X_FORWARDED_FOR'].'";getId("aOSloadingInfo").innerHTML += "<br>Your OS key is " + SRVRKEYWORD;';
+    // push javascript to set server variables
+    echo 'window.SRVRKEYWORD="'.$_COOKIE['keyword'].'";window.IPADDRESS="'.$_SERVER['HTTP_X_FORWARDED_FOR'].'";';
     // if it needs to be refreshed, tell the client via js
     if($needtorefresh){
         echo 'window.location = "aosBeta.php?refreshed="+Math.round(Math.random()*1000);doLog("Moving");';
@@ -137,24 +134,6 @@
     if(!(is_dir('USERFILES/'.$_COOKIE['keyword']))){
         $newUser = 1;
         mkdir('USERFILES/'.$_COOKIE['keyword']);
-    }
-    // begin grabbing users files
-    $directory = scandir('USERFILES/'.$_COOKIE['keyword']);
-    foreach($directory as $filename){
-        // if not moving back a dir
-        if($filename != '.' && $filename != '..'){
-            // if the file needs an underscore
-            $fileusesunderscore = '';
-            // if invalid characters start the filename
-            if(strpos('0123456789.,-[]/+=\\`"\'!*:|@#%^&()<>?|;~', $filename[0]) !== false){
-                // file needs an underscore
-                $fileusesunderscore = '_';
-            }
-            // grab the file contents and push it to javascript
-            $file = fopen('USERFILES/'.$_COOKIE['keyword'].'/'.$filename, 'r');
-            echo  'try{USERFILES.'.$fileusesunderscore.pathinfo($filename, PATHINFO_FILENAME).'=`'.str_replace("/script", "\\/script", str_replace("\r\n", '\\n', str_replace('`', '\\`', fread($file, filesize('USERFILES/'.$_COOKIE['keyword'].'/'.$filename))))).'`;}catch(err){alert(err)}';
-            fclose($file);
-        }
     }
     
     $newUsers = fopen('USERFILES/newUsers.txt', 'r');
@@ -177,7 +156,4 @@
     $newUsers = fopen('USERFILES/newUsers.txt', 'w');
     fwrite($newUsers, join("\n", $newList));
     fclose($newUsers);
-    
-    // finish the loading javascript
-    echo 'clearInterval(loadInterval);for(var app in apps){getId("aOSloadingInfo").innerHTML="Loading your files...<br>Your OS key is"+SRVRKEYWORD+"<br>Loading "+app;try{apps[app].signalHandler("USERFILES_DONE");}catch(err){alert(err)}}console.log("Load successful, interval deleted and apps alerted.");}},1);';
 ?>
