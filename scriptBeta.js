@@ -14079,6 +14079,10 @@ bootFileHTTP.onreadystatechange = function(){
     if(bootFileHTTP.readyState === 4){
         if(bootFileHTTP.status === 200){
             USERFILES = JSON.parse(bootFileHTTP.responseText);
+            console.log(bootFileHTTP.responseText);
+            if(USERFILES === null){
+                USERFILES = {};
+            }
         }else{
             alert("Failed to fetch your files. Web error " + bootFileHTTP.status);
         }

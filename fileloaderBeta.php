@@ -11,7 +11,6 @@ function find_all_files($dir)
             $result[substr($value, 0, strrpos($value, '.'))] = file_get_contents("$dir/$value");
             continue;
         }
-        
     }
     return $result;
 }
@@ -36,8 +35,12 @@ if(isset($_COOKIE['keyword'])){
                     
                     if(password_verify($_COOKIE['password'], $currPassword)){
                         $jsonResult = json_encode(find_all_files('USERFILES/'.$_COOKIE['keyword']));
-                        $jsonResult = str_replace("/script", "\\/script", $jsonResult);
-                        echo $jsonResult;
+                        if($jsonResult == "null"){
+                            echo '{}';
+                        }else{
+                            $jsonResult = str_replace("/script", "\\/script", $jsonResult);
+                            echo $jsonResult;
+                        }
                     }else{
                         echo '{}';
                     }
@@ -47,8 +50,12 @@ if(isset($_COOKIE['keyword'])){
             }
         }else{
             $jsonResult = json_encode(find_all_files('USERFILES/'.$_COOKIE['keyword']));
-            $jsonResult = str_replace("/script", "\\/script", $jsonResult);
-            echo $jsonResult;
+            if($jsonResult == "null"){
+                echo '{}';
+            }else{
+                $jsonResult = str_replace("/script", "\\/script", $jsonResult);
+                echo $jsonResult;
+            }
         }
     }else{
         echo '{}';
