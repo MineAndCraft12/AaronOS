@@ -25,17 +25,7 @@ if(typeof console === "undefined"){
     };
 }
 
-// see if animationframe is supported - if not, substitute it
-var requestAnimationFrameIntact = 1;
-if(window.requestAnimationFrame === undefined){
-    requestAnimationFrameIntact = 0;
-    window.requestAnimationFrame = function(func){
-        window.setTimeout(func, 0);
-    };
-    window.requestAnimationFrame(function(){console.log('requestAnimationFrame is not supported by your browser. It has been replaced by function(func){setTimeout(func, 0)}', '#F00')});
-}
-
-// same for performance.now
+// substitute performance.now if not intact
 var windowperformancenowIntact = 1;
 if(window.performance === undefined){
     window.performance = {
@@ -50,6 +40,21 @@ if(window.performance === undefined){
     };
     window.requestAnimationFrame(function(){console.log('performance.now is not supported by your browser. It has been replaced by function(){return (new Date).getTime() * 1000}', '#F00')});
 }
+
+// appx how much time it took to load the page
+var timeToPageLoad = Math.round(performance.now() * 10) / 10;
+
+// see if animationframe is supported - if not, substitute it
+var requestAnimationFrameIntact = 1;
+if(window.requestAnimationFrame === undefined){
+    requestAnimationFrameIntact = 0;
+    window.requestAnimationFrame = function(func){
+        window.setTimeout(func, 0);
+    };
+    window.requestAnimationFrame(function(){console.log('requestAnimationFrame is not supported by your browser. It has been replaced by function(func){setTimeout(func, 0)}', '#F00')});
+}
+
+// force https
 if(window.location.href.indexOf('http://') === 0 && navigator.userAgent.indexOf('MSIE') === -1){
     var tempLoc = window.location.href.split('http://');
     tempLoc.shift();
@@ -4331,7 +4336,12 @@ c(function(){
         {
             appInfo: 'This is a JavaScript console for quick debugging without having to open DevTools. It also has extra features like colored text and HTML formatting support.',
             cnsPosts: [
-                "JavaScript Console initialized.", '#D60'
+                "JavaScript Console initialized.", '#D60',
+                '', '#7F7F7F',
+                'Source Code Line of the Day: ' + lineOfTheDay[0], '#7F7F7F',
+                cleanStr(lineOfTheDay[1].trim()), '#7F7F7F',
+                '', '#7F7F7F',
+                'Took ' + timeToPageLoad + 'ms to load script file.', ''
             ],
             lastInputUsed: 'jsConsoleHasNotBeenUsed',
             makeLog: function(logStr, logClr){
@@ -4478,11 +4488,33 @@ c(function(){
                                 this.workdirfinal = "/";
                             }
                             //this.workdirdepth++;
-                        }else if(isNaN(parseInt(this.workdirtemp[this.workdirdepth], 10))){
+                        }else{
+                            if(
+                                isNaN(parseInt(this.workdirtemp[this.workdirdepth], 10)) &&
+                                this.workdirtemp[this.workdirdepth].indexOf('=') === -1 &&
+                                this.workdirtemp[this.workdirdepth].indexOf(' ') === -1 &&
+                                this.workdirtemp[this.workdirdepth].indexOf(';') === -1 &&
+                                this.workdirtemp[this.workdirdepth].indexOf('.') === -1 &&
+                                this.workdirtemp[this.workdirdepth].indexOf(',') === -1
+                            ){
+                                try{
+                                    new Function(this.workdirtemp[this.workdirdepth], 'var ' + this.workdirtemp[this.workdirdepth]);
+                                    this.workdirfinal += "." + this.workdirtemp[this.workdirdepth];
+                                }catch(err){
+                                    console.log("oof")
+                                    this.workdirfinal += "['" + this.workdirtemp[this.workdirdepth] + "']";
+                                }
+                            }else{
+                                this.workdirfinal += "['" + this.workdirtemp[this.workdirdepth] + "']";
+                            }
+                        }
+                        
+                        /*else if(isNaN(parseInt(this.workdirtemp[this.workdirdepth], 10))){
                             this.workdirfinal += "." + this.workdirtemp[this.workdirdepth];
                         }else{
                             this.workdirfinal += "['" + this.workdirtemp[this.workdirdepth] + "']";
                         }
+                        */
                     }
                     this.workdirdepth++;
                 }
@@ -8159,10 +8191,12 @@ c(function(){
             "02/05/2019: B0.9.8.0\n + Begun work on rewriting the new replacement file manager.\n\n" +
             "02/06/2019: B0.9.9.0\n + Added view modes to experimental file manager.\n + Added file icons to experimental file manager.\n\n" +
             "02/08/2019: B0.9.9.1\n + Added experimental subpixel antialiasing to icons in Files 2\n\n" +
-            "02/09/2019: B0.9.9.2\n : Function Grapher no longer requires 'Math.'\n : Function Grapher informs user of ^ operator.\n : Your USERFILES are now loaded separately from the page source, and are initialized in a better way. In some ways this is faster, in other ways it's slower. But in all ways it appears to be more stable than before.\n : Fixed USERFILES sometimes being set to null when your folder is empty.",
+            "02/09/2019: B0.9.9.2\n : Function Grapher no longer requires 'Math.'\n : Function Grapher informs user of ^ operator.\n : Your USERFILES are now loaded separately from the page source, and are initialized in a better way. In some ways this is faster, in other ways it's slower. But in all ways it appears to be more stable than before.\n : Fixed USERFILES sometimes being set to null when your folder is empty.\n\n" +
+            "02/10/2019: B0.9.9.3\n : Function Grapher only notifies on ^ once.\n\n" +
+            "02/11/2019: B0.9.9.4\n + Source Code Line of the Day in JS Console.\n + More detailed loading performance info in JS Console.\n - Removed unnecessary logs from JS Console.\n : Files 2 no longer accidentally sends the wrong name to Text Editor for USERFILES entries.\n : Files 2 is much more stable when encountering 'invalid' filenames.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.9.2 (02/09/2019) r2';
+    window.aOSversion = 'B0.9.9.4 (02/11/2019) r2';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -8765,7 +8799,7 @@ c(function(){
                     if(this.currLoc === "/USERFILES/"){
                         for(var item in this.currDirList){
                             if(this.currDirList[item]){
-                                temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'USERFILES.' + this.currDirList[item] + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + this.currDirList[item] + '\\\');\'])">' +
+                                temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + this.currDirList[item] + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + this.currDirList[item] + '\\\');\'])">' +
                                     '<img src="files2/small/file.png"> ' +
                                     this.currDirList[item] +
                                     '</div>';
@@ -9531,17 +9565,22 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    doLog("Initializing APM apps...", "#ACE");
+                    //doLog("Initializing APM apps...", "#ACE");
                     if(safeMode){
-                        doLog("Failed because Safe Mode is enabled.", "#F00");
+                        doLog("Failed APM apps because Safe Mode is enabled.", "#F00");
                     }else{
                         for(var file in USERFILES){
                             if(file.indexOf("APM_APPS_DATABASE_") === 0){
-                                eval(USERFILES[file]);
+                                try{
+                                    eval(USERFILES[file]);
+                                }catch(err){
+                                    doLog("Failed " + file + ":", "#F00");
+                                    doLog(err, "#F00");
+                                }
                             }
                         }
                     }
-                    doLog("Done.", "#ACE");
+                    //doLog("Done.", "#ACE");
                     break;
                 case 'shutdown':
                         
@@ -9714,13 +9753,18 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    doLog("Initializing WAP apps...", "#ACE");
+                    //doLog("Initializing WAP apps...", "#ACE");
                     if(safeMode){
-                        doLog("Failed because Safe Mode is enabled.", "#F00");
+                        doLog("Failed initializing WAP apps because Safe Mode is enabled.", "#F00");
                     }else{
                         for(var file in USERFILES){
                             if(file.indexOf("WAP_APPS_DATABASE_") === 0){
-                                apps.webAppMaker.vars.compileApp(USERFILES[file], file);
+                                try{
+                                    apps.webAppMaker.vars.compileApp(USERFILES[file], file);
+                                }catch(err){
+                                    doLog("Failed initializing " + file + ":", "#F00");
+                                    doLog(err, "#F00");
+                                }
                             }
                         }
                         // alphabetized array of apps
@@ -9735,10 +9779,10 @@ c(function(){
                             appsSorted[i] = tempStr;
                         }
                     }
-                    doLog("Done.", "#ACE");
-                    doLog("Initializing WAP Message Listener and Permission system...", "#ACE");
+                    //doLog("Done.", "#ACE");
+                    //doLog("Initializing WAP Message Listener and Permission system...", "#ACE");
                     if(safeMode){
-                        doLog("Failed Message Listener because Safe Mode is enabled.", "#F00");
+                        doLog("Failed WAP Message Listener because Safe Mode is enabled.", "#F00");
                     }else{
                         window.addEventListener("message", apps.webAppMaker.vars.recieveMessage);
                     }
@@ -9759,10 +9803,10 @@ c(function(){
                                 apps.webAppMaker.vars.trustedApps = tempobj;
                             }
                         }catch(err){
-                            doLog("Failed Permissions: " + err, "#F00");
+                            doLog("Failed initializing WAP Permissions: " + err, "#F00");
                         }
                     }
-                    doLog("Done.", "#ACE");
+                    //doLog("Done.", "#ACE");
                     break;
                 case 'shutdown':
                         
@@ -11948,6 +11992,7 @@ c(function(){
             lastY: 0,
             currFunc: '',
             failed: 0,
+            notifBitwise: 0,
             graph: function(){
                 this.currFunc = getId('GphInput').value;
                 this.currColor = getId('GphColor').value;
@@ -11962,8 +12007,9 @@ c(function(){
                 }else{
                     getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#00F">&nbsp;</span> xStep ' + this.currStep + '<br>';
                 }
-                if(this.currFunc.indexOf('^') > -1){
+                if(!this.notifBitwise && this.currFunc.indexOf('^') > -1){
                     apps.prompt.vars.notify("Warning; the ^ symbol is the BITWISE-XOR operator.<br>If you wish to use exponents, instead use pow(x, e)", ["Okay"], function(){}, "Function Grapher", "appicons/ds/Gph.png");
+                    this.notifBitwise = 1;
                 }
                 for(var x = -10; x <= 10; x = Math.round((x + this.currStep) * 100) / 100){
                     try{
@@ -11999,8 +12045,9 @@ c(function(){
                 this.currX = getId('GphCalc').value;
                 this.ctx.strokeStyle = this.currColor;
                 getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#7F00FF">&nbsp;</span> f(x) = ' + this.currFunc + '<br>';
-                if(this.currFunc.indexOf('^') > -1){
+                if(!this.notifBitwise && this.currFunc.indexOf('^') > -1){
                     apps.prompt.vars.notify("Warning; the ^ symbol is the BITWISE-XOR operator.<br>If you wish to use exponents, instead use pow(x, e)", ["Okay"], function(){}, "Function Grapher", "appicons/ds/Gph.png");
+                    this.notifBitwise = 1;
                 }
                 try{
                     var x = parseFloat(this.currX);
@@ -14053,12 +14100,13 @@ c(function(){
     
     initStatus = 1;
     doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to initialize.');
-    aOSping(function(text){
-        doLog('aOS server ping: ' + text[0] + ' &micro;s with status ' + text[1]);
-    });
-    corsPing(function(text){
-        doLog('NORAA search service ping: ' + text[0] + ' &micro;s with status ' + text[1]);
-    });
+    perfStart("masterInitAOS");
+    //aOSping(function(text){
+    //    doLog('aOS server ping: ' + text[0] + ' &micro;s with status ' + text[1]);
+    //});
+    //corsPing(function(text){
+    //    doLog('NORAA search service ping: ' + text[0] + ' &micro;s with status ' + text[1]);
+    //});
     if(window.navigator.vendor !== "Google Inc."){
         doLog('Looks like you are not using Google Chrome. Make sure you use Google Chrome to access aOS. Otherwise, certain features will be missing or broken.', '#F00;text-decoration:underline');
         try{
@@ -14085,13 +14133,14 @@ bootFileHTTP.onreadystatechange = function(){
     if(bootFileHTTP.readyState === 4){
         if(bootFileHTTP.status === 200){
             USERFILES = JSON.parse(bootFileHTTP.responseText);
-            console.log(bootFileHTTP.responseText);
             if(USERFILES === null){
                 USERFILES = {};
             }
         }else{
             alert("Failed to fetch your files. Web error " + bootFileHTTP.status);
         }
+        doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to fetch USERFILES.');
+        perfStart("masterInitAOS");
         m("init fileloader");
         getId("aOSloadingInfo").innerHTML += "<br>Your OS key is " + SRVRKEYWORD;
         for(var app in apps){
@@ -14103,6 +14152,8 @@ bootFileHTTP.onreadystatechange = function(){
             }
         }
         requestAnimationFrame(function(){bootFileHTTP = null;});
+        doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to exec USERFILES_DONE.');
+        doLog('Took ' + Math.round(performance.now() * 10) / 10 + 'ms grand total to reach desktop.');
         console.log("Load successful, apps alerted, and bootFileHTTP deleted.");
     }
 };

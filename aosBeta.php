@@ -141,6 +141,9 @@
         $changeKey = $_GET['changeKey'];
         $changePass = $_GET['changePass'];
     }
+    echo '<script defer>window.lineOfTheDay = ';
+    require 'lotd.php';
+    echo '</script>';
     echo '<script defer>';
     require 'filepreloaderBeta.php';
     echo '</script>';
