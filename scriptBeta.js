@@ -2666,7 +2666,7 @@ c(function(){
                     c(function(){
                         openapp(apps.files2, 'dsktp');
                         c(function(){
-                            apps.files2.vars.next('/apps/' + arg);
+                            apps.files2.vars.next('apps/' + arg + '/');
                         });
                     });
                 }, 'ctxMenu/beta/folder.png']
@@ -7924,12 +7924,15 @@ c(function(){
                 this.appWindow.setContent(
                     '<textarea id="np2Screen" style="white-space:no-wrap; width:calc(100% - 6px); height:calc(100% - 23px); position:absolute; padding:3px; border:none; bottom: 0px; left: 0px; font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000; overflow:auto"></textarea>' +
                     '<div style="width:100%; border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + '; height:16px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#000', '#FFF') + ';">' +
-                    '<input id="np2Load" placeholder="file name" style="left: 16px; border:none; height:16px; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + '; position:absolute; top:0; width:75%;"></input>' +
-                    '<div onclick="requestAnimationFrame(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/save.png\', \'ctxMenu/beta/load.png\'], \' Save\', \'apps.notepad2.vars.saveFile(getId(\\\'np2Load\\\').value)\', \' Load\', \'apps.notepad2.vars.openFile(getId(\\\'np2Load\\\').value)\'])})" class="cursorPointer" style="top:0; right:16px; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + ';">&nbsp;File&nbsp;</div> ' +
+                    '<input id="np2Load" placeholder="file name" style="padding-left:3px; font-family: aosProFont, monospace; font-size:12px; left: 16px; border:none; height:16px; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + '; position:absolute; top:0; width:calc(100% - 115px);"></input>' +
+                    '<div id="np2Mode" onclick="apps.notepad2.vars.toggleFileMode()" class="cursorPointer" style="color:#7F7F7F; font-family:aosProFont, monospace; font-size:12px; height:16px;line-height:16px; padding-right:3px; padding-left: 3px; right:95px">Text Mode</div>' +
+                    '<div onclick="apps.notepad2.vars.openFile(getId(\'np2Load\').value)" class="cursorPointer" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:55px; text-align:center;width:38px; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + ';">Load</div> ' +
+                    '<div onclick="apps.notepad2.vars.saveFile(getId(\'np2Load\').value)" class="cursorPointer" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:16px; text-align:center;width:38px; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + ';">Save</div> ' +
                     '</div>'
                 );
                 getId("np2Screen").wrap = "off";
                 getId('win_notepad2_html').style.background = 'none';
+                this.filemode = "string";
             }
             this.appWindow.openWindow();
         },
@@ -7967,6 +7970,16 @@ c(function(){
             appInfo: 'Simple text editor for AaronOS. Edits text files created by the user, and views strings, numbers, and functions of AaronOS apps.',
             openEditTools: function(){apps.prompt.vars.notify('This button is unfinished. Right-click the document instead.', [], function(){}, 'Text Editor', 'appicons/ds/TE.png')},
             launchedAs: '',
+            filemode: 'string',
+            toggleFileMode: function(){
+                if(this.filemode === "string"){
+                    this.filemode = "function";
+                    getId('np2Mode').innerHTML = "Eval Mode";
+                }else{
+                    this.filemode = "string";
+                    getId('np2Mode').innerHTML = "Text Mode";
+                }
+            },
             openFile: function(filename){
                 if(!apps.notepad2.appWindow.appIcon){
                     openapp(apps.notepad2, "dsktp");
@@ -7988,9 +8001,19 @@ c(function(){
                     apps.prompt.vars.alert("Failed to open " + filename + ": the item is a folder or null.", "Okay", function(){}, "Text Editor");
                     return;
                 }
+                if(typeof filecontent === "function"){
+                    this.filemode = 'function';
+                    getId('np2Mode').innerHTML = "Eval Mode";
+                }else{
+                    this.filemode = 'string';
+                    getId('np2Mode').innerHTML = "Text Mode";
+                }
                 if(getId('np2Screen').value !== ""){
                     apps.prompt.vars.confirm("You will lose all unsaved work. Continue?", ['No', 'Yes'], (btn) => {
                         if(btn){
+                            requestAnimationFrame(function(){
+                                toTop(apps.notepad2);
+                            });
                             getId('np2Load').value = filename;
                             getId('np2Screen').value = filecontent;
                             getId('np2Screen').scrollTop = 0;
@@ -8000,10 +8023,10 @@ c(function(){
                     requestAnimationFrame(function(){
                         toTop(apps.notepad2);
                     });
+                    getId('np2Load').value = filename;
+                    getId('np2Screen').value = filecontent;
+                    getId('np2Screen').scrollTop = 0;
                 }
-                getId('np2Load').value = filename;
-                getId('np2Screen').value = filecontent;
-                getId('np2Screen').scrollTop = 0;
             },
             saveFile: function(filename){
                 if(filename.indexOf('/') === -1){
@@ -8023,16 +8046,34 @@ c(function(){
                     }
                 }else{
                     try{
-                        var oldfilecontent = apps.bash.getRealDir(filename);
+                        var oldfilecontent = apps.bash.vars.getRealDir(filename);
                     }catch(err){
                         apps.prompt.vars.alert("Failed to save " + filename + ": " + err, "Okay", function(){}, "Text Editor")
                         return;
                     }
-                    if(typeof oldfilecontent !== "string" && typeof oldfilecontent !== "undefined"){
-                        apps.prompt.vars.alert("Failed to save " + filename + ": Already exists and is of type " + (typeof oldfilecontent) + ".", "Okay", function(){}, "Text Editor");
-                        return;
+                    if(this.filemode === "string"){
+                        if(typeof oldfilecontent !== "string" && typeof oldfilecontent !== "undefined"){
+                            apps.prompt.vars.alert("Failed to save " + filename + ": Already exists and is of type " + (typeof oldfilecontent) + " (expected string).", "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        eval(apps.bash.vars.translateDir(filename) + ' = getId("np2Screen").value');
+                    }else if(this.filemode === "function"){
+                        if(typeof oldfilecontent !== "function" && typeof oldfilecontent !== "undefined"){
+                            apps.prompt.vars.alert("Failed to save " + filename + ": Already exists and is of type " + (typeof oldfilecontent) + " (expected function).", "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        try{
+                            var newfilecontent = eval("(" + getId("np2Screen").value + ")");
+                        }catch(err){
+                            apps.prompt.vars.alert("Failed to save " + filename + ": Input error: " + err, "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        if(typeof newfilecontent !== "function"){
+                            apps.prompt.vars.alert("Failed to save " + filename + ": Input is of type " + (typeof newfilecontent) + "; expected function.", "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        eval(apps.bash.vars.translateDir(filename) + '=' + newfilecontent + "");
                     }
-                    eval(apps.bash.vars.translateDir(filename) + ' = getId("np2Screen").value');
                 }
             }
         }, 0, "notepad2", "appicons/ds/TE.png"
@@ -8326,10 +8367,10 @@ c(function(){
             "02/09/2019: B0.9.9.2\n : Function Grapher no longer requires 'Math.'\n : Function Grapher informs user of ^ operator.\n : Your USERFILES are now loaded separately from the page source, and are initialized in a better way. In some ways this is faster, in other ways it's slower. But in all ways it appears to be more stable than before.\n : Fixed USERFILES sometimes being set to null when your folder is empty.\n\n" +
             "02/10/2019: B0.9.9.3\n : Function Grapher only notifies on ^ once.\n\n" +
             "02/11/2019: B0.9.9.4\n + Source Code Line of the Day in JS Console.\n + More detailed loading performance info in JS Console.\n - Removed unnecessary logs from JS Console.\n : Files 2 no longer accidentally sends the wrong name to Text Editor for USERFILES entries.\n : Files 2 is much more stable when encountering 'invalid' filenames.\n\n" +
-            "02/12/2019: B0.9.10.0\n + File Manager has been replaced File Manager 2.\n + File Manager 2 uses bash for most of its file operations.\n + File Manager 2 has multiple view modes.\n + File Manager 2 has much faster performance.\n + File Manager 2 has file icons.\n + File Manager 2 is compatible with mobile mode and custom border width.\n + File Manager 2 is far more stable.\n + Begun work on replacement text editor.",
+            "02/12/2019: B0.9.10.0\n + File Manager has been replaced File Manager 2.\n + File Manager 2 uses bash for most of its file operations.\n + File Manager 2 has multiple view modes.\n + File Manager 2 has much faster performance.\n + File Manager 2 has file icons.\n + File Manager 2 is compatible with mobile mode and custom border width.\n + File Manager 2 is far more stable.\n + Begun work on replacement text editor.\n + TE2 can now edit and save functions.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.10.0 (02/12/2019) r1';
+    window.aOSversion = 'B0.9.10.0 (02/12/2019) r2';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11608,7 +11649,7 @@ c(function(){
                         this.vars.currAppBuiltIn = 'Built-In aOS App';
                     }
                     getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';"><img style="height:128px;width:128px;" src="' + this.vars.currAppImg + '" onerror="this.src=\'appicons/ds/redx.png\'"><div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
-                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], \' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', \' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', \'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  \' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'/apps/' + app + '\\\')})})\'' + function(appname, builtin){if(builtin === "User-Made APM App"){return ', \' Open Source File\', \'c(function(){openapp(apps.notepad, \\\'open\\\');apps.notepad.vars.openFile(\\\'APM_APPS_DATABASE_' + appname + '\\\')})\'';}else{return ''}}(app, this.vars.currAppBuiltIn) + '])})">v</button>';
+                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], \' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', \' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', \'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  \' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/' + app + '/\\\')})})\'' + function(appname, builtin){if(builtin === "User-Made APM App"){return ', \' Open Source File\', \'c(function(){openapp(apps.notepad, \\\'open\\\');apps.notepad.vars.openFile(\\\'APM_APPS_DATABASE_' + appname + '\\\')})\'';}else{return ''}}(app, this.vars.currAppBuiltIn) + '])})">v</button>';
                     this.vars.appsListed++;
                 }
             }
