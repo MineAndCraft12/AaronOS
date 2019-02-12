@@ -11,10 +11,10 @@
     }else{
         $jsLines = file('scriptBeta.js');
         $selectedLine = array_rand($jsLines);
-        while(strlen($jsLines[$selectedLine]) < 10){
+        while(strlen(trim($jsLines[$selectedLine])) < 5){
             $selectedLine = array_rand($jsLines);
         }
-        $newLine = array($datestr, $selectedLine + 1, substr($jsLines[$selectedLine], 0, strlen($jsLines[$selectedLine]) - 1));
+        $newLine = array($datestr, $selectedLine + 1, trim($jsLines[$selectedLine]));
         file_put_contents("lotd.txt", json_encode($newLine));
         echo json_encode(array($newLine[1], $newLine[2]));
     }

@@ -11,25 +11,30 @@
     width:16px;
     background-color:#555;
     box-shadow:inset 0 0 10px #CCC;
+    cursor:url(cursors/beta/default.png) 3 3, default;
 }
 ::-webkit-scrollbar-corner{
     background-color:#555;
     box-shadow:inset 0 0 10px #CCC;
+    cursor:url(cursors/beta/default.png) 3 3, default;
 }
 ::-webkit-resizer{
     border-radius:8px;
     background-color:#CCC;
     box-shadow:inset 0 0 10px #555;
+    cursor:url(cursors/beta/default.png) 3 3, default;
 }
 ::-webkit-scrollbar-thumb{
     border-radius:8px;
     background-color:#CCC;
     box-shadow:inset 0 0 10px #555;
+    cursor:url(cursors/beta/default.png) 3 3, default;
 }
 ::-webkit-scrollbar-button{
     border-radius:8px;
     background-color:#CCC;
     box-shadow:inset 0 0 10px #555;
+    cursor:url(cursors/beta/default.png) 3 3, default;
 }
     .darkMode ::-webkit-scrollbar{
         width:16px;
