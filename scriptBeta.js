@@ -2167,7 +2167,7 @@ function showEditContext(event){
     if((event.target.tagName === "INPUT" && (event.target.getAttribute("type") === "text" || event.target.getAttribute("type") === "password" || event.target.getAttribute("type") === null)) || event.target.tagName === "TEXTAREA"){
         canPasteHere = 1;
     }
-    textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "ctxMenu/beta/happy.png", "ctxmenu/beta/load.png", "ctxmenu/beta/save.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
+    textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "ctxMenu/beta/happy.png", "ctxMenu/beta/load.png", "ctxMenu/beta/save.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
     for(var i = 1; i <= textEditorTools.slots; i++){
         if(currentSelection.length === 0){
             textEditorTools.tempvar = '-';
@@ -4647,7 +4647,6 @@ c(function(){
                         }
                     }
                 }
-                doLog(cmdObjects);
                 return cmdObjects;
             },
             execute: function(cmd, silent){
@@ -7932,7 +7931,7 @@ c(function(){
                 );
                 getId("np2Screen").wrap = "off";
                 getId('win_notepad2_html').style.background = 'none';
-                this.filemode = "string";
+                this.vars.filemode = "string";
             }
             this.appWindow.openWindow();
         },
@@ -8029,6 +8028,11 @@ c(function(){
                 }
             },
             saveFile: function(filename){
+                doLog(1);
+                if(filename.length === 0){
+                    apps.prompt.vars.alert("Failed to save: No filename provided.", "Okay", function(){}, "Text Editor");
+                    return;
+                }
                 if(filename.indexOf('/') === -1){
                     filename = '/USERFILES/' + filename;
                 }else if(filename.indexOf('/') !== 0){
@@ -8037,6 +8041,10 @@ c(function(){
                 getId('np2Load').value = filename;
                 if(filename.indexOf('/USERFILES/') === 0){
                     var shortfilename = filename.substring(11, filename.length);
+                    if(shortfilename.length === 0){
+                        apps.prompt.vars.alert("Failed to save: No filename provided.", "Okay", function(){}, "Text Editor");
+                        return;
+                    }
                     if(shortfilename.indexOf('/') !== -1){
                         apps.prompt.vars.alert("Failed to save " + filename + ": Folders not supported in USERFILES.", "Okay", function(){}, "Text Editor");
                     }else if(shortfilename.indexOf('.') !== -1){
@@ -8367,10 +8375,11 @@ c(function(){
             "02/09/2019: B0.9.9.2\n : Function Grapher no longer requires 'Math.'\n : Function Grapher informs user of ^ operator.\n : Your USERFILES are now loaded separately from the page source, and are initialized in a better way. In some ways this is faster, in other ways it's slower. But in all ways it appears to be more stable than before.\n : Fixed USERFILES sometimes being set to null when your folder is empty.\n\n" +
             "02/10/2019: B0.9.9.3\n : Function Grapher only notifies on ^ once.\n\n" +
             "02/11/2019: B0.9.9.4\n + Source Code Line of the Day in JS Console.\n + More detailed loading performance info in JS Console.\n - Removed unnecessary logs from JS Console.\n : Files 2 no longer accidentally sends the wrong name to Text Editor for USERFILES entries.\n : Files 2 is much more stable when encountering 'invalid' filenames.\n\n" +
-            "02/12/2019: B0.9.10.0\n + File Manager has been replaced File Manager 2.\n + File Manager 2 uses bash for most of its file operations.\n + File Manager 2 has multiple view modes.\n + File Manager 2 has much faster performance.\n + File Manager 2 has file icons.\n + File Manager 2 is compatible with mobile mode and custom border width.\n + File Manager 2 is far more stable.\n + Begun work on replacement text editor.\n + TE2 can now edit and save functions.",
+            "02/12/2019: B0.9.10.0\n + File Manager has been replaced File Manager 2.\n + File Manager 2 uses bash for most of its file operations.\n + File Manager 2 has multiple view modes.\n + File Manager 2 has much faster performance.\n + File Manager 2 has file icons.\n + File Manager 2 is compatible with mobile mode and custom border width.\n + File Manager 2 is far more stable.\n + Begun work on replacement text editor.\n + TE2 can now edit and save functions.\n\n" +
+            "02/13/2019: B0.9.10.1\n + Users can now type a path into Files 2\n : Files 2 handles empty and null directories better.\n : TE2 handles bad input better.\n : Fixed some copy/paste icons",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.10.0 (02/12/2019) r2';
+    window.aOSversion = 'B0.9.10.1 (02/12/2019) r2';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -8754,7 +8763,7 @@ c(function(){
                     '<div class="cursorPointer" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.setViewMode()">&#8801;</div>' +
                     '</div>' +
                     '<div style="width:100%; height:calc(100% - 25px); top:25px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow-x:auto; overflow-y:scroll; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>' +
-                    '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:' + (25 + scrollHeight) + 'px; line-height:25px; vertical-align:middle; width:calc(100% - 110px); border-top-left-radius:5px; border-top-right-radius:5px; overflow-x:scroll;"><div id="FIL2green" style="width:0;height:100%;"></div><div>&nbsp;/</div></div>' +
+                    '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:' + (25 + scrollHeight) + 'px; line-height:25px; vertical-align:middle; width:calc(100% - 110px); border-top-left-radius:5px; border-top-right-radius:5px; overflow-x:scroll;"><div id="FIL2green" style="width:0;height:100%;"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="/"></div></div>' +
                     '<div id="FIL2viewModeIcon" style="pointer-events:none; color:#7F7F7F; text-align:right; left:55px; font-family:monospace; height:25px; line-height:25px; vertical-align:middle; width:calc(100% - 110px);"></div>'
                 );
             }
@@ -8844,12 +8853,18 @@ c(function(){
                 this.update();
             },
             next: function(nextName){
-                if(getId("FIL2green").style.backgroundColor !== "rgb(170, 255, 170)"){
-                    this.currLoc += nextName;
-                    this.update();
-                }else{
-                    apps.prompt.vars.alert('Please allow Files to finish searching the current folder.', 'Oops, I almost broke stuff.', function(){}, 'Files');
+                this.currLoc += nextName;
+                this.update();
+            },
+            navigate: function(newName){
+                if(newName[0] !== "/"){
+                    newName = "/" + newName;
                 }
+                if(newName[newName.length - 1] !== "/"){
+                    newName = newName + "/";
+                }
+                this.currLoc = newName;
+                this.update();
             },
             filetype: function(type){
                 switch(type){
@@ -8926,7 +8941,7 @@ c(function(){
                     '<div id="FIL2tbl" class="' + this.viewModes[this.currViewMode][1] + '" style="width:100%; position:absolute; top:' + scrollHeight + 'px; margin:auto;padding-bottom:3px;"></div>';
                 getId("FIL2tbl").style.marginTop = scrollHeight;
                 if(this.currLoc === '/'){
-                    getId("FIL2path").innerHTML = '<div id="FIL2green" style="height:100%;background-color:rgb(170, 255, 170)"></div><div>&nbsp;/</div>';
+                    getId("FIL2path").innerHTML = '<div id="FIL2green" style="height:100%;background-color:rgb(170, 255, 170)"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="/"></div>';
                     getId("FIL2tbl").innerHTML =
                         '<div class="cursorPointer" onClick="apps.files2.vars.next(\'apps/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'apps\\\');toTop(apps.properties)\'])">' +
                         '<img src="files2/small/folder.png"> ' +
@@ -8952,65 +8967,71 @@ c(function(){
                     getId("FIL2cntn").style.backgroundImage="";
                     getId('FIL2cntn').classList.remove('cursorLoadDark');
                 }else{
-                    getId("FIL2path").innerHTML = '<div id="FIL2green" class="liveElement" liveTarget="style.width" liveVar="apps.files2.vars.currItem/apps.files2.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div>&nbsp;' + this.currLoc + '</div>';
+                    getId("FIL2path").innerHTML = '<div id="FIL2green" class="liveElement" liveTarget="style.width" liveVar="apps.files2.vars.currItem/apps.files2.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="' + this.currLoc + '"></div>';
                     this.currDirList = apps.bash.vars.execute("ls '" + this.currLoc + "'", 1).split('\n');
-                    this.currDirList.sort(function(a, b){
-                        var aLow = a.toLowerCase();
-                        var bLow = b.toLowerCase();
-                        if(aLow === bLow){
-                            return 0;
-                        }
-                        if(aLow > bLow){
-                            return 1;
-                        }
-                        return -1;
-                    });
-                    var temphtml = '';
-                    if(this.currLoc === "/USERFILES/"){
-                        for(var item in this.currDirList){
-                            if(this.currDirList[item]){
-                                temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'/USERFILES/' + this.currDirList[item] + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + this.currDirList[item] + '\\\');\'])">' +
-                                    '<img src="files2/small/file.png"> ' +
-                                    this.currDirList[item] +
-                                    '</div>';
-                            }
-                        }
-                    }else if(this.currLoc === "/apps/"){
-                        for(var item in this.currDirList){
-                            if(this.currDirList[item]){
-                                // if item is a folder
-                                if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
-                                    temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                        '<img class="FIL2aosAppIcon" src="' + (apps[this.currDirList[item].split('/')[0]].appWindow.appImg || "appicons/ds/redx.png") + '"> ' +
-                                        this.currDirList[item] +
-                                        '</div>';
-                                }else{
-                                    temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\'") + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                        '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
-                                        this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
-                                        '</div>';
-                                }
-                            }
+                    if(this.currDirList.length === 1 && this.currDirList[0] === ""){
+                        if(typeof apps.bash.vars.getRealDir(this.currLoc) !== "object" || apps.bash.vars.getRealDir(this.currLoc) === null){
+                            apps.prompt.vars.alert("Could not open " + this.currLoc + ": Does not exist or is null.", "Okay", function(){}, "File Manager");
                         }
                     }else{
-                        for(var item in this.currDirList){
-                            if(this.currDirList[item]){
-                                // if item is a folder
-                                if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
-                                    temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                        '<img src="files2/small/folder.png"> ' +
+                        this.currDirList.sort(function(a, b){
+                            var aLow = a.toLowerCase();
+                            var bLow = b.toLowerCase();
+                            if(aLow === bLow){
+                                return 0;
+                            }
+                            if(aLow > bLow){
+                                return 1;
+                            }
+                            return -1;
+                        });
+                        var temphtml = '';
+                        if(this.currLoc === "/USERFILES/"){
+                            for(var item in this.currDirList){
+                                if(this.currDirList[item]){
+                                    temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'/USERFILES/' + this.currDirList[item] + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + this.currDirList[item] + '\\\');\'])">' +
+                                        '<img src="files2/small/file.png"> ' +
                                         this.currDirList[item] +
-                                        '</div>';
-                                }else{
-                                    temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                        '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
-                                        this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
                                         '</div>';
                                 }
                             }
+                        }else if(this.currLoc === "/apps/"){
+                            for(var item in this.currDirList){
+                                if(this.currDirList[item]){
+                                    // if item is a folder
+                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
+                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                            '<img class="FIL2aosAppIcon" src="' + (apps[this.currDirList[item].split('/')[0]].appWindow.appImg || "appicons/ds/redx.png") + '"> ' +
+                                            this.currDirList[item] +
+                                            '</div>';
+                                    }else{
+                                        temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\'") + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                            '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
+                                            this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
+                                            '</div>';
+                                    }
+                                }
+                            }
+                        }else{
+                            for(var item in this.currDirList){
+                                if(this.currDirList[item]){
+                                    // if item is a folder
+                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
+                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                            '<img src="files2/small/folder.png"> ' +
+                                            this.currDirList[item] +
+                                            '</div>';
+                                    }else{
+                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                            '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
+                                            this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
+                                            '</div>';
+                                    }
+                                }
+                            }
                         }
+                        getId('FIL2tbl').innerHTML = temphtml;
                     }
-                    getId('FIL2tbl').innerHTML = temphtml;
                     getId("FIL2green").className = '';
                     getId('FIL2green').style.backgroundColor = "#FFF";
                     getId("FIL2green").style.display = "none";
