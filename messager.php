@@ -1,6 +1,6 @@
 <?php
 // recieve message from client
-if(isset($_COOKIE['keyword']) && isset($_POST['c']) && strpos($_SERVER['HTTP_REFERER'], 'https://'.$_SERVER['SERVER_NAME']) === 0){
+if(isset($_COOKIE['keyword']) && isset($_POST['c']) && (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== FALSE || explode(':', $_SERVER['HTTP_HOST'])[0] === "localhost")){
     if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){
         if(isset($_COOKIE['password'])){
             if(!password_verify($_COOKIE['password'], file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt'))){

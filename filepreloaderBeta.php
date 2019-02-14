@@ -18,7 +18,7 @@
         if(!is_dir('messageUsernames')){
             mkdir('messageUsernames');
         }
-        echo 'alert("By hosting AaronOS or otherwise using its code or resources, you are agreeing to the End User License Agreement which will open in a new window/tab when you click anywhere on the aOS desktop.");window.tosClick=function(){window.open("terms.txt","_blank");window.removeEventListener("click",window.tosClick)};window.addEventListener("click",window.tosClick);';
+        echo 'alert("By hosting AaronOS or otherwise using its code or resources, you are agreeing to the End User License Agreement which will open in a new window/tab when you click anywhere on the aOS desktop.");window.tosClick=function(){window.open("eula.txt","_blank");window.removeEventListener("click",window.tosClick)};window.addEventListener("click",window.tosClick);';
     }
     
     // if the page needs to be refreshed
@@ -67,7 +67,7 @@
         $newUser = 1;
         // create a new userkey
         $newcode = 'blank';
-        while(is_dir('USERFILES/'.$newcode)){
+        while($newcode === 'blank' || is_dir('USERFILES/'.$newcode)){
             $newcode = '';
             for($i = 0; $i < 21; $i++){ // capacity for 41-trillion, 107-billion, 996-million, 877-thousand, 935-hundred, 680 unique web-browser keys
                 $newcode = $newcode.$lettertypes[rand(0, strlen($lettertypes) - 1)];
@@ -82,7 +82,7 @@
         $newUser = 1;
         // create a new userkey
         $newcode = 'blank';
-        while(is_dir('USERFILES/'.$newcode)){
+        while($newcode === 'blank' || is_dir('USERFILES/'.$newcode)){
             $newcode = '';
             for($i = 0; $i < 21; $i++){ // capacity for 41-trillion, 107-billion, 996-million, 877-thousand, 935-hundred, 680 unique web-browser keys
                 $newcode = $newcode.$lettertypes[rand(0, strlen($lettertypes) - 1)];
