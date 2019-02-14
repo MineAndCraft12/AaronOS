@@ -19,13 +19,18 @@ Looking under the hood?
         \|/                                    */
 
 // force https
-if(serverCanUseHTTPS){
-    if(window.location.href.indexOf('http://') === 0 && navigator.userAgent.indexOf('MSIE') === -1){
-        var tempLoc = window.location.href.split('http://');
-        tempLoc.shift();
-        window.location = 'https://' + tempLoc.join('http://');
-        makeAnErrorToQuit();
+try{
+    if(serverCanUseHTTPS){
+        if(window.location.href.indexOf('http://') === 0 && navigator.userAgent.indexOf('MSIE') === -1){
+            var tempLoc = window.location.href.split('http://');
+            tempLoc.shift();
+            window.location = 'https://' + tempLoc.join('http://');
+            makeAnErrorToQuit();
+        }
     }
+}catch(err){
+    console.log(err);
+    console.log("issue in test_ssl.php?");
 }
 
 if(typeof console === "undefined"){

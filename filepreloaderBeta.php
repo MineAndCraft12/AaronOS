@@ -125,7 +125,12 @@
         }
     }
     // push javascript to set server variables
-    echo 'window.SRVRKEYWORD="'.$_COOKIE['keyword'].'";window.IPADDRESS="'.$_SERVER['HTTP_X_FORWARDED_FOR'].'";';
+    echo 'window.SRVRKEYWORD="'.$_COOKIE['keyword'].'";';
+    try{
+        echo 'window.IPADDRESS="'.$_SERVER['HTTP_X_FORWARDED_FOR'].'";';
+    }catch(Exception $e){
+        echo 'window.IPADDRESS="undefined";';
+    }
     // if it needs to be refreshed, tell the client via js
     if($needtorefresh){
         echo 'window.location = "aosBeta.php?refreshed="+Math.round(Math.random()*1000);doLog("Moving");';
