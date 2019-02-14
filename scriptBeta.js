@@ -1283,11 +1283,11 @@ function checkLiveElements(){
                 try{
                     eval('liveElements[' + elem + '].' + liveElements[elem].getAttribute('liveTarget') + ' = "' + eval(liveElements[elem].getAttribute('liveVar')) + '"');
                 }catch(err){
-                    doLog(' ');
-                    doLog('LiveElement Error: ' + err, '#F00');
-                    doLog('Element #' + elem, '#F00');
-                    doLog('Target ' + liveElements[elem].getAttribute('liveTarget'), '#F00');
-                    doLog('Value ' + liveElements[elem].getAttribute('liveVar'), '#F00');
+                    //doLog(' ');
+                    //doLog('LiveElement Error: ' + err, '#F00');
+                    //doLog('Element #' + elem, '#F00');
+                    //doLog('Target ' + liveElements[elem].getAttribute('liveTarget'), '#F00');
+                    //doLog('Value ' + liveElements[elem].getAttribute('liveVar'), '#F00');
                 }
             }
         }
@@ -4652,7 +4652,24 @@ c(function(){
             execute: function(cmd, silent){
                 if(cmd){
                     this.command = cmd;
-                    if(!silent){
+                    if(silent){
+                        var temporaryBashWorkDir = this.workdir;
+                        if(arguments.callee.caller === window.sh){
+                            if(typeof arguments.callee.caller.caller.__bashworkdir === "string"){
+                                this.workdir = arguments.callee.caller.caller.__bashworkdir;
+                            }else{
+                                arguments.callee.caller.caller.__bashworkdir = "/";
+                                this.workdir = "/";
+                            }
+                        }else{
+                            if(typeof arguments.callee.caller.__bashworkdir === "string"){
+                                this.workdir = arguments.callee.caller.__bashworkdir;
+                            }else{
+                                arguments.callee.caller.__bashworkdir = "/";
+                                this.workdir = "/";
+                            }
+                        }
+                    }else{
                         this.echo('[aOS]$ ' + cleanStr(cmd));
                     }
                     var commandObjects = this.getCmdObjects(this.command);
@@ -4712,6 +4729,14 @@ c(function(){
                     if(cmdResult && !cmd){
                         this.echo(cmdResult);
                     }else if(cmd){
+                        if(silent){
+                            if(arguments.callee.caller === window.sh){
+                                arguments.callee.caller.caller.__bashworkdir = this.workdir;
+                            }else{
+                                arguments.callee.caller.__bashworkdir = this.workdir;
+                            }
+                            this.workdir = temporaryBashWorkDir;
+                        }
                         return cmdResult
                     }
                 }
@@ -8380,10 +8405,10 @@ c(function(){
             "02/11/2019: B0.9.9.4\n + Source Code Line of the Day in JS Console.\n + More detailed loading performance info in JS Console.\n - Removed unnecessary logs from JS Console.\n : Files 2 no longer accidentally sends the wrong name to Text Editor for USERFILES entries.\n : Files 2 is much more stable when encountering 'invalid' filenames.\n\n" +
             "02/12/2019: B0.9.10.0\n + File Manager has been replaced File Manager 2.\n + File Manager 2 uses bash for most of its file operations.\n + File Manager 2 has multiple view modes.\n + File Manager 2 has much faster performance.\n + File Manager 2 has file icons.\n + File Manager 2 is compatible with mobile mode and custom border width.\n + File Manager 2 is far more stable.\n + Begun work on replacement text editor.\n + TE2 can now edit and save functions.\n\n" +
             "02/13/2019: B0.9.10.1\n + Users can now type a path into Files 2\n : Files 2 handles empty and null directories better.\n : TE2 handles bad input better.\n : Fixed some copy/paste icons\n\n" +
-            "02/14/2019: B0.9.10.2\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.",
+            "02/14/2019: B0.9.10.2\n + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.10.2 (02/14/2019) r0';
+    window.aOSversion = 'B0.9.10.2 (02/14/2019) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
