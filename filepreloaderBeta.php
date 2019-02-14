@@ -10,6 +10,7 @@
         mkdir('USERFILES');
         mkdir('USERFILES/!ERROR');
         mkdir('USERFILES/!MESSAGE');
+        file_put_contents('USERFILES/newUsers.txt', '');
         if(!file_exists('setting.txt')){
             file_put_contents('USERFILES/!MESSAGE/m0.txt', '{"i":" ","n":" ","c":"This is the beginning of the message history.","t":"1","l":"0"}');
             file_put_contents('setting.txt', '0');

@@ -21,16 +21,32 @@ Looking under the hood?
 // force https
 try{
     if(serverCanUseHTTPS){
-        if(window.location.href.indexOf('http://') === 0 && navigator.userAgent.indexOf('MSIE') === -1){
+        if((window.location.href.indexOf('http://') === 0 || window.location.href.indexOf('://') === -1) && navigator.userAgent.indexOf('MSIE') === -1){
             var tempLoc = window.location.href.split('http://');
             tempLoc.shift();
             window.location = 'https://' + tempLoc.join('http://');
             makeAnErrorToQuit();
         }
     }
+    window.getSSLTestVars = function(){
+        return {
+            canUseHTTPS: serverCanUseHTTPS,
+            errors: sslTestEncounteredError,
+            hostServer: sslTestHostServer,
+            certifServer: sslTestCertificateServer
+        };
+    }
 }catch(err){
     console.log(err);
     console.log("issue in test_ssl.php?");
+    window.getSSLTestVars = function(){
+        return {
+            canUseHTTPS: serverCanUseHTTPS,
+            errors: sslTestEncounteredError,
+            hostServer: sslTestHostServer,
+            certifServer: sslTestCertificateServer
+        };
+    }
 }
 
 if(typeof console === "undefined"){
