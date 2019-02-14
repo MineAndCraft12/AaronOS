@@ -1,6 +1,6 @@
 <?php
 function sslerror($errno, $errstr){
-    echo 'FAIL';
+    echo 'window.serverCanUseHTTPS = 0;';
     die();
 }
 set_error_handler("sslerror");
