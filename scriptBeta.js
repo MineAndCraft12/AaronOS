@@ -1309,7 +1309,7 @@ function pinApp(app){
     }else{
         pinnedApps.splice(pinnedApps.indexOf(app), 1);
     }
-    apps.savemaster.vars.save('APP_STN_PINNEDAPPS', JSON.stringify(pinnedApps), 1);
+    ufsave('APP_STN_PINNEDAPPS', JSON.stringify(pinnedApps));
 }
 // Application class
 m('init Application class');
@@ -1747,7 +1747,7 @@ function addWidget(widgetName, nosave){
             widgets[widgetName].start();
             widgetsList[widgetName] = widgetName;
             if(!nosave){
-                apps.savemaster.vars.save('APP_STN_WIDGETLIST', JSON.stringify(widgetsList), 1);
+                ufsave('APP_STN_WIDGETLIST', JSON.stringify(widgetsList));
             }
         }
     }
@@ -1762,7 +1762,7 @@ function removeWidget(widgetName, nosave){
             getId('widget_' + widgetName).outerHTML = '';
             delete widgetsList[widgetName];
             if(!nosave){
-                apps.savemaster.vars.save('APP_STN_WIDGETLIST', JSON.stringify(widgetsList), 1);
+                ufsave('APP_STN_WIDGETLIST', JSON.stringify(widgetsList));
             }
         }
     }
@@ -1999,7 +1999,7 @@ widgets.battery = new Widget(
             ]
         },
         changeStyle: function(newStyle){
-            apps.savemaster.vars.save("WGT_BATTERY_STYLE", newStyle, 1);
+            ufsave("WGT_BATTERY_STYLE", newStyle);
             widgets.battery.vars.styles[newStyle][0]();
         },
         generateMenu: function(){
@@ -2245,7 +2245,7 @@ var textEditorTools = {
     tmpGenArray: [],
     copy: function(slot){
         this.clipboard[slot - 1] = this.tempvar3;
-        apps.savemaster.vars.save("APP_STN_SAVED_CLIPBOARD", this.clipboard.join('-78e23dde9ace11e69f33a24fc0d9649c-'), 1);
+        ufsave("APP_STN_SAVED_CLIPBOARD", this.clipboard.join('-78e23dde9ace11e69f33a24fc0d9649c-'));
     },
     paste: function(element, slot, cursorpos, endselect){
         getId(element).value = getId(element).value.substring(0, cursorpos) + this.clipboard[slot - 1] + getId(element).value.substring(endselect, getId(element).value.length); 
@@ -2253,7 +2253,7 @@ var textEditorTools = {
     swap: function(element, slot, cursorpos){
         var tempCopy = this.clipboard[slot - 1];
         this.clipboard[slot - 1] = this.tempvar3;
-        apps.savemaster.vars.save("APP_STN_SAVED_CLIPBOARD", this.clipboard.join('-78e23dde9ace11e69f33a24fc0d9649c-'), 1);
+        ufsave("APP_STN_SAVED_CLIPBOARD", this.clipboard.join('-78e23dde9ace11e69f33a24fc0d9649c-'));
         getId(element).value = getId(element).value.substring(0, cursorpos) + tempCopy + getId(element).value.substring(cursorpos, getId(element).value.length);
     }
 };
@@ -2851,7 +2851,7 @@ c(function(){
                 }
                 USERFILES.NORAA_MOOD = this.mood + "";
                 if(!nosave){
-                    apps.savemaster.vars.save("NORAA_MOOD", this.mood, 1);
+                    ufsave("NORAA_MOOD", this.mood);
                 }
             },
             contRecog: {},
@@ -3068,7 +3068,7 @@ c(function(){
                                         apps.nora.vars.notes[i] = apps.nora.vars.notes[i + 1];
                                     }
                                     apps.nora.vars.notes.pop();
-                                    apps.savemaster.vars.save('NORAA_NOTES', String(apps.nora.vars.notes));
+                                    ufsave('NORAA_NOTES', String(apps.nora.vars.notes));
                                     apps.nora.vars.say('Deleted the note ' + this[4].lastDeleted);
                                 }else{
                                     apps.nora.vars.say('I can\'t delete something that\'s not there. You only have ' + apps.nora.vars.notes.length + ' notes.');
@@ -3371,7 +3371,7 @@ c(function(){
                             apps.nora.vars.updateUserObj(this[4].inpPro, this[4].inpVal);
                         }else if(text.indexOf('will be deleted') > -1){
                             delete apps.nora.vars.userObj[text.substring(0, text.indexOf(' will be deleted'))];
-                            apps.savemaster.vars.save('NORAA_USER', JSON.stringify(apps.nora.vars.userObj), 1);
+                            ufsave('NORAA_USER', JSON.stringify(apps.nora.vars.userObj));
                             apps.nora.vars.say('I deleted that info about you.');
                         }else{
                             apps.nora.vars.say('I cannot find any discernable information in there.');
@@ -5110,7 +5110,7 @@ c(function(){
                     usage: 'sudo [command]',
                     desc: 'obselete function to run command as root; all users already root but the function still works',
                     action: function(args){
-                        return apps.bash.vars.execute(args.join(' '), 1);
+                        return apps.bash.vars.execute(args.join(' '));
                     }
                 },
                 {
@@ -6071,7 +6071,7 @@ c(function(){
                     saveRes: {
                         option: 'Save Resolution',
                         description: function(){return 'Have aOS automatically load to a specified resolution (enter in boxes above)'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save</button> <button onclick="apps.savemaster.vars.del(\'APP_STN_SAVESCREENRES\')">Delete</button>'}
+                        buttons: function(){return '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save</button> <button onclick="ufdel(\'APP_STN_SAVESCREENRES\')">Delete</button>'}
                     },
                     currWin: {
                         option: 'Current Browser Window Resolution',
@@ -7714,7 +7714,7 @@ c(function(){
                 apps.prompt.vars.confirm('Are you sure you wish to delete this icon?', ['No, Keep Icon', 'Yes, Delete Icon'], function(btn){
                     if(btn){
                         getId('app' + apps.iconMaker.vars.deleteElem).style.display = 'none';
-                        apps.savemaster.vars.del('APP_IcM_ICON_' + apps.iconMaker.vars.deleteElem);
+                        ufdel('APP_IcM_ICON_' + apps.iconMaker.vars.deleteElem);
                     }
                 }, 'aOS');
             }
@@ -8405,10 +8405,10 @@ c(function(){
             "02/11/2019: B0.9.9.4\n + Source Code Line of the Day in JS Console.\n + More detailed loading performance info in JS Console.\n - Removed unnecessary logs from JS Console.\n : Files 2 no longer accidentally sends the wrong name to Text Editor for USERFILES entries.\n : Files 2 is much more stable when encountering 'invalid' filenames.\n\n" +
             "02/12/2019: B0.9.10.0\n + File Manager has been replaced File Manager 2.\n + File Manager 2 uses bash for most of its file operations.\n + File Manager 2 has multiple view modes.\n + File Manager 2 has much faster performance.\n + File Manager 2 has file icons.\n + File Manager 2 is compatible with mobile mode and custom border width.\n + File Manager 2 is far more stable.\n + Begun work on replacement text editor.\n + TE2 can now edit and save functions.\n\n" +
             "02/13/2019: B0.9.10.1\n + Users can now type a path into Files 2\n : Files 2 handles empty and null directories better.\n : TE2 handles bad input better.\n : Fixed some copy/paste icons\n\n" +
-            "02/14/2019: B0.9.10.2\n + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.",
+            "02/14/2019: B0.9.10.2\n + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.\n - Notification content no longer pushes into button row.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.10.2 (02/14/2019) r1';
+    window.aOSversion = 'B0.9.10.2 (02/14/2019) r3';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -8715,7 +8715,7 @@ c(function(){
                                     c(function(arg){
                                         //getId("FILtbl").innerHTML +=
                                         apps.files.vars.currContentStr +=
-                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + arg + '\\\');\'])">' +
+                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'+Delete\', \'ufdel(\\\'' + arg + '\\\');\'])">' +
                                             '<td>' + arg + '</td>' +
                                             '<td>' + apps.files.vars.filetype(typeof(eval(apps.files.vars.currLoc)[arg])) + '</td>' +
                                             '</tr>';
@@ -8997,7 +8997,7 @@ c(function(){
                     getId('FIL2cntn').classList.remove('cursorLoadDark');
                 }else{
                     getId("FIL2path").innerHTML = '<div id="FIL2green" class="liveElement" liveTarget="style.width" liveVar="apps.files2.vars.currItem/apps.files2.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="' + this.currLoc + '"></div>';
-                    this.currDirList = apps.bash.vars.execute("ls '" + this.currLoc + "'", 1).split('\n');
+                    this.currDirList = sh("ls '" + this.currLoc + "'").split('\n');
                     if(this.currDirList.length === 1 && this.currDirList[0] === ""){
                         if(typeof apps.bash.vars.getRealDir(this.currLoc) !== "object" || apps.bash.vars.getRealDir(this.currLoc) === null){
                             apps.prompt.vars.alert("Could not open " + this.currLoc + ": Does not exist or is null.", "Okay", function(){}, "File Manager");
@@ -9018,7 +9018,7 @@ c(function(){
                         if(this.currLoc === "/USERFILES/"){
                             for(var item in this.currDirList){
                                 if(this.currDirList[item]){
-                                    temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'/USERFILES/' + this.currDirList[item] + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.savemaster.vars.del(\\\'' + this.currDirList[item] + '\\\');\'])">' +
+                                    temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'/USERFILES/' + this.currDirList[item] + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'+Delete\', \'ufdel(\\\'' + this.currDirList[item] + '\\\');\'])">' +
                                         '<img src="files2/small/file.png"> ' +
                                         this.currDirList[item] +
                                         '</div>';

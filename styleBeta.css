@@ -1132,10 +1132,10 @@ div{
     height:1em;
 }
 #notifContent{
-    bottom:2px;
+    bottom:calc(10px + 1em);
     left:2px;
     width:calc(100% - 56px);
-    height:calc(100% - 2em - 4px);
+    height:calc(100% - 3em - 12px);
     overflow:auto;
 }
 #notifButtons{
