@@ -147,6 +147,9 @@
     echo '<script defer>';
     require 'filepreloaderBeta.php';
     echo '</script>';
+    echo '<script>';
+    require 'test_ssl.php';
+    echo '</script>';
 ?>
 </html>
 <?php ob_end_flush(); ?>

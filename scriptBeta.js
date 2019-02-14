@@ -12,11 +12,22 @@ Looking under the hood?
     And I have no way to keep you from doing so?
         Let's dive straight into business then, shall we?
 
-    Here's a bunch of IE compatibility fixes to start us off!
+    Here's a bunch of IE compatibility fixes and stuff to start us off!
                                  |
           _______________________|
          |
         \|/                                    */
+
+// force https
+if(serverCanUseHTTPS){
+    if(window.location.href.indexOf('http://') === 0 && navigator.userAgent.indexOf('MSIE') === -1){
+        var tempLoc = window.location.href.split('http://');
+        tempLoc.shift();
+        window.location = 'https://' + tempLoc.join('http://');
+        makeAnErrorToQuit();
+    }
+}
+
 if(typeof console === "undefined"){
     console = {
         log: function(){
@@ -52,14 +63,6 @@ if(window.requestAnimationFrame === undefined){
         window.setTimeout(func, 0);
     };
     window.requestAnimationFrame(function(){console.log('requestAnimationFrame is not supported by your browser. It has been replaced by function(func){setTimeout(func, 0)}', '#F00')});
-}
-
-// force https
-if(window.location.href.indexOf('http://') === 0 && navigator.userAgent.indexOf('MSIE') === -1){
-    var tempLoc = window.location.href.split('http://');
-    tempLoc.shift();
-    window.location = 'https://' + tempLoc.join('http://');
-    makeAnErrorToQuit();
 }
 
 (function(win, doc){
