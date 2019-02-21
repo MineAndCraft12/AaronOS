@@ -1,7 +1,7 @@
 <?php
     // error handler
-    function error($errno, $errstr){
-        echo "alert('Serverside error. [$errno]: $errstr | Contact mineandcraft12@gmail.com or else the file broken and every other file you save from now on will be lost. Reference error code ".$_COOKIE['keyword']." in the email.');";
+    function error($errno, $errstr, $errfile, $errline){
+        echo "alert('Serverside error in $errfile[$errline]: $errstr\n\nContact mineandcraft12@gmail.com or #bug-reports on https://discord.gg/Y5Jytdm\nIf needed, tell the developer in a PRIVATE conversation, your ID is ".$_COOKIE['keyword']."');";
     }
     set_error_handler("error");
     
