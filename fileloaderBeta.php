@@ -23,8 +23,8 @@ function dirToArray($dir) {
    return $result; 
 }
 
-$freturn=dirToArray("message_standalone");
-echo json_encode($freturn, JSON_PRETTY_PRINT);
+
+
 if(isset($_COOKIE['keyword'])){
     if(is_dir('USERFILES/'.$_COOKIE['keyword'])){
         if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){
