@@ -1,19 +1,30 @@
 <?php 
-function find_all_files($dir) 
-{ 
-    $root = scandir($dir); 
-    foreach($root as $value) 
-    { 
-        if($value === '.' || $value === '..') {
-            continue;
-        } 
-        if(is_file("$dir/$value")) {
-            $result[substr($value, 0, strrpos($value, '.'))] = file_get_contents("$dir/$value");
-            continue;
-        }
-    }
-    return $result;
+// dirToArray provided by SkyeEverest
+function dirToArray($dir) { 
+   
+   $result = array(); 
+
+   $cdir = scandir($dir); 
+   foreach ($cdir as $key => $value) 
+   { 
+      if (!in_array($value,array(".",".."))) 
+      { 
+         if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) 
+         { 
+            $result[$value] = dirToArray($dir . DIRECTORY_SEPARATOR . $value); 
+         } 
+         else 
+         { 
+            $result[substr($value, 0, strrpos($value, '.'))] =  file_get_contents($dir . DIRECTORY_SEPARATOR . $value); 
+         } 
+      } 
+   } 
+   
+   return $result; 
 }
+
+$freturn=dirToArray("message_standalone");
+echo json_encode($freturn, JSON_PRETTY_PRINT);
 if(isset($_COOKIE['keyword'])){
     if(is_dir('USERFILES/'.$_COOKIE['keyword'])){
         if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){
@@ -34,7 +45,7 @@ if(isset($_COOKIE['keyword'])){
                     }
                     
                     if(password_verify($_COOKIE['password'], $currPassword)){
-                        $jsonResult = json_encode(find_all_files('USERFILES/'.$_COOKIE['keyword']));
+                        $jsonResult = json_encode(dirToArray('USERFILES/'.$_COOKIE['keyword']));
                         if($jsonResult == "null"){
                             echo '{}';
                         }else{
@@ -49,7 +60,7 @@ if(isset($_COOKIE['keyword'])){
                 echo '{}';
             }
         }else{
-            $jsonResult = json_encode(find_all_files('USERFILES/'.$_COOKIE['keyword']));
+            $jsonResult = json_encode(dirToArray('USERFILES/'.$_COOKIE['keyword']));
             if($jsonResult == "null"){
                 echo '{}';
             }else{

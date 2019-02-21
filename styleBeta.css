@@ -313,7 +313,7 @@ div{
                 }
                 .winHTML.noPadding{
                     padding-left:0;
-                    width:calc(100% - 6px);
+                    width:calc(100% - 6px); /* fallback */
                     width:calc(100% - var(--windowBorderWidth) - var(--windowBorderWidth));
                 }
                     .mobileMode .winHTML.noPadding{
