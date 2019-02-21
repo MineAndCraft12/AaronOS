@@ -5632,6 +5632,12 @@ c(function(){
                             if(typeof USERFILES.APP_STN_SETTING_WINCOLOR === "string"){
                                 getId("STNwinColorInput").value = USERFILES.APP_STN_SETTING_WINCOLOR;
                                 apps.settings.vars.setWinColor(1);
+                            }else{
+                                if((navigator.userAgent.indexOf("Trident") > -1 && navigator.userAgent.indexOf("rv:") > -1) || navigator.userAgent.indexOf("MSIE") > -1){
+                                    // browser is IE and does not support blurring; pick a better window background color
+                                    getId("STNwinColorInput").value = 'rgb(70, 80, 110)';
+                                    apps.settings.vars.setWinColor(1);
+                                }
                             }
                             if(typeof USERFILES.APP_STN_SETTING_WINBLEND === "string"){
                                 getId("STNwinBlendInput").value = USERFILES.APP_STN_SETTING_WINBLEND;
@@ -8086,7 +8092,7 @@ c(function(){
                     getId('np2Mode').innerHTML = "Text Mode";
                 }
                 if(getId('np2Screen').value !== ""){
-                    apps.prompt.vars.confirm("You will lose all unsaved work. Continue?", ['No', 'Yes'], (btn) => {
+                    apps.prompt.vars.confirm("You will lose all unsaved work. Continue?", ['No', 'Yes'], function(btn){
                         if(btn){
                             requestAnimationFrame(function(){
                                 toTop(apps.notepad2);
@@ -8095,7 +8101,7 @@ c(function(){
                             getId('np2Screen').value = filecontent;
                             getId('np2Screen').scrollTop = 0;
                         }
-                    }, 'Text Editor');
+                    }.bind(this), 'Text Editor');
                 }else{
                     requestAnimationFrame(function(){
                         toTop(apps.notepad2);
@@ -8455,10 +8461,11 @@ c(function(){
             "02/11/2019: B0.9.9.4\n + Source Code Line of the Day in JS Console.\n + More detailed loading performance info in JS Console.\n - Removed unnecessary logs from JS Console.\n : Files 2 no longer accidentally sends the wrong name to Text Editor for USERFILES entries.\n : Files 2 is much more stable when encountering 'invalid' filenames.\n\n" +
             "02/12/2019: B0.9.10.0\n + File Manager has been replaced File Manager 2.\n + File Manager 2 uses bash for most of its file operations.\n + File Manager 2 has multiple view modes.\n + File Manager 2 has much faster performance.\n + File Manager 2 has file icons.\n + File Manager 2 is compatible with mobile mode and custom border width.\n + File Manager 2 is far more stable.\n + Begun work on replacement text editor.\n + TE2 can now edit and save functions.\n\n" +
             "02/13/2019: B0.9.10.1\n + Users can now type a path into Files 2\n : Files 2 handles empty and null directories better.\n : TE2 handles bad input better.\n : Fixed some copy/paste icons\n\n" +
-            "02/14/2019: B0.9.10.2\n + Desktop icons will rearrange to fit the size of the desktop if it changes.\n : Deleting files actually works now.\n + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.\n - Notification content no longer pushes into button row.\n : LOTS of backend code fixes.",
+            "02/14/2019: B0.9.10.2\n + Desktop icons will rearrange to fit the size of the desktop if it changes.\n : Deleting files actually works now.\n + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.\n - Notification content no longer pushes into button row.\n : LOTS of backend code fixes.\n\n" +
+            "02/20/2019: B0.9.10.3\n + Included fallbacks for CSS var(), for IE.\n : Automatically sets a darker, opaque background color for IE.\n : Serverside error reports now report the correct line number.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.10.2 (02/14/2019) r5';
+    window.aOSversion = 'B0.9.10.3 (02/20/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

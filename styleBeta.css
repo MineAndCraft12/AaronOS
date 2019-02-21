@@ -276,8 +276,10 @@ div{
                 font-family:Courier, monospace;
                 font-size:16px;
                 top:0px;
+                left:3px; /* fallback */
                 left:var(--windowBorderWidth);
                 padding-left:23px;
+                width: calc(100% - 29px); /* fallback */
                 width:calc(100% - 23px - var(--windowBorderWidth) - var(--windowBorderWidth));
                 height:21px;
                 text-shadow:0px 0px 2px #000;
@@ -289,8 +291,12 @@ div{
                     padding-left:69px;
                 }
             .winHTML{
+                width:calc(100% - 9px); /* fallback */
+                height:calc(100% - 24px); /* fallback */
                 width:calc(100% - 3px - var(--windowBorderWidth) - var(--windowBorderWidth));
                 height:calc(100% - 21px - var(--windowBorderWidth));
+                bottom:3px; /* fallback */
+                left:3px; /* fallback */
                 bottom:var(--windowBorderWidth);
                 left:var(--windowBorderWidth);
                 background-color:#FFF;
@@ -307,6 +313,7 @@ div{
                 }
                 .winHTML.noPadding{
                     padding-left:0;
+                    width:calc(100% - 6px);
                     width:calc(100% - var(--windowBorderWidth) - var(--windowBorderWidth));
                 }
                     .mobileMode .winHTML.noPadding{
@@ -527,6 +534,7 @@ div{
                 }
             .winExit{
                 height:16px;
+                right: 3px; /* fallback */
                 right:var(--windowBorderWidth);
                 width:16px;
                 padding-left:2px;
@@ -553,6 +561,7 @@ div{
                 background-color:#C00;
             }
                 .leftCaptionButtons .winExit{
+                    left:3px; /* fallback */
                     left:var(--windowBorderWidth);
                     right:initial;
                 }
@@ -583,23 +592,28 @@ div{
                 background-color:#090;
             }
             .winShrink{
+                right:49px; /* fallback */
                 right:calc(46px + var(--windowBorderWidth));
             }
                 .leftCaptionButtons .winShrink{
+                    left:49px; /* fallback */
                     left:calc(46px + var(--windowBorderWidth));
                     right:initial;
                 }
             .winBig{
+                right: 26px; /* fallback */
                 right:calc(23px + var(--windowBorderWidth));
             }
                 .mobileMode .winBig{
                     display:none !important;
                 }
                 .leftCaptionButtons .winBig{
+                    left: 26px; /* fallback */
                     left:calc(23px + var(--windowBorderWidth));
                     right:initial;
                 }
             .winFld{
+                left: 3px; /* fallback */
                 left: var(--windowBorderWidth);
                 line-height:24px;
             }
@@ -607,6 +621,7 @@ div{
                     display:none !important;
                 }
                 .leftCaptionButtons .winFld{
+                    right: 3px; /* fallback */
                     right:var(--windowBorderWidth);
                     left:initial;
                 }
