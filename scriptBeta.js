@@ -8871,15 +8871,20 @@ c(function(){
                 this.vars.currLoc = '/';
                 getId('win_files2_html').style.background = "none";
                 this.appWindow.setContent(
-                    '<div id="FIL2topdiv" style="width:100%; height:25px;">' +
+                    '<div id="FIL2topdiv" style="width:100%; height:50px;">' +
                     '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.back()">&lArr; &nbsp;</div>' +
                     '<div class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.home()">H</div>' +
                     '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">&nbsp; &#x21BB;</div>' +
                     '<div class="cursorPointer" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.setViewMode()">&#8801;</div>' +
+                    '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:25px; line-height:25px; vertical-align:middle; width:calc(100% - 110px); border-top-left-radius:5px; border-top-right-radius:5px;"><div id="FIL2green" style="width:0;height:100%;"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="/"></div></div>' +
+                    '<div id="FIL2viewModeIcon" style="pointer-events:none; color:#7F7F7F; text-align:right; left:55px; font-family:monospace; height:25px; line-height:25px; vertical-align:middle; width:calc(100% - 110px);"></div>' +
+                    '<div id="FIL2search" style="left:55px; top:26px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:24px; line-height:24px; vertical-align:middle; width:calc(100% - 110px);"><input id="FIL2searchInput" placeholder="Search" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:20px;padding:0;padding-left:8px;" onkeyup="apps.files2.vars.updateSearch(this.value)"></div>' +
+                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.mkdir()"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:9px;top:5px;" src="files2/small/folder.png"></div>' +
+                    '<div class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.mkfile()"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:8px;top:5px;" src="ctxMenu/beta/new.png"></div>' +
+                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; right:6px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center; display:none;" onClick=""></div>' +
+                    '<div class="cursorPointer" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center; display:none;" onClick=""></div>' +
                     '</div>' +
-                    '<div style="width:100%; height:calc(100% - 25px); top:25px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow-x:auto; overflow-y:scroll; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>' +
-                    '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:' + (25 + scrollHeight) + 'px; line-height:25px; vertical-align:middle; width:calc(100% - 110px); border-top-left-radius:5px; border-top-right-radius:5px; overflow-x:scroll;"><div id="FIL2green" style="width:0;height:100%;"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="/"></div></div>' +
-                    '<div id="FIL2viewModeIcon" style="pointer-events:none; color:#7F7F7F; text-align:right; left:55px; font-family:monospace; height:25px; line-height:25px; vertical-align:middle; width:calc(100% - 110px);"></div>'
+                    '<div style="width:100%; height:calc(100% - 50px); top:50px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow-x:auto; overflow-y:scroll; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>'
                 );
             }
             this.vars.update();
@@ -8971,6 +8976,49 @@ c(function(){
                 this.currLoc += nextName;
                 this.update();
             },
+            mkdir: function(){
+                if(this.currLoc === '/'){
+                    apps.prompt.vars.alert('Please navigate to a directory to create a new folder.', 'Okay', function(){}, 'FIle Manager');
+                }else if(this.currLoc.indexOf('/USERFILES/') === 0){
+                    apps.prompt.vars.prompt('Enter a name for the new folder.<br><br>Folder will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
+                        if(str){
+                            apps.savemaster.vars.mkdir(this.currLoc.substring(11, this.currLoc.length) + str);
+                        }
+                        this.update();
+                    }.bind(this), "File Manager");
+                }else if(this.currLoc !== '/apps/'){
+                    apps.prompt.vars.prompt('Enter a name for the new folder.<br><br>Folder will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
+                        if(str){
+                            sh('mkdir ' + this.currLoc + str);
+                        }
+                        this.update();
+                    }.bind(this), "File Manager");
+                }else{
+                    apps.prompt.vars.alert('Please navigate to a directory to create a new folder.', 'Okay', function(){}, 'FIle Manager');
+                }
+            },
+            mkfile: function(){
+                if(this.currLoc === '/'){
+                    apps.prompt.vars.alert('Please navigate to a directory to create a new file.', 'Okay', function(){}, 'FIle Manager');
+                }else if(this.currLoc.indexOf('/USERFILES/') === 0){
+                    apps.prompt.vars.prompt('Enter a name for the new file.<br><br>File will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
+                        if(str){
+                            ufsave(this.currLoc.substring(11, this.currLoc.length) + str, '');
+                        }
+                        this.update();
+                    }.bind(this), "File Manager");
+                }else if(this.currLoc !== '/apps/'){
+                    apps.prompt.vars.prompt('Enter a name for the new file.<br><br>File will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
+                        if(str){
+                            eval(apps.bash.vars.translateDir(this.currLoc + str) + '=""');
+                        }
+                        this.update();
+                    }.bind(this), "File Manager");
+                }else{
+                    apps.prompt.vars.alert('Please navigate to a directory to create a new file.', 'Okay', function(){}, 'FIle Manager');
+                }
+                
+            },
             navigate: function(newName){
                 if(newName[0] !== "/"){
                     newName = "/" + newName;
@@ -9047,13 +9095,14 @@ c(function(){
             currDirList: [],
             update: function(){
                 this.currContentStr = '';
+                getId('FIL2searchInput').value = '';
                 getId("FIL2green").style.backgroundColor = 'rgb(170, 255, 170)';
                 getId("FIL2green").style.width = "0";
                 getId("FIL2cntn").style.backgroundImage = 'url(/loadDark.gif)';
                 // getId("FILcntn").style.cursor = cursors.loadDark;
                 getId('FIL2cntn').classList.add('cursorLoadDark');
                 getId("FIL2cntn").innerHTML =
-                    '<div id="FIL2tbl" class="' + this.viewModes[this.currViewMode][1] + '" style="width:100%; position:absolute; top:' + scrollHeight + 'px; margin:auto;padding-bottom:3px;"></div>';
+                    '<div id="FIL2tbl" class="' + this.viewModes[this.currViewMode][1] + '" style="width:100%; position:absolute; margin:auto;padding-bottom:3px;"></div>';
                 getId("FIL2tbl").style.marginTop = scrollHeight;
                 if(this.currLoc === '/'){
                     getId("FIL2path").innerHTML = '<div id="FIL2green" style="height:100%;background-color:rgb(170, 255, 170)"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="/"></div>';
@@ -9160,6 +9209,16 @@ c(function(){
                     getId("FIL2green").style.display = "none";
                     getId("FIL2cntn").style.backgroundImage="";
                     getId('FIL2cntn').classList.remove('cursorLoadDark');
+                }
+            },
+            updateSearch: function(searchStr){
+                var searchElems = getId('FIL2tbl').childNodes;
+                for(var i = 0; i < searchElems.length; i++){
+                    if(searchElems[i].innerText.toLowerCase().indexOf(searchStr.toLowerCase()) === -1){
+                        searchElems[i].style.display = 'none';
+                    }else{
+                        searchElems[i].style.display = '';
+                    }
                 }
             }
         }, 0, "files2", "appicons/ds/FIL.png"
