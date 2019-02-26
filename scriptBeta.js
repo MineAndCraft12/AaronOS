@@ -2295,7 +2295,7 @@ var textEditorTools = {
     tmpGenArray: [],
     copy: function(slot){
         this.clipboard[slot - 1] = this.tempvar3;
-        ufsave("APP_STN_SAVED_CLIPBOARD", this.clipboard.join('-78e23dde9ace11e69f33a24fc0d9649c-'));
+        ufsave("APP_STN_SAVED_CLIPBOARD", JSON.stringify(this.clipboard));
     },
     paste: function(element, slot, cursorpos, endselect){
         getId(element).value = getId(element).value.substring(0, cursorpos) + this.clipboard[slot - 1] + getId(element).value.substring(endselect, getId(element).value.length); 
@@ -2303,7 +2303,7 @@ var textEditorTools = {
     swap: function(element, slot, cursorpos){
         var tempCopy = this.clipboard[slot - 1];
         this.clipboard[slot - 1] = this.tempvar3;
-        ufsave("APP_STN_SAVED_CLIPBOARD", this.clipboard.join('-78e23dde9ace11e69f33a24fc0d9649c-'));
+        ufsave("APP_STN_SAVED_CLIPBOARD", JSON.stringify(this.clipboard));
         getId(element).value = getId(element).value.substring(0, cursorpos) + tempCopy + getId(element).value.substring(cursorpos, getId(element).value.length);
     }
 };
@@ -5733,7 +5733,11 @@ c(function(){
                             }
                             if(typeof USERFILES.APP_STN_SAVED_CLIPBOARD === "string"){
                                 if(USERFILES.APP_STN_SAVED_CLIPBOARD !== '_cleared_clipboard_'){
-                                    textEditorTools.clipboard = USERFILES.APP_STN_SAVED_CLIPBOARD.split('-78e23dde9ace11e69f33a24fc0d9649c-');
+                                    if(USERFILES.APP_STN_SAVED_CLIPBOARD.indexOf('-78e23dde9ace11e69f33a24fc0d9649c-') > -1 && (USERFILES.APP_STN_SAVED_CLIPBOARD[0] !== '{' && USERFILES.APP_STN_SAVED_CLIPBOARD[USERFILES.APP_STN_SAVED_CLIPBOARD.length - 1] !== '}')){
+                                        textEditorTools.clipboard = USERFILES.APP_STN_SAVED_CLIPBOARD.split('-78e23dde9ace11e69f33a24fc0d9649c-');
+                                    }else{
+                                        textEditorTools.clipboard = JSON.parse(USERFILES.APP_STN_SAVED_CLIPBOARD);//.split('-78e23dde9ace11e69f33a24fc0d9649c-');
+                                    }
                                 }
                             }
                             /*screenScale = 1;
@@ -6739,7 +6743,8 @@ c(function(){
             },
             tmpPasswordSet: '',
             newPassword: function(){
-                apps.savemaster.vars.save('aOSpassword', getId('STNosPass').value, 1);
+                apps.savemaster.vars.save('aOSpassword', getId('STNosPass').value, 1, 'SET_PASSWORD');
+                USERFILES.aOSpassword = '*****';
                 apps.settings.vars.tmpPasswordSet = getId('STNosPass').value;
                 setTimeout(function(){
                     document.cookie = 'password=' + apps.settings.vars.tmpPasswordSet + '; Max-Age=315576000';
@@ -8069,11 +8074,25 @@ c(function(){
                 }else{
                     openapp(apps.notepad2, 'tskbr');
                 }
+                
+                /*
                 if(filename.indexOf('/') === -1){
                     filename = '/USERFILES/' + filename;
                 }else if(filename.indexOf('/') !== 0){
                     filename = '/' + filename;
                 }
+                */
+                
+                if(filename.indexOf('/USERFILES/') !== 0){
+                    if(filename.indexOf('/window/') !== 0){
+                        if(filename[0] === '/'){
+                            filename = '/USERFILES' + filename;
+                        }else{
+                            filename = '/USERFILES/' + filename;
+                        }
+                    }
+                }
+                
                 try{
                     var filecontent = apps.bash.vars.getRealDir(filename);
                 }catch(err){
@@ -8117,11 +8136,25 @@ c(function(){
                     apps.prompt.vars.alert("Failed to save: No filename provided.", "Okay", function(){}, "Text Editor");
                     return;
                 }
+                
+                /*
                 if(filename.indexOf('/') === -1){
                     filename = '/USERFILES/' + filename;
                 }else if(filename.indexOf('/') !== 0){
                     filename = '/' + filename;
                 }
+                */
+                
+                if(filename.indexOf('/USERFILES/') !== 0){
+                    if(filename.indexOf('/window/') !== 0){
+                        if(filename[0] === '/'){
+                            filename = '/USERFILES' + filename;
+                        }else{
+                            filename = '/USERFILES/' + filename;
+                        }
+                    }
+                }
+                
                 getId('np2Load').value = filename;
                 if(filename.indexOf('/USERFILES/') === 0){
                     var shortfilename = filename.substring(11, filename.length);
@@ -8129,13 +8162,7 @@ c(function(){
                         apps.prompt.vars.alert("Failed to save: No filename provided.", "Okay", function(){}, "Text Editor");
                         return;
                     }
-                    if(shortfilename.indexOf('/') !== -1){
-                        apps.prompt.vars.alert("Failed to save " + filename + ": Folders not supported in USERFILES.", "Okay", function(){}, "Text Editor");
-                    }else if(shortfilename.indexOf('.') !== -1){
-                        apps.prompt.vars.alert("Failed to save " + filename + ": USERFILES does not support '.' character in filenames.", "Okay", function(){}, "Text Editor");
-                    }else{
-                        apps.savemaster.vars.save(shortfilename, getId("np2Screen").value, 1);
-                    }
+                    apps.savemaster.vars.save(shortfilename, getId("np2Screen").value, 1);
                 }else{
                     try{
                         var oldfilecontent = apps.bash.vars.getRealDir(filename);
@@ -8462,10 +8489,11 @@ c(function(){
             "02/12/2019: B0.9.10.0\n + File Manager has been replaced File Manager 2.\n + File Manager 2 uses bash for most of its file operations.\n + File Manager 2 has multiple view modes.\n + File Manager 2 has much faster performance.\n + File Manager 2 has file icons.\n + File Manager 2 is compatible with mobile mode and custom border width.\n + File Manager 2 is far more stable.\n + Begun work on replacement text editor.\n + TE2 can now edit and save functions.\n\n" +
             "02/13/2019: B0.9.10.1\n + Users can now type a path into Files 2\n : Files 2 handles empty and null directories better.\n : TE2 handles bad input better.\n : Fixed some copy/paste icons\n\n" +
             "02/14/2019: B0.9.10.2\n + Desktop icons will rearrange to fit the size of the desktop if it changes.\n : Deleting files actually works now.\n + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.\n - Notification content no longer pushes into button row.\n : LOTS of backend code fixes.\n\n" +
-            "02/20/2019: B0.9.10.3\n + Some backend support for subdirectories in USERFILES, courtesy of SkyeEverest.\n + Included fallbacks for CSS var(), for IE.\n : Automatically sets a darker, opaque background color for IE.\n : Serverside error reports now report the correct line number.",
+            "02/20/2019: B0.9.10.3\n + Some backend support for subdirectories in USERFILES, courtesy of SkyeEverest.\n + Included fallbacks for CSS var(), for IE.\n : Automatically sets a darker, opaque background color for IE.\n : Serverside error reports now report the correct line number.\n\n" +
+            "02/25/2019: B0.10.0.0\n + USERFILES now supports psuedo file extensions.\n + Full backend and frontend support for folders in USERFILES.\n : Text Editor 2 now assumes USERFILES, instead of the other way around.\n + Files 2 and Text Editor 2 now properly handle folders in USERFILES.\n - aOSpassword cannot be modified except for setting a new password.\n - aOSpassword cannot be viewed.\n + Added some padding on the boot loading bar.\n : Clipboard now uses JSON for storage.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.9.10.3 (02/20/2019) r0';
+    window.aOSversion = 'B0.10.0.0 (02/25/2019) r2';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -9072,13 +9100,21 @@ c(function(){
                             return -1;
                         });
                         var temphtml = '';
-                        if(this.currLoc === "/USERFILES/"){
+                        if(this.currLoc.indexOf("/USERFILES/") === 0){
                             for(var item in this.currDirList){
                                 if(this.currDirList[item]){
-                                    temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'/USERFILES/' + this.currDirList[item] + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'+Delete\', \'ufdel(\\\'' + this.currDirList[item] + '\\\');\'])">' +
-                                        '<img src="files2/small/file.png"> ' +
-                                        this.currDirList[item] +
-                                        '</div>';
+                                    // if item is a folder
+                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
+                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                            '<img src="files2/small/folder.png"> ' +
+                                            this.currDirList[item] +
+                                            '</div>';
+                                    }else{
+                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                            '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
+                                            this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
+                                            '</div>';
+                                    }
                                 }
                             }
                         }else if(this.currLoc === "/apps/"){
@@ -9108,7 +9144,7 @@ c(function(){
                                             this.currDirList[item] +
                                             '</div>';
                                     }else{
-                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'/window' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
                                             '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
                                             this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
                                             '</div>';
@@ -9450,6 +9486,10 @@ c(function(){
             save: function(filepath, filecontent, newformat, errorreport, pass){
                 m('Saving File');
                 d(1, 'Saving File ' + filepath);
+                if(filepath.indexOf('..') > -1){
+                    apps.prompt.vars.alert('Error saving file:<br><br>Not allowed to use ".." keyword.', 'Okay', function(){}, 'SaveMaster');
+                    return false;
+                }
                 // if(window.navigator.onLine){
                     this.savePerf = Math.floor(performance.now());
                     if(!newformat){
@@ -9523,6 +9563,9 @@ c(function(){
                             this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
                             this.xf['fd' + this.savePerf].append('f', filepath);
                             this.xf['fd' + this.savePerf].append('c', filecontent);
+                            if(errorreport === 'SET_PASSWORD'){
+                                this.xf['fd' + this.savePerf].append('setpass', 'true');
+                            }
                             this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
                             this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
                                 if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
@@ -9537,7 +9580,14 @@ c(function(){
                             };
                             this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php');
                             this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
-                            USERFILES[filepath] = '' + filecontent;
+                            if(errorreport === 'SET_PASSWORD'){
+                                eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '="*****"');
+                            }else{
+                                sh('mkdir /USERFILES/' + filepath.substring(0, filepath.lastIndexOf('/')));
+                                apps.savemaster.vars.temporarySaveContent = '' + filecontent;
+                                eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '=apps.savemaster.vars.temporarySaveContent');
+                                delete apps.savemaster.vars.temporarySaveContent;
+                            }
                         }
                         //document.getElementById("mastersaveform").submit();
                     }
@@ -9545,6 +9595,31 @@ c(function(){
                 //     apps.prompt.vars.alert('Error saving file:<br><br>You are not online.', 'Okay', function(){}, 'SaveMaster');
                 // }
                 m(modulelast);
+            },
+            mkdir: function(filepath){
+                if(filepath.indexOf('..') > -1){
+                    apps.prompt.vars.alert('Error saving directory:<br><br>Not allowed to use ".." keyword.', 'Okay', function(){}, 'SaveMaster');
+                    return false;
+                }
+                this.xf['fd' + this.savePerf] = new FormData();
+                this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
+                this.xf['fd' + this.savePerf].append('f', filepath);
+                this.xf['fd' + this.savePerf].append('mkdir', 'true');
+                this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
+                this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
+                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
+                        apps.savemaster.vars.saving = 0;
+                        taskbarShowHardware();
+                        if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
+                            apps.prompt.vars.alert('Error saving directory:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                        }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
+                            apps.prompt.vars.alert('Error saving directory:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                        }
+                    }
+                };
+                this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php');
+                this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
+                sh('mkdir /USERFILES/' + filepath);
             },
             latestDel: '',
             del: function(filepath){

@@ -940,6 +940,9 @@ div{
         white-space:nowrap;
         box-shadow:0 -3px 0 #0A0;
     }
+        #aOSloadingInfo:before{
+            content:"\00a0";
+        }
     #aOSloadingInfoDiv{
         width:75%;
         min-width:75%;

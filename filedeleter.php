@@ -1,4 +1,21 @@
 <?php
+    function deleteDir($dirPath) {
+        if (! is_dir($dirPath)) {
+            throw new InvalidArgumentException("$dirPath must be a directory");
+        }
+        if (substr($dirPath, strlen($dirPath) - 1, 1) != '/') {
+            $dirPath .= '/';
+        }
+        $files = glob($dirPath . '*', GLOB_MARK);
+        foreach ($files as $file) {
+            if (is_dir($file)) {
+                deleteDir($file);
+            } else {
+                unlink($file);
+            }
+        }
+        rmdir($dirPath);
+    }
     if(strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== FALSE || explode(':', $_SERVER['HTTP_HOST'])[0] === "localhost"){ //aaron-os-mineandcraft12.c9.io'){
         function error($errno, $errstr){
             echo "Error - [" + $errno + '] ' + $errstr;
@@ -32,8 +49,35 @@
                 }
             }
             
-            $filepath = 'USERFILES/'.$_POST['k'].'/'.str_replace('.', 'X', str_replace('/', 'X', $_POST['f'])).'.txt';
-            unlink(realpath($filepath));
+            if(strpos($_POST['f'], '..') != FALSE){
+                echo 'Error - keyword ".." not allowed.';
+                die();
+            }
+            if(realpath('USERFILES/'.$_POST['k']) == realpath('USERFILES/'.$_POST['k'].'/'.$filepath)){
+                echo 'Error - not allowed to delete root folder.';
+                die();
+            }
+            
+            
+            $filepath = 'USERFILES/'.$_POST['k'].'/'.$_POST['f'];
+            if(is_dir($filepath)){
+                try{
+                    deleteDir($filepath);
+                }catch(Exception $e){
+                    echo 'Error - Could not delete directory: '.$e;
+                    die();
+                }
+            }else{
+                try{
+                    if(!unlink(realpath($filepath . '.txt'))){
+                        echo 'Error - Coult not delete file.';
+                        die();
+                    }
+                }catch(Exception $e){
+                    echo 'Error - Could not delete file: '.$e;
+                    die();
+                }
+            }
         }else{
             echo "Error - User ID malformed, or your user ID is incorrect.";
             die();
