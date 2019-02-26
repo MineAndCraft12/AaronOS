@@ -1,8 +1,10 @@
 <?php
 // send message to client
 //if(isset($_COOKIE['keyword'])){
-    $dirstuff = array_diff(scandir('USERFILES/!MESSAGE'), array('..', '.'));
-    $dirsize = count($dirstuff) - 1;
+    $files = array_diff(scandir('USERFILES/!MESSAGE'), array('..', '.'));
+    usort($files, 'strnatcmp');
+    $dirsize = count($files) - 1;
+    
     if(!isset($_GET['l'])){
         $last = $dirsize - 1;
     }else if($_GET['l'] === 'none'){
@@ -18,9 +20,7 @@
     }
     if($last < $dirsize){
         $last++;
-        $file = fopen('USERFILES/!MESSAGE/m'.$last.'.txt', 'r');
-        echo fread($file, filesize('USERFILES/!MESSAGE/m'.$last.'.txt'));
-        fclose($file);
+        echo file_get_contents('USERFILES/!MESSAGE/'.$files[$last]);
     }else{
         echo '';
     }

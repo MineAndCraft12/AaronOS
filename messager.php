@@ -28,20 +28,18 @@ if(isset($_COOKIE['keyword']) && isset($_POST['c']) && (strpos($_SERVER['HTTP_RE
     $outMessage = join('&quot;', explode('"', join('\\\\', explode('\\', join('&gt;', explode('>', join('&lt;', explode('<', $_POST['c']))))))));
     $outTime = round(microtime(true) * 1000);
     
-    $setting = fopen('setting.txt', 'r');
-    $filenumber = strval(intval(fread($setting, filesize('setting.txt'))) + 1);
-    fclose($setting);
+    $files = scandir('USERFILES/!MESSAGE');
+    usort($files, 'strnatcmp');
+    $newest_file = $files[count($files) - 1];
     
-    $lastJSON = file_get_contents('USERFILES/!MESSAGE/m'.($filenumber - 1).'.txt');
+    $lastJSON = file_get_contents('USERFILES/!MESSAGE/'.$newest_file);
     $lastMessage = json_decode($lastJSON);
     if($lastMessage->n == $outUsername && $lastMessage->c == $outMessage){
         echo 'Error - Message identical to previous message.';
         die();
     }
     
-    $setting = fopen('setting.txt', 'w');
-    fwrite($setting, $filenumber);
-    fclose($setting);
+    $filenumber = intval($lastMessage->l) + 1;
     
     $file = fopen('USERFILES/!MESSAGE/m'.$filenumber.'.txt', 'w');
     //$file = fopen('USERFILES/!MESSAGE/m'.date('d_m_Y_H_i_s_').$_GET['n'].'.txt', 'w');

@@ -8490,10 +8490,11 @@ c(function(){
             "02/13/2019: B0.9.10.1\n + Users can now type a path into Files 2\n : Files 2 handles empty and null directories better.\n : TE2 handles bad input better.\n : Fixed some copy/paste icons\n\n" +
             "02/14/2019: B0.9.10.2\n + Desktop icons will rearrange to fit the size of the desktop if it changes.\n : Deleting files actually works now.\n + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.\n - Notification content no longer pushes into button row.\n : LOTS of backend code fixes.\n\n" +
             "02/20/2019: B0.9.10.3\n + Some backend support for subdirectories in USERFILES, courtesy of SkyeEverest.\n + Included fallbacks for CSS var(), for IE.\n : Automatically sets a darker, opaque background color for IE.\n : Serverside error reports now report the correct line number.\n\n" +
-            "02/25/2019: B0.10.0.0\n + USERFILES now supports psuedo file extensions.\n + Full backend and frontend support for folders in USERFILES.\n : Text Editor 2 now assumes USERFILES, instead of the other way around.\n + Files 2 and Text Editor 2 now properly handle folders in USERFILES.\n - aOSpassword cannot be modified except for setting a new password.\n - aOSpassword cannot be viewed.\n + Added some padding on the boot loading bar.\n : Clipboard now uses JSON for storage.",
+            "02/25/2019: B0.10.0.0\n + USERFILES now supports psuedo file extensions.\n + Full backend and frontend support for folders in USERFILES.\n : Text Editor 2 now assumes USERFILES, instead of the other way around.\n + Files 2 and Text Editor 2 now properly handle folders in USERFILES.\n - aOSpassword cannot be modified except for setting a new password.\n - aOSpassword cannot be viewed.\n + Added some padding on the boot loading bar.\n : Clipboard now uses JSON for storage.\n\n" +
+            "02/26/2019: B0.10.0.1\n - Removed backend messaging dependency on setting.txt\n + System admins can now just straight-up delete messages instead of editing their content and erasing it.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.10.0.0 (02/25/2019) r2';
+    window.aOSversion = 'B0.10.0.1 (02/26/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14478,6 +14479,14 @@ c(function(){
     //corsPing(function(text){
     //    doLog('NORAA search service ping: ' + text[0] + ' &micro;s with status ' + text[1]);
     //});
+    try{
+        if(localStorage.getItem('notifyFilesDeletion') !== "1"){
+            localStorage.setItem('notifyFilesDeletion', "1");
+            apps.prompt.vars.notify('(2/25/2019) Please back up anything important in your USERFILES folder. It will be cleared in a couple weeks to improve compatibility with a future update.', [], function(){}, 'Important Notice', 'appicons/ds/FIL.png');
+        }
+    }catch(localStorageNotSupported){
+        apps.prompt.vars.notify('(2/25/2019) Please back up anything important in your USERFILES folder. It will be cleared in a couple weeks to improve compatibility with a future update.', [], function(){}, 'Important Notice', 'appicons/ds/FIL.png');
+    }
     if(window.navigator.vendor !== "Google Inc."){
         doLog('Looks like you are not using Google Chrome. Make sure you use Google Chrome to access aOS. Otherwise, certain features will be missing or broken.', '#F00;text-decoration:underline');
         try{
