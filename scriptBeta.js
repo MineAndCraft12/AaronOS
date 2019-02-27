@@ -483,7 +483,7 @@ var lastPageX = 0;
 var lastPageY = 0;
 // user has moved their mouse
 function markUserMouseActive(event){
-    if(event.pageX !== lastPageX && event.pageY !== lastPageY){
+    if(event.pageX !== lastPageX || event.pageY !== lastPageY){
         perfStart('userActivity');
         if(screensaverRunning){
             getId('screensaverLayer').style.display = "none";
@@ -8491,10 +8491,11 @@ c(function(){
             "02/14/2019: B0.9.10.2\n + Desktop icons will rearrange to fit the size of the desktop if it changes.\n : Deleting files actually works now.\n + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.\n - Notification content no longer pushes into button row.\n : LOTS of backend code fixes.\n\n" +
             "02/20/2019: B0.9.10.3\n + Some backend support for subdirectories in USERFILES, courtesy of SkyeEverest.\n + Included fallbacks for CSS var(), for IE.\n : Automatically sets a darker, opaque background color for IE.\n : Serverside error reports now report the correct line number.\n\n" +
             "02/25/2019: B0.10.0.0\n + USERFILES now supports psuedo file extensions.\n + Full backend and frontend support for folders in USERFILES.\n : Text Editor 2 now assumes USERFILES, instead of the other way around.\n + Files 2 and Text Editor 2 now properly handle folders in USERFILES.\n - aOSpassword cannot be modified except for setting a new password.\n - aOSpassword cannot be viewed.\n + Added some padding on the boot loading bar.\n : Clipboard now uses JSON for storage.\n\n" +
-            "02/26/2019: B0.10.0.1\n - Removed backend messaging dependency on setting.txt\n + System admins can now just straight-up delete messages instead of editing their content and erasing it.",
+            "02/26/2019: B0.10.1.0\n + Added search bar and new folder / new file buttons to the File Manager.\n - Removed backend messaging dependency on setting.txt\n + System admins can now just straight-up delete messages instead of editing their content and erasing it.\n\n" +
+            "02/27/2019: B0.10.2.0\n + Pet Cursors app! Users can create custom cursors that follow their mouse around. Each has their own, specialized personality.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.10.0.1 (02/26/2019) r0';
+    window.aOSversion = 'B0.10.1.0 (02/26/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13515,6 +13516,263 @@ c(function(){
                 }
             }
         }, 0, 'textBinary', 'appicons/ds/CAM.png'
+    );
+    getId('aOSloadingInfo').innerHTML = 'Pet Cursors';
+});
+c(function(){
+    apps.petCursors = new Application(
+        'PC',
+        'Pet Cursors',
+        0,
+        function(){
+            if(!this.appIcon){
+                getId('win_petCursors_html').style.overflowY = 'auto';
+                this.appWindow.setDims("auto", "auto", 800, 500);
+                this.appWindow.setCaption('Pet Cursors');
+                this.appWindow.setContent(
+                    '<h1>Pet Cursors!</h1>' +
+                    '<p>This app is used to make extra cursors that follow your mouse around the screen like pets.</p>' +
+                    '<hr>' +
+                    'Use this button to turn the app on and off: <button onclick="apps.petCursors.vars.toggleApp()">Toggle</button><br><br>' +
+                    'Add new cursors:' +
+                    '<br><ul id="petCursorsPresets"></ul>' +
+                    'Your cursors:' +
+                    '<br><ol id="petCursorsList"></ol>'
+                );
+                this.vars.buildPresetList();
+                this.vars.buildCursorList();
+            }
+            this.appWindow.openWindow();
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    this.appWindow.setContent("");
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(typeof USERFILES.APP_PETCURSORS_cursors === "string"){
+                        try{
+                            this.vars.cursors = JSON.parse(USERFILES.APP_PETCURSORS_cursors);
+                        }catch(err){
+                            doLog('Pet Cursors save file is corrupt!', '#F00');
+                        }
+                    }
+                    if(typeof USERFILES.APP_PETCURSORS_enabled === "string"){
+                        if(USERFILES.APP_PETCURSORS_enabled === "1"){
+                            this.vars.toggleApp(1);
+                        }
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        },
+        {
+            appInfo: 'Pet Cursors will give you any number of extra cursors that will follow you around as you use aOS.',
+            enabled: 0,
+            buildPresetList: function(){
+                var tempList = '';
+                for(var i in this.presets){
+                    tempList += '<li><button onclick="apps.petCursors.vars.addNewCursor(\'' + i + '\')">' + this.presets[i].imageName + '</button> <img src="' + this.presets[i].imageSource + '"></li>';
+                }
+                tempList += '<li><button onclick="apps.petCursors.vars.addNewCursor()">Custom</button></li>'
+                getId('petCursorsPresets').innerHTML = tempList;
+            },
+            presets: {
+                breezeDefault: {
+                    imageName: 'Breeze',
+                    imageSource: 'cursors/beta/default.png',
+                    imageCenter: [3, 3],
+                    distance: 50,
+                    speed: 25,
+                    personality: 15
+                },
+                alphaDefault: {
+                    imageName: 'aOS Alpha',
+                    imageSource: 'cursors/default.png',
+                    imageCenter: [3, 3],
+                    distance: 50,
+                    speed: 20,
+                    personality: 30
+                },
+                win7Default: {
+                    imageName: 'Windows 7',
+                    imageSource: 'cursors/aeroCursor.png',
+                    imageCenter: [0, 0],
+                    distance: 35,
+                    speed: 20,
+                    personality: 1
+                },
+                orangeCat: {
+                    imageName: 'Orange Kitten',
+                    imageSource: 'cursors/cat.png',
+                    imageCenter: [24, 24],
+                    distance: 200,
+                    speed: 3,
+                    personality: 50
+                },
+                grayCat: {
+                    imageName: 'Gray Kitten',
+                    imageSource: 'cursors/cat2.png',
+                    imageCenter: [24, 24],
+                    distance: 100,
+                    speed: 5,
+                    personality: 20
+                }
+            },
+            buildCursorList: function(){
+                var tempList = '';
+                for(var i in this.cursors){
+                    tempList += '<li>' +
+                        'Name: <input id="petCursorName_' + i + '" placeholder="Name" value="' + this.cursors[i].cursorName + '"> ' +
+                        '<button onclick="apps.petCursors.vars.updateCursor(' + i + ')">Update Cursor</button> ' +
+                        '<button onclick="apps.petCursors.vars.deleteCursor(' + i + ')">Delete Cursor</button>' +
+                        '</li>' +
+                        '<ul>' +
+                        '<li>Image: <input id="petCursorImage_' + i + '" placeholder="https://" value="' + this.cursors[i].cursorImage + '"></li>' +
+                        '<li>Image Center: <input id="petCursorOffset_' + i + '" size="3" placeholder="[x, y]" value="[' + this.cursors[i].cursorCenter[0] + ', ' + this.cursors[i].cursorCenter[1] + ']"></li>' +
+                        '<li>Follow Distance: <input id="petCursorDistance_' + i + '" size="1" placeholder="50" value="' + this.cursors[i].followDistance + '"></li>' +
+                        '<li>Follow Speed: <input id="petCursorSpeed_' + i + '" size="1" placeholder="25" value="' + this.cursors[i].followSpeed + '"></li>' +
+                        '<li>Personality: <input id="petCursorPersonality_' + i + '" size="1" placeholder="25" value="' + this.cursors[i].personality + '"></li>' +
+                        '</ul>';
+                }
+                getId('petCursorsList').innerHTML = tempList;
+            },
+            cursors: [
+                {
+                    cursorName: 'Breeze',
+                    cursorImage: 'cursors/beta/default.png',
+                    cursorCenter: [3, 3],
+                    followDistance: 50,
+                    followSpeed: 25,
+                    personality: 15
+                }
+            ],
+            addNewCursor: function(preset){
+                if(preset){
+                    this.cursors.push({
+                        cursorName: this.presets[preset].imageName,
+                        cursorImage: this.presets[preset].imageSource,
+                        cursorCenter: this.presets[preset].imageCenter,
+                        followDistance: this.presets[preset].distance,
+                        followSpeed: this.presets[preset].speed,
+                        personality: this.presets[preset].personality
+                    });
+                    this.rebuildCursors();
+                    this.saveCursors();
+                }else{
+                    this.cursors.push({
+                        cursorName: '',
+                        cursorImage: '',
+                        cursorCenter: [0, 0],
+                        followDistance: 50,
+                        followSpeed: 25,
+                        personality: 15
+                    });
+                }
+                this.buildCursorList();
+            },
+            updateCursor: function(id){
+                this.cursors[id] = {
+                    cursorName: getId('petCursorName_' + id).value,
+                    cursorImage: getId('petCursorImage_' + id).value,
+                    cursorCenter: JSON.parse(getId('petCursorOffset_' + id).value),
+                    followDistance: parseInt(getId('petCursorDistance_' + id).value),
+                    followSpeed: parseFloat(getId('petCursorSpeed_' + id).value),
+                    personality: parseInt(getId('petCursorPersonality_' + id).value)
+                };
+                this.buildCursorList();
+                this.rebuildCursors();
+                this.saveCursors();
+            },
+            deleteCursor: function(id){
+                this.cursors.splice(id, 1);
+                this.buildCursorList();
+                this.rebuildCursors();
+                this.saveCursors();
+            },
+            saveCursors: function(){
+                ufsave('APP_PETCURSORS_cursors', JSON.stringify(this.cursors));
+            },
+            toggleApp: function(nosave){
+                if(this.enabled){
+                    this.stopCursors();
+                }else{
+                    this.startCursors();
+                }
+                if(!nosave){
+                    ufsave('APP_PETCURSORS_enabled', '' + this.enabled);
+                }
+            },
+            enabled: 0,
+            rebuildCursors: function(){
+                if(this.enabled){
+                    getId('petCursors').innerHTML = '';
+                    for(var i in this.cursors){
+                        getId('petCursors').innerHTML += '<img id="pet_cursor_' + i + '" src="' + this.cursors[i].cursorImage + '">';
+                        getId('pet_cursor_' + i).style.left = Math.round(Math.random() * parseInt(getId('monitor').style.width) - this.cursors[i].cursorCenter[0]) + 'px';
+                        getId('pet_cursor_' + i).style.top = Math.round(Math.random() * parseInt(getId('monitor').style.height) - this.cursors[i].cursorCenter[1]) + 'px';
+                    }
+                }
+            },
+            startCursors: function(){
+                if(!this.enabled){
+                    this.enabled = 1;
+                    this.rebuildCursors();
+                    getId('petCursors').style.display = 'block';
+                    requestAnimationFrame(this.moveCursors);
+                }
+            },
+            stopCursors: function(){
+                this.enabled = 0;
+                getId('petCursors').style.display = 'none';
+                getId('petCursors').innerHTML = '';
+            },
+            moveCursors: function(){
+                if(apps.petCursors.vars.enabled){
+                    var mouseX = lastPageX / screenScale;
+                    var mouseY = lastPageY / screenScale;
+                    for(var i in apps.petCursors.vars.cursors){
+                        var currX = parseInt(getId('pet_cursor_' + i).style.left) + apps.petCursors.vars.cursors[i].cursorCenter[0];
+                        var currY = parseInt(getId('pet_cursor_' + i).style.top) + apps.petCursors.vars.cursors[i].cursorCenter[1];
+                        var distX = mouseX - currX;
+                        var distY = mouseY - currY;
+                        var totalDist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+                        if(totalDist > apps.petCursors.vars.cursors[i].followDistance * 2){
+                            currX += distX * (apps.petCursors.vars.cursors[i].followSpeed / 100) + (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
+                            currY += distY * (apps.petCursors.vars.cursors[i].followSpeed / 100) + (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
+                        }else if(totalDist > apps.petCursors.vars.cursors[i].followDistance){
+                            currX += distX * (apps.petCursors.vars.cursors[i].followSpeed / 200) + (Math.random() * apps.petCursors.vars.cursors[i].personality - apps.petCursors.vars.cursors[i].personality / 2);
+                            currY += distY * (apps.petCursors.vars.cursors[i].followSpeed / 200) + (Math.random() * apps.petCursors.vars.cursors[i].personality - apps.petCursors.vars.cursors[i].personality / 2);
+                        }else if(Math.random() < 0.01){
+                            currX += (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
+                            currY += (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
+                        }
+                        getId('pet_cursor_' + i).style.left = Math.round(currX) - apps.petCursors.vars.cursors[i].cursorCenter[0] + "px";
+                        getId('pet_cursor_' + i).style.top = Math.round(currY) - apps.petCursors.vars.cursors[i].cursorCenter[1] + "px";
+                    }
+                    setTimeout(apps.petCursors.vars.moveCursors, 100);
+                }
+            }
+        }, 0, 'petCursors', 'appicons/ds/GTK.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Finalizing...';
 });

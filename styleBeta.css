@@ -863,19 +863,24 @@ div{
         margin:1px 0 2px 0px;
         display:block;
     }
-#customPointer{
-    width:12px;
-    height:12px;
-    background:#AAC;
-    border-top:1px solid #557;
-    border-left:1px solid #557;
-    border-radius:0px 6px 6px 6px;
-    /*box-shadow:0 0 6px #000;*/
+#petCursors{
+    width:100%;
+    height:100%;
+    background:none;
     display:none;
-    top:51px;
-    left:51px;
+    top:0;
+    left:0;
     z-index:99999999999999999;
+    pointer-events:none;
 }
+    #petCursors img{
+        max-width:128px;
+        max-height:128px;
+        position:absolute;
+        display:block;
+        transition:0.1s;
+        transition-timing-function: linear;
+    }
 #aOSloadingBg{
     width:calc(100% + 40px);
     height:calc(100% + 40px);

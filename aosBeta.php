@@ -85,8 +85,8 @@
         </div>
         <canvas id="aDE"></canvas>
         <div id="ctxMenu" onclick="getId('ctxMenu').style.display='none'"></div>
-        <div id="customPointer"></div>
         <div id="screensaverLayer"></div>
+        <div id="petCursors"></div>
         <!--<div id="aOSloadingBg"></div>-->
         <?php
             if(isset($_COOKIE['keyword'])){
