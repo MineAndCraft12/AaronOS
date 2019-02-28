@@ -13793,7 +13793,7 @@ c(function(){
                         getId('pet_cursor_' + i).style.left = Math.round(Math.random() * parseInt(getId('monitor').style.width) - this.cursors[i].cursorCenter[0]) + 'px';
                         getId('pet_cursor_' + i).style.top = Math.round(Math.random() * parseInt(getId('monitor').style.height) - this.cursors[i].cursorCenter[1]) + 'px';
                         getId('pet_cursor_' + i).style.width = (this.cursors[i].cursorSize || ['', ''])[0] + 'px';
-                        getId('pet_cursor_' + i).style.width = (this.cursors[i].cursorSize || ['', ''])[1] + 'px';
+                        getId('pet_cursor_' + i).style.height = (this.cursors[i].cursorSize || ['', ''])[1] + 'px';
                     }
                 }
             },
