@@ -13569,8 +13569,9 @@ c(function(){
                     '<hr>' +
                     'Use this button to turn the app on and off: <button onclick="apps.petCursors.vars.toggleApp()">Toggle</button><br><br>' +
                     'Add new cursors:' +
-                    '<br><ul id="petCursorsPresets"></ul>' +
+                    '<br><span id="petCursorsPresets"></span>' +
                     'Your cursors:' +
+                    '<br><button onclick="apps.petCursors.vars.deleteAll()">Delete All</button>' +
                     '<br><ol id="petCursorsList"></ol>'
                 );
                 this.vars.buildPresetList();
@@ -13625,9 +13626,9 @@ c(function(){
             buildPresetList: function(){
                 var tempList = '';
                 for(var i in this.presets){
-                    tempList += '<li><button onclick="apps.petCursors.vars.addNewCursor(\'' + i + '\')">' + this.presets[i].imageName + '</button> <img src="' + this.presets[i].imageSource + '"></li>';
+                    tempList += '<img onclick="apps.petCursors.vars.addNewCursor(\'' + i + '\')" class="cursorPointer" src="' + this.presets[i].imageSource + '">&nbsp; &nbsp;';
                 }
-                tempList += '<li><button onclick="apps.petCursors.vars.addNewCursor()">Custom</button></li>'
+                tempList += '<br><button onclick="apps.petCursors.vars.addNewCursor()">Custom</button><br><br>'
                 getId('petCursorsPresets').innerHTML = tempList;
             },
             aggressiveChase: 0,
@@ -13635,22 +13636,35 @@ c(function(){
                 breezeDefault: {
                     imageName: 'Breeze',
                     imageSource: 'cursors/beta/default.png',
+                    imageSize: [41, 41],
                     imageCenter: [3, 3],
                     distance: 50,
                     speed: 25,
                     personality: 15
                 },
+                /*
+                crosshair: {
+                    imageName: 'Crosshair',
+                    imageSource: 'cursors/crosshair.png',
+                    imageCenter: [16, 16],
+                    distance: -1,
+                    speed: 30,
+                    personality: 5
+                },
+                */
                 alphaDefault: {
                     imageName: 'aOS Alpha',
                     imageSource: 'cursors/default.png',
+                    imageSize: [18, 25],
                     imageCenter: [3, 3],
                     distance: 50,
                     speed: 20,
                     personality: 30
                 },
-                win7Default: {
-                    imageName: 'Windows 7',
+                winDefault: {
+                    imageName: 'Windows',
                     imageSource: 'cursors/aeroCursor.png',
+                    imageSize: [14, 21],
                     imageCenter: [0, 0],
                     distance: 35,
                     speed: 20,
@@ -13659,6 +13673,7 @@ c(function(){
                 orangeCat: {
                     imageName: 'Orange Kitten',
                     imageSource: 'cursors/cat.png',
+                    imageSize: [48, 48],
                     imageCenter: [24, 24],
                     distance: 200,
                     speed: 3,
@@ -13667,6 +13682,7 @@ c(function(){
                 grayCat: {
                     imageName: 'Gray Kitten',
                     imageSource: 'cursors/cat2.png',
+                    imageSize: [48, 48],
                     imageCenter: [24, 24],
                     distance: 100,
                     speed: 5,
@@ -13682,8 +13698,9 @@ c(function(){
                         '<button onclick="apps.petCursors.vars.deleteCursor(' + i + ')">Delete Cursor</button>' +
                         '</li>' +
                         '<ul>' +
-                        '<li>Image: <input id="petCursorImage_' + i + '" placeholder="https://" value="' + this.cursors[i].cursorImage + '"></li>' +
-                        '<li>Image Center: <input id="petCursorOffset_' + i + '" size="3" placeholder="[x, y]" value="[' + this.cursors[i].cursorCenter[0] + ', ' + this.cursors[i].cursorCenter[1] + ']"></li>' +
+                        '<li>Image URL: <input id="petCursorImage_' + i + '" placeholder="https://" value="' + this.cursors[i].cursorImage + '"></li>' +
+                        '<li>Image Size: <input id="petCursorSize_' + i + '" size="3" placeholder="[w, h]" value="' + JSON.stringify(this.cursors[i].cursorSize || 'null') + '"></li>' +
+                        '<li>Image Center: <input id="petCursorOffset_' + i + '" size="3" placeholder="[x, y]" value="' + JSON.stringify(this.cursors[i].cursorCenter) + '"></li>' +
                         '<li>Follow Distance: <input id="petCursorDistance_' + i + '" size="1" placeholder="50" value="' + this.cursors[i].followDistance + '"></li>' +
                         '<li>Follow Speed: <input id="petCursorSpeed_' + i + '" size="1" placeholder="25" value="' + this.cursors[i].followSpeed + '"></li>' +
                         '<li>Personality: <input id="petCursorPersonality_' + i + '" size="1" placeholder="25" value="' + this.cursors[i].personality + '"></li>' +
@@ -13695,6 +13712,7 @@ c(function(){
                 {
                     cursorName: 'Breeze',
                     cursorImage: 'cursors/beta/default.png',
+                    cursorSize: [41, 41],
                     cursorCenter: [3, 3],
                     followDistance: 50,
                     followSpeed: 25,
@@ -13706,6 +13724,7 @@ c(function(){
                     this.cursors.push({
                         cursorName: this.presets[preset].imageName,
                         cursorImage: this.presets[preset].imageSource,
+                        cursorSize: this.presets[preset].imageSize,
                         cursorCenter: this.presets[preset].imageCenter,
                         followDistance: this.presets[preset].distance,
                         followSpeed: this.presets[preset].speed,
@@ -13717,6 +13736,7 @@ c(function(){
                     this.cursors.push({
                         cursorName: '',
                         cursorImage: '',
+                        cursorSize: null,
                         cursorCenter: [0, 0],
                         followDistance: 50,
                         followSpeed: 25,
@@ -13729,6 +13749,7 @@ c(function(){
                 this.cursors[id] = {
                     cursorName: getId('petCursorName_' + id).value,
                     cursorImage: getId('petCursorImage_' + id).value,
+                    cursorSize: JSON.parse(getId('petCursorSize_' + id).value || 'null'),
                     cursorCenter: JSON.parse(getId('petCursorOffset_' + id).value),
                     followDistance: parseInt(getId('petCursorDistance_' + id).value),
                     followSpeed: parseFloat(getId('petCursorSpeed_' + id).value),
@@ -13740,6 +13761,12 @@ c(function(){
             },
             deleteCursor: function(id){
                 this.cursors.splice(id, 1);
+                this.buildCursorList();
+                this.rebuildCursors();
+                this.saveCursors();
+            },
+            deleteAll: function(){
+                this.cursors = [];
                 this.buildCursorList();
                 this.rebuildCursors();
                 this.saveCursors();
@@ -13765,6 +13792,8 @@ c(function(){
                         getId('petCursors').innerHTML += '<img id="pet_cursor_' + i + '" src="' + this.cursors[i].cursorImage + '">';
                         getId('pet_cursor_' + i).style.left = Math.round(Math.random() * parseInt(getId('monitor').style.width) - this.cursors[i].cursorCenter[0]) + 'px';
                         getId('pet_cursor_' + i).style.top = Math.round(Math.random() * parseInt(getId('monitor').style.height) - this.cursors[i].cursorCenter[1]) + 'px';
+                        getId('pet_cursor_' + i).style.width = (this.cursors[i].cursorSize || ['', ''])[0] + 'px';
+                        getId('pet_cursor_' + i).style.width = (this.cursors[i].cursorSize || ['', ''])[1] + 'px';
                     }
                 }
             },
@@ -13786,23 +13815,25 @@ c(function(){
                     var mouseX = lastPageX / screenScale;
                     var mouseY = lastPageY / screenScale;
                     for(var i in apps.petCursors.vars.cursors){
-                        var currX = parseInt(getId('pet_cursor_' + i).style.left) + apps.petCursors.vars.cursors[i].cursorCenter[0];
-                        var currY = parseInt(getId('pet_cursor_' + i).style.top) + apps.petCursors.vars.cursors[i].cursorCenter[1];
-                        var distX = mouseX - currX;
-                        var distY = mouseY - currY;
-                        var totalDist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
-                        if(totalDist > apps.petCursors.vars.cursors[i].followDistance * 2 || apps.petCursors.vars.aggressiveChase){
-                            currX += distX * (apps.petCursors.vars.cursors[i].followSpeed / 100) + (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
-                            currY += distY * (apps.petCursors.vars.cursors[i].followSpeed / 100) + (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
-                        }else if(totalDist > apps.petCursors.vars.cursors[i].followDistance){
-                            currX += distX * (apps.petCursors.vars.cursors[i].followSpeed / 200) + (Math.random() * apps.petCursors.vars.cursors[i].personality - apps.petCursors.vars.cursors[i].personality / 2);
-                            currY += distY * (apps.petCursors.vars.cursors[i].followSpeed / 200) + (Math.random() * apps.petCursors.vars.cursors[i].personality - apps.petCursors.vars.cursors[i].personality / 2);
-                        }else if(Math.random() < 0.01){
-                            currX += (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
-                            currY += (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
+                        if(getId('pet_cursor_' + i)){
+                            var currX = parseInt(getId('pet_cursor_' + i).style.left) + apps.petCursors.vars.cursors[i].cursorCenter[0];
+                            var currY = parseInt(getId('pet_cursor_' + i).style.top) + apps.petCursors.vars.cursors[i].cursorCenter[1];
+                            var distX = mouseX - currX;
+                            var distY = mouseY - currY;
+                            var totalDist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
+                            if(totalDist > apps.petCursors.vars.cursors[i].followDistance * 2 || apps.petCursors.vars.aggressiveChase){
+                                currX += distX * (apps.petCursors.vars.cursors[i].followSpeed / 100) + (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
+                                currY += distY * (apps.petCursors.vars.cursors[i].followSpeed / 100) + (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
+                            }else if(totalDist > apps.petCursors.vars.cursors[i].followDistance){
+                                currX += distX * (apps.petCursors.vars.cursors[i].followSpeed / 200) + (Math.random() * apps.petCursors.vars.cursors[i].personality - apps.petCursors.vars.cursors[i].personality / 2);
+                                currY += distY * (apps.petCursors.vars.cursors[i].followSpeed / 200) + (Math.random() * apps.petCursors.vars.cursors[i].personality - apps.petCursors.vars.cursors[i].personality / 2);
+                            }else if(Math.random() < apps.petCursors.vars.cursors[i].personality * 0.001){
+                                currX += (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
+                                currY += (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
+                            }
+                            getId('pet_cursor_' + i).style.left = Math.round(currX) - apps.petCursors.vars.cursors[i].cursorCenter[0] + "px";
+                            getId('pet_cursor_' + i).style.top = Math.round(currY) - apps.petCursors.vars.cursors[i].cursorCenter[1] + "px";
                         }
-                        getId('pet_cursor_' + i).style.left = Math.round(currX) - apps.petCursors.vars.cursors[i].cursorCenter[0] + "px";
-                        getId('pet_cursor_' + i).style.top = Math.round(currY) - apps.petCursors.vars.cursors[i].cursorCenter[1] + "px";
                     }
                     setTimeout(apps.petCursors.vars.moveCursors, 100);
                 }
