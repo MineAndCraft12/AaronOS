@@ -6993,6 +6993,8 @@ c(function(){
                     },
                     start: function(){
                         getId('screensaverLayer').style.backgroundColor = "#000";
+                        lastPageX = -200;
+                        lastPageY = -200;
                     },
                     end: function(){
                         getId('screensaverLayer').style.backgroundColor = "";
@@ -7006,10 +7008,31 @@ c(function(){
                     start: function(){
                         getId('screensaverLayer').style.backgroundColor = '#000';
                         getId('screensaverLayer').innerHTML = '<iframe src="scrsav/phosphor.html" style="pointer-events:none;border:none;width:100%;height:100%;display:block;position:absolute;left:0;top:0;"></iframe>';
+                        apps.settings.vars.screensavers.phosphor.vars.enabled = 1;
+                        apps.settings.vars.screensavers.phosphor.vars.moveCursors();
                     },
                     end: function(){
                         getId('screensaverLayer').style.backgroundColor = '';
                         getId('screensaverLayer').innerHTML = '';
+                        apps.settings.vars.screensavers.phosphor.vars.enabled = 0;
+                    },
+                    vars: {
+                        cursorsPosition: 0,
+                        cursorsInterval: 0,
+                        enabled: 0,
+                        moveCursors: function(){
+                            if(apps.settings.vars.screensavers.phosphor.vars.enabled){
+                                lastPageX = Math.round(Math.random() * parseInt(getId('monitor').style.width) * 0.4);
+                                if(apps.settings.vars.screensavers.phosphor.vars.cursorInterval){
+                                    lastPageY = parseInt(getId('monitor').style.height) * 0.1;
+                                    apps.settings.vars.screensavers.phosphor.vars.cursorInterval = 0;
+                                }else{
+                                    lastPageY = parseInt(getId('monitor').style.height) * 0.9;
+                                    apps.settings.vars.screensavers.phosphor.vars.cursorInterval = 1;
+                                }
+                                window.setTimeout(apps.settings.vars.screensavers.phosphor.vars.moveCursors, 3000);
+                            }
+                        }
                     }
                 },
                 hue: {
@@ -7028,8 +7051,8 @@ c(function(){
                     vars: {
                         currHue: 0,
                         setHue: function(){
-                            getId("monitor").style.filter = "hue-rotate(" + (apps.settings.vars.screensavers.hue.vars.currHue++) + "deg)";
                             if(apps.settings.vars.screensavers.hue.vars.canRun){
+                                getId("monitor").style.filter = "hue-rotate(" + (apps.settings.vars.screensavers.hue.vars.currHue++) + "deg)";
                                 setTimeout(apps.settings.vars.screensavers.hue.vars.setHue, 100);
                             }else{
                                 getId("monitor").style.filter = "";
@@ -7046,13 +7069,17 @@ c(function(){
                     start: function(){
                         apps.settings.vars.screensavers.randomColor.vars.currColor = [127, 127, 127];
                         apps.settings.vars.screensavers.randomColor.vars.canRun = 1;
-                        getId('screensaverLayer').style.transition = 'background-color 3s';
+                        getId('screensaverLayer').style.transition = 'background-color 6s';
+                        getId('screensaverLayer').style.transitionTimingFunction = 'linear';
+                        apps.petCursors.vars.aggressiveChase = 1;
                         requestAnimationFrame(apps.settings.vars.screensavers.randomColor.vars.setColor);
                     },
                     end: function(){
                         apps.settings.vars.screensavers.randomColor.vars.canRun = 0;
+                        apps.petCursors.vars.aggressiveChase = 0;
                         getId('screensaverLayer').style.backgroundColor = '';
                         getId('screensaverLayer').style.transition = '';
+                        getId('screensaverLayer').style.transitionTimingFunction = 'linear';
                     },
                     vars: {
                         currColor: [127, 127, 127],
@@ -7062,7 +7089,9 @@ c(function(){
                                 apps.settings.vars.screensavers.randomColor.vars.currColor[1] = Math.floor(Math.random() * 256);
                                 apps.settings.vars.screensavers.randomColor.vars.currColor[2] = Math.floor(Math.random() * 256);
                                 getId('screensaverLayer').style.backgroundColor = 'rgb(' + apps.settings.vars.screensavers.randomColor.vars.currColor[0] + ',' + apps.settings.vars.screensavers.randomColor.vars.currColor[1] + ',' + apps.settings.vars.screensavers.randomColor.vars.currColor[2] + ')';
-                                setTimeout(apps.settings.vars.screensavers.randomColor.vars.setColor, 3000);
+                                lastPageX = Math.round(Math.random() * parseInt(getId('monitor').style.width) * 0.8 + parseInt(getId('monitor').style.width) * 0.1);
+                                lastPageY = Math.round(Math.random() * parseInt(getId('monitor').style.height) * 0.8 + parseInt(getId('monitor').style.height) * 0.1);
+                                setTimeout(apps.settings.vars.screensavers.randomColor.vars.setColor, 6000);
                             }
                         },
                         canRun: 0
@@ -7086,12 +7115,14 @@ c(function(){
                         apps.settings.vars.screensavers.bouncyBall.vars.canRun = 1;
                         requestAnimationFrame(apps.settings.vars.screensavers.bouncyBall.vars.frame);
                         apps.settings.vars.screensavers.bouncyBall.vars.resetBall();
+                        apps.petCursors.vars.aggressiveChase = 1;
                     },
                     end: function(){
                         console.log('end');
                         apps.settings.vars.screensavers.bouncyBall.vars.canRun = 0;
                         apps.settings.vars.screensavers.bouncyBall.vars.ctxFg = null;
                         getId('screensaverLayer').innerHTML = '';
+                        apps.petCursors.vars.aggressiveChase = 0;
                     },
                     vars: {
                         ctxFg: null,
@@ -7142,6 +7173,9 @@ c(function(){
                                     apps.settings.vars.screensavers.bouncyBall.vars.ball.vel[1] = -0.75 * apps.settings.vars.screensavers.bouncyBall.vars.ball.vel[1];
                                 }
                                 apps.settings.vars.screensavers.bouncyBall.vars.ball.vel[1] += 0.098;
+                                
+                                lastPageX = apps.settings.vars.screensavers.bouncyBall.vars.ball.coord[0];
+                                lastPageY = apps.settings.vars.screensavers.bouncyBall.vars.ball.coord[1];
                                 
                                 requestAnimationFrame(apps.settings.vars.screensavers.bouncyBall.vars.frame);
                             }
@@ -13596,6 +13630,7 @@ c(function(){
                 tempList += '<li><button onclick="apps.petCursors.vars.addNewCursor()">Custom</button></li>'
                 getId('petCursorsPresets').innerHTML = tempList;
             },
+            aggressiveChase: 0,
             presets: {
                 breezeDefault: {
                     imageName: 'Breeze',
@@ -13756,7 +13791,7 @@ c(function(){
                         var distX = mouseX - currX;
                         var distY = mouseY - currY;
                         var totalDist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2));
-                        if(totalDist > apps.petCursors.vars.cursors[i].followDistance * 2){
+                        if(totalDist > apps.petCursors.vars.cursors[i].followDistance * 2 || apps.petCursors.vars.aggressiveChase){
                             currX += distX * (apps.petCursors.vars.cursors[i].followSpeed / 100) + (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
                             currY += distY * (apps.petCursors.vars.cursors[i].followSpeed / 100) + (Math.random() * (apps.petCursors.vars.cursors[i].personality * 2) - apps.petCursors.vars.cursors[i].personality);
                         }else if(totalDist > apps.petCursors.vars.cursors[i].followDistance){

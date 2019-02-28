@@ -12,7 +12,7 @@
     }else{
         $last = $_GET['l'];
     }
-    if($last  < 0){
+    if($last < 0){
         $last = $dirsize + $last - 1;
     }
     if($last < -1){
