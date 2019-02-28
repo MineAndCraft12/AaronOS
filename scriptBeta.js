@@ -1627,7 +1627,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             setCaption: function(newCap){
                 d(1, 'Changing caption.');
                 if(appImg){
-                    getId("win_" + this.objName + "_cap").innerHTML = '<img src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'" style="height:32px;margin-bottom:-12px;margin-top:-6px;"> ' + newCap;
+                    getId("win_" + this.objName + "_cap").innerHTML = '<img src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'" style="height:32px;margin-bottom:-11px;margin-top:-6px;"> ' + newCap;
                 }else{
                     getId("win_" + this.objName + "_cap").innerHTML = this.dsktpIcon + '|' + newCap;
                 }
@@ -8526,7 +8526,8 @@ c(function(){
             "02/20/2019: B0.9.10.3\n + Some backend support for subdirectories in USERFILES, courtesy of SkyeEverest.\n + Included fallbacks for CSS var(), for IE.\n : Automatically sets a darker, opaque background color for IE.\n : Serverside error reports now report the correct line number.\n\n" +
             "02/25/2019: B0.10.0.0\n + USERFILES now supports psuedo file extensions.\n + Full backend and frontend support for folders in USERFILES.\n : Text Editor 2 now assumes USERFILES, instead of the other way around.\n + Files 2 and Text Editor 2 now properly handle folders in USERFILES.\n - aOSpassword cannot be modified except for setting a new password.\n - aOSpassword cannot be viewed.\n + Added some padding on the boot loading bar.\n : Clipboard now uses JSON for storage.\n\n" +
             "02/26/2019: B0.10.1.0\n + Added search bar and new folder / new file buttons to the File Manager.\n - Removed backend messaging dependency on setting.txt\n + System admins can now just straight-up delete messages instead of editing their content and erasing it.\n\n" +
-            "02/27/2019: B0.10.2.0\n + Pet Cursors app! Users can create custom cursors that follow their mouse around. Each has their own, specialized personality.",
+            "02/27/2019: B0.10.2.0\n + Pet Cursors app! Users can create custom cursors that follow their mouse around. Each has their own, specialized personality.\n\n" +
+            "02/28/2019: B0.10.3.0\n : Changed window caption font from Courier to Consolas\n + Added a small shadow to caption buttons.\n : Numerous fixes for Pet Cursors",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
     window.aOSversion = 'B0.10.1.0 (02/26/2019) r0';

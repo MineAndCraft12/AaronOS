@@ -273,7 +273,7 @@ div{
                 /*cursor:url(cursors/move.png) 14 14, move;*/
             }
             .winCap{
-                font-family:Courier, monospace;
+                font-family:Consolas, Courier, monospace;
                 font-size:16px;
                 top:0px;
                 left:3px; /* fallback */
@@ -548,6 +548,7 @@ div{
                 border-top-left-radius:0;
                 color:rgba(255, 255, 255, .3);
                 text-align:center;
+                box-shadow:0 0 1px #000;
                 /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
             }
             .winExit:hover{
@@ -579,6 +580,7 @@ div{
                 border-top-left-radius:0;
                 color:rgba(255, 255, 255, .3);
                 text-align:center;
+                box-shadow:0 0 1px #000;
                 /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
             }
             .winShrink:hover, .winBig:hover, .winFld:hover{
@@ -874,8 +876,6 @@ div{
     pointer-events:none;
 }
     #petCursors img{
-        max-width:128px;
-        max-height:128px;
         position:absolute;
         display:block;
         transition:0.1s;
