@@ -1021,11 +1021,9 @@ div{
     cursor:url(cursors/beta/pointer.png) 20 4, pointer;
 }
 .cursorLoadLight{
-    /*cursor:url(cursors/loadLight.png) 16 16, wait;*/
     cursor:url(cursors/beta/wait.png) 20 20, wait;
 }
 .cursorLoadDark{
-    /*cursor:url(cursors/loadDark.png) 16 16, wait;*/
     cursor:url(cursors/beta/wait.png) 20 20, wait;
 }
 .cursorForceLoad{

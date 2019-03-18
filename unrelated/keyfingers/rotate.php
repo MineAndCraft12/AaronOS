@@ -31,6 +31,7 @@
             var resetAfter = 0;
             var analyser;
             var ctx;
+            var vctx;
             var ctxMusic;
             var audio;
             var audioMusic;
@@ -42,34 +43,105 @@
             var big;
             var freqDat;
             var boxes;
+            var transformFact = [1, 1, 1025];
+            var tempMedian;
+            var pools = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            var lines = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            var TAU = Math.PI * 2;
+            function degArc(x, y, r, a, b){
+                vctx.beginPath();
+                vctx.arc(x, y, r, (a / 360) * TAU, (b / 360) * TAU);
+                vctx.stroke();
+            }
             window.requestAnimationFrame(function(){
+                /*
                 boxDiv = document.getElementById('audioBoxesDiv');
                 for(var i = 0; i < 1024; i++){// id="b' + i + '"
                     boxDiv.innerHTML += '<div class="box" style="left:' + i + 'px"></div>';
                 }
                 boxes = document.getElementsByClassName('box');
+                */
+                boxDiv = document.getElementById('audioBoxesDiv');
+                vctx = boxDiv.getContext('2d');
+                vctx.lineWidth = 24;
+                vctx.lineCap = "round";
+                vctx.strokeStyle = '#0000FF';
+                vctx.fillRect(0, 0, 1024, 1024);
+                for(var i = 1; i < 11; i++){
+                    degArc(512, 512, 48 * i, 0, 180);
+                }
                 big = 0;
-                makeBig = function(){
-                    if(!big){
+                makeBig = function(sizes){
+                    if(sizes){
                         big = 1;
-                        document.getElementById('audioBoxesDiv').style.transform = 'scale(' + (parseInt(window.innerWidth, 10) / 1024) + ')';
-                        document.body.style.backgroundColor = "#000";
+                        document.body.background = '#000';
+                        boxDiv.style.top = '0';
+                        //boxDiv.style.transform = 'scale(' + (window.innerWidth / 1024) + ',' + (window.innerHeight / 255) + ')';
+                        boxDiv.style.width = sizes[0] + 'px';
+                        boxDiv.width = sizes[0];
+                        boxDiv.style.height = sizes[1] + 'px';
+                        boxDiv.height = sizes[1];
+                        transformFact = [sizes[0] / 1024, sizes[1] / 255, Math.round(1024 / (boxDiv.width - 1024))];
+                        //vctx.lineWidth = Math.floor(transformFact[0]) + 1;
+                        document.getElementById('btns').style.display = 'none';
+                        document.getElementById('loadDiv').style.display = 'none';
+                    }else if(!big){
+                        big = 1;
+                        document.body.background = '#000';
+                        var totalSize = 1024; //Math.min(window.innerWidth, window.innerHeight);
+                        boxDiv.style.top = (window.innerHeight - totalSize) / 2 + "px";
+                        boxDiv.style.left = (window.innerWidth - totalSize) / 2 + "px";
+                        //boxDiv.style.transform = 'scale(' + (window.innerWidth / 1024) + ',' + (window.innerHeight / 255) + ')';
+                        boxDiv.style.width = totalSize + 'px';
+                        boxDiv.width = totalSize;
+                        boxDiv.style.height = totalSize + 'px';
+                        boxDiv.height = totalSize;
+                        transformFact = [totalSize / 1024, totalSize / 1024, Math.round(1024 / (totalSize - 1024))];
+                        //vctx.lineWidth = Math.floor(transformFact[0]) + 1;
+                        document.getElementById('btns').style.display = 'none';
+                        document.getElementById('loadDiv').style.display = 'none';
+                        document.body.style.background="#000";
                     }else{
                         big = 0;
-                        document.getElementById('audioBoxesDiv').style.transform = 'scale(1)';
-                        document.body.style.backgroundColor = "#FFF";
+                        document.body.background = 'none';
+                        boxDiv.style.top = '30px';
+                        boxDiv.style.left = '0';
+                        //boxDiv.style.transform = 'scale(1)';
+                        boxDiv.style.width = '1024px';
+                        boxDiv.width = '1024';
+                        boxDiv.style.height = '1024px';
+                        boxDiv.height = '1024';
+                        transformFact = [1, 1, 1025];
+                        //vctx.lineWidth = 1;
+                        document.getElementById('btns').style.display = 'block';
+                        document.getElementById('loadDiv').style.display = 'block';
+                        document.body.style.background="";
                     }
+                    vctx.lineWidth = 24;
+                    vctx.lineCap = "round";
                 };
+                
                 renderFrame = function(){
                     requestAnimationFrame(renderFrame);
                     analyser.getByteFrequencyData(frequencyData);
-                    boxDiv.style.display = 'none';
+                    vctx.clearRect(0, 0, 1024 * transformFact[0], 1024 * transformFact[1]);
+                    pools = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                     for(var i = 0; i < 1024; i++){
-                        freqDat = frequencyData[i];
-                        boxes[i].style.height = freqDat + 'px';
-                        boxes[i].style.backgroundColor = 'rgb(0,' + freqDat + ',' + (255 - freqDat) + ')';
+                        var currPool = Math.floor(i / 102.4)
+                        pools[currPool] = Math.max(frequencyData[i], pools[currPool]);
                     }
-                    boxDiv.style.display = 'block';
+                    
+                    for(var i = 0; i < 10; i++){
+                        lines[i] += Math.pow(pools[i], 2) / 65025 * 5;
+                        if(lines[i] > 360){
+                            lines[i] -= 360;
+                        }
+                        vctx.beginPath();
+                        //vctx.strokeStyle = 'rgb(0, ' + frequencyData[i] + ',' + (255 - frequencyData[i]) + ')';
+                        vctx.strokeStyle = 'rgb(' + ((pools[i] > 200) * ((pools[i] - 200) * 4.6)) + ', ' + (pools[i] - ((pools[i] > 220) * ((pools[i] - 220) * 7.2))) + ',' + (255 - pools[i]) + ')';
+                        degArc(512, 512, 48 * (i + 1), lines[i], lines[i] + 180);
+                        vctx.stroke();
+                    }
                 };
                 document.getElementById("fileInput").onchange = function(){
                     var files = this.files;
@@ -103,6 +175,7 @@
                     loadStr = "Local File";
                     audio.oncanplaythrough = function(){
                         if(loadsReady){
+                            //document.getElementById('songname').value = loadStr;
                             setTimeout(function(){
                                 audioMusic.play();
                             }, parseInt(document.getElementById('delayTime').value, 10));
@@ -116,10 +189,12 @@
                             renderFrame();
                         }else{
                             loadsReady = 1;
+                            //document.getElementById('songname').value = 'Loading Audio...';
                         }
                     }
                     audioMusic.oncanplaythrough = function(){
                         if(loadsReady){
+                            //document.getElementById('songname').value = loadStr;
                             setTimeout(function(){
                                 audioMusic.play();
                             }, parseInt(document.getElementById('delayTime').value, 10));
@@ -133,8 +208,10 @@
                             renderFrame();
                         }else{
                             loadsReady = 1;
+                            //document.getElementById('songname').value = 'Loading Audio...';
                         }
                     }
+                    //document.getElementById('songname').value = 'Loading Visualizer...';
                 }
             });
         </script>
@@ -146,7 +223,7 @@
                 transform-origin:0 0;
                 width:1024px;/*690px;*/
                 overflow:hidden;
-                height:255px;
+                height:1024px;
                 background-color:#FFF;
                 position:absolute;
                 top:30px;
@@ -195,24 +272,24 @@
     </head>
     <body>
         <audio id="myAudio" src=""></audio>
-        <audio id="msAudio" src="" onended="if(resetAfter){window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/visual.php?random=true';}"></audio>
+        <audio id="msAudio" src="" onended="if(resetAfter){window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/cnv.php?random=true';}"></audio>
         <div id="loadDiv">
             <div id="loadTotal"></div>
             <div id="loadTime"></div>
         </div>
-        <div id="audioBoxesDiv" onclick="makeBig()"></div>
-        <div style="position:absolute;top:0;left:0;z-index:100">
+        <canvas id="audioBoxesDiv" onclick="makeBig()" width="1024" height="1024"></canvas>
+        <div id="btns" style="position:absolute;top:0;left:0;z-index:100">
             <input id="fileInput" type="file" accept="audio/*"></input>
             <button onclick="audio.pause();audioMusic.pause();audio.currentTime = 0;audioMusic.currentTime = 0;setTimeout(function(){audioMusic.play()},400);audio.play();">&larr;</button>
             <!--<button style="background-color:red;" onclick="audio.pause();audioMusic.pause();audio.currentTime -= 5;audioMusic.currentTime -= 5;audio.play();audioMusic.play();">&lt;&lt;</button>-->
             <button onclick="audio.pause();audioMusic.pause();">||</button>
             <button onclick="audio.play();audioMusic.play();">&gt;</button>
             <!--<button style="background-color:red;" onclick="audio.pause();audioMusic.pause();audio.currentTime += 5;audioMusic.currentTime += 5;audio.play();audioMusic.play();">&gt;&gt;</button>-->
-            <button onclick="window.location='visual.php'">New</button>
-            Delay ms: <input id="delayTime" style="font-family:monospace;" value="150" size="4">
+            <button onclick="window.location='cnv.php'">New</button>
+            Delay ms: <input id="delayTime" style="font-family:monospace;" value="200" size="4">
             Min decibels: <input id="db" style="font-family:monospace;" value="-70" size="4">
-            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/visual.php?random=true';">Randomize</button>
-            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/cnv.php';">Normal</button>
+            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/cnv.php?random=true';">Randomize</button>
+            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/recolor.php';">Window Recolor</button>
         </div>
         <?php
             if(isset($_GET['random'])){
