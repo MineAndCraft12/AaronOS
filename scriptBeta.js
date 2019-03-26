@@ -1754,6 +1754,9 @@ function arrangeDesktopIcons(){
                         appPosY = 8;
                         appPosX += 108;
                     }
+                }else{
+                    getId("app_" + app).style.left = JSON.parse(USERFILES['DSKTP_ico_app_' + app])[0] + "px";
+                    getId("app_" + app).style.top = JSON.parse(USERFILES['DSKTP_ico_app_' + app])[1] + "px";
                 }
             }else{
                 getId("app_" + app).style.display = "none";
@@ -13688,6 +13691,15 @@ c(function(){
                     distance: 100,
                     speed: 5,
                     personality: 20
+                },
+                foxxo: {
+                    imageName: 'Foxxo',
+                    imageSource: 'cursors/foxxo.png',
+                    imageSize: [48, 48],
+                    imageCenter: [24, 24],
+                    distance: 100,
+                    speed: 5,
+                    personality: 50
                 }
             },
             buildCursorList: function(){

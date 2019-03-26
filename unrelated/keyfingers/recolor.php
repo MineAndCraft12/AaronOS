@@ -233,7 +233,7 @@
             Delay ms: <input id="delayTime" style="font-family:monospace;" value="200" size="4">
             Min decibels: <input id="db" style="font-family:monospace;" value="-80" size="4">
             <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/recolor.php?random=true';">Randomize</button>
-            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/line.php';">Lines</button>
+            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/rotate.php';">Rotating</button>
         </div>
         <?php
             if(isset($_GET['random'])){

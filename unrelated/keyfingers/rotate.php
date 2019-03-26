@@ -127,7 +127,7 @@
                     vctx.clearRect(0, 0, 1024 * transformFact[0], 1024 * transformFact[1]);
                     pools = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
                     for(var i = 0; i < 1024; i++){
-                        var currPool = Math.floor(i / 102.4)
+                        var currPool = Math.floor(i / 102.4);
                         pools[currPool] = Math.max(frequencyData[i], pools[currPool]);
                     }
                     
@@ -285,11 +285,11 @@
             <button onclick="audio.pause();audioMusic.pause();">||</button>
             <button onclick="audio.play();audioMusic.play();">&gt;</button>
             <!--<button style="background-color:red;" onclick="audio.pause();audioMusic.pause();audio.currentTime += 5;audioMusic.currentTime += 5;audio.play();audioMusic.play();">&gt;&gt;</button>-->
-            <button onclick="window.location='cnv.php'">New</button>
+            <button onclick="window.location='rotate.php'">New</button>
             Delay ms: <input id="delayTime" style="font-family:monospace;" value="200" size="4">
             Min decibels: <input id="db" style="font-family:monospace;" value="-70" size="4">
-            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/cnv.php?random=true';">Randomize</button>
-            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/recolor.php';">Window Recolor</button>
+            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/rotate.php?random=true';">Randomize</button>
+            <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/line.php';">Lines</button>
         </div>
         <?php
             if(isset($_GET['random'])){
