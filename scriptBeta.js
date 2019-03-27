@@ -283,7 +283,7 @@ window.onerror = function(errorMsg, url, lineNumber){
         'derp',
         'Augh! Message for you, sir!',  // Monty Python joke!
         'Nice job, Aaron!',
-        
+        'Ask Aaron\'s fox to ask Aaron what happened.'
     ];
     // present error and ask to send report
     lasterrorconfirmation = confirm(lang('aOS', 'fatalError1') + errorMessages[Math.floor(Math.random() * errorMessages.length)] + "\n\n" + lang('aOS', 'fatalError2') + " " + url + "\n" + lang('aOS', 'fatalError3') + " '" + module + "' " + lang('aOS', 'fatalError4') + " [" + lineNumber + "]:\n" + errorMsg + "\n\n" + lang('aOS', 'fatalError5'));
@@ -8530,10 +8530,12 @@ c(function(){
             "02/25/2019: B0.10.0.0\n + USERFILES now supports psuedo file extensions.\n + Full backend and frontend support for folders in USERFILES.\n : Text Editor 2 now assumes USERFILES, instead of the other way around.\n + Files 2 and Text Editor 2 now properly handle folders in USERFILES.\n - aOSpassword cannot be modified except for setting a new password.\n - aOSpassword cannot be viewed.\n + Added some padding on the boot loading bar.\n : Clipboard now uses JSON for storage.\n\n" +
             "02/26/2019: B0.10.1.0\n + Added search bar and new folder / new file buttons to the File Manager.\n - Removed backend messaging dependency on setting.txt\n + System admins can now just straight-up delete messages instead of editing their content and erasing it.\n\n" +
             "02/27/2019: B0.10.2.0\n + Pet Cursors app! Users can create custom cursors that follow their mouse around. Each has their own, specialized personality.\n\n" +
-            "02/28/2019: B0.10.3.0\n : Changed window caption font from Courier to Consolas\n + Added a small shadow to caption buttons.\n : Numerous fixes for Pet Cursors",
+            "02/28/2019: B0.10.3.0\n : Changed window caption font from Courier to Consolas\n + Added a small shadow to caption buttons.\n : Numerous fixes for Pet Cursors\n\n" +
+            "03/25/2019: B0.11.0.0\n + Added Foxxo pet cursor.\n : Misc updates that I forgot to include in the log. But mostly the fox cursor.\n\n" +
+            "03/26/2019: B0.11.0.1\n : Fixed Terminal screensaver.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.10.1.0 (02/26/2019) r0';
+    window.aOSversion = 'B0.11.0.1 (03/26/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

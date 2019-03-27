@@ -16,15 +16,12 @@
 #taskbar{
     outline:1px solid #0F0;
 }
-#winmove, #winrot, #icnmove{
+#winmove, #winrot, #icnmove, #screensaverLayer, #petCursors{
     background:none !important;
 }
 #windowFrameOverlay{
     background:none !important;
     outline:3px solid #0F0;
-}
-#screensaverLayer{
-    background:none !important;
 }
 img{
     filter:grayscale(1) sepia(1) saturate(13) hue-rotate(45deg) contrast(4) !important;
