@@ -8532,10 +8532,11 @@ c(function(){
             "02/27/2019: B0.10.2.0\n + Pet Cursors app! Users can create custom cursors that follow their mouse around. Each has their own, specialized personality.\n\n" +
             "02/28/2019: B0.10.3.0\n : Changed window caption font from Courier to Consolas\n + Added a small shadow to caption buttons.\n : Numerous fixes for Pet Cursors\n\n" +
             "03/25/2019: B0.11.0.0\n + Added Foxxo pet cursor.\n : Misc updates that I forgot to include in the log. But mostly the fox cursor.\n\n" +
-            "03/26/2019: B0.11.0.1\n : Fixed Terminal screensaver.",
+            "03/26/2019: B0.11.0.1\n : Fixed Terminal stylesheet.\n\n" +
+            "03/28/2019: B0.11.0.2\n : Fixed Help App crashing on launch.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.11.0.1 (03/26/2019) r0';
+    window.aOSversion = 'B0.11.0.2 (03/28/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11306,7 +11307,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims("auto", "auto", 800, 500);
                 this.appWindow.setCaption('aOS Help');
-                getId('win_help_h').style.overflow = 'auto';
+                getId('win_help_html').style.overflow = 'auto';
                 this.vars.populateList();
             }
             this.appWindow.openWindow();
