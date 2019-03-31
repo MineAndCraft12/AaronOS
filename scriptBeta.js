@@ -76,6 +76,8 @@ if(window.performance === undefined){
 // appx how much time it took to load the page
 var timeToPageLoad = Math.round(performance.now() * 10) / 10;
 
+var noUserFiles = (window.location.href.indexOf('nofiles=true') !== -1);
+
 // see if animationframe is supported - if not, substitute it
 var requestAnimationFrameIntact = 1;
 if(window.requestAnimationFrame === undefined){
@@ -125,6 +127,9 @@ if(typeof document.getElementsByClassName === 'undefined'){
 // safe mode
 var safeMode = (window.location.href.indexOf('safe=true') > -1);
 var safe = !safeMode;
+
+// style editor template mode
+var styleEditorTemplateMode = (window.location.href.indexOf('styletemplate=true') > -1);
 
 var darkMode = 0;
 function darkSwitch(light, dark){
@@ -233,7 +238,7 @@ requestAnimationFrame(checkMonitorMovement);
 
 // this section helps to handle errors, assuming the browser supports it
 // this is user's answer to send error report - 0 or 1. 2 means never been asked
-var lasterrorconfirmation = 2;
+var lasterrorconfirmation = 0;
 // error handler itself
 window.onerror = function(errorMsg, url, lineNumber){
     // just in case it has been destroyed, vartry is rebuilt - check function vartry(...){...} for commentation on it
@@ -285,16 +290,37 @@ window.onerror = function(errorMsg, url, lineNumber){
         'Nice job, Aaron!',
         'Ask Aaron\'s fox to ask Aaron what happened.'
     ];
+    var randomPhrase = errorMessages[Math.floor(Math.random() * errorMessages.length)];
+    var errorModule = module;
+    if(formDate('YMDHmSs') - lasterrorconfirmation > 30000){
+        lasterrorconfirmation = formDate('YMDHmSs');
+        try{
+            apps.prompt.vars.notify('Error in ' + errorModule + '<br>[' + lineNumber + '] ' + errorMsg + '<br><br>' + randomPhrase, ['Open Console', 'Dismiss'], function(btn){if(!btn){openapp(apps.jsConsole, 'dsktp');}}, 'Uncaught Error', 'appicons/ds/redx.png');
+        }catch(err){
+            console.log("Could not prompt error!");
+        }
+    }
     // present error and ask to send report
-    lasterrorconfirmation = confirm(lang('aOS', 'fatalError1') + errorMessages[Math.floor(Math.random() * errorMessages.length)] + "\n\n" + lang('aOS', 'fatalError2') + " " + url + "\n" + lang('aOS', 'fatalError3') + " '" + module + "' " + lang('aOS', 'fatalError4') + " [" + lineNumber + "]:\n" + errorMsg + "\n\n" + lang('aOS', 'fatalError5'));
-    if(typeof doLog !== undefined){
+    //lasterrorconfirmation = confirm(lang('aOS', 'fatalError1') + errorMessages[Math.floor(Math.random() * errorMessages.length)] + "\n\n" + lang('aOS', 'fatalError2') + " " + url + "\n" + lang('aOS', 'fatalError3') + " '" + module + "' " + lang('aOS', 'fatalError4') + " [" + lineNumber + "]:\n" + errorMsg + "\n\n" + lang('aOS', 'fatalError5'));
+    try{
+        doLog("");
+        doLog("You found an error! " + randomPhrase, '#F00');
         doLog("");
         doLog("Error in " + url, "#F00");
-        doLog("Module '" + module + "' at [" + lineNumber + "]:", "#F00");
+        doLog("Module '" + errorModule + "' at [" + lineNumber + "]:", "#F00");
         doLog(errorMsg, "#F00");
         doLog("");
+    }catch(err){
+        console.log("");
+        console.log("You found an error! " + errorMessages[Math.floor(Math.random() * errorMessages.length)]);
+        console.log("");
+        console.log("Error in " + url);
+        console.log("Module '" + module + "' at [" + lineNumber + "]:");
+        console.log(errorMsg);
+        console.log("");
     }
     // if the user wants report sent
+    /*
     if(lasterrorconfirmation){
         try{
             // save a special file containing error message
@@ -335,6 +361,7 @@ window.onerror = function(errorMsg, url, lineNumber){
             alert(lang('aOS', 'errorReport'));
         }
     }
+    */
 };
 
 // scale of screen, for hidpi compatibility
@@ -353,7 +380,7 @@ function m(msg){
     modulelast = module;
     module = msg;
     // reset module to idle so it is ready for next one
-    window.setTimeout(function(){module = 'idle';}, 0);
+    window.setTimeout(function(){module = 'unknown';}, 0);
 }
 
 // dynamic debug logging
@@ -5503,7 +5530,7 @@ c(function(){
                 this.appWindow.setDims("auto", "auto", 700, 400);
             }
             this.appWindow.setCaption("Settings");
-            if(launchtype === 'oldMenu'){
+            if(launchtype === 'oldMenu' || launchtype === 'oldMenuHide'){
                 this.appWindow.setContent(
                     '<div style="font-family:monospace;width:100%;height:100%;overflow:auto">' +
                     '<i>' + langOld('settings', 'valuesMayBeOutdated') + '</i><hr>' +
@@ -5564,7 +5591,9 @@ c(function(){
             }else{
                 this.vars.showMenu(apps.settings.vars.menus);
             }
-            this.appWindow.openWindow();
+            if(launchtype !== "oldMenuHide"){
+                this.appWindow.openWindow();
+            }
         },
         function(signal){
             switch(signal){
@@ -5616,7 +5645,7 @@ c(function(){
                         getId('aOSloadingBg').style.display = 'none';
                     }, 1005);
                     window.setTimeout(function(){
-                        openapp(apps.settings, 'oldMenu');
+                        openapp(apps.settings, 'oldMenuHide');
                         if(!safeMode){
                             if(typeof USERFILES.APP_STN_SETTING_BACKGROUND === "string"){
                                 getId("bckGrndImg").value = USERFILES.APP_STN_SETTING_BACKGROUND;
@@ -8533,10 +8562,11 @@ c(function(){
             "02/28/2019: B0.10.3.0\n : Changed window caption font from Courier to Consolas\n + Added a small shadow to caption buttons.\n : Numerous fixes for Pet Cursors\n\n" +
             "03/25/2019: B0.11.0.0\n + Added Foxxo pet cursor.\n : Misc updates that I forgot to include in the log. But mostly the fox cursor.\n\n" +
             "03/26/2019: B0.11.0.1\n : Fixed Terminal stylesheet.\n\n" +
-            "03/28/2019: B0.11.0.2\n : Fixed Help App crashing on launch.",
+            "03/28/2019: B0.11.0.2\n : Fixed Help App crashing on launch.\n\n" +
+            "03/30/2019: B0.11.1.0\n + Custom Style Editor now uses a live preview of a real AaronOS instance to test your stylesheets in real-time.\n - Fake AaronOS desktop for use with Style Editor has been removed.\n : Errors now show in notifications instead of JavaScript alerts which hang aOS.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.11.0.2 (03/28/2019) r0';
+    window.aOSversion = 'B0.11.1.0 (03/30/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -9594,104 +9624,115 @@ c(function(){
                 }
                 // if(window.navigator.onLine){
                     this.savePerf = Math.floor(performance.now());
-                    if(!newformat){
-                        getId("mastersaveframe").src = "filesaver.php/?k=" + SRVRKEYWORD + "&f=" + filepath + "&c=" + filecontent;
-                    }else{
-                        this.saving = 2;
-                        taskbarShowHardware();
-                        if(errorreport === 'ERROR_REPORT'){
-                            //getId("mastersaveframediv").innerHTML = '<iframe id="mastersaveframe" name="mastersaveframe"></iframe><form action="filesavernew.php/?error=error" method="POST" target="mastersaveframe" id="mastersaveform"><input name="k" value="' + SRVRKEYWORD + '"><input name="f" value="' + filepath + '"><textarea name="c">' + filecontent + '</textarea><input type="submit" id="savesubmit"></form>';
-                            this.xf['fd' + this.savePerf] = new FormData();
-                            this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
-                            this.xf['fd' + this.savePerf].append('f', filepath);
-                            this.xf['fd' + this.savePerf].append('c', filecontent);
-                            this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
-                            this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
-                                if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
-                                    apps.savemaster.vars.saving = 0;
-                                    taskbarShowHardware();
-                                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                                        apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
-                                    }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                                        apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
-                                    }
-                                }
-                            };
-                            this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php/?error=error');
-                            this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
-                            USERFILES[filepath] = '' + filecontent;
-                        }else if(errorreport === 'RDP'){
-                            this.xf['fd' + this.savePerf] = new FormData();
-                            this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
-                            this.xf['fd' + this.savePerf].append('f', filepath);
-                            this.xf['fd' + this.savePerf].append('c', filecontent);
-                            this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
-                            this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
-                                if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
-                                    apps.savemaster.vars.saving = 0;
-                                    taskbarShowHardware();
-                                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                                        apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
-                                    }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                                        apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
-                                    }
-                                }
-                            };
-                            this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php/?rdp=rdp');
-                            this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
-                        }else if(errorreport === 'mUname'){
-                            this.xf['fd' + this.savePerf] = new FormData();
-                            this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
-                            this.xf['fd' + this.savePerf].append('f', filepath);
-                            this.xf['fd' + this.savePerf].append('c', filecontent);
-                            this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
-                            this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
-                                if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
-                                    apps.savemaster.vars.saving = 0;
-                                    taskbarShowHardware();
-                                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                                        apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
-                                    }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                                        apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
-                                    }
-                                }
-                            };
-                            this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php/?mUname=mUname&pass=' + pass.split('?').join('X').split('&').join('X'));
-                            this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
-                            USERFILES[filepath] = '' + filecontent;
+                    if(!noUserFiles){
+                        if(!newformat){
+                            getId("mastersaveframe").src = "filesaver.php/?k=" + SRVRKEYWORD + "&f=" + filepath + "&c=" + filecontent;
                         }else{
-                            //getId("mastersaveframediv").innerHTML = '<iframe id="mastersaveframe" name="mastersaveframe"></iframe><form action="filesavernew.php" method="POST" target="mastersaveframe" id="mastersaveform"><input name="k" value="' + SRVRKEYWORD + '"><input name="f" value="' + filepath + '"><textarea name="c">' + filecontent + '</textarea><input type="submit" id="savesubmit"></form>';
-                            this.xf['fd' + this.savePerf] = new FormData();
-                            this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
-                            this.xf['fd' + this.savePerf].append('f', filepath);
-                            this.xf['fd' + this.savePerf].append('c', filecontent);
-                            if(errorreport === 'SET_PASSWORD'){
-                                this.xf['fd' + this.savePerf].append('setpass', 'true');
-                            }
-                            this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
-                            this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
-                                if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
-                                    apps.savemaster.vars.saving = 0;
-                                    taskbarShowHardware();
-                                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                                        apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
-                                    }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                                        apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                            this.saving = 2;
+                            taskbarShowHardware();
+                            if(errorreport === 'ERROR_REPORT'){
+                                //getId("mastersaveframediv").innerHTML = '<iframe id="mastersaveframe" name="mastersaveframe"></iframe><form action="filesavernew.php/?error=error" method="POST" target="mastersaveframe" id="mastersaveform"><input name="k" value="' + SRVRKEYWORD + '"><input name="f" value="' + filepath + '"><textarea name="c">' + filecontent + '</textarea><input type="submit" id="savesubmit"></form>';
+                                this.xf['fd' + this.savePerf] = new FormData();
+                                this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
+                                this.xf['fd' + this.savePerf].append('f', filepath);
+                                this.xf['fd' + this.savePerf].append('c', filecontent);
+                                this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
+                                this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
+                                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
+                                        apps.savemaster.vars.saving = 0;
+                                        taskbarShowHardware();
+                                        if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
+                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                                        }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
+                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                                        }
                                     }
-                                }
-                            };
-                            this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php');
-                            this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
-                            if(errorreport === 'SET_PASSWORD'){
-                                eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '="*****"');
+                                };
+                                this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php/?error=error');
+                                this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
+                                USERFILES[filepath] = '' + filecontent;
+                            }else if(errorreport === 'RDP'){
+                                this.xf['fd' + this.savePerf] = new FormData();
+                                this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
+                                this.xf['fd' + this.savePerf].append('f', filepath);
+                                this.xf['fd' + this.savePerf].append('c', filecontent);
+                                this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
+                                this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
+                                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
+                                        apps.savemaster.vars.saving = 0;
+                                        taskbarShowHardware();
+                                        if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
+                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                                        }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
+                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                                        }
+                                    }
+                                };
+                                this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php/?rdp=rdp');
+                                this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
+                            }else if(errorreport === 'mUname'){
+                                this.xf['fd' + this.savePerf] = new FormData();
+                                this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
+                                this.xf['fd' + this.savePerf].append('f', filepath);
+                                this.xf['fd' + this.savePerf].append('c', filecontent);
+                                this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
+                                this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
+                                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
+                                        apps.savemaster.vars.saving = 0;
+                                        taskbarShowHardware();
+                                        if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
+                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                                        }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
+                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                                        }
+                                    }
+                                };
+                                this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php/?mUname=mUname&pass=' + pass.split('?').join('X').split('&').join('X'));
+                                this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
+                                USERFILES[filepath] = '' + filecontent;
                             }else{
-                                sh('mkdir /USERFILES/' + filepath.substring(0, filepath.lastIndexOf('/')));
-                                apps.savemaster.vars.temporarySaveContent = '' + filecontent;
-                                eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '=apps.savemaster.vars.temporarySaveContent');
-                                delete apps.savemaster.vars.temporarySaveContent;
+                                //getId("mastersaveframediv").innerHTML = '<iframe id="mastersaveframe" name="mastersaveframe"></iframe><form action="filesavernew.php" method="POST" target="mastersaveframe" id="mastersaveform"><input name="k" value="' + SRVRKEYWORD + '"><input name="f" value="' + filepath + '"><textarea name="c">' + filecontent + '</textarea><input type="submit" id="savesubmit"></form>';
+                                this.xf['fd' + this.savePerf] = new FormData();
+                                this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
+                                this.xf['fd' + this.savePerf].append('f', filepath);
+                                this.xf['fd' + this.savePerf].append('c', filecontent);
+                                if(errorreport === 'SET_PASSWORD'){
+                                    this.xf['fd' + this.savePerf].append('setpass', 'true');
+                                }
+                                this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
+                                this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
+                                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
+                                        apps.savemaster.vars.saving = 0;
+                                        taskbarShowHardware();
+                                        if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
+                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                                        }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
+                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                                        }
+                                    }
+                                };
+                                this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php');
+                                this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
+                                if(errorreport === 'SET_PASSWORD'){
+                                    eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '="*****"');
+                                }else{
+                                    sh('mkdir /USERFILES/' + filepath.substring(0, filepath.lastIndexOf('/')));
+                                    apps.savemaster.vars.temporarySaveContent = '' + filecontent;
+                                    eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '=apps.savemaster.vars.temporarySaveContent');
+                                    delete apps.savemaster.vars.temporarySaveContent;
+                                }
                             }
+                            //document.getElementById("mastersaveform").submit();
                         }
-                        //document.getElementById("mastersaveform").submit();
+                    }else{
+                        if(errorreport === 'SET_PASSWORD'){
+                            eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '="*****"');
+                        }else{
+                            sh('mkdir /USERFILES/' + filepath.substring(0, filepath.lastIndexOf('/')));
+                            apps.savemaster.vars.temporarySaveContent = '' + filecontent;
+                            eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '=apps.savemaster.vars.temporarySaveContent');
+                            delete apps.savemaster.vars.temporarySaveContent;
+                        }
                     }
                 // }else{
                 //     apps.prompt.vars.alert('Error saving file:<br><br>You are not online.', 'Okay', function(){}, 'SaveMaster');
@@ -9703,24 +9744,26 @@ c(function(){
                     apps.prompt.vars.alert('Error saving directory:<br><br>Not allowed to use ".." keyword.', 'Okay', function(){}, 'SaveMaster');
                     return false;
                 }
-                this.xf['fd' + this.savePerf] = new FormData();
-                this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
-                this.xf['fd' + this.savePerf].append('f', filepath);
-                this.xf['fd' + this.savePerf].append('mkdir', 'true');
-                this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
-                this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
-                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
-                        apps.savemaster.vars.saving = 0;
-                        taskbarShowHardware();
-                        if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                            apps.prompt.vars.alert('Error saving directory:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
-                        }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                            apps.prompt.vars.alert('Error saving directory:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                if(!noUserFiles){
+                    this.xf['fd' + this.savePerf] = new FormData();
+                    this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
+                    this.xf['fd' + this.savePerf].append('f', filepath);
+                    this.xf['fd' + this.savePerf].append('mkdir', 'true');
+                    this.xf['xhttp' + this.savePerf] = new XMLHttpRequest();
+                    this.xf['xhttp' + this.savePerf].onreadystatechange = function(){
+                        if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
+                            apps.savemaster.vars.saving = 0;
+                            taskbarShowHardware();
+                            if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
+                                apps.prompt.vars.alert('Error saving directory:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                            }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
+                                apps.prompt.vars.alert('Error saving directory:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                            }
                         }
-                    }
-                };
-                this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php');
-                this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
+                    };
+                    this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php');
+                    this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
+                }
                 sh('mkdir /USERFILES/' + filepath);
             },
             latestDel: '',
@@ -9741,20 +9784,22 @@ c(function(){
                 apps.prompt.vars.confirm(this.latestDel + ' wants to permanantly delete the file ' + filepath + '. Do you give permission to delete the file? This cannot be undone.', ['No, do nothing', 'Yes, delete file'], function(btn){
                     if(btn){
                 */
-                apps.savemaster.vars.saving = 2;
-                taskbarShowHardware();
-                apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf] = new FormData();
-                apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf].append('k', SRVRKEYWORD);
-                apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf].append('f', filepath);
-                apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf] = new XMLHttpRequest();
-                apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].onreadystatechange = function(){
-                    if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
-                        apps.savemaster.vars.saving = 0;
-                        taskbarShowHardware();
-                    }
-                };
-                apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].open('POST', 'filedeleter.php');
-                apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].send(apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf]);
+                if(!noUserFiles){
+                    apps.savemaster.vars.saving = 2;
+                    taskbarShowHardware();
+                    apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf] = new FormData();
+                    apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf].append('k', SRVRKEYWORD);
+                    apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf].append('f', filepath);
+                    apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf] = new XMLHttpRequest();
+                    apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].onreadystatechange = function(){
+                        if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].readyState === 4){
+                            apps.savemaster.vars.saving = 0;
+                            taskbarShowHardware();
+                        }
+                    };
+                    apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].open('POST', 'filedeleter.php');
+                    apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].send(apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf]);
+                }
                 delete USERFILES[filepath];
                 /*
                     }
@@ -12251,14 +12296,20 @@ c(function(){
         0,
         function(){
             if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setDims("auto", "auto", 400, 400);
-                this.appWindow.toggleFullscreen();
-                this.appWindow.setCaption('Custom Style Editor');
-                this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe src="csePreview.html" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
-                if(typeof USERFILES.aosCustomStyle === "string"){
-                    getId('CSEtextarea').innerHTML = USERFILES.aosCustomStyle;
-                    //this.vars.updateFrame();
+                if(styleEditorTemplateMode){
+                    this.appWindow.setDims("auto", "auto", 400, 500);
+                    this.appWindow.setCaption("CSE Preview");
+                    this.appWindow.setContent('<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>');
+                }else{
+                    this.appWindow.paddingMode(0);
+                    this.appWindow.setDims("auto", "auto", 400, 400);
+                    this.appWindow.toggleFullscreen();
+                    this.appWindow.setCaption('Custom Style Editor');
+                    this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe src="aosBeta.php?styletemplate=true&nofiles=true" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
+                    if(typeof USERFILES.aosCustomStyle === "string"){
+                        getId('CSEtextarea').innerHTML = USERFILES.aosCustomStyle;
+                        //this.vars.updateFrame();
+                    }
                 }
             }
             this.appWindow.openWindow();
@@ -12284,7 +12335,14 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    
+                    if(styleEditorTemplateMode){
+                        this.appWindow.setDims("auto", "auto", 400, 500);
+                        this.appWindow.setCaption("CSE Preview");
+                        this.appWindow.setContent('<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>');
+                        this.appWindow.openWindow();
+                        apps.prompt.vars.notify('Test Notification', ['Button 1', 'Button 2'], function(){}, 'Custom Style Editor', 'appicons/ds/CSE.png');
+                        setTimeout(function(){toTop(apps.styleEditor);}, 1000);
+                    }
                     break;
                 case 'shutdown':
                         
@@ -14937,8 +14995,29 @@ bootFileHTTP.onreadystatechange = function(){
     }
 };
 c(function(){
-    bootFileHTTP.open('GET', 'fileloaderBeta.php');
-    bootFileHTTP.send();
+    if(!noUserFiles){
+        bootFileHTTP.open('GET', 'fileloaderBeta.php');
+        bootFileHTTP.send();
+    }else{
+        doLog("WARNING - USERFILES disallowed by ?nofiles=true", '#FF7F00');
+        USERFILES = {};
+        doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to fetch USERFILES.');
+        perfStart("masterInitAOS");
+        m("init fileloader");
+        getId("aOSloadingInfo").innerHTML += "<br>Your OS key is " + SRVRKEYWORD;
+        for(var app in apps){
+            getId("aOSloadingInfo").innerHTML="Loading your files...<br>Your OS key is" + SRVRKEYWORD + "<br>Loading " + app;
+            try{
+                apps[app].signalHandler("USERFILES_DONE");
+            }catch(err){
+                alert("Error initializing " + app + ":\n\n" + err);
+            }
+        }
+        requestAnimationFrame(function(){bootFileHTTP = null;});
+        doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to exec USERFILES_DONE.');
+        doLog('Took ' + Math.round(performance.now() * 10) / 10 + 'ms grand total to reach desktop.');
+        console.log("Load successful, apps alerted, and bootFileHTTP deleted.");
+    }
 });
 totalWaitingCodes = codeToRun.length;
 // 2000 lines of code! 9/18/2015
