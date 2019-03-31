@@ -40,15 +40,11 @@
     display:none;
 }
 */
-#icons div:first-child{
+#icn_startMenu{
     border-top-right-radius:10px;
     border-bottom-right-radius:10px;
     background:linear-gradient(to bottom, #479246 0, #8FC08F 3px, #409A3F 6px, #43A543 60%, #38A638 90%, #31723F 100%);
     box-shadow:inset 6px 6px 3px -5px #559B55, inset -6px -6px 10px -5px #246825, 2px 2px 1px rgba(255, 255, 255, 0.2);
-}
-#icons div:first-child div{
-    background:none;
-    box-shadow:none;
 }
 #time{
     width:auto;

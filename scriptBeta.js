@@ -8269,8 +8269,8 @@ c(function(){
     m('init files');
     files = {
         customStyles: {
-            glassWindows1: ".winHTML{\n    background:none;\n}\n.darkMode .winHTML{\n    background:none;\n}",
-            glassWindows2: ".winHTML{\n    background:rgba(255, 255, 255, 0.1);\n}\n.darkMode .winHTML{\n    background:rgba(0, 0, 0, 0.1);\n}"
+            glassWindows1: ".winHTML{\n    background:none;\n}\n.darkMode .winHTML{\n    background:none;\n}\n#FIL2cntn{\n    background:none !important;\n}\n#FIL2tbl div{\n    background:#FFF;\n}\n.darkMode #FIL2tbl div{\n    background:#000;\n}\n#FIL2search{\n    border-bottom-left-radius:5px;\n    border-bottom-right-radius:5px;\n}\n#win_notepad2_html div{\n    background:none !important;\n}\n#win_notepad2_html div div{\n    background:#FFF !important;\n}\n.darkMode #win_notepad2_html div div{\n    background:#000 !important;\n}\n#stickyNotePad{\n    background:none !important;\n    box-shadow:none;\n}\n.darkMode #stickyNotePad{\n    color:#FFF;\n}",
+            glassWindows2: ".winHTML{\n    background:rgba(255, 255, 255, 0.1);\n}\n.darkMode .winHTML{\n    background:rgba(0, 0, 0, 0.1);\n}\n#FIL2cntn{\n    background:rgba(255, 255, 255, 0.1) !important;\n}\n.darkMode #FIL2cntn{\n    background:rgba(0, 0, 0, 0.1) !important;\n}\n#FIL2tbl div{\n    background:#FFF;\n}\n.darkMode #FIL2tbl div{\n    background:#000;\n}\n#FIL2search{\n    border-bottom-left-radius:5px;\n    border-bottom-right-radius:5px;\n}\n#win_notepad2_html div{\n    background:rgba(255, 255, 255, 0.1) !important;\n}\n.darkMode #win_notepad2_html div{\n    background:rgba(0, 0, 0, 0.1) !important;\n}\n#win_notepad2_html div div{\n    background:#FFF !important;\n}\n.darkMode #win_notepad2_html div div{\n    background:#000 !important;\n}\n#stickyNotePad{\n    background:rgba(255, 255, 127, 0.1) !important;\n}"
         },
         changelog_old:
             "OLD CHANGELOG AND PLANNING SHEET\nThis could be found in a very large comment at the very top of the main script file before this file addition.\n\n" +
@@ -8563,10 +8563,11 @@ c(function(){
             "03/25/2019: B0.11.0.0\n + Added Foxxo pet cursor.\n : Misc updates that I forgot to include in the log. But mostly the fox cursor.\n\n" +
             "03/26/2019: B0.11.0.1\n : Fixed Terminal stylesheet.\n\n" +
             "03/28/2019: B0.11.0.2\n : Fixed Help App crashing on launch.\n\n" +
-            "03/30/2019: B0.11.1.0\n + Custom Style Editor now uses a live preview of a real AaronOS instance to test your stylesheets in real-time.\n - Fake AaronOS desktop for use with Style Editor has been removed.\n : Errors now show in notifications instead of JavaScript alerts which hang aOS.",
+            "03/30/2019: B0.11.1.0\n + Custom Style Editor now uses a live preview of a real AaronOS instance to test your stylesheets in real-time.\n - Fake AaronOS desktop for use with Style Editor has been removed.\n : Errors now show in notifications instead of JavaScript alerts which hang aOS.\n\n" +
+            "03/31/2019: B0.11.1.1\n + Cleaned up many of the CustomStyles themes.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.11.1.0 (03/30/2019) r0';
+    window.aOSversion = 'B0.11.1.1 (03/31/2019) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

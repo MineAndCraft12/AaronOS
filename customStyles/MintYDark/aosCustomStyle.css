@@ -46,6 +46,8 @@ textarea:focus, input:focus{
  color:#909090;
  border-color:transparent;
  margin-top:2px;
+ box-shadow:none;
+ border-radius:0;
 }
  .darkMode .winExit, .darkMode .winShrink, .darkMode .winBig, .darkMode .winFld{
   color:#666666;
