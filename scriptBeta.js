@@ -7437,7 +7437,7 @@ c(function(){
                 }
             },
             reqFullscreen: function(){
-                getId("monitor").webkitRequestFullscreen();
+                (getId("monitor").requestFullscreen || getId("monitor").webkitRequestFullscreen || getId("monitor").mozRequestFullscreen)();
                 window.setTimeout(fitWindowRes(screen.width, screen.height), 100);
             },
             endFullscreen: function(){
@@ -15033,3 +15033,4 @@ totalWaitingCodes = codeToRun.length;
 // 11194 lines of code! 2/3/2017
 // 12736 lines of code! 6/2/2017
 // 11145 lines of code! 2/13/2018
+// 15023 lines of code! 4/3/2019
