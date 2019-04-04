@@ -26,6 +26,6 @@ Not Included:
 
 The main PHP file is /aosBeta.php
 
-The main JavaScript file is /scriptBeta.php
+The main JavaScript file is /scriptBeta.js
 
-The main CSS file is /styleBeta.php
+The main CSS file is /styleBeta.css

@@ -8564,10 +8564,11 @@ c(function(){
             "03/26/2019: B0.11.0.1\n : Fixed Terminal stylesheet.\n\n" +
             "03/28/2019: B0.11.0.2\n : Fixed Help App crashing on launch.\n\n" +
             "03/30/2019: B0.11.1.0\n + Custom Style Editor now uses a live preview of a real AaronOS instance to test your stylesheets in real-time.\n - Fake AaronOS desktop for use with Style Editor has been removed.\n : Errors now show in notifications instead of JavaScript alerts which hang aOS.\n\n" +
-            "03/31/2019: B0.11.1.1\n + Cleaned up many of the CustomStyles themes.",
+            "03/31/2019: B0.11.1.1\n + Cleaned up many of the CustomStyles themes.\n\n" +
+            "04/03/2019: B0.11.1.2\n : Fixed Fullscreen button in Settings (thank you CerebralDatabank)\n : Modified filetype description positioning in File Manager 2.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.11.1.1 (03/31/2019) r1';
+    window.aOSversion = 'B0.11.1.2 (04/03/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -9235,7 +9236,7 @@ c(function(){
                                     }else{
                                         temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
                                             '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
-                                            this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
+                                            this.currDirList[item] + '<span style="opacity:0.5;float:right;">' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
                                             '</div>';
                                     }
                                 }
@@ -9252,7 +9253,7 @@ c(function(){
                                     }else{
                                         temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\'") + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
                                             '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
-                                            this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
+                                            this.currDirList[item] + '<span style="opacity:0.5;float:right;">' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
                                             '</div>';
                                     }
                                 }
@@ -9269,7 +9270,7 @@ c(function(){
                                     }else{
                                         temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'/window' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\\\'") + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
                                             '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
-                                            this.currDirList[item] + '<span style="color:#7F7F7F">.' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '</span>' +
+                                            this.currDirList[item] + '<span style="opacity:0.5;float:right;">' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
                                             '</div>';
                                     }
                                 }
