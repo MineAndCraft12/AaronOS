@@ -279,8 +279,9 @@ div{
                 left:3px; /* fallback */
                 left:var(--windowBorderWidth);
                 padding-left:23px;
-                width: calc(100% - 29px); /* fallback */
-                width:calc(100% - 23px - var(--windowBorderWidth) - var(--windowBorderWidth));
+                width: calc(100% - 98px); /* fallback */
+                width:calc(100% - 92px - var(--windowBorderWidth) - var(--windowBorderWidth));
+                white-space:nowrap;
                 height:21px;
                 text-shadow:0px 0px 2px #000;
                 color:#FFF;
