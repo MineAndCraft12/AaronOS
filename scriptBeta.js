@@ -4064,6 +4064,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -4153,6 +4158,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -4234,6 +4244,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -4393,6 +4408,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -4432,8 +4452,12 @@ c(function(){
                 }, logStr);
                 this.cnsPosts.push(logStr);
                 this.cnsPosts.push(logClr);
-                getId("cnsTrgt").innerHTML += '<br><span style="color:' + logClr + ';">' + logStr + '</span>';
-                getId("cnsTrgt").scrollTop = getId("cnsTrgt").scrollHeight;
+                try{
+                    getId("cnsTrgt").innerHTML += '<br><span style="color:' + logClr + ';">' + logStr + '</span>';
+                    getId("cnsTrgt").scrollTop = getId("cnsTrgt").scrollHeight;
+                }catch(err){
+                    // jsconsole window is not open
+                }
             },
             runInput: function(){
                 m('Running jsC Input');
@@ -4499,8 +4523,12 @@ c(function(){
                     this.appWindow.closeIcon();
                     break;
                 case "close":
-                    clearInterval(this.vars.drawInt);
                     this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -5286,6 +5314,11 @@ c(function(){
                 case "close":
                     clearInterval(this.vars.drawInt);
                     this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -5354,6 +5387,11 @@ c(function(){
                 case "close":
                     this.appWindow.closeWindow();
                     window.setTimeout(function(){apps.prompt.vars.checkPrompts();}, 0);
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -5604,6 +5642,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -7711,6 +7754,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -7903,7 +7951,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -8099,7 +8151,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -8564,12 +8620,12 @@ c(function(){
             "03/26/2019: B0.11.0.1\n : Fixed Terminal stylesheet.\n\n" +
             "03/28/2019: B0.11.0.2\n : Fixed Help App crashing on launch.\n\n" +
             "03/30/2019: B0.11.1.0\n + Custom Style Editor now uses a live preview of a real AaronOS instance to test your stylesheets in real-time.\n - Fake AaronOS desktop for use with Style Editor has been removed.\n : Errors now show in notifications instead of JavaScript alerts which hang aOS.\n\n" +
-            "03/31/2019: B0.11.1.1\n + Cleaned up many of the CustomStyles themes.\n\n" +
+            "03/31/2019: B0.11.1.1\n : Cleaned up many of the CustomStyles themes.\n\n" +
             "04/03/2019: B0.11.1.2\n : Fixed Fullscreen button in Settings (thank you CerebralDatabank)\n : Modified filetype description positioning in File Manager 2.\n\n" +
-            "04/04/2019: B0.11.2.0\n : Fixed error when right clicking a file with a period in its name in FIL2.\n : Properties app now uses bash file paths instead of JS object paths.\n : Fixed window titles overlapping buttons on right side.",
+            "04/04/2019: B0.11.2.0\n : Apps now wait until the window closing animation is finished before clearing their content, looks way better now.\n : Fixed error when right clicking a file with a period in its name in FIL2.\n : Properties app now uses bash file paths instead of JS object paths.\n : Fixed window titles overlapping buttons on right side.\n : Fixed some apps not clearing their window content after being closed.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.11.2.0 (04/04/2019) r0';
+    window.aOSversion = 'B0.11.2.0 (04/04/2019) r2';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -8672,7 +8728,11 @@ c(function(){
                         apps.prompt.vars.alert('Please don\'t close the window until it is done counting.', 'Oh, I nearly broke stuff.', function(){}, 'Properties');
                     }else{
                         this.appWindow.closeWindow();
-                        this.appWindow.setContent("");
+                        setTimeout(function(){
+                            if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                                this.appWindow.setContent("");
+                            }
+                        }.bind(this), 300);
                     }
                     break;
                 case "checkrunning":
@@ -8769,7 +8829,11 @@ c(function(){
                 case "close":
                     if(getId("FILgreen").style.backgroundColor !== "rgb(170, 255, 170)"){
                         this.appWindow.closeWindow();
-                        this.appWindow.setContent("");
+                        setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                                this.appWindow.setContent("");
+                            }
+                        }.bind(this), 300);
                     }else{
                         apps.prompt.vars.alert('Please allow Files to finish searching the current folder.', 'Oops, I almost broke stuff.', function(){}, 'Files');
                     }
@@ -8989,7 +9053,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -9361,7 +9429,11 @@ c(function(){
                 case "close":
                     this.vars.currGame = '';
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -9422,7 +9494,11 @@ c(function(){
                 case "close":
                     this.vars.currGame = '';
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -9547,7 +9623,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -9600,7 +9680,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -9859,7 +9943,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -10076,7 +10164,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -10264,7 +10356,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -10664,7 +10760,11 @@ c(function(){
                                 break;
                             case "close":
                                 this.appWindow.closeWindow();
-                                this.appWindow.setContent("");
+                                setTimeout(function(){
+                                    if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                                        this.appWindow.setContent("");
+                                    }
+                                }.bind(this), 300);
                                 break;
                             case "checkrunning":
                                 if(this.appWindow.appIcon){
@@ -10722,7 +10822,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -10780,7 +10884,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -11325,7 +11433,11 @@ c(function(){
                         apps.prompt.vars.notify('Error stopping camera. Your camera may still be running.<br><br>' + e, [], function(){}, 'Camera Error', 'appicons/ds/CAM.png')
                     }
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -11384,7 +11496,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -11901,7 +12017,11 @@ c(function(){
                 case "close":
                     unblockScreensaver("apps.musicVis", 1);
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12017,7 +12137,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12079,9 +12203,11 @@ c(function(){
                 case "close":
                     unblockScreensaver("apps.indycar", 1);
                     this.appWindow.closeWindow();
-                    this.appWindow.setCaption('IndyCar');
-                    getId('ICrFrame').contentDocument.innerHTML = "";
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12135,9 +12261,11 @@ c(function(){
                 case "close":
                     unblockScreensaver("apps.housegame", 1);
                     this.appWindow.closeWindow();
-                    this.appWindow.setCaption("House Game")
-                    getId('HsGFrame').contentDocument.innerHTML = "";
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12192,7 +12320,11 @@ c(function(){
                 case "close":
                     //apps.savemaster.vars.save('APP_SNt_stickyNoteSave', getId('stickyNotePad').value, 1);
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12250,7 +12382,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12341,7 +12477,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12409,7 +12549,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12487,7 +12631,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12624,7 +12772,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12703,7 +12855,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12753,7 +12909,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -12805,7 +12965,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -13238,7 +13402,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -13671,7 +13839,11 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    this.appWindow.setContent("");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
