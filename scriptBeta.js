@@ -8326,8 +8326,8 @@ c(function(){
     m('init files');
     files = {
         customStyles: {
-            glassWindows1: ".winHTML{\n    background:none;\n}\n.darkMode .winHTML{\n    background:none;\n}\n#FIL2cntn{\n    background:none !important;\n}\n#FIL2tbl div{\n    background:#FFF;\n}\n.darkMode #FIL2tbl div{\n    background:#000;\n}\n#FIL2search{\n    border-bottom-left-radius:5px;\n    border-bottom-right-radius:5px;\n}\n#win_notepad2_html div{\n    background:none !important;\n}\n#win_notepad2_html div div{\n    background:#FFF !important;\n}\n.darkMode #win_notepad2_html div div{\n    background:#000 !important;\n}\n#stickyNotePad{\n    background:none !important;\n    box-shadow:none;\n}\n.darkMode #stickyNotePad{\n    color:#FFF;\n}",
-            glassWindows2: ".winHTML{\n    background:rgba(255, 255, 255, 0.1);\n}\n.darkMode .winHTML{\n    background:rgba(0, 0, 0, 0.1);\n}\n#FIL2cntn{\n    background:rgba(255, 255, 255, 0.1) !important;\n}\n.darkMode #FIL2cntn{\n    background:rgba(0, 0, 0, 0.1) !important;\n}\n#FIL2tbl div{\n    background:#FFF;\n}\n.darkMode #FIL2tbl div{\n    background:#000;\n}\n#FIL2search{\n    border-bottom-left-radius:5px;\n    border-bottom-right-radius:5px;\n}\n#win_notepad2_html div{\n    background:rgba(255, 255, 255, 0.1) !important;\n}\n.darkMode #win_notepad2_html div{\n    background:rgba(0, 0, 0, 0.1) !important;\n}\n#win_notepad2_html div div{\n    background:#FFF !important;\n}\n.darkMode #win_notepad2_html div div{\n    background:#000 !important;\n}\n#stickyNotePad{\n    background:rgba(255, 255, 127, 0.1) !important;\n}"
+            glassWindows1: ".winHTML{\n    background:none;\n}\n.darkMode .winHTML{\n    background:none;\n}\n#FIL2cntn, #FIL2sidebar{\n    background:none !important;\n}\n#FIL2tbl div{\n    background:#FFF;\n}\n.darkMode #FIL2tbl div{\n    background:#000;\n}\n#FIL2search{\n    border-bottom-left-radius:5px;\n    border-bottom-right-radius:5px;\n}\n#win_notepad2_html div{\n    background:none !important;\n}\n#win_notepad2_html div div{\n    background:#FFF !important;\n}\n.darkMode #win_notepad2_html div div{\n    background:#000 !important;\n}\n#stickyNotePad{\n    background:none !important;\n    box-shadow:none;\n}\n.darkMode #stickyNotePad{\n    color:#FFF;\n}",
+            glassWindows2: ".winHTML{\n    background:rgba(255, 255, 255, 0.1);\n}\n.darkMode .winHTML{\n    background:rgba(0, 0, 0, 0.1);\n}\n#FIL2cntn, #FIL2sidebar{\n    background:rgba(255, 255, 255, 0.1) !important;\n}\n.darkMode #FIL2cntn, .darkMode #FIL2sidebar{\n    background:rgba(0, 0, 0, 0.1) !important;\n}\n#FIL2tbl div{\n    background:#FFF;\n}\n.darkMode #FIL2tbl div{\n    background:#000;\n}\n#FIL2search{\n    border-bottom-left-radius:5px;\n    border-bottom-right-radius:5px;\n}\n#win_notepad2_html div{\n    background:rgba(255, 255, 255, 0.1) !important;\n}\n.darkMode #win_notepad2_html div{\n    background:rgba(0, 0, 0, 0.1) !important;\n}\n#win_notepad2_html div div{\n    background:#FFF !important;\n}\n.darkMode #win_notepad2_html div div{\n    background:#000 !important;\n}\n#stickyNotePad{\n    background:rgba(255, 255, 127, 0.1) !important;\n}"
         },
         changelog_old:
             "OLD CHANGELOG AND PLANNING SHEET\nThis could be found in a very large comment at the very top of the main script file before this file addition.\n\n" +
@@ -8623,10 +8623,11 @@ c(function(){
             "03/30/2019: B0.11.1.0\n + Custom Style Editor now uses a live preview of a real AaronOS instance to test your stylesheets in real-time.\n - Fake AaronOS desktop for use with Style Editor has been removed.\n : Errors now show in notifications instead of JavaScript alerts which hang aOS.\n\n" +
             "03/31/2019: B0.11.1.1\n : Cleaned up many of the CustomStyles themes.\n\n" +
             "04/03/2019: B0.11.1.2\n : Fixed Fullscreen button in Settings (thank you CerebralDatabank)\n : Modified filetype description positioning in File Manager 2.\n\n" +
-            "04/04/2019: B0.11.2.0\n : Apps now wait until the window closing animation is finished before clearing their content, looks way better now.\n : Fixed error when right clicking a file with a period in its name in FIL2.\n : Properties app now uses bash file paths instead of JS object paths.\n : Fixed window titles overlapping buttons on right side.\n : Fixed some apps not clearing their window content after being closed.\n : Fixed the LiveElement system erroring out in its error handler.",
+            "04/04/2019: B0.11.2.0\n : Apps now wait until the window closing animation is finished before clearing their content, looks way better now.\n : Fixed error when right clicking a file with a period in its name in FIL2.\n : Properties app now uses bash file paths instead of JS object paths.\n : Fixed window titles overlapping buttons on right side.\n : Fixed some apps not clearing their window content after being closed.\n : Fixed the LiveElement system erroring out in its error handler.\n\n" +
+            "04/05/2019: B0.11.3.0\n + Sidebar in the File Manager including the new Home, Favorites and Navigation features.\n : The main page of the File Manager is now called Home\n + Favorites list in File Manager, to save important locations.\n + Navigation list in File Manager, to jump around in the current path.\n : Buttons for touch and mkdir in File Manager moved to the right side.\n + Add Favorite button added to left side of File Manager's toolbar.\n + Descriptions for the File Manager's toolbar buttons will now appear when hovered over.\n + Rounded corners on the top edge of the File Manager's content.\n : The left edge of the File Manager's Location and Search boxes are now lined up with the left edge of the main content.\n : Fixed caption bars in the Windows 98 theme.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.11.2.0 (04/04/2019) r3';
+    window.aOSversion = 'B0.11.3.0 (04/05/2019) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -9018,7 +9019,7 @@ c(function(){
         function(launchType){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims("auto", "auto", 700, 400, 1);
+                this.appWindow.setDims("auto", "auto", 796, 400, 1);
             }
             this.appWindow.setCaption("File Manager 2");
             this.appWindow.openWindow();
@@ -9026,24 +9027,47 @@ c(function(){
                 this.vars.currLoc = '/';
                 getId('win_files2_html').style.background = "none";
                 this.appWindow.setContent(
-                    '<div id="FIL2topdiv" style="width:100%; height:50px;">' +
-                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.back()">&lArr; &nbsp;</div>' +
-                    '<div class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.home()">H</div>' +
-                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">&nbsp; &#x21BB;</div>' +
-                    '<div class="cursorPointer" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.setViewMode()">&#8801;</div>' +
+                    '<div id="FIL2topdiv" style="width:calc(100% - 96px); min-width:calc(70% + 48px); right:0; height:50px;">' +
+                    '<div title="Back" class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.back()">&lArr; &nbsp;</div>' +
+                    '<div title="Home" class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.home()">H</div>' +
+                    '<div title="View Mode" class="cursorPointer" style="width:34px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">&nbsp; &#x21BB;</div>' +
+                    '<div title="Refresh" class="cursorPointer" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.setViewMode()">&#8801;</div>' +
                     '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:25px; line-height:25px; vertical-align:middle; width:calc(100% - 110px); border-top-left-radius:5px; border-top-right-radius:5px;"><div id="FIL2green" style="width:0;height:100%;"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="/"></div></div>' +
                     '<div id="FIL2viewModeIcon" style="pointer-events:none; color:#7F7F7F; text-align:right; left:55px; font-family:monospace; height:25px; line-height:25px; vertical-align:middle; width:calc(100% - 110px);"></div>' +
                     '<div id="FIL2search" style="left:55px; top:26px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:24px; line-height:24px; vertical-align:middle; width:calc(100% - 110px);"><input id="FIL2searchInput" placeholder="Search" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:20px;padding:0;padding-left:8px;" onkeyup="apps.files2.vars.updateSearch(this.value)"></div>' +
-                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.mkdir()"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:9px;top:5px;" src="files2/small/folder.png"></div>' +
-                    '<div class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.mkfile()"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:8px;top:5px;" src="ctxMenu/beta/new.png"></div>' +
-                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; right:6px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center; display:none;" onClick=""></div>' +
-                    '<div class="cursorPointer" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center; display:none;" onClick=""></div>' +
+                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center; display:none" onClick=""></div>' +
+                    '<div title="Toggle Favorite" class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.toggleFavorite(apps.files2.vars.currLoc)"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:8px;top:5px;" src="ctxMenu/beta/happy.png"></div>' +
+                    '<div title="New Folder" class="cursorPointer" style="width:34px; height:18px; padding-top:2px; right:6px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.mkdir()"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:16px;top:5px;" src="files2/small/folder.png"></div>' +
+                    '<div title="New File" class="cursorPointer" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.mkfile()"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:8px;top:5px;" src="ctxMenu/beta/new.png"></div>' +
                     '</div>' +
-                    '<div style="width:100%; height:calc(100% - 50px); top:50px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow-x:auto; overflow-y:scroll; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>'
+                    '<div id="FIL2sidebar" style="overflow-y:scroll; border-top-left-radius:5px; font-family:aosProFont, Courier, monospace; font-size:12px; width:144px; max-width:30%; padding:3px; height:calc(100% - 56px); top:50px; background-color:' + darkSwitch('#FFF', '#000') + ';">' +
+                    'Home<br><div id="FIL2home" class="FIL2sidetbl FIL2viewMedium"></div><br>' +
+                    'Favorites<br><div id="FIL2favorites" class="FIL2sidetbl FIL2viewMedium"></div><br>' +
+                    'Navigation<br><div id="FIL2nav" class="FIL2sidetbl FIL2viewMedium"></div></div>' +
+                    '<div style="width:calc(100% - 151px); border-top-right-radius:5px; min-width:calc(70% - 7px); right:0; height:calc(100% - 50px); top:50px; background-color:' + darkSwitch('#FFF', '#000') + '; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>'
                 );
+                getId("FIL2home").innerHTML =
+                    '<div class="cursorPointer" onClick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.next(\'apps/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/apps/\\\');toTop(apps.properties)\'])">' +
+                    '<img src="files2/small/folder.png"> ' +
+                    '/apps/' +
+                    '</div><div class="cursorPointer" onClick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.next(\'widgets/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/widgets/\\\');toTop(apps.properties)\'])">' +
+                    '<img src="files2/small/folder.png"> ' +
+                    '/widgets/' +
+                    '</div><div class="cursorPointer" onClick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.next(\'USERFILES/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/USERFILES/\\\');toTop(apps.properties)\'])">' +
+                    '<img src="files2/small/folder.png"> ' +
+                    '/USERFILES/' +
+                    function(){
+                        if(apps.settings.vars.FILcanWin){
+                            return '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'window/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/window/\\\');toTop(apps.properties)\'])">' +
+                                '<span style="color:#F00">window/</span>';
+                        }else{
+                            return '';
+                        }
+                    }() +
+                    '</div>';
+                this.vars.updateFavorites(1);
+                this.vars.setViewMode(this.vars.currViewMode, 1);
             }
-            this.vars.update();
-            this.vars.setViewMode(this.vars.currViewMode, 1);
         },
         function(signal){
             switch(signal){
@@ -9072,6 +9096,9 @@ c(function(){
                 case "USERFILES_DONE":
                     if(typeof USERFILES.APP_FIL_VIEWMODE === "string"){
                         this.vars.setViewMode(parseInt(USERFILES.APP_FIL_VIEWMODE), 1);
+                    }
+                    if(typeof USERFILES.APP_FIL_favorites === "string"){
+                        this.vars.favorites = JSON.parse(USERFILES.APP_FIL_favorites);
                     }
                     break;
                 case 'shutdown':
@@ -9244,8 +9271,7 @@ c(function(){
                 booleanFalseFile: false,
                 undefinedFile: undefined,
                 nullFile: null,
-                numberFile: 1337,
-                
+                numberFile: 1337
             },
             currTotal: 0,
             currItem: 0,
@@ -9260,12 +9286,12 @@ c(function(){
                 getId("FIL2cntn").style.backgroundImage = 'url(/loadDark.gif)';
                 // getId("FILcntn").style.cursor = cursors.loadDark;
                 getId('FIL2cntn').classList.add('cursorLoadDark');
-                getId("FIL2cntn").innerHTML =
-                    '<div id="FIL2tbl" class="' + this.viewModes[this.currViewMode][1] + '" style="width:100%; position:absolute; margin:auto;padding-bottom:3px;"></div>';
+                getId("FIL2cntn").innerHTML = '<div id="FIL2tbl" class="' + this.viewModes[this.currViewMode][1] + '" style="width:100%; position:absolute; margin:auto;padding-bottom:3px;"></div>';
                 getId("FIL2tbl").style.marginTop = scrollHeight;
                 if(this.currLoc === '/'){
                     getId("FIL2path").innerHTML = '<div id="FIL2green" style="height:100%;background-color:rgb(170, 255, 170)"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="/"></div>';
                     getId("FIL2tbl").innerHTML =
+                        '<span style="padding-left:3px;line-height:18px">Home</span><br>' +
                         '<div class="cursorPointer" onClick="apps.files2.vars.next(\'apps/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/apps/\\\');toTop(apps.properties)\'])">' +
                         '<img src="files2/small/folder.png"> ' +
                         'apps/' +
@@ -9283,7 +9309,9 @@ c(function(){
                                 return '';
                             }
                         }() +
-                        '</div>';
+                        '</div>' +
+                        '<br><br><span style="padding-left:3px;line-height:18px;">Favorites</span><br>';
+                    this.updateFavorites(1, 1);
                     getId("FIL2green").className = '';
                     getId('FIL2green').style.backgroundColor = "#FFF";
                     getId("FIL2green").style.display = "none";
@@ -9369,9 +9397,38 @@ c(function(){
                     getId("FIL2cntn").style.backgroundImage="";
                     getId('FIL2cntn').classList.remove('cursorLoadDark');
                 }
+                var pathSplit = this.currLoc.split('/');
+                if(pathSplit[0] === ""){
+                    pathSplit.shift();
+                }
+                if(pathSplit[pathSplit.length - 1] === ""){
+                    pathSplit.pop();
+                }
+                var navDepth = 0;
+                var navPath = "/";
+                var tempHTML = '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.update()" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \'-Properties\', \'\', \'_Delete\', \'\'])">' +
+                            '<img src="files2/small/folder.png"> ' +
+                            '/' +
+                            '</div>';
+                for(var i in pathSplit){
+                    if(pathSplit.indexOf("apps") === 0 && navDepth === 1){
+                        tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + navPath + '\';apps.files2.vars.next(\'' + pathSplit[i] + '/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (navPath + pathSplit[i]) + '/\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                            '<img class="FIL2aosAppIcon" src="' + (apps[pathSplit[i]] || {appWindow:{appImg:"appicons/ds/redx.png"}}).appWindow.appImg + '"> ' +
+                            pathSplit[i] + "/" +
+                            '</div>';
+                    }else{
+                        tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + navPath + '\';apps.files2.vars.next(\'' + pathSplit[i] + '/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (navPath + pathSplit[i]) + '/\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                            '<img src="files2/small/folder.png"> ' +
+                            pathSplit[i] + '/' +
+                            '</div>';
+                    }
+                    navPath += pathSplit[i] + '/';
+                    navDepth++;
+                }
+                getId("FIL2nav").innerHTML = tempHTML;
             },
             updateSearch: function(searchStr){
-                var searchElems = getId('FIL2tbl').childNodes;
+                var searchElems = getId('FIL2tbl').getElementsByTagName('div');
                 for(var i = 0; i < searchElems.length; i++){
                     if(searchElems[i].innerText.toLowerCase().indexOf(searchStr.toLowerCase()) === -1){
                         searchElems[i].style.display = 'none';
@@ -9379,6 +9436,58 @@ c(function(){
                         searchElems[i].style.display = '';
                     }
                 }
+            },
+            favorites: [],
+            updateFavorites: function(nosave, mainPage){
+                if(!nosave){
+                    ufsave('APP_FIL_favorites', JSON.stringify(this.favorites));
+                }
+                var tempHTML = '';
+                for(var i in this.favorites){
+                    var currPath = this.favorites[i].split('/');
+                    if(currPath[currPath.length - 1] === ""){
+                        currPath.pop();
+                    }
+                    if(currPath[0] === ""){
+                        currPath.shift();
+                    }
+                    if(currPath.length === 0){
+                        tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.update()" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \'-Properties\', \'\', \'+Remove Favorite\', \'apps.files2.vars.toggleFavorite(\\\'/\\\')\', \'_Delete\', \'\'])">' +
+                            '<img src="files2/small/folder.png"> ' +
+                            '/' +
+                            '</div>';
+                    }else{
+                        var currName = currPath[currPath.length - 1];
+                        if(currPath.indexOf("apps") === 0 && currPath.length === 2){
+                            tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + this.favorites[i] + '\';apps.files2.vars.update()" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + this.favorites[i] + '\\\');toTop(apps.properties)\', \'+Remove Favorite\', \'apps.files2.vars.toggleFavorite(\\\'' + this.favorites[i] + '\\\')\', \'_Delete\', \'\'])">' +
+                                '<img class="FIL2aosAppIcon" src="' + (apps[currName] || {appWindow:{appImg:"appicons/ds/redx.png"}}).appWindow.appImg + '"> ' +
+                                currName + "/" +
+                                '</div>';
+                        }else{
+                            tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + this.favorites[i] + '\';apps.files2.vars.update()" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + this.favorites[i] + '\\\');toTop(apps.properties)\', \'+Remove Favorite\', \'apps.files2.vars.toggleFavorite(\\\'' + this.favorites[i] + '\\\')\', \'_Delete\', \'\'])">' +
+                                '<img src="files2/small/folder.png"> ' +
+                                currName + '/' +
+                                '</div>';
+                        }
+                    }
+                }
+                if(mainPage){
+                    getId("FIL2tbl").innerHTML += tempHTML;
+                }else{
+                    getId("FIL2favorites").innerHTML = tempHTML;
+                    if(this.currLoc === '/'){
+                        this.update();
+                    }
+                }
+            },
+            toggleFavorite: function(item){
+                var itemLocation = this.favorites.indexOf(item);
+                if(itemLocation === -1){
+                    this.favorites.push(item);
+                }else{
+                    this.favorites.splice(itemLocation, 1);
+                }
+                this.updateFavorites();
             }
         }, 0, "files2", "appicons/ds/FIL.png"
     );
