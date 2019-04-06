@@ -355,21 +355,29 @@ div{
                     .darkMode #FILtbl tr:hover{
                         background-color:#555;
                     }
-                    
-                #FIL2tbl div{
+                #FIL2tbl{
+                    height:calc(100% - 3px);
+                    overflow-y:scroll;
+                    font-family:aosProFont, monospace;
+                    font-size:12px;
+                }
+                #FIL2tbl div, .FIL2sidetbl div{
                     font-family:aosProFont, monospace;
                     position:relative;
                     white-space:nowrap;
                     /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
                 }
-                #FIL2tbl div:hover{
+                .FIL2sidetbl{
+                    position:relative;
+                }
+                #FIL2tbl div:hover, .FIL2sidetbl div:hover{
                     background-color:#AAA;
                 }
-                    .darkMode #FIL2tbl div:hover{
+                    .darkMode #FIL2tbl div:hover, .darkMode .FIL2sidetbl div:hover{
                         background-color:#555;
                     }
                     
-                #FIL2tbl img{
+                #FIL2tbl img, .FIL2sidetbl img{
                     display:inline-block;
                     margin-top:2px;
                     margin-bottom:-2px;
@@ -377,18 +385,18 @@ div{
                     width:10px;
                     height:10px;
                 }
-                    .darkMode #FIL2tbl img{
+                    .darkMode #FIL2tbl img, .darkMode .FIL2sidetbl img{
                         filter:invert(1);
                     }
                 
-                #FIL2tbl .FIL2aosAppIcon{
+                #FIL2tbl .FIL2aosAppIcon, .FIL2sidetbl .FIL2aosAppIcon{
                     width:16px;
                     height:16px;
                     margin-top:0;
                     margin-bottom:-5px;
                     margin-left:1px;
                 }
-                    .darkMode #FIL2tbl .FIL2aosAppIcon{
+                    .darkMode #FIL2tbl .FIL2aosAppIcon, .darkMode .FIL2sidetbl .FIL2aosAppIcon{
                         filter:none;
                     }
                 
@@ -434,7 +442,7 @@ div{
                     margin-top:1px;
                     padding:1px;
                 }
-                    #FIL2tbl.FIL2viewMedium .FIL2aosAppIcon{
+                    #FIL2tbl.FIL2viewMedium .FIL2aosAppIcon, .FIL2sidetbl.FIL2viewMedium .FIL2aosAppIcon{
                         margin-top:-1px;
                         margin-bottom:-5px;
                     }
