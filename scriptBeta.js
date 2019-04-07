@@ -7627,7 +7627,9 @@ c(function(){
                             getId('aOSisLoading').style.transition = '1s';
                             getId('aOSisLoading').style.display = 'block';
                             getId('aOSloadingBg').style.display = 'block';
-                            getId('aOSisLoading').innerHTML = '<div><h1>Restarting aOS</h1>Shutting down...<br><br>Alerting app <span id="aOSloadingInfo">aOS</span>...<br><img src="appicons/ds/aOS.png" id="aosLoadingImage"></div>';
+                            window.shutDownPercentComplete = 0;
+                            window.shutDownTotalPercent = 1;
+                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Shutting down...</div></div></div>';
                             // getId('aOSisLoading').style.cursor = cursors.loadLight;
                             getId('aOSisLoading').classList.remove('cursorLoadDark');
                             getId('aOSisLoading').classList.add('cursorLoadLight');
@@ -7640,16 +7642,20 @@ c(function(){
                                 // getId('aOSisLoading').style.cursor = cursors.loadDark;
                                 getId('aOSisLoading').classList.remove('cursorLoadLight');
                                 getId('aOSisLoading').classList.add('cursorLoadDark');
+                                shutDownPercentComplete = codeToRun.length;
                                 for(var app in apps){
                                     c(function(args){
                                         m('THERE WAS AN ERROR SHUTTING DOWN THE APP ' + args + '. SHUTDOWN SHOULD CONTINUE WITH NO ISSUE.');
-                                        getId('aOSloadingInfo').innerHTML = args;
+                                        //getId('aOSloadingInfo').innerHTML = args;
+                                        shutDownPercentComplete++;
                                         apps[args].signalHandler('shutdown');
                                     }, app);
                                 }
+                                shutDownTotalPercent = codeToRun.length - shutDownPercentComplete;
+                                shutDownPercentComplete = 0;
                                 c(function(){
                                     //apps.savemaster.vars.save();
-                                    getId('aOSisLoading').innerHTML = '<div><h1>Restarting aOS</h1>Shutting down...<br><br>Goodbye!<br><img src="appicons/ds/aOS.png" id="aosLoadingImage"></div>';
+                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Goodbye!</div></div></div>';
                                     if(logout){
                                         document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
@@ -7666,7 +7672,9 @@ c(function(){
                             getId('aOSisLoading').style.transition = '1s';
                             getId('aOSisLoading').style.display = 'block';
                             getId('aOSloadingBg').style.display = 'block';
-                            getId('aOSisLoading').innerHTML = '<div><h1>Shutting Down aOS</h1>Shutting down...<br><br>Alerting app <span id="aOSloadingInfo">aOS</span>...<br><img src="appicons/ds/aOS.png" id="aosLoadingImage"></div>';
+                            window.shutDownPercentComplete = 0;
+                            window.shutDownTotalPercent = 1;
+                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Shutting down...</div></div></div>';
                             // getId('aOSisLoading').style.cursor = cursors.loadLight;
                             getId('aOSisLoading').classList.remove('cursorLoadDark');
                             getId('aOSisLoading').classList.add('cursorLoadLight');
@@ -7679,16 +7687,20 @@ c(function(){
                                 // getId('aOSisLoading').style.cursor = cursors.loadDark;
                                 getId('aOSisLoading').classList.remove('cursorLoadLight');
                                 getId('aOSisLoading').classList.add('cursorLoadDark');
+                                shutDownPercentComplete = codeToRun.length;
                                 for(var app in apps){
                                     c(function(args){
                                         m('THERE WAS AN ERROR SHUTTING DOWN THE APP ' + args + '. SHUTDOWN SHOULD CONTINUE WITH NO ISSUE.');
-                                        getId('aOSloadingInfo').innerHTML = args;
+                                        //getId('aOSloadingInfo').innerHTML = args;
+                                        shutDownPercentComplete++;
                                         apps[args].signalHandler('shutdown');
                                     }, app);
                                 }
+                                shutDownTotalPercent = codeToRun.length - shutDownPercentComplete;
+                                shutDownPercentComplete = 0;
                                 c(function(){
                                     //apps.savemaster.vars.save();
-                                    getId('aOSisLoading').innerHTML = '<div><h1>Shutting Down aOS</h1>Shutting down...<br><br>Goodbye!<br><img src="appicons/ds/aOS.png" id="aosLoadingImage"></div>';
+                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Goodbye!</div></div></div>';
                                     if(logout){
                                         document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
@@ -8624,10 +8636,11 @@ c(function(){
             "03/31/2019: B0.11.1.1\n : Cleaned up many of the CustomStyles themes.\n\n" +
             "04/03/2019: B0.11.1.2\n : Fixed Fullscreen button in Settings (thank you CerebralDatabank)\n : Modified filetype description positioning in File Manager 2.\n\n" +
             "04/04/2019: B0.11.2.0\n : Apps now wait until the window closing animation is finished before clearing their content, looks way better now.\n : Fixed error when right clicking a file with a period in its name in FIL2.\n : Properties app now uses bash file paths instead of JS object paths.\n : Fixed window titles overlapping buttons on right side.\n : Fixed some apps not clearing their window content after being closed.\n : Fixed the LiveElement system erroring out in its error handler.\n\n" +
-            "04/05/2019: B0.11.3.0\n + Sidebar in the File Manager including the new Home, Favorites and Navigation features.\n : The main page of the File Manager is now called Home\n + Favorites list in File Manager, to save important locations.\n + Navigation list in File Manager, to jump around in the current path.\n : Buttons for touch and mkdir in File Manager moved to the right side.\n + Add Favorite button added to left side of File Manager's toolbar.\n + Descriptions for the File Manager's toolbar buttons will now appear when hovered over.\n + Rounded corners on the top edge of the File Manager's content.\n : The left edge of the File Manager's Location and Search boxes are now lined up with the left edge of the main content.\n : Fixed caption bars in the Windows 98 theme.",
+            "04/05/2019: B0.11.3.0\n + Sidebar in the File Manager including the new Home, Favorites and Navigation features.\n : The main page of the File Manager is now called Home\n + Favorites list in File Manager, to save important locations.\n + Navigation list in File Manager, to jump around in the current path.\n : Buttons for touch and mkdir in File Manager moved to the right side.\n + Add Favorite button added to left side of File Manager's toolbar.\n + Descriptions for the File Manager's toolbar buttons will now appear when hovered over.\n + Rounded corners on the top edge of the File Manager's content.\n : The left edge of the File Manager's Location and Search boxes are now lined up with the left edge of the main content.\n : Fixed caption bars in the Windows 98 theme.\n\n" +
+            "04/07/2019: B0.11.3.1\n + Progress bar for shutdown.\n : Fixed shutdown screen.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.11.3.0 (04/05/2019) r1';
+    window.aOSversion = 'B0.11.3.1 (04/07/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
