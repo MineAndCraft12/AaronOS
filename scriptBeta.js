@@ -1050,6 +1050,7 @@ window.requestAnimationFrame(countVisualFPS);
 // taskbar settings
 var tskbrToggle = {
     perfMode: 0,
+    /*
     netStat: 1,
     batStat: 1,
     batComp: 1,
@@ -1057,6 +1058,7 @@ var tskbrToggle = {
     fpsComp: 1,
     lodStat: 1,
     timeComp: 1,
+    */
     tskbrPos: 0 // 0, 1, 2, 3 : bot, top, left, right
 };
 
@@ -1360,7 +1362,7 @@ function pinApp(app){
     }else{
         pinnedApps.splice(pinnedApps.indexOf(app), 1);
     }
-    ufsave('APP_STN_PINNEDAPPS', JSON.stringify(pinnedApps));
+    ufsave('aos_system/taskbar/pinned_apps', JSON.stringify(pinnedApps));
 }
 // Application class
 m('init Application class');
@@ -1772,7 +1774,7 @@ function arrangeDesktopIcons(){
     for(var app in apps){
         try{
             if(!apps[app].keepOffDesktop){
-                if(typeof USERFILES['DSKTP_ico_app_' + app] !== "string"){
+                if(!ufload("aos_system/desktop/ico_app_" + app, 1)){
                     appTotal++;
                     getId("app_" + app).style.left = appPosX + "px";
                     getId("app_" + app).style.top = appPosY + "px";
@@ -1782,14 +1784,14 @@ function arrangeDesktopIcons(){
                         appPosX += 108;
                     }
                 }else{
-                    getId("app_" + app).style.left = JSON.parse(USERFILES['DSKTP_ico_app_' + app])[0] + "px";
-                    getId("app_" + app).style.top = JSON.parse(USERFILES['DSKTP_ico_app_' + app])[1] + "px";
+                    getId("app_" + app).style.left = JSON.parse(ufload("aos_system/desktop/ico_app_" + app))[0] + "px";
+                    getId("app_" + app).style.top = JSON.parse(ufload("aos_system/desktop/ico_app_" + app))[1] + "px";
                 }
             }else{
                 getId("app_" + app).style.display = "none";
             }
         }catch(err){
-            
+            doLog("Error arranging icons - " + err, "#F00");
         }
     }
 }
@@ -1827,7 +1829,7 @@ function addWidget(widgetName, nosave){
             widgets[widgetName].start();
             widgetsList[widgetName] = widgetName;
             if(!nosave){
-                ufsave('APP_STN_WIDGETLIST', JSON.stringify(widgetsList));
+                ufsave('aos_system/taskbar/widget_list', JSON.stringify(widgetsList));
             }
         }
     }
@@ -1842,7 +1844,7 @@ function removeWidget(widgetName, nosave){
             getId('widget_' + widgetName).outerHTML = '';
             delete widgetsList[widgetName];
             if(!nosave){
-                ufsave('APP_STN_WIDGETLIST', JSON.stringify(widgetsList));
+                ufsave('aos_system/taskbar/widget_list', JSON.stringify(widgetsList));
             }
         }
     }
@@ -2325,7 +2327,7 @@ var textEditorTools = {
     tmpGenArray: [],
     copy: function(slot){
         this.clipboard[slot - 1] = this.tempvar3;
-        ufsave("APP_STN_SAVED_CLIPBOARD", JSON.stringify(this.clipboard));
+        ufsave("aos_system/clipboard", JSON.stringify(this.clipboard));
     },
     paste: function(element, slot, cursorpos, endselect){
         getId(element).value = getId(element).value.substring(0, cursorpos) + this.clipboard[slot - 1] + getId(element).value.substring(endselect, getId(element).value.length); 
@@ -2333,7 +2335,7 @@ var textEditorTools = {
     swap: function(element, slot, cursorpos){
         var tempCopy = this.clipboard[slot - 1];
         this.clipboard[slot - 1] = this.tempvar3;
-        ufsave("APP_STN_SAVED_CLIPBOARD", JSON.stringify(this.clipboard));
+        ufsave("aos_system/clipboard", JSON.stringify(this.clipboard));
         getId(element).value = getId(element).value.substring(0, cursorpos) + tempCopy + getId(element).value.substring(cursorpos, getId(element).value.length);
     }
 };
@@ -2458,7 +2460,7 @@ c(function(){
                     }
                     this.appWindow.openWindow();
                     //getId('win_startMenu_top').style.transform = '';
-                    switch(USERFILES.APP_STN_DASHBOARD){
+                    switch(ufload("aos_system/apps/startMenu/dashboard")){
                         case 'whisker':
                             this.appWindow.setContent('<span style="color:#FFF;font-family:aosProFont,monospace;font-size:12px">User: ' + apps.messaging.vars.parseBB(apps.messaging.vars.name) + '</span><div style="left:0;bottom:0;height:calc(100% - 3em);overflow-y:scroll;width:calc(70% - 2px);background:' + darkSwitch('#FFF', '#000') + ';color:' + darkSwitch('#000', '#FFF') + ';"><table style="position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table></div><div style="right:0;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);text-align:right"><img class="cursorPointer" style="width:10px;height:10px;" src="ctxMenu/beta/gear.png" onclick="openapp(apps.settings,\'dsktp\')"> <img class="cursorPointer" style="width:10px;height:10px;" src="ctxMenu/beta/power.png" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})"><br><br><br><button style="width:100%" onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button><br><button style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button><br><button style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button><br><button style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button><br><button style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br><button style="width:100%" onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button></div><input style="position:absolute;left:0;top:1.5em;width:calc(100% - 2px);" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>');
                             if(this.vars.listOfApps.length === 0){
@@ -2643,8 +2645,8 @@ c(function(){
                     break;
                 case "USERFILES_DONE":
                     // SET UP WIDGETS
-                    if(typeof USERFILES.APP_STN_WIDGETLIST === "string" && !safeMode){
-                        var tempList = JSON.parse(USERFILES.APP_STN_WIDGETLIST);
+                    if(ufload("aos_system/taskbar/widget_list") && !safeMode){
+                        var tempList = JSON.parse(ufload("aos_system/taskbar/widget_list"));
                         for(var i in tempList){
                             addWidget(i, 1);
                         }
@@ -2885,17 +2887,17 @@ c(function(){
                     this.vars.ddg.onreadystatechange = function(){
                         apps.nora.vars.finishDDG();
                     }
-                    if(typeof USERFILES.NORAA_MOOD === 'string'){
-                        this.vars.updateMood(USERFILES.NORAA_MOOD, 1);
+                    if(ufload("aos_system/noraa/mood")){
+                        this.vars.updateMood(ufload("aos_system/noraa/mood"), 1);
                     }
-                    if(typeof USERFILES.NORAA_NOTES === 'string'){
-                        this.vars.notes = USERFILES.NORAA_NOTES.split(',');
+                    if(ufload("aos_system/noraa/notes")){
+                        this.vars.notes = ufload("aos_system/noraa/notes").split(',');
                     }
-                    if(typeof USERFILES.NORAA_USER === 'string'){
-                        this.vars.userObj = JSON.parse(USERFILES.NORAA_USER);
+                    if(ufload("aos_system/noraa/user_profile")){
+                        this.vars.userObj = JSON.parse(ufload("aos_system/noraa/user_profile"));
                     }
-                    if(typeof USERFILES.NORAA_LANG === 'string'){
-                        this.vars.lang = USERFILES.NORAA_LANG;
+                    if(ufload("aos_system/noraa/speech_voice")){
+                        this.vars.lang = ufload("aos_system/noraa/speech_voice");
                         this.vars.initing = 0;
                         try{
                             window.speechSynthesis.onvoiceschanged();
@@ -2903,8 +2905,8 @@ c(function(){
                             doLog('Error - speechSynthesis not supported.', '#F00');
                         }
                     }
-                    if(typeof USERFILES.NORAA_DELAY === 'string'){
-                        this.vars.inputDelay = parseInt(USERFILES.NORAA_DELAY, 10);
+                    if(ufload("aos_system/noraa/speech_response_delay")){
+                        this.vars.inputDelay = parseInt(ufload("aos_system/noraa/speech_response_delay"), 10);
                     }
                     this.vars.sayDynamic('hello');
                     break;
@@ -2929,9 +2931,10 @@ c(function(){
                 }else if(this.mood > 10){
                     this.mood = 10;
                 }
-                USERFILES.NORAA_MOOD = this.mood + "";
+                sh("mkdir /USERFILES/aos_system/noraa/mood");
+                USERFILES.aos_system.noraa.mood = this.mood + "";
                 if(!nosave){
-                    ufsave("NORAA_MOOD", this.mood);
+                    ufsave("aos_system/noraa/mood", this.mood);
                 }
             },
             contRecog: {},
@@ -3148,7 +3151,7 @@ c(function(){
                                         apps.nora.vars.notes[i] = apps.nora.vars.notes[i + 1];
                                     }
                                     apps.nora.vars.notes.pop();
-                                    ufsave('NORAA_NOTES', String(apps.nora.vars.notes));
+                                    ufsave('aos_system/noraa/notes', String(apps.nora.vars.notes));
                                     apps.nora.vars.say('Deleted the note ' + this[4].lastDeleted);
                                 }else{
                                     apps.nora.vars.say('I can\'t delete something that\'s not there. You only have ' + apps.nora.vars.notes.length + ' notes.');
@@ -3451,7 +3454,7 @@ c(function(){
                             apps.nora.vars.updateUserObj(this[4].inpPro, this[4].inpVal);
                         }else if(text.indexOf('will be deleted') > -1){
                             delete apps.nora.vars.userObj[text.substring(0, text.indexOf(' will be deleted'))];
-                            ufsave('NORAA_USER', JSON.stringify(apps.nora.vars.userObj));
+                            ufsave('aos_system/noraa/user_profile', JSON.stringify(apps.nora.vars.userObj));
                             apps.nora.vars.say('I deleted that info about you.');
                         }else{
                             apps.nora.vars.say('I cannot find any discernable information in there.');
@@ -3697,7 +3700,7 @@ c(function(){
                             }else{
                                 apps.nora.vars.notes.push(text.replace(',', '&comma;'));
                             }
-                            apps.savemaster.vars.save('NORAA_NOTES', String(apps.nora.vars.notes));
+                            ufsave('aos_system/noraa/notes', String(apps.nora.vars.notes));
                             apps.nora.vars.say('I took the note ' + text);
                         }else{
                             apps.nora.vars.say('<i>NORAA does as you asked - takes note of nothing</i>');
@@ -3831,7 +3834,7 @@ c(function(){
             updateUserObj: function(property, value){
                 d(1, 'NORAA knows something about the user.');
                 this.userObj[property] = value;
-                apps.savemaster.vars.save('NORAA_USER', JSON.stringify(this.userObj), 1);
+                ufsave('aos_system/noraa/user_profile', JSON.stringify(this.userObj));
             },
             getUserName: function(){
                 if(typeof this.userObj.name === 'string'){
@@ -4543,8 +4546,8 @@ c(function(){
                     this.vars.prefix = '[' + SRVRKEYWORD + '@aOS bash]$ ';
                     this.vars.pastValue = '[' + SRVRKEYWORD + '@aOS bash]$ ';
                     
-                    if(typeof USERFILES.APP_SH_ALIAS === 'string'){
-                        this.vars.alias = JSON.parse(USERFILES.APP_SH_ALIAS);
+                    if(ufload("aos_system/apps/bash/alias")){
+                        this.vars.alias = JSON.parse(ufload("aos_system/apps/bash/alias"));
                     }
                     break;
                 case 'shutdown':
@@ -4900,7 +4903,7 @@ c(function(){
                             }else{
                                 throw "AliasError: The alias command appears to be malformed. Make sure your alias is only one word and the = is in the correct place.";
                             }
-                            apps.savemaster.vars.save('APP_SH_ALIAS', JSON.stringify(apps.bash.vars.alias), 1);
+                            ufsave('aos_system/apps/bash/alias', JSON.stringify(apps.bash.vars.alias));
                         }else{
                             var str = "";
                             for(var i in apps.bash.vars.alias){
@@ -5575,7 +5578,7 @@ c(function(){
                     '<i>' + langOld('settings', 'valuesMayBeOutdated') + '</i><hr>' +
                     '<b>' + langOld('settings', 'bgImgURL') + '</b><br>' +
                     '<i>' + langOld('settings', 'imgTile') + '</i><br>' +
-                    '<input id="bckGrndImg" style="display:inline-block; width:500px" value="' + USERFILES.APP_STN_SETTING_BACKGROUND + '"><button onClick="apps.settings.vars.sB()">Set</button><hr>' +
+                    '<input id="bckGrndImg" style="display:inline-block; width:500px" value="' + ufload("aos_system/desktop/background_image") + '"><button onClick="apps.settings.vars.sB()">Set</button><hr>' +
                     '<b>' + langOld('settings', 'performance') + '</b><br>' +
                     langOld('settings', 'dbgLevel') + ': <button onclick="apps.settings.vars.setDebugLevel(0)">Vital Only</button> <button onclick="apps.settings.vars.setDebugLevel(1)">Normal</button> <button onclick="apps.settings.vars.setDebugLevel(2)">High</button><br>' +
                     '<i>' + langOld('settings', 'dbgExplain') + '</i><br><br>' +
@@ -5612,7 +5615,6 @@ c(function(){
                     'Windowblur Strength: <input id="STNwinblurRadius" placeholder="5" value="' + this.vars.currWinblurRad + '"> <button onclick="apps.settings.vars.setAeroRad()">Set</button><br>' +
                     '<i>Window Blur uses a Blend Mode to determine how its color affects the background. Since people will have conflicting ideas on what is best, I give you the choice.</i><br>' +
                     'Window Blur Blend Mode: <input id="STNwinBlendInput" placeholder="screen" value="' + this.vars.currWinBlend + '"> <button onClick="apps.settings.vars.setWinBlend()">Set</button><br>' +
-                    'Window Blur Opacity: <input id="STNwinOpacInput" placeholder="1" value="' + this.vars.currWinOpac + '"> <button onClick="apps.settings.vars.setWinOpac()">Set</button><br>' +
                     'Window Background Image: <button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="winimg.png" value="' + this.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button><hr>' +
                     '<b>Taskbar</b><br>' +
                     '<i>Toggle the display of different elements of the taskbar</i><br>' +
@@ -5691,12 +5693,12 @@ c(function(){
                     window.setTimeout(function(){
                         openapp(apps.settings, 'oldMenuHide');
                         if(!safeMode){
-                            if(typeof USERFILES.APP_STN_SETTING_BACKGROUND === "string"){
-                                getId("bckGrndImg").value = USERFILES.APP_STN_SETTING_BACKGROUND;
+                            if(ufload("aos_system/desktop/background_image")){
+                                getId("bckGrndImg").value = ufload("aos_system/desktop/background_image");
                                 apps.settings.vars.sB(1);
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_AERO === "string"){
-                                if(USERFILES.APP_STN_SETTING_AERO === "0"){
+                            if(ufload("aos_system/windows/blur_enabled")){
+                                if(ufload("aos_system/windows/blur_enabled") === "0"){
                                     apps.settings.vars.togAero(1);
                                 }
                             }else{
@@ -5705,8 +5707,8 @@ c(function(){
                                     apps.settings.vars.togAero(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_WINCOLOR === "string"){
-                                getId("STNwinColorInput").value = USERFILES.APP_STN_SETTING_WINCOLOR;
+                            if(ufload("aos_system/windows/border_color")){
+                                getId("STNwinColorInput").value = ufload("aos_system/windows/border_color");
                                 apps.settings.vars.setWinColor(1);
                             }else{
                                 if((navigator.userAgent.indexOf("Trident") > -1 && navigator.userAgent.indexOf("rv:") > -1) || navigator.userAgent.indexOf("MSIE") > -1){
@@ -5715,183 +5717,135 @@ c(function(){
                                     apps.settings.vars.setWinColor(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_WINBLEND === "string"){
-                                getId("STNwinBlendInput").value = USERFILES.APP_STN_SETTING_WINBLEND;
+                            if(ufload("aos_system/windows/blur_blendmode")){
+                                getId("STNwinBlendInput").value = ufload("aos_system/windows/blur_blendmode");
                                 apps.settings.vars.setWinBlend(1);
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_WINOPAC === "string"){
-                                getId("STNwinBlendInput").value = USERFILES.APP_STN_SETTING_WINOPAC;
-                                apps.settings.vars.setWinOpac(1);
-                            }
-                            if(typeof USERFILES.APP_STN_SETTING_AERORAD === "string"){
-                                getId("STNwinblurRadius").value = USERFILES.APP_STN_SETTING_AERORAD;
+                            if(ufload("aos_system/windows/blur_radius")){
+                                getId("STNwinblurRadius").value = ufload("aos_system/windows/blur_radius");
                                 apps.settings.vars.setAeroRad(1);
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_WINBORDER === "string"){
-                                apps.settings.vars.setWinBorder(USERFILES.APP_STN_SETTING_WINBORDER, 1);
+                            if(ufload("aos_system/windows/border_width")){
+                                apps.settings.vars.setWinBorder(ufload("aos_system/windows/border_width"), 1);
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_CAPBTNLEFT === "string"){
-                                if(USERFILES.APP_STN_SETTING_CAPBTNLEFT === "1"){
+                            if(ufload("aos_system/windows/controls_on_left")){
+                                if(ufload("aos_system/windows/controls_on_left") === "1"){
                                     apps.settings.vars.togCaptionButtonsLeft(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_TIMECOMP === "string"){
-                                if(USERFILES.APP_STN_SETTING_TIMECOMP === "0"){
-                                    apps.settings.vars.togTimeComp();
-                                }
+                            if(ufload("aos_system/language")){
+                                currentlanguage = ufload("aos_system/language");
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_NETSTAT === "string"){
-                                if(USERFILES.APP_STN_SETTING_NETSTAT === "0"){
-                                    apps.settings.vars.togNetStat();
-                                }
-                            }
-                            if(typeof USERFILES.APP_STN_SETTING_BATSTAT === "string"){
-                                if(USERFILES.APP_STN_SETTING_BATSTAT === "0"){
-                                    apps.settings.vars.togBatStat();
-                                }
-                            }
-                            if(typeof USERFILES.APP_STN_SETTING_BATCOMP === "string"){
-                                if(USERFILES.APP_STN_SETTING_BATCOMP === "0"){
-                                    apps.settings.vars.togBatComp();
-                                }
-                            }
-                            if(typeof USERFILES.APP_STN_SETTING_FPSSTAT === "string"){
-                                if(USERFILES.APP_STN_SETTING_FPSSTAT === "0"){
-                                    apps.settings.vars.togFpsStat();
-                                }
-                            }
-                            if(typeof USERFILES.APP_STN_SETTING_FPSCOMP === "string"){
-                                if(USERFILES.APP_STN_SETTING_FPSCOMP === "0"){
-                                    apps.settings.vars.togFpsComp();
-                                }
-                            }
-                            if(typeof USERFILES.APP_STN_SETTING_LODSTAT === "string"){
-                                if(USERFILES.APP_STN_SETTING_LODSTAT === "0"){
-                                    apps.settings.vars.togLodStat();
-                                }
-                            }
-                            if(typeof USERFILES.APP_STN_SETTING_LANG === "string"){
-                                currentlanguage = USERFILES.APP_STN_SETTING_LANG;
-                            }
-                            if(typeof USERFILES.NORAA_LISTEN === "string"){
-                                if(USERFILES.NORAA_LISTEN === "1"){
+                            if(ufload("aos_system/noraa/listen_enabled")){
+                                if(ufload("aos_system/noraa/listen_enabled")){
                                     apps.settings.vars.togNoraListen(1);
                                 }
                             }
-                            if(typeof USERFILES.NORAA_PHRASE === "string"){
-                                apps.settings.vars.currNoraPhrase = USERFILES.NORAA_PHRASE;
+                            if(ufload("aos_system/noraa/listen_phrase")){
+                                apps.settings.vars.currNoraPhrase = ufload("aos_system/noraa/listen_phrase");
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_DATACOLLECT === "string"){
-                                apps.settings.vars.collectData = parseInt(USERFILES.APP_STN_SETTING_DATACOLLECT, 10);
+                            if(ufload("aos_system/apps/settings/data_collect_enabled")){
+                                apps.settings.vars.collectData = parseInt(ufload("aos_system/apps/settings/data_collect_enabled"), 10);
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_NORAHELP === "string"){
-                                if(USERFILES.APP_STN_SETTING_NORAHELP === "0"){
+                            if(ufload("aos_system/noraa/adv_help_enabled")){
+                                if(ufload("aos_system/noraa/adv_help_enabled") === "0"){
                                     apps.settings.vars.togNoraHelpTopics(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_LONGTAP === "string"){
-                                if(USERFILES.APP_STN_SETTING_LONGTAP === "1"){
+                            if(ufload("aos_system/apps/settings/ctxmenu_two_fingers")){
+                                if(ufload("aos_system/apps/settings/ctxmenu_two_fingers") === "1"){
                                     apps.settings.vars.togLongTap(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_TOGWINIMG === "string"){
-                                if(USERFILES.APP_STN_SETTING_TOGWINIMG === "0"){
+                            if(ufload("aos_system/windows/border_texture_enabled")){
+                                if(ufload("aos_system/windows/border_texture_enabled") === "0"){
                                     apps.settings.vars.togWinImg(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_WINIMG === "string"){
-                                getId("STNwinImgInput").value = USERFILES.APP_STN_SETTING_WINIMG;
+                            if(ufload("aos_system/windows/border_texture")){
+                                getId("STNwinImgInput").value = ufload("aos_system/windows/border_texture");
                                 apps.settings.vars.setWinImg(1);
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_SLOTS === "string"){
-                                textEditorTools.slots = parseInt(USERFILES.APP_STN_SETTING_SLOTS);
+                            if(ufload("aos_system/clipboard_slots")){
+                                textEditorTools.slots = parseInt(ufload("aos_system/clipboard_slots"));
                                 textEditorTools.updateSlots();
                             }
-                            if(typeof USERFILES.APP_STN_SAVED_CLIPBOARD === "string"){
-                                if(USERFILES.APP_STN_SAVED_CLIPBOARD !== '_cleared_clipboard_'){
-                                    if(USERFILES.APP_STN_SAVED_CLIPBOARD.indexOf('-78e23dde9ace11e69f33a24fc0d9649c-') > -1 && (USERFILES.APP_STN_SAVED_CLIPBOARD[0] !== '{' && USERFILES.APP_STN_SAVED_CLIPBOARD[USERFILES.APP_STN_SAVED_CLIPBOARD.length - 1] !== '}')){
-                                        textEditorTools.clipboard = USERFILES.APP_STN_SAVED_CLIPBOARD.split('-78e23dde9ace11e69f33a24fc0d9649c-');
-                                    }else{
-                                        textEditorTools.clipboard = JSON.parse(USERFILES.APP_STN_SAVED_CLIPBOARD);//.split('-78e23dde9ace11e69f33a24fc0d9649c-');
-                                    }
+                            if(ufload("aos_system/clipboard")){
+                                if(ufload("aos_system/clipboard") !== '_cleared_clipboard_'){
+                                    textEditorTools.clipboard = JSON.parse(ufload("aos_system/clipboard"));
                                 }
                             }
-                            /*screenScale = 1;
-                            if(typeof USERFILES.APP_STN_screenscale){
-                                if(USERFILES.APP_STN_screenscale !== "1"){*/
-                                    apps.settings.vars.setScale(USERFILES.APP_STN_screenscale || "1", 1);/*
-                                }
-                            }*/
-                            if(typeof USERFILES.APP_STN_SAVESCREENRES === "string"){
-                                apps.settings.vars.tempResArray = USERFILES.APP_STN_SAVESCREENRES.split('/');
+                            apps.settings.vars.setScale(ufload("aos_system/apps/settings/ui_scale") || "1", 1);
+                            if(ufload("aos_system/apps/settings/saved_screen_res")){
+                                apps.settings.vars.tempResArray = ufload("aos_system/apps/settings/saved_screen_res").split('/');
                                 fitWindowRes(apps.settings.vars.tempResArray[0], apps.settings.vars.tempResArray[1]);
                             }
-                            if(typeof USERFILES.APP_STN_CORSPROXY === "string"){
-                                apps.settings.vars.corsProxy = USERFILES.APP_STN_CORSPROXY;
+                            if(ufload("aos_system/apps/settings/cors_proxy")){
+                                apps.settings.vars.corsProxy = ufload("aos_system/apps/settings/cors_proxy");
                             }
-                            if(typeof USERFILES.aosCustomStyle === "string"){
-                                getId('aosCustomStyle').innerHTML = USERFILES.aosCustomStyle;
+                            if(ufload("aos_system/user_custom_style") === "string"){
+                                getId('aosCustomStyle').innerHTML = ufload("aos_system/user_custom_style");
                             }
-                            if(typeof USERFILES.APP_STN_DARKMODE === "string"){
-                                if(USERFILES.APP_STN_DARKMODE === "1"){
+                            if(ufload("aos_system/windows/dark_mode")){
+                                if(ufload("aos_system/windows/dark_mode") === "1"){
                                     apps.settings.vars.togDarkMode(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_MOBILEMODE === "string"){
-                                apps.settings.vars.setMobileMode(USERFILES.APP_STN_MOBILEMODE, 1)
+                            if(ufload("aos_system/apps/settings/mobile_mode")){
+                                apps.settings.vars.setMobileMode(ufload("aos_system/apps/settings/mobile_mode"), 1)
                             }
-                            if(typeof USERFILES.APP_STN_LIVEBG_ENABLED === "string"){
-                                if(USERFILES.APP_STN_LIVEBG_ENABLED === "1"){
+                            if(ufload("aos_system/desktop/background_live_enabled")){
+                                if(ufload("aos_system/desktop/background_live_enabled")){
                                     apps.settings.vars.togLiveBg(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_LIVEBG === "string"){
-                                apps.settings.vars.setLiveBg(USERFILES.APP_STN_LIVEBG, 1);
+                            if(ufload("aos_system/desktop/background_live_url")){
+                                apps.settings.vars.setLiveBg(ufload("aos_system/desktop/background_live_url"), 1);
                             }
-                            if(typeof USERFILES.APP_STN_PRLXBG === "string"){
-                                apps.settings.vars.setPrlxBg(USERFILES.APP_STN_PRLXBG, 1);
+                            if(ufload("aos_system/desktop/background_parallax_layers")){
+                                apps.settings.vars.setPrlxBg(ufload("aos_system/desktop/background_parallax_layers"), 1);
                             }
-                            if(typeof USERFILES.APP_STN_PRLXBG_ENABLED === "string"){
-                                if(USERFILES.APP_STN_PRLXBG_ENABLED === "1"){
+                            if(ufload("aos_system/desktop/background_parallax_enabled")){
+                                if(ufload("aos_system/desktop/background_parallax_enabled") === "1"){
                                     apps.settings.vars.togPrlxBg(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_BACKDROPFILTER === "string"){
-                                if(USERFILES.APP_STN_SETTING_BACKDROPFILTER === "1"){
+                            if(ufload("aos_system/windows/backdropfilter_blur")){
+                                if(ufload("aos_system/windows/backdropfilter_blur") === "1"){
                                     apps.settings.vars.togBackdropFilter(1);
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_SCREENSAVER_ENABLED === "string"){
-                                if(USERFILES.APP_STN_SETTING_SCREENSAVER_ENABLED === "0"){
+                            if(ufload("aos_system/screensaver/enabled")){
+                                if(ufload("aos_system/screensaver/enabled") === "0"){
                                     apps.settings.vars.togScreensaver();
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_SCREENSAVER_TIME === "string"){
-                                apps.settings.vars.screensaverTime = parseInt(USERFILES.APP_STN_SETTING_SCREENSAVER_TIME, 10);
+                            if(ufload("aos_system/screensaver/idle_time")){
+                                apps.settings.vars.screensaverTime = parseInt(ufload("aos_system/screensaver/idle_time"), 10);
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_SCREENSAVER === "string"){
-                                apps.settings.vars.currScreensaver = USERFILES.APP_STN_SETTING_SCREENSAVER;
+                            if(ufload("aos_system/screensaver/selected_screensaver")){
+                                apps.settings.vars.currScreensaver = ufload("aos_system/screensaver/selected_screensaver");
                             }
                             apps.settings.vars.screensaverTimer = window.setInterval(apps.settings.vars.checkScreensaver, 1000);
-                            if(typeof USERFILES.APP_STN_TSKBRPOS === "string"){
-                                apps.settings.vars.setTskbrPos(parseInt(USERFILES.APP_STN_TSKBRPOS, 10), 1);
+                            if(ufload("aos_system/taskbar/position")){
+                                apps.settings.vars.setTskbrPos(parseInt(ufload("aos_system/taskbar/position"), 10), 1);
                             }
-                            if(typeof USERFILES.APP_STN_PERFMODE === "string"){
-                                if(USERFILES.APP_STN_PERFMODE === "1"){
+                            if(ufload("aos_system/apps/settings/performance_mode")){
+                                if(ufload("aos_system/apps/settings/performance_mode") === "1"){
                                     apps.settings.vars.togPerformanceMode();
                                 }
                             }
-                            if(typeof USERFILES.APP_STN_SETTING_FADE === "string"){
+                            if(ufload("aos_system/windows/fade_distance")){
                                 setTimeout(function(){
-                                apps.settings.vars.setFadeDistance(USERFILES.APP_STN_SETTING_FADE, 1);
+                                    apps.settings.vars.setFadeDistance(ufload("aos_system/windows/fade_distance"), 1);
                                 }, 100);
                             }else{
                                 setTimeout(function(){
                                     apps.settings.vars.setFadeDistance("0.5", 1);
                                 }, 1000);
                             }
-                            if(typeof USERFILES.APP_STN_PINNEDAPPS === "string"){
-                                pinnedApps = JSON.parse(USERFILES.APP_STN_PINNEDAPPS);
+                            if(typeof ufload("aos_system/taskbar/pinned_apps") === "string"){
+                                pinnedApps = JSON.parse(ufload("aos_system/taskbar/pinned_apps"));
                                 for(var i in pinnedApps){
                                     getId('icn_' + pinnedApps[i]).style.display = 'inline-block';
                                 }
@@ -5900,10 +5854,10 @@ c(function(){
                         
                         // google play settings
                         if(sessionStorage.getItem('GooglePlay') === 'true'){
-                            if(USERFILES.APP_STN_PERFMODE !== "1"){
+                            if(ufload("aos_system/apps/settings/performance_mode") !== "1"){
                                 apps.settings.vars.togPerformanceMode(1);
                             }
-                            if(USERFILES.APP_STN_SETTING_AERO !== "0"){
+                            if(ufload("aos_system/windows/blur_enabled") !== "0"){
                                 apps.settings.vars.togAero(1);
                             }
                             
@@ -5921,11 +5875,14 @@ c(function(){
                             setTimeout(apps.settings.vars.reqFullscreen, 5000);
                         }
                         if(!safeMode){
-                            for(var file in USERFILES){
-                                if(file.indexOf('DSKTP_ico_') === 0){
-                                    if(getId(file.substring(10, 16)) !== null){
-                                        getId(file.substring(10, 16)).style.left = eval(USERFILES[file])[0] + "px";
-                                        getId(file.substring(10, 16)).style.top = eval(USERFILES[file])[1] + "px";
+                            var dsktpIconFolder = ufload("aos_system/desktop/");
+                            if(dsktpIconFolder){
+                                for(var file in dsktpIconFolder){
+                                    if(file.indexOf('ico_') === 0){
+                                        if(getId(file.substring(10, 16)) !== null){
+                                            getId(file.substring(4, file.length)).style.left = eval(USERFILES[file])[0] + "px";
+                                            getId(file.substring(4, file.length)).style.top = eval(USERFILES[file])[1] + "px";
+                                        }
                                     }
                                 }
                             }
@@ -5997,8 +5954,8 @@ c(function(){
                     image: 'settingIcons/beta/dsktpBack.png',
                     setUrl: {
                         option: 'Background Image URL',
-                        description: function(){return 'Images tile to cover the screen.<br><img style="height:200px" src="' + USERFILES.APP_STN_SETTING_BACKGROUND + '">'},
-                        buttons: function(){return '<input id="bckGrndImg" style="display:inline-block; width:500px" value="' + USERFILES.APP_STN_SETTING_BACKGROUND + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
+                        description: function(){return 'Images tile to cover the screen.<br><img style="height:200px" src="' + ufload("aos_system/desktop/background_image") + '">'},
+                        buttons: function(){return '<input id="bckGrndImg" style="display:inline-block; width:500px" value="' + ufload("aos_system/desktop/background_image") + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
                     },
                     liveBackground: {
                         option: 'Live Background',
@@ -6181,7 +6138,7 @@ c(function(){
                     corsProxy: {
                         option: 'CORS Proxy',
                         description: function(){return 'Prefix to URLs used by some apps to access non-aOS websites. If you don\'t know what this is, dont mess with it.'},
-                        buttons: function(){return '<input id="STNcorsInput" placeholder="https://cors-anywhere.herokuapp.com/"> <button onclick="apps.settings.vars.corsProxy = getId(\'STNcorsInput\').value;apps.savemaster.vars.save(\'APP_STN_CORSPROXY\', apps.settings.vars.corsProxy, 1)">Set</button>'}
+                        buttons: function(){return '<input id="STNcorsInput" placeholder="https://cors-anywhere.herokuapp.com/"> <button onclick="apps.settings.vars.corsProxy = getId(\'STNcorsInput\').value;apps.savemaster.vars.save(\'aos_system/apps/settings/cors_proxy\', apps.settings.vars.corsProxy, 1)">Set</button>'}
                     }
                 },
                 screenRes: {
@@ -6207,7 +6164,7 @@ c(function(){
                     saveRes: {
                         option: 'Save Resolution',
                         description: function(){return 'Have aOS automatically load to a specified resolution (enter in boxes above)'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save</button> <button onclick="ufdel(\'APP_STN_SAVESCREENRES\')">Delete</button>'}
+                        buttons: function(){return '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save</button> <button onclick="ufdel(\'aos_system/apps/settings/saved_screen_res\')">Delete</button>'}
                     },
                     currWin: {
                         option: 'Current Browser Window Resolution',
@@ -6257,7 +6214,7 @@ c(function(){
                     },
                     windowBlur: {
                         option: 'Windowblur',
-                        description: function(){return 'Current: <span class="liveElement" liveVar="numtf(parseInt(USERFILES.APP_STN_SETTING_AERO || \'0\'))">true</span>. Toggle Windowblur off to save on performance, but does not look as good.'},
+                        description: function(){return 'Current: <span class="liveElement" liveVar="numtf(parseInt(ufload(\'aos_system/windows/blur_enabled\') || \'0\'))">true</span>. Toggle Windowblur off to save on performance, but does not look as good.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.togAero()">Toggle Windowblur Effect</button>'}
                     },
                     blurStrength: {
@@ -6272,7 +6229,7 @@ c(function(){
                     },
                     backdropFilter: {
                         option: 'CSS Backdrop Blur',
-                        description: function(){return 'Current: <span class="liveElement" liveVar="numtf(parseInt(USERFILES.APP_STN_SETTING_BACKDROPFILTER || \'0\'))">true</span>. Toggle experimental CSS backdrop filter for windowblur. So far, the API is only available for Safari on Mac, but the API is under development for Google Chrome.'},
+                        description: function(){return 'Current: <span class="liveElement" liveVar="numtf(parseInt(ufload(\'aos_system/windows/backdropfilter_blur\') || \'0\'))">true</span>. Toggle experimental CSS backdrop filter for windowblur. So far, the API is only available for Safari on Mac, but the API is under development for Google Chrome.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.togBackdropFilter()">Toggle Backdrop Filter Blur</button>'}
                     },
                     fadeDist: {
@@ -6386,7 +6343,7 @@ c(function(){
                     clear: {
                         option: 'Clear Clipboard',
                         description: function(){return 'Clear the persistent keyboard of aOS. Useful for if you have a cluttered clipboard. If you do not copy anything to the clipboard until you shut down, then the next time you boot aOS, the clipboard will be empty. Think of this as a fallback for if clicking this button was an accident. Just copy something to the clipboard and nothing will disappear. It is also one last chance to use the stuff you have copied before it is cleared.'},
-                        buttons: function(){return '<button onclick="apps.savemaster.vars.save(\'APP_STN_SAVED_CLIPBOARD\', \'_cleared_clipboard_\', 1);">Clear</button>'}
+                        buttons: function(){return '<button onclick="ufsave(\'aos_system/clipboard\', \'_cleared_clipboard_\');">Clear</button>'}
                     }
                 },
                 screensaver: {
@@ -6438,12 +6395,12 @@ c(function(){
                     stylesheet: {
                         option: 'Custom CSS Stylesheet',
                         description: function(){return 'If you are an advanced aOS user and want nearly full customization ability for aOS, here is how to use the Custom Stylesheet feature...'},
-                        buttons: function(){return 'All you need to know is the CSS stylesheet language. Create a new file called aosCustomStyle, and put your CSS code in there. After you save the file, restart aOS or <button onclick="getId(\'aosCustomStyle\').innerHTML = USERFILES.aosCustomStyle">Force Style Update Now</button>. <i>It\'s that easy.</i> For reference, you can get to the official aOS stylesheet by visiting <a target="_blank" href="style.css">style.css</a>.'}
+                        buttons: function(){return 'All you need to know is the CSS stylesheet language. Open the Custom Style Editor app and start writing your stylesheet. <i>It\'s that easy.</i> For reference, you can get to the official aOS stylesheet by visiting <a target="_blank" href="style.css">style.css</a>.'}
                     },
                     normal: {
                         option: 'Default Styling',
                         description: function(){return 'Restore aOS to its default stylesheet. If you are using a customized sheet, make sure to back it up, as this button will delete it.'},
-                        buttons: function(){return '<button onClick="apps.savemaster.vars.save(\'aosCustomStyle\', \'/* DEFAULT */\', 1);getId(\'aosCustomStyle\').innerHTML = USERFILES.aosCustomStyle">Restore</button>'}
+                        buttons: function(){return '<button onClick="apps.savemaster.vars.save(\'aos_system/user_custom_style\', \'/* DEFAULT */\', 1);getId(\'aosCustomStyle\').innerHTML = ufload(\'aos_system/user_custom_style\')">Restore</button>'}
                     },
                     aaronsCustom: {
                         // put aaron's personal stylesheet here
@@ -6466,12 +6423,12 @@ c(function(){
                     glassWindows1: {
                         option: 'Glass Windows 1',
                         description: function(){return 'Style aOS will all-glass windows! This works on -most- apps, and gets rid of the default white background behind the apps. Now, the entire window is glass!'},
-                        buttons: function(){return '<button onClick="apps.savemaster.vars.save(\'aosCustomStyle\', files.customStyles.glassWindows1, 1);getId(\'aosCustomStyle\').innerHTML = USERFILES.aosCustomStyle">Install</button>'}
+                        buttons: function(){return '<button onClick="apps.savemaster.vars.save(\'aos_system/user_custom_style\', files.customStyles.glassWindows1, 1);getId(\'aosCustomStyle\').innerHTML = ufload(\'aos_system/user_custom_style\')">Install</button>'}
                     },
                     glassWindows2: {
                         option: 'Glass Windows 2',
                         description: function(){return 'Style aOS will all-glass windows! This works on -most- apps, and gets rid of the default white background behind the apps. This version also adds just a bit of a white shade to the windows, for better readability. Now, almost the entire window is glass!'},
-                        buttons: function(){return '<button onClick="apps.savemaster.vars.save(\'aosCustomStyle\', files.customStyles.glassWindows2, 1);getId(\'aosCustomStyle\').innerHTML = USERFILES.aosCustomStyle">Install</button>'}
+                        buttons: function(){return '<button onClick="apps.savemaster.vars.save(\'aos_system/user_custom_style\', files.customStyles.glassWindows2, 1);getId(\'aosCustomStyle\').innerHTML = ufload(\'aos_system/user_custom_style\')">Install</button>'}
                     },
                     elme: {
                         option: 'Elme\'s Style',
@@ -6542,30 +6499,13 @@ c(function(){
                     trustedApps: {
                         option: 'Trusted Apps',
                         description: function(){return 'This is a list of all external apps that you have allowed to use permissions on aOS. The list is JSON-encoded.';},
-                        buttons: function(){return '<textarea id="STN_trusted_apps" style="white-space:nowrap;width:75%;height:8em">' + (USERFILES.APP_WAP_trusted_apps || "") + '</textarea><button onclick="apps.savemaster.vars.save(\'APP_WAP_trusted_apps\', getId(\'STN_trusted_apps\').value, 1);apps.webAppMaker.vars.reflectPermissions();">Set</button>'}
+                        buttons: function(){return '<textarea id="STN_trusted_apps" style="white-space:nowrap;width:75%;height:8em">' + (ufload("aos_system/apps/webAppMaker/trusted_apps") || "") + '</textarea><button onclick="ufsave(\'aos_system/apps/webAppMaker/trusted_apps\', getId(\'STN_trusted_apps\').value);apps.webAppMaker.vars.reflectPermissions();">Set</button>'}
                     },
                     reset: {
                         option: 'Reset aOS',
                         description: function(){return 'If you wish, you can completely reset aOS. This will give you a new OS ID, which will have the effect of removing all of your files. Your old files will still be preserved, so you can ask the developer for help if you mistakenly reset aOS. If you wish for your old files to be permanantly removed, please contact the developer.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.resetOS()">Reset aOS</button>'}
                     }
-                    /*
-                    tampermonkey: {
-                        option: 'aOS Tampermonkey Script',
-                        description: function(){return 'If you have a Tampermonkey-capable browser (Google Chrome or Firefox are two of them) and love aOS, you can get quick access to aOS on all of your tabs! (this extension is in beta and certain things may break)'},
-                        buttons: function(){return 'Visit <a href="/tampermonkey.txt">tampermonkey.txt</a> and copy-paste its contents into Tampermonkey. A bar will appear on all of your pages from then on that will allow you to open aOS on any tab.'}
-                    },
-                    trustedServers: {
-                        option: 'Trusted Servers',
-                        description: function(){return 'This is a list of all external servers you allow to modify the files on your aOS. Ensure each server is on its own line and there are no stray characters.';},
-                        buttons: function(){return '<textarea id="STN_trusted_servers" style="white-space:nowrap;width:75%;height:8em">' + (USERFILES.APP_STN_trusted_servers || "") + '</textarea><button onclick="apps.savemaster.vars.save(\'APP_STN_trusted_servers\', getId(\'STN_trusted_servers\').value, 1);">Set</button>'}
-                    },
-                    fileAPI: {
-                        option: 'File API',
-                        description: function(){return 'If you are a web developer, you can use the aOS File API to set files on a user\'s OS, with their permission.'},
-                        buttons: function(){return 'Note that for the API to work, you have to ask the developer to permit your server to connect to the aOS server.<br><br>It is recommended to do this from JavaScript with an XMLHttpRequest.<br>Ensure that XMLHttpRequest.withCredentials === true.<br>Send a GET request to https://aaron-os-mineandcraft12.c9.io/fileapi.php with the following URL parameters:<br><br>?id=(User OS ID here)<br>&file=(file name here)<br>&text=(content of file here)<br><br>Note that the user must have a password and must be logged in from the same browser for the API to work. They must also add you to their trusted servers list.<br><br>If the API ever encounters an error, then the responseText will tell you what went wrong.'}
-                    },
-                    */
                 }
             },
             showMenu: function(menu){
@@ -6667,8 +6607,8 @@ c(function(){
             recievedCustomStyle: function(){
                 if(apps.settings.vars.customStyleHttp.readyState === 4){
                     if(apps.settings.vars.customStyleHttp.status === 200){
-                        apps.savemaster.vars.save('aosCustomStyle', apps.settings.vars.customStyleHttp.responseText/*.split("\n").join("\\n")*/, 1);
-                        getId('aosCustomStyle').innerHTML = USERFILES.aosCustomStyle;
+                        apps.savemaster.vars.save('aos_system/user_custom_style', apps.settings.vars.customStyleHttp.responseText/*.split("\n").join("\\n")*/, 1);
+                        getId('aosCustomStyle').innerHTML = ufload("aos_system/user_custom_style");
                         apps.settings.vars.customStyleHttp = null;
                     }else{
                         apps.prompt.vars.alert('Network error ' + apps.settings.vars.customStyleHttp.status + ' while setting Custom Style.', 'Okay', function(){}, 'Settings');
@@ -6683,12 +6623,12 @@ c(function(){
             },
             corsProxy: 'https://cors-anywhere.herokuapp.com/',
             saveRes: function(newX, newY){
-                apps.savemaster.vars.save('APP_STN_SAVESCREENRES', newX + '/' + newY, 1);
+                ufsave('aos_system/apps/settings/saved_screen_res', newX + '/' + newY);
                 fitWindowRes(newX, newY);
             },
             togDirtyLoad: function(){
                 dirtyLoadingEnabled = -1 * dirtyLoadingEnabled + 1;
-                apps.savemaster.vars.save('APP_STN_SETTING_DIRTYLOAD', dirtyLoadingEnabled, 1);
+                apps.savemaster.vars.save('aos_system/apps/settings/ugly_boot', dirtyLoadingEnabled);
             },
             resetOS: function(){
                 apps.prompt.vars.confirm('<h1>STOP</h1><br><br>Please confirm with absolute certainty that you wish to RESET AaronOS.', ['<h1>CANCEL</h1>', '<h1 style="color:#F00">RESET</h1>'], function(btn){if(btn){
@@ -6708,26 +6648,26 @@ c(function(){
                     this.captionButtonsLeft = 1;
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_SETTING_CAPBTNLEFT', this.captionButtonsLeft, 1);
+                    ufsave('aos_system/windows/controls_on_left', this.captionButtonsLeft);
                 }
             },
             setClipboardSlots: function(newSlots, nosave){
                 textEditorTools.slots = newSlots;
                 textEditorTools.updateSlots();
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_SETTING_SLOTS', newSlots, 1);
+                    ufsave('aos_system/clipboard_slots', newSlots);
                 }
             },
             setDashboard: function(dashboardName){
                 apps.startMenu.vars.listOfApps = '';
                 apps.startMenu.vars.appElems = null;
-                apps.savemaster.vars.save('APP_STN_DASHBOARD', dashboardName, 1);
+                ufsave('aos_system/apps/startMenu/dashboard', dashboardName);
             },
             setScale: function(newScale, nosave){
                 window.screenScale = parseFloat(newScale);
                 fitWindow();
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_screenscale', newScale, 1);
+                    ufsave('aos_system/apps/settings/ui_scale', newScale);
                 }
             },
             togDarkMode: function(nosave){
@@ -6739,7 +6679,7 @@ c(function(){
                     document.body.classList.add('darkMode');
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_DARKMODE', darkMode, 1);
+                    ufsave('aos_system/windows/dark_mode', darkMode);
                 }
             },
             setMobileMode: function(type, nosave){
@@ -6753,7 +6693,7 @@ c(function(){
                     autoMobile = 0;
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_MOBILEMODE', type, 1);
+                    ufsave('aos_system/apps/settings/mobile_mode', type);
                 }
                 checkMobileSize();
             },
@@ -6776,7 +6716,7 @@ c(function(){
                     getId('liveBackground').src = apps.settings.vars.liveBackgroundURL;
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_LIVEBG_ENABLED', apps.settings.vars.liveBackgroundEnabled, 1);
+                    ufsave('aos_system/desktop/background_live_enabled', apps.settings.vars.liveBackgroundEnabled);
                 }
             },
             setLiveBg: function(newURL, nosave){
@@ -6785,7 +6725,7 @@ c(function(){
                     getId('liveBackground').src = newURL;
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_LIVEBG', newURL, 1);
+                    ufsave('aos_system/desktop/background_live_url', newURL);
                 }
             },
             togPrlxBg: function(nosave){
@@ -6802,7 +6742,7 @@ c(function(){
                     getId('prlxBackground').src = 'prlxBg.php?img=' + encodeURIComponent(apps.settings.vars.prlxBackgroundURLs) + '#0,0';
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_PRLXBG_ENABLED', apps.settings.vars.prlxBackgroundEnabled, 1);
+                    ufsave('aos_system/desktop/background_parallax_enabled', apps.settings.vars.prlxBackgroundEnabled);
                 }
             },
             setPrlxBg: function(newURL, nosave){
@@ -6811,7 +6751,7 @@ c(function(){
                     getId('prlxBackground').src = 'prlxBg.php?img=' + encodeURIComponent(newURL) + '#0,0';
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_PRLXBG', newURL, 1);
+                    apps.savemaster.vars.save('aos_system/desktop/background_parallax_layers', newURL, 1);
                 }
             },
             prlxBackgroundUpdate: function(){
@@ -6860,7 +6800,7 @@ c(function(){
             togLongTap: function(nosave){
                 this.longTap = -1 * this.longTap + 1;
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_SETTING_LONGTAP', this.longTap, 1);
+                    ufsave('aos_system/apps/settings/ctxmenu_two_fingers', this.longTap);
                 }
             },
             clickToMove: 0,
@@ -6870,7 +6810,7 @@ c(function(){
             togNoraHelpTopics: function(nosave){
                 this.noraHelpTopics = this.noraHelpTopics * -1 + 1;
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_SETTING_NORAHELP', this.noraHelpTopics, 1);
+                    ufsave('aos_system/noraa/adv_help_enabled', this.noraHelpTopics);
                 }
             },
             noraHelpTopics: 1,
@@ -6885,21 +6825,21 @@ c(function(){
                     this.currNoraListening = "0";
                     apps.nora.vars.stopContRecog();
                     if(!nosave){
-                        apps.savemaster.vars.save('NORAA_LISTEN', this.currNoraListening, 1);
+                        ufsave('aos_system/noraa/listen_enabled', this.currNoraListening);
                     }
                 }else{
                     //start nora's listening
                     this.currNoraListening = "1";
                     apps.nora.vars.startContRecog();
                     if(!nosave){
-                        apps.savemaster.vars.save('NORAA_LISTEN', this.currNoraListening, 1);
+                        ufsave('aos_system/noraa/listen_enabled', this.currNoraListening);
                     }
                 }
             },
             togNoraPhrase: function(nosave){
                 this.currNoraPhrase = getId('STNnoraphrase').value;
                 if(!nosave){
-                    apps.savemaster.vars.save('NORAA_PHRASE', this.currNoraPhrase, 1);
+                    ufsave('aos_system/noraa/listen_phrase', this.currNoraPhrase);
                 }
             },
             setDebugLevel: function(level){
@@ -6910,7 +6850,7 @@ c(function(){
                 this.winBorder = parseInt(newValue);
                 getId('windowBorderStyle').innerHTML = '#monitor{--windowBorderWidth:' + this.winBorder + 'px;}';
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_SETTING_WINBORDER', this.winBorder, 1);
+                    ufsave('aos_system/windows/border_width', this.winBorder);
                 }
             },
             dataCampaigns: [
@@ -6953,7 +6893,7 @@ c(function(){
                     }
                     this.enabWinImg = 0;
                     if(!nosave){
-                        apps.savemaster.vars.save("APP_STN_SETTING_TOGWINIMG", "0", 1);
+                        ufsave("aos_system/windows/border_texture_enabled", "0");
                     }
                 }else{
                     this.tempArray = document.getElementsByClassName("winBimg");
@@ -6962,7 +6902,7 @@ c(function(){
                     }
                     this.enabWinImg = 1;
                     if(!nosave){
-                        apps.savemaster.vars.save("APP_STN_SETTING_TOGWINIMG", "1", 1);
+                        ufsave("aos_system/windows/border_texture_enabled", "1");
                     }
                 }
                 d(1, perfCheck('settings') + '&micro;s to toggle windowbgimg');
@@ -6975,14 +6915,14 @@ c(function(){
                     this.tempArray[elem].style.backgroundImage = 'url(' + this.currWinImg + ')';
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save("APP_STN_SETTING_WINIMG", this.currWinImg, 1);
+                    ufsave("aos_system/windows/border_texture", this.currWinImg);
                 }
                 d(1, perfCheck('settings') + '&micro;s to set windowbgimg');
             },
             getTextLanguages: function(){
                 this.currLangStr = '';
                 for(var i in languagepacks){
-                    this.currLangStr += '<button onclick="currentlanguage = \'' + i + '\';apps.savemaster.vars.save(\'APP_STN_SETTING_LANG\', \'' + i + '\', 1)">' + languagepacks[i] + '</button> ';
+                    this.currLangStr += '<button onclick="currentlanguage = \'' + i + '\';ufsave(\'aos_system/language\', \'' + i + '\')">' + languagepacks[i] + '</button> ';
                 }
                 return this.currLangStr;
             },
@@ -6998,12 +6938,12 @@ c(function(){
                 }
             },
             saveNORAAvoice: function(){
-                apps.savemaster.vars.save('NORAA_LANG', apps.nora.vars.lang, 1);
+                ufsave('aos_system/noraa/speech_voice', apps.nora.vars.lang);
             },
             NORAAsetDelay: function(nosave){
                 apps.nora.vars.inputDelay = parseInt(getId('STNnoraDelay').value, 10);
                 if(!nosave){
-                    apps.savemaster.vars.save('NORAA_DELAY', apps.nora.vars.inputDelay);
+                    ufsave('aos_system/noraa/speech_response_delay', apps.nora.vars.inputDelay);
                 }
             },
             tempArray: [],
@@ -7011,7 +6951,7 @@ c(function(){
             togPerformanceMode: function(nosave){
                 this.performanceMode = -1 * this.performanceMode + 1;
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_PERFMODE', this.performanceMode, 1);
+                    ufsave('aos_system/apps/settings/performance_mode', this.performanceMode);
                 }
                 tskbrToggle.perfMode = this.performanceMode;
                 if(this.performanceMode){
@@ -7286,7 +7226,7 @@ c(function(){
                         newPage: function(){
                             if(apps.settings.vars.screensavers.wikiRandom.vars.canRun){
                                 getId('screensaverLayer').innerHTML = '';
-                                if(USERFILES.APP_STN_scnsav_wikiRandom === '0'){
+                                if(ufload("aos_system/screensaver/wikirandom/logo_enabled") === '0'){
                                     getId('screensaverLayer').innerHTML = '<iframe src="https://en.wikipedia.org/wiki/Special:Random" style="pointer-events:none;border:none;width:100%;height:100%;"></iframe>';
                                 }else{
                                     getId('screensaverLayer').innerHTML = '<iframe src="https://en.wikipedia.org/wiki/Special:Random" style="pointer-events:none;border:none;width:100%;height:100%;"></iframe><div style="top:10px;right:200px;font-size:108px;color:#557;font-family:aosProFont"><img src="appicons/ds/aOS.png" style="width:128px;height:128px"><i>Screensaver</i></div>';
@@ -7295,7 +7235,7 @@ c(function(){
                             }
                         },
                         setSetting: function(btn){
-                            apps.savemaster.vars.save('APP_STN_scnsav_wikiRandom', String(btn), 1);
+                            ufsave('aos_system/screensaver/wikirandom/logo_enabled', String(btn));
                         }
                     }
                 },
@@ -7324,20 +7264,19 @@ c(function(){
             },
             togScreensaver: function(){
                 this.screensaverEnabled = -1 * this.screensaverEnabled + 1;
-                apps.savemaster.vars.save("APP_STN_SETTING_SCREENSAVER_ENABLED", this.screensaverEnabled, 1);
+                ufsave("aos_system/screensaver/enabled", this.screensaverEnabled);
             },
             setScreensaverTime: function(newTime){
                 this.screensaverTime = newTime;
-                apps.savemaster.vars.save("APP_STN_SETTING_SCREENSAVER_TIME", this.screensaverTime, 1);
+                ufsave("aos_system/screensaver/idle_time", this.screensaverTime);
             },
             setScreensaver: function(type){
                 this.currScreensaver = type;
                 this.screensavers[type].selected();
-                apps.savemaster.vars.save("APP_STN_SETTING_SCREENSAVER", this.currScreensaver, 1);
+                ufsave("aos_system/screensaver/selected_screensaver", this.currScreensaver);
             },
             currWinColor: "rgba(190, 190, 255, .3)",
             currWinBlend: "screen",
-            currWinOpac: "1",
             currWinblurRad: "5",
             isAero: 1,
             sB: function(nosave){
@@ -7351,7 +7290,7 @@ c(function(){
                     }
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save("APP_STN_SETTING_BACKGROUND", getId("bckGrndImg").value, 1);
+                    ufsave("aos_system/desktop/background_image", getId("bckGrndImg").value);
                 }
                 d(1, perfCheck('settings') + '&micro;s to set background');
             },
@@ -7367,7 +7306,7 @@ c(function(){
                     }
                     this.isAero = 0;
                     if(!nosave){
-                        apps.savemaster.vars.save("APP_STN_SETTING_AERO", "0", 1);
+                        ufsave("aos_system/windows/blur_enabled", "0");
                     }
                 }else{
                     this.tempArray = document.getElementsByClassName("winAero");
@@ -7379,7 +7318,7 @@ c(function(){
                     }
                     this.isAero = 1;
                     if(!nosave){
-                        apps.savemaster.vars.save("APP_STN_SETTING_AERO", "1", 1);
+                        ufsave("aos_system/windows/blur_enabled", "1");
                     }
                 }
                 d(1, perfCheck('settings') + '&micro;s to toggle windowblur');
@@ -7397,7 +7336,7 @@ c(function(){
                     getId('taskbar').style.backdropFilter = 'none';
                     this.isBackdrop = 0;
                     if(!nosave){
-                        apps.savemaster.vars.save("APP_STN_SETTING_BACKDROPFILTER", "0", 1);
+                        ufsave("aos_system/windows/backdropfilter_blur", "0");
                     }
                 }else{
                     this.tempArray = document.getElementsByClassName("window");
@@ -7409,7 +7348,7 @@ c(function(){
                     getId('taskbar').style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)';
                     this.isBackdrop = 1;
                     if(!nosave){
-                        apps.savemaster.vars.save("APP_STN_SETTING_BACKDROPFILTER", "1", 1);
+                        ufsave("aos_system/windows/backdropfilter_blur", "1");
                     }
                 }
                 d(1, perfCheck('settings') + '&micro;s to toggle backdrop filter');
@@ -7426,7 +7365,7 @@ c(function(){
                     this.tempArray[elem].style.backgroundColor = this.currWinColor;
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save("APP_STN_SETTING_WINCOLOR", this.currWinColor, 1);
+                    ufsave("aos_system/windows/border_color", this.currWinColor);
                 }
                 d(1, perfCheck('settings') + '&micro;s to set window color');
             },
@@ -7439,7 +7378,7 @@ c(function(){
                     this.tempArray[elem].style.filter = "blur(" + this.currWinblurRad + "px)";
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save("APP_STN_SETTING_AERORAD", this.currWinblurRad, 1);
+                    ufsave("aos_system/windows/blur_radius", this.currWinblurRad);
                 }
                 d(1, perfCheck('settings') + '&micro;s to set windowblur radius');
             },
@@ -7451,21 +7390,9 @@ c(function(){
                     this.tempArray[elem].style.backgroundBlendMode = this.currWinBlend;
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save("APP_STN_SETTING_WINBLEND", this.currWinBlend, 1);
+                    ufsave("aos_system/windows/blur_blendmode", this.currWinBlend);
                 }
                 d(1, perfCheck('settings') + '&micro;s to set window blend mode');
-            },
-            setWinOpac: function(nosave){
-                perfStart('settings');
-                this.currWinOpac = getId("STNwinOpacInput").value;
-                this.tempArray = document.getElementsByClassName("winAero");
-                for(var elem = 0; elem < this.tempArray.length; elem++){
-                    this.tempArray[elem].style.opacity = this.currWinOpac;
-                }
-                if(!nosave){
-                    apps.savemaster.vars.save("APP_STN_SETTING_WINOPAC", this.currWinOpac, 1);
-                }
-                d(1, perfCheck('settings') + '&micro;s to set window opacity');
             },
             winFadeDistance: '0.5',
             setFadeDistance: function(newDist, nosave){
@@ -7477,7 +7404,7 @@ c(function(){
                     }
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save("APP_STN_SETTING_FADE", newDist, 1);
+                    ufsave("aos_system/windows/fade_distance", newDist);
                 }
             },
             reqFullscreen: function(){
@@ -7509,34 +7436,6 @@ c(function(){
                         apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
                     }
                 }, 'Settings');
-            },
-            togTimeComp: function(){
-                tskbrToggle.timeComp = -1 * tskbrToggle.timeComp + 1;
-                apps.savemaster.vars.save("APP_STN_SETTING_TIMECOMP", tskbrToggle.timeComp, 1);
-            },
-            togNetStat: function(){
-                tskbrToggle.netStat = -1 * tskbrToggle.netStat + 1;
-                apps.savemaster.vars.save("APP_STN_SETTING_NETSTAT", tskbrToggle.netStat, 1);
-            },
-            togBatStat: function(){
-                tskbrToggle.batStat = -1 * tskbrToggle.batStat + 1;
-                apps.savemaster.vars.save("APP_STN_SETTING_BATSTAT", tskbrToggle.batStat, 1);
-            },
-            togBatComp: function(){
-                tskbrToggle.batComp = -1 * tskbrToggle.batComp + 1;
-                apps.savemaster.vars.save("APP_STN_SETTING_BATCOMP", tskbrToggle.batComp, 1);
-            },
-            togFpsStat: function(){
-                tskbrToggle.fpsStat = -1 * tskbrToggle.fpsStat + 1;
-                apps.savemaster.vars.save("APP_STN_SETTING_FPSSTAT", tskbrToggle.fpsStat, 1);
-            },
-            togFpsComp: function(){
-                tskbrToggle.fpsComp = -1 * tskbrToggle.fpsComp + 1;
-                apps.savemaster.vars.save("APP_STN_SETTING_FPSCOMP", tskbrToggle.fpsComp, 1);
-            },
-            togLodStat: function(){
-                tskbrToggle.lodStat = -1 * tskbrToggle.lodStat + 1;
-                apps.savemaster.vars.save("APP_STN_SETTING_LODSTAT", tskbrToggle.lodStat, 1);
             },
             setTskbrPos: function(newPos, nosave){
                 tskbrToggle.tskbrPos = newPos;
@@ -7613,7 +7512,7 @@ c(function(){
                         apps.prompt.vars.alert('Error - unrecognised taskbar position format: ' + newPos, 'OK', function(){}, 'Settings');
                 }
                 if(!nosave){
-                    apps.savemaster.vars.save('APP_STN_TSKBRPOS', newPos, 1);
+                    ufsave('aos_system/taskbar/position', newPos);
                 }
                 openapp(apps.startMenu, 'srtup');
             },
@@ -7785,10 +7684,13 @@ c(function(){
                 case "USERFILES_DONE":
                     setTimeout(function(){
                         if(!safeMode){
-                            for(var file in USERFILES){
-                                if(file.indexOf('APP_IcM_ICON_') === 0){
-                                    if(USERFILES[file].indexOf('[') === 0){
-                                        apps.iconMaker.vars.buildIcon(USERFILES[file]);
+                            var iconsFolder = ufload("aos_system/desktop/user_icons/");
+                            if(iconsFolder){
+                                for(var file in iconsFolder){
+                                    if(file.indexOf('uico_') === 0){
+                                        if(iconsFolder[file].indexOf('[') === 0){
+                                            apps.iconMaker.vars.buildIcon(iconsFolder[file]);
+                                        }
                                     }
                                 }
                             }
@@ -7820,7 +7722,7 @@ c(function(){
             },
             createIcon: function(icon, id){
                 if(icon){
-                    apps.savemaster.vars.save('APP_IcM_ICON_' + id, icon, 1);
+                    apps.savemaster.vars.save('aos_system/desktop/user_icons/uico_' + id, icon, 1);
                 }else{
                     if(parseInt(getId('IcMleft').value) > 0 && parseInt(getId('IcMtop').value) > 0 && getId('IcMname').value.length > 0 && getId('IcMpath').value.length > 0){
                         var currMS = (new Date().getTime());
@@ -7835,7 +7737,7 @@ c(function(){
                                     getId('IcMpath').value
                                 ];
                                 this.compiledIcon = JSON.stringify(tempIconObj);
-                                apps.savemaster.vars.save('APP_IcM_ICON_' + currMS, this.compiledIcon, 1);
+                                apps.savemaster.vars.save('aos_system/desktop/user_icons/uico_' + currMS, this.compiledIcon, 1);
                                 this.buildIcon(this.compiledIcon);
                             }else{
                                 apps.prompt.vars.alert('The specified app could not be found. Please check that the file path to your app is spelled correctly.', 'Okay', function(){}, 'Icon Maker')
@@ -7850,7 +7752,7 @@ c(function(){
                                 getId('IcMpath').value
                             ];
                             this.compiledIcon = JSON.stringify(tempIconObj);
-                            apps.savemaster.vars.save('APP_IcM_ICON_' + currMS, this.compiledIcon, 1);
+                            apps.savemaster.vars.save('aos_system/desktop/user_icons/uico_' + currMS, this.compiledIcon, 1);
                             this.buildIcon(this.compiledIcon);
                         }
                     }else{
@@ -7885,7 +7787,7 @@ c(function(){
             moveIcon: function(element, movedata){
                 this.moveTo = eval(movedata);
                 this.moveSelect = element.substring(3, element.length);
-                this.replaceObj = eval(USERFILES['APP_IcM_ICON_' + this.moveSelect]);
+                this.replaceObj = eval(ufload("aos_system/desktop/user_icons/uico_" + this.moveSelect));
                 this.replaceObj[1] = this.moveTo[0];
                 this.replaceObj[2] = this.moveTo[1];
                 this.createIcon('[' + this.replaceObj[0] + ', ' +
@@ -7902,7 +7804,7 @@ c(function(){
                 apps.prompt.vars.confirm('Are you sure you wish to delete this icon?', ['No, Keep Icon', 'Yes, Delete Icon'], function(btn){
                     if(btn){
                         getId('app' + apps.iconMaker.vars.deleteElem).style.display = 'none';
-                        ufdel('APP_IcM_ICON_' + apps.iconMaker.vars.deleteElem);
+                        ufdel('aos_system/desktop/user_icons/uico_' + apps.iconMaker.vars.deleteElem);
                     }
                 }, 'aOS');
             }
@@ -8637,10 +8539,11 @@ c(function(){
             "04/03/2019: B0.11.1.2\n : Fixed Fullscreen button in Settings (thank you CerebralDatabank)\n : Modified filetype description positioning in File Manager 2.\n\n" +
             "04/04/2019: B0.11.2.0\n : Apps now wait until the window closing animation is finished before clearing their content, looks way better now.\n : Fixed error when right clicking a file with a period in its name in FIL2.\n : Properties app now uses bash file paths instead of JS object paths.\n : Fixed window titles overlapping buttons on right side.\n : Fixed some apps not clearing their window content after being closed.\n : Fixed the LiveElement system erroring out in its error handler.\n\n" +
             "04/05/2019: B0.11.3.0\n + Sidebar in the File Manager including the new Home, Favorites and Navigation features.\n : The main page of the File Manager is now called Home\n + Favorites list in File Manager, to save important locations.\n + Navigation list in File Manager, to jump around in the current path.\n : Buttons for touch and mkdir in File Manager moved to the right side.\n + Add Favorite button added to left side of File Manager's toolbar.\n + Descriptions for the File Manager's toolbar buttons will now appear when hovered over.\n + Rounded corners on the top edge of the File Manager's content.\n : The left edge of the File Manager's Location and Search boxes are now lined up with the left edge of the main content.\n : Fixed caption bars in the Windows 98 theme.\n\n" +
-            "04/07/2019: B0.11.3.1\n + Progress bar for shutdown.\n : Fixed shutdown screen.",
+            "04/07/2019: B0.11.3.1\n + Progress bar for shutdown.\n : Fixed shutdown screen.\n\n" +
+            "01/10/2019: B0.12.0.0\n + New aos_system folder in USERFILES\n - system files are no longer dumped into the root directory of USERFILES >.<\n : All system files moved into the aos_system folder.\n : All system files given new, more sensible names\n : Fixed Minesweeper Easy Clear setting not saving.\n : Fixed APM using old text editor.\n : Boot should be slightly faster, as several slow functions were sped up.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.11.3.1 (04/07/2019) r0';
+    window.aOSversion = 'B0.12.0.0 (04/10/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -8672,23 +8575,7 @@ c(function(){
                 
                 var fileDescription = "";
                 if(filePath[0] === "USERFILES"){
-                    if(fileName.indexOf('APP_') === 0){
-                        fileDescription = "This file likely belongs to an app labeled " + fileName.split('_')[1] + ".";
-                    }else if(fileName.indexOf("DSKTP_ico_app_") === 0){
-                        fileDescription = "This file is the configuration of the desktop icon for " + fileName.substring(14, fileName.length) + ".";
-                    }else if(fileName.indexOf("NORAA_") === 0){
-                        fileDescription = "This file holds a memory of NORAA.";
-                    }else if(fileName.indexOf("APM_APPS_DATABASE_") === 0){
-                        fileDescription = "This file contains a user-made application called " + fileName.substring(18, fileName.length) + ".";
-                    }else if(fileToOpen === "/USERFILES/aOSpassword"){
-                        fileDescription = "You cannot view the contents of this file.";
-                    }else if(fileToOpen === "/USERFILES/aosCustomStyle"){
-                        fileDescription = "This is the currently-installed user-made stylesheet.";
-                    }else if(filePath === "CONFIRM_ADMIN_MESSAGE"){
-                        fileDescription = "This is a personal message from the administrator to you.";
-                    }else if(fileName.indexOf('WGT_') === 0){
-                        fileDescription = "This file likely belongs to a taskbar widget labeled " + fileName.split('_')[1] + ".";
-                    }
+                    
                 }else if(filePath[0] === "apps" && filePath.length > 1){
                     fileDescription = "This item belongs to the app " + apps[filePath[1]].appDesc + ".";
                 }
@@ -9107,11 +8994,11 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    if(typeof USERFILES.APP_FIL_VIEWMODE === "string"){
-                        this.vars.setViewMode(parseInt(USERFILES.APP_FIL_VIEWMODE), 1);
+                    if(ufload("aos_system/apps/files/view_mode")){
+                        this.vars.setViewMode(parseInt(ufload("aos_system/apps/files/view_mode")), 1);
                     }
-                    if(typeof USERFILES.APP_FIL_favorites === "string"){
-                        this.vars.favorites = JSON.parse(USERFILES.APP_FIL_favorites);
+                    if(ufload("aos_system/apps/files/favorites")){
+                        this.vars.favorites = JSON.parse(ufload("aos_system/apps/files/favorites"));
                     }
                     break;
                 case 'shutdown':
@@ -9157,7 +9044,7 @@ c(function(){
                 }
                 
                 if(!nosave){
-                    apps.savemaster.vars.save("APP_FIL_VIEWMODE", this.currViewMode, 1);
+                    apps.savemaster.vars.save("aos_system/apps/files/view_mode", this.currViewMode, 1);
                 }
             },
             back: function(){
@@ -9453,7 +9340,7 @@ c(function(){
             favorites: [],
             updateFavorites: function(nosave, mainPage){
                 if(!nosave){
-                    ufsave('APP_FIL_favorites', JSON.stringify(this.favorites));
+                    ufsave('aos_system/apps/files/favorites', JSON.stringify(this.favorites));
                 }
                 var tempHTML = '';
                 for(var i in this.favorites){
@@ -9875,7 +9762,10 @@ c(function(){
                                 };
                                 this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php/?error=error');
                                 this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
-                                USERFILES[filepath] = '' + filecontent;
+                                sh('mkdir /USERFILES/' + filepath.substring(0, filepath.lastIndexOf('/')));
+                                apps.savemaster.vars.temporarySaveContent = '' + filecontent;
+                                eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '=apps.savemaster.vars.temporarySaveContent');
+                                delete apps.savemaster.vars.temporarySaveContent;
                             }else if(errorreport === 'RDP'){
                                 this.xf['fd' + this.savePerf] = new FormData();
                                 this.xf['fd' + this.savePerf].append('k', SRVRKEYWORD);
@@ -9914,7 +9804,10 @@ c(function(){
                                 };
                                 this.xf['xhttp' + this.savePerf].open('POST', 'filesavernew.php/?mUname=mUname&pass=' + pass.split('?').join('X').split('&').join('X'));
                                 this.xf['xhttp' + this.savePerf].send(this.xf['fd' + this.savePerf]);
-                                USERFILES[filepath] = '' + filecontent;
+                                sh('mkdir /USERFILES/' + filepath.substring(0, filepath.lastIndexOf('/')));
+                                apps.savemaster.vars.temporarySaveContent = '' + filecontent;
+                                eval(apps.bash.vars.translateDir('/USERFILES/' + filepath) + '=apps.savemaster.vars.temporarySaveContent');
+                                delete apps.savemaster.vars.temporarySaveContent;
                             }else{
                                 //getId("mastersaveframediv").innerHTML = '<iframe id="mastersaveframe" name="mastersaveframe"></iframe><form action="filesavernew.php" method="POST" target="mastersaveframe" id="mastersaveform"><input name="k" value="' + SRVRKEYWORD + '"><input name="f" value="' + filepath + '"><textarea name="c">' + filecontent + '</textarea><input type="submit" id="savesubmit"></form>';
                                 this.xf['fd' + this.savePerf] = new FormData();
@@ -10025,7 +9918,7 @@ c(function(){
                     apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].open('POST', 'filedeleter.php');
                     apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].send(apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf]);
                 }
-                delete USERFILES[filepath];
+                eval('delete ' + apps.bash.vars.translateDir('/USERFILES/' + filepath));
                 /*
                     }
                 });
@@ -10038,7 +9931,21 @@ c(function(){
     };
     window.ufdel = function(filename){
         return apps.savemaster.vars.del(filename);
-    }
+    };
+    window.ufload = function(filename, debug){
+        try{
+            if(debug){
+                doLog("ufload " + filename + ":", "#ABCDEF");
+                doLog(apps.bash.vars.getRealDir("/USERFILES/" + filename), "#ABCDEF");
+            }
+            return apps.bash.vars.getRealDir("/USERFILES/" + filename);
+        }catch(err){
+            if(debug){
+                doLog(err, "#FFCDEF");
+            }
+            return null;
+        }
+    };
     getId('aOSloadingInfo').innerHTML = 'aOS API';
 });
 c(function(){
@@ -10229,7 +10136,7 @@ c(function(){
                 this.vars.div.innerHTML = '<h1>App Maker</h1>' +
                     '<p id="APMappsaving"></p>' +
                     '<p>If you need to leave and return later: <button onclick="apps.appmaker.vars.saveProj()">Save Project</button> <button onclick="apps.appmaker.vars.loadProj()">Load Project</button><br>' +
-                    'Currently stored project: ' + function(){if(typeof USERFILES.APP_APM_proj_name === "string"){return '<span style="font-family:monospace">' + USERFILES.APP_APM_proj_name + '</span>'}else{return 'no project saved'}}() +
+                    'Currently stored project: ' + function(){if(ufload("aos_system/apps/appmaker/project")){return '<span style="font-family:monospace">' + JSON.parse(ufload("aos_system/apps/appmaker/project")).name + '</span>'}else{return 'no project saved'}}() +
                     '<br>WARNING: There is only one save file available. Saving this one will overwrite the existing one, and loading it in will overwrite whatever is in your window.</p>' +
                     '<hr>' +
                     '<p>Codename of Application: <input id="APMappcode" class="monoinput"></p>' +
@@ -10307,13 +10214,16 @@ c(function(){
                     if(safeMode){
                         doLog("Failed APM apps because Safe Mode is enabled.", "#F00");
                     }else{
-                        for(var file in USERFILES){
-                            if(file.indexOf("APM_APPS_DATABASE_") === 0){
-                                try{
-                                    eval(USERFILES[file]);
-                                }catch(err){
-                                    doLog("Failed " + file + ":", "#F00");
-                                    doLog(err, "#F00");
+                        var apmdb = ufload("aos_system/apm_apps");
+                        if(apmdb){
+                            for(var file in apmdb){
+                                if(file.indexOf("app_") === 0){
+                                    try{
+                                        eval(apmdb[file]);
+                                    }catch(err){
+                                        doLog("Failed aos_system/apm_apps/" + file + ":", "#F00");
+                                        doLog(err, "#F00");
+                                    }
                                 }
                             }
                         }
@@ -10328,7 +10238,7 @@ c(function(){
             }
         },
         {
-            appInfo: 'This app is used to create and install your very own custom apps! If your custom app happens to break, you can go to USERFILES and delete its entry under APM_APPS_DATABASE.',
+            appInfo: 'This app is used to create and install your very own custom apps! If your custom app happens to break, you can go to USERFILES and delete its entry under aos_system/apm_apps.',
             div: undefined,
             newapp: "",
             compileApp: function(){
@@ -10339,10 +10249,9 @@ c(function(){
                 ',\nfunction(launchtype){\n' + getId("APMappmaincode").value +
                 '\n},\nfunction(signal){\nswitch(signal){\n' + getId("APMappsignal").value +
                 '\n}\n},\n{\n' + getId("APMappvars").value + '\n},' + getId("APMappdsktp").value + ',"' + getId("APMappcode").value + '",' + getId("APMappiconimage").value + ')';
-                USERFILES.APP_APM_newapp = this.newApp;
-                openapp(apps.notepad, 'open');
-                apps.notepad.vars.openFile('APP_APM_newapp');
-                apps.savemaster.vars.save('APP_APM_newapp', this.newApp, 1);
+                ufsave("aos_system/apps/appmaker/new_app", this.newApp);
+                openapp(apps.notepad2, 'open');
+                apps.notepad2.vars.openFile('aos_system/apps/appmaker/new_app');
             },
             installApp: function(){
                 this.newApp = 'apps.' + getId("APMappcode").value +
@@ -10352,8 +10261,7 @@ c(function(){
                 ',\nfunction(launchtype){\n' + getId("APMappmaincode").value +
                 '\n},\nfunction(signal){\nswitch(signal){\n' + getId("APMappsignal").value +
                 '\n}\n},\n{\n' + getId("APMappvars").value + '\n},' + getId("APMappdsktp").value + ',"' + getId("APMappcode").value + '",' + getId("APMappiconimage").value + ')';
-                USERFILES['APM_APPS_DATABASE_' + getId("APMappcode").value] = this.newApp;
-                apps.savemaster.vars.save('APM_APPS_DATABASE_' + getId("APMappcode").value, this.newApp, 1);
+                ufsave('aos_system/apm_apps/app_' + getId("APMappcode").value, this.newApp);
                 setTimeout(function(){apps.settings.vars.shutDown('restart', 0);}, 2000);
             },
             saveProj: function(){
@@ -10363,48 +10271,41 @@ c(function(){
                     getId('win_appMaker_html').classList.add('cursorLoadLight');
                     if(btn){
                         getId('APMappsaving').innerHTML = 'SAVING PROJECT...';
-                        USERFILES.APP_APM_proj_code = getId('APMappcode').value;
-                        USERFILES.APP_APM_proj_icon = getId('APMappicon').value;
-                        USERFILES.APP_APM_proj_name = getId('APMappname').value;
-                        USERFILES.APP_APM_proj_launchtypes = getId('APMapplaunchtypes').value;
-                        USERFILES.APP_APM_proj_maincode = getId('APMappmaincode').value;
-                        USERFILES.APP_APM_proj_signal = getId('APMappsignal').value;
-                        USERFILES.APP_APM_proj_vars = getId('APMappvars').value;
-                        USERFILES.APP_APM_proj_dsktp = getId('APMappdsktp').value;
-                        USERFILES.APP_APM_proj_code = getId('APMappcode').value;
-                        USERFILES.APP_APM_proj_iconimage = getId('APMappiconimage').value;
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_code', USERFILES.APP_APM_proj_code, 1)}, 0);
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_icon', USERFILES.APP_APM_proj_icon, 1)}, 500);
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_name', USERFILES.APP_APM_proj_name, 1)}, 1000);
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_launchtypes', USERFILES.APP_APM_proj_launchtypes, 1)}, 1500);
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_maincode', USERFILES.APP_APM_proj_maincode, 1)}, 2000);
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_signal', USERFILES.APP_APM_proj_signal, 1)}, 2500);
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_vars', USERFILES.APP_APM_proj_vars, 1)}, 3000);
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_dsktp', USERFILES.APP_APM_proj_dsktp, 1)}, 3500);
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_code', USERFILES.APP_APM_proj_code, 1)}, 4000);
-                        setTimeout(function(){apps.savemaster.vars.save('APP_APM_proj_iconimage', USERFILES.APP_APM_proj_iconimage, 1)}, 4500);
-                        setTimeout(function(){
-                            getId('APMappsaving').innerHTML = '';
-                            getId('win_appMaker_html').style.backgroundImage = '';
-                            // getId('winAPMh').style.cursor = '';
-                            getId('win_appMaker_html').classList.remove('cursorLoadLight')
-                        }, 5000);
+                        var projJSON = {};
+                        projJSON.code = getId('APMappcode').value;
+                        projJSON.icon = getId('APMappicon').value;
+                        projJSON.name = getId('APMappname').value;
+                        projJSON.launchtypes = getId('APMapplaunchtypes').value;
+                        projJSON.maincode = getId('APMappmaincode').value;
+                        projJSON.signal = getId('APMappsignal').value;
+                        projJSON.vars = getId('APMappvars').value;
+                        projJSON.dsktp = getId('APMappdsktp').value;
+                        projJSON.code = getId('APMappcode').value;
+                        projJSON.iconimage = getId('APMappiconimage').value;
+                        
+                        ufsave("aos_system/apps/appmaker/project", JSON.stringify(projJSON));
+                        
+                        getId('APMappsaving').innerHTML = '';
+                        getId('win_appMaker_html').style.backgroundImage = '';
+                        // getId('winAPMh').style.cursor = '';
+                        getId('win_appMaker_html').classList.remove('cursorLoadLight');
                     }
                 }, 'App Maker');
             },
             loadProj: function(){
                 apps.prompt.vars.confirm('Overwrite all unsaved work?', ['No', 'Yes'], function(btn){
+                    var proj = JSON.parse(ufload("aos_system/apps/appmaker/project"));
                     if(btn){
-                        getId('APMappcode').value = USERFILES.APP_APM_proj_code;
-                        getId('APMappicon').value = USERFILES.APP_APM_proj_icon;
-                        getId('APMappname').value = USERFILES.APP_APM_proj_name;
-                        getId('APMapplaunchtypes').value = USERFILES.APP_APM_proj_launchtypes;
-                        getId('APMappmaincode').value = USERFILES.APP_APM_proj_maincode;
-                        getId('APMappsignal').value = USERFILES.APP_APM_proj_signal;
-                        getId('APMappvars').value = USERFILES.APP_APM_proj_vars;
-                        getId('APMappdsktp').value = USERFILES.APP_APM_proj_dsktp;
-                        getId('APMappcode').value = USERFILES.APP_APM_proj_code;
-                        getId('APMappiconimage').value = USERFILES.APP_APM_proj_iconimage;
+                        getId('APMappcode').value = proj.code;
+                        getId('APMappicon').value = proj.icon;
+                        getId('APMappname').value = proj.name;
+                        getId('APMapplaunchtypes').value = proj.launchtypes;
+                        getId('APMappmaincode').value = proj.maincode;
+                        getId('APMappsignal').value = proj.signal;
+                        getId('APMappvars').value = proj.vars;
+                        getId('APMappdsktp').value = proj.dsktp;
+                        getId('APMappcode').value = proj.code;
+                        getId('APMappiconimage').value = proj.iconimage;
                     }
                 }, 'App Maker');
             }
@@ -10528,9 +10429,9 @@ c(function(){
                     }else{
                         window.addEventListener("message", apps.webAppMaker.vars.recieveMessage);
                     }
-                    if(typeof USERFILES.APP_WAP_trusted_apps === "string"){
+                    if(ufload("aos_system/apps/webAppMaker/trusted_apps")){
                         try{
-                            var tempobj = JSON.parse(USERFILES.APP_WAP_trusted_apps);
+                            var tempobj = JSON.parse(ufload("aos_system/apps/webAppMaker/trusted_apps"));
                             var fail = 0;
                             for(var i in tempobj){
                                 for(var j in tempobj[i]){
@@ -10738,13 +10639,13 @@ c(function(){
                 }
             },
             updatePermissions: function(){
-                apps.savemaster.vars.save("APP_WAP_trusted_apps", JSON.stringify(apps.webAppMaker.vars.trustedApps, null, 4), 1);
+                ufsave("aos_system/apps/webAppMaker/trusted_apps", JSON.stringify(apps.webAppMaker.vars.trustedApps, null, 4));
             },
             reflectPermissions: function(){
                 doLog("Initializing WAP Permission system...", "#ACE");
-                if(typeof USERFILES.APP_WAP_trusted_apps === "string"){
+                if(ufload("aos_system/apps/webAppMaker/trusted_apps")){
                     try{
-                        var tempobj = JSON.parse(USERFILES.APP_WAP_trusted_apps);
+                        var tempobj = JSON.parse(ufload("aos_system/apps/webAppMaker/trusted_apps"));
                         var fail = 0;
                         for(var i in tempobj){
                             for(var j in tempobj[i]){
@@ -11023,12 +10924,12 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    if(USERFILES.APP_MSG_CHATNAME){
-                        apps.messaging.vars.name = USERFILES.APP_MSG_CHATNAME;
+                    if(ufload("aos_system/apps/messaging/chat_name")){
+                        apps.messaging.vars.name = ufload("aos_system/apps/messaging/chat_name");
                     }
                     if(!safeMode){
-                        if(USERFILES.APP_MSG_lookOverThere){
-                            if(USERFILES.APP_MSG_lookOverThere === "1"){
+                        if(ufload("aos_system/apps/messaging/easter_egg")){
+                            if(ufload("aos_system/apps/messaging/easter_egg") === "1"){
                                 this.vars.canLookethOverThereSound = 1;
                             }
                         }
@@ -11078,7 +10979,7 @@ c(function(){
                                             
                                             // This zone is quite battlescarred. Why must our fellow samaritans attack it so much?
                                             
-                                            apps.savemaster.vars.save('APP_MSG_CHATNAME', apps.messaging.vars.name, 1, 'mUname', secretpass || 'pass');
+                                            apps.savemaster.vars.save('aos_system/apps/messaging/chat_name', apps.messaging.vars.name, 1, 'mUname', secretpass || 'pass');
                                         //}else{
                                         //    apps.prompt.vars.alert('Nice try! You aren\'t Aaron! And you aren\'t an admin either! What gives, man? Calm down with the impersonation here! I\'m just a kid doing something really cool with computers, chill out and quit trying to mess things up!', 'Sheesh, I guess I won\'t pretend to be Aaron or an admin, like a jerk or something.', function(){}, 'Aaron');
                                         //}
@@ -11088,7 +10989,7 @@ c(function(){
                                     //for(var i in apps.messaging.vars.nameTemp){
                                     //    apps.messaging.vars.name += encodeURIComponent(apps.messaging.vars.nameTemp[i]);
                                     //}
-                                    apps.savemaster.vars.save('APP_MSG_CHATNAME', apps.messaging.vars.name, 1, 'mUname', '');
+                                    apps.savemaster.vars.save('aos_system/apps/messaging/chat_name', apps.messaging.vars.name, 1, 'mUname', '');
                                 }
                             }, 'Messaging');
                             break;
@@ -11102,7 +11003,7 @@ c(function(){
                         case 3:
                             apps.messaging.vars.canLookethOverThereSound = apps.messaging.vars.canLookethOverThereSound * -1 + 1;
                             apps.prompt.vars.alert('Looketh Over There enabled: ' + numtf(apps.messaging.vars.canLookethOverThereSound), 'Okay', function(){}, 'Messaging');
-                            apps.savemaster.vars.save('APP_MSG_lookOverThere', apps.messaging.vars.canLookethOverThereSound, 1);
+                            apps.savemaster.vars.save('aos_system/apps/messaging/easter_egg', apps.messaging.vars.canLookethOverThereSound, 1);
                         default:
                             doLog('Messaging settings change cancelled');
                     }
@@ -12237,7 +12138,7 @@ c(function(){
                     }else{
                         this.vars.currAppOnTop = '';
                     }
-                    if(typeof USERFILES['APM_APPS_DATABASE_' + app] === "string"){
+                    if(ufload('aos_system/apm_apps/app_' + app)){
                         this.vars.currAppBuiltIn = 'User-Made APM App';
                     }else if(app.indexOf('webApp') === 0){
                         this.vars.currAppBuiltIn = 'User-Made WAP App';
@@ -12245,7 +12146,7 @@ c(function(){
                         this.vars.currAppBuiltIn = 'Built-In aOS App';
                     }
                     getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';"><img style="height:128px;width:128px;" src="' + this.vars.currAppImg + '" onerror="this.src=\'appicons/ds/redx.png\'"><div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
-                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], \' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', \' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', \'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  \' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/' + app + '/\\\')})})\'' + function(appname, builtin){if(builtin === "User-Made APM App"){return ', \' Open Source File\', \'c(function(){openapp(apps.notepad, \\\'open\\\');apps.notepad.vars.openFile(\\\'APM_APPS_DATABASE_' + appname + '\\\')})\'';}else{return ''}}(app, this.vars.currAppBuiltIn) + '])})">v</button>';
+                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], \' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', \' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', \'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  \' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/' + app + '/\\\')})})\'' + function(appname, builtin){if(builtin === "User-Made APM App"){return ', \' Open Source File\', \'c(function(){openapp(apps.notepad2, \\\'open\\\');apps.notepad2.vars.openFile(\\\'aos_system/apm_apps/app_' + appname + '\\\')})\'';}else{return ''}}(app, this.vars.currAppBuiltIn) + '])})">v</button>';
                     this.vars.appsListed++;
                 }
             }
@@ -12428,8 +12329,8 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims(10, 10, 200, 200);
                 this.appWindow.setContent('<textarea id="stickyNotePad" onblur="apps.postit.vars.savePost()" style="padding:0;color:#000;font-family:Comic Sans MS;font-weight:bold;border:none;resize:none;display:block;width:100%;height:100%;background-color:#FF7;"></textarea>');
-                if(typeof USERFILES.APP_SNt_stickyNoteSave === "string"){
-                    getId('stickyNotePad').value = USERFILES.APP_SNt_stickyNoteSave;
+                if(ufload("aos_system/apps/postit/saved_note")){
+                    getId('stickyNotePad').value = ufload("aos_system/apps/postit/saved_note");
                 }
                 this.appWindow.alwaysOnTop(1);
             }
@@ -12443,7 +12344,7 @@ c(function(){
                     this.appWindow.closeIcon();
                     break;
                 case "close":
-                    //apps.savemaster.vars.save('APP_SNt_stickyNoteSave', getId('stickyNotePad').value, 1);
+                    //apps.savemaster.vars.save('aos_system/apps/postit/saved_note', getId('stickyNotePad').value, 1);
                     this.appWindow.closeWindow();
                     setTimeout(function(){
                         if(getId("win_" + this.objName + "_top").style.opacity === "0"){
@@ -12474,7 +12375,7 @@ c(function(){
             appInfo: 'Simple stickynote that stays above other apps on your screen. The contents are saved across reboots.',
             savePost: function(){
                 if(apps.postit.appWindow.appIcon){
-                    apps.savemaster.vars.save('APP_SNt_stickyNoteSave', getId('stickyNotePad').value, 1);
+                    apps.savemaster.vars.save('aos_system/apps/postit/saved_note', getId('stickyNotePad').value, 1);
                 }
             }
         }, 1, 'postit', 'appicons/ds/SNt.png'
@@ -12492,8 +12393,8 @@ c(function(){
                 this.appWindow.setDims("auto", "auto", 400, 400);
                 this.appWindow.setCaption('Boot Script');
                 this.appWindow.setContent('<textarea id="BtStextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:100%;height:90%;resize:none;"></textarea><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.bootScript.vars.saveBootScript()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.bootScript.vars.helpBootScript()">Help</button>');
-                if(typeof USERFILES.APP_BtS_BOOTSCRIPT === "string"){
-                    getId('BtStextarea').innerHTML = USERFILES.APP_BtS_BOOTSCRIPT;
+                if(ufload("aos_system/user_boot_script")){
+                    getId('BtStextarea').innerHTML = ufload("aos_system/user_boot_script");
                 }
             }
             this.appWindow.openWindow();
@@ -12540,8 +12441,8 @@ c(function(){
             appInfo: 'This app runs your own custom JavaScript code just after aOS boots, just before the loading screen disappears. Any JS code will work here - mod aOS to your heart\'s content!<br><br>If you created something you would wish to be featured in aOS, please tell the developer so he can take a look!',
             theBootScript: '',
             doBootScript: function(){
-                if(typeof USERFILES.APP_BtS_BOOTSCRIPT === 'string'){
-                    this.theBootScript = USERFILES.APP_BtS_BOOTSCRIPT;
+                if(ufload("aos_system/user_boot_script")){
+                    this.theBootScript = ufload("aos_system/user_boot_script");
                     try{
                         eval(this.theBootScript);
                     }catch(err){
@@ -12558,7 +12459,7 @@ c(function(){
                 }
             },
             saveBootScript: function(){
-                apps.savemaster.vars.save('APP_BtS_BOOTSCRIPT', getId('BtStextarea').value, 1);
+                apps.savemaster.vars.save('aos_system/user_boot_script', getId('BtStextarea').value, 1);
                 // apps.prompt.vars.alert('Saved.', 'Okay', function(){}, 'Boot Script');
             },
             helpBootScript: function(){
@@ -12585,8 +12486,8 @@ c(function(){
                     this.appWindow.toggleFullscreen();
                     this.appWindow.setCaption('Custom Style Editor');
                     this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe src="aosBeta.php?styletemplate=true&nofiles=true" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
-                    if(typeof USERFILES.aosCustomStyle === "string"){
-                        getId('CSEtextarea').innerHTML = USERFILES.aosCustomStyle;
+                    if(ufload("aos_system/user_custom_style")){
+                        getId('CSEtextarea').innerHTML = ufload("aos_system/user_custom_style");
                         //this.vars.updateFrame();
                     }
                 }
@@ -12637,8 +12538,8 @@ c(function(){
         {
             appInfo: 'Create your own custom CSS stylesheet for aOS! It is embedded as an actual stylesheet, placed such that it overrides the default styles.<br><br>If you create something you want to be featured in aOS, please tell the developer so he can take a look!',
             saveStyleEditor: function(){
-                apps.savemaster.vars.save('aosCustomStyle', getId('CSEtextarea').value, 1);
-                getId('aosCustomStyle').innerHTML = USERFILES.aosCustomStyle;
+                apps.savemaster.vars.save('aos_system/user_custom_style', getId('CSEtextarea').value, 1);
+                getId('aosCustomStyle').innerHTML = ufload("aos_system/user_custom_style");
             },
             helpStyleEditor: function(){
                 apps.prompt.vars.alert('WARNING - ADVANCED USERS ONLY<br>The Custom Stylesheet is your very own set of styling rules for aOS. Use it to style aOS to your whim - theoretically, every element of the OS can be customized with this file.<br><br>You can check out style.css for the default stylesheet, and use your browser\'s developer tools to get easier access to elements as they are shown on-screen.', 'Okay, thanks.', function(){}, 'Boot Script');
@@ -13106,18 +13007,23 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    if(typeof USERFILES.APP_MSw_grid === "string"){
-                        if(USERFILES.APP_MSw_grid === "0"){
+                    if(ufload("aos_system/apps/minesweeper/grid")){
+                        if(ufload("aos_system/apps/minesweeper/grid") === "0"){
                             this.vars.grid = 0;
                         }
                     }
-                    if(typeof USERFILES.APP_MSw_clear === "string"){
-                        if(USERFILES.APP_MSw_clear === "0"){
+                    if(ufload("aos_system/apps/minesweeper/clear")){
+                        if(ufload("aos_system/apps/minesweeper/clear") === "0"){
                             this.vars.clear = 0;
                         }
                     }
-                    if(typeof USERFILES.APP_MSw_safe === "string"){
-                        if(USERFILES.APP_MSw_safe === "0"){
+                    if(ufload("aos_system/apps/minesweeper/easyClear")){
+                        if(ufload("aos_system/apps/minesweeper/easyClear") === "0"){
+                            this.vars.clear = 0;
+                        }
+                    }
+                    if(ufload("aos_system/apps/minesweeper/safe") === "string"){
+                        if(ufload("aos_system/apps/minesweeper/safe") === "0"){
                             this.vars.safe = 0;
                         }
                     }
@@ -13246,19 +13152,19 @@ c(function(){
                         switch(btn){
                             case 1:
                                 apps.minesweeper.vars.grid = Math.abs(apps.minesweeper.vars.grid - 1);
-                                apps.savemaster.vars.save("APP_MSw_grid", apps.minesweeper.vars.grid, 1);
+                                apps.savemaster.vars.save("aos_system/apps/minesweeper/grid", apps.minesweeper.vars.grid, 1);
                                 break;
                             case 2:
                                 apps.minesweeper.vars.clear = Math.abs(apps.minesweeper.vars.clear - 1);
-                                apps.savemaster.vars.save("APP_MSw_clear", apps.minesweeper.vars.clear, 1);
+                                apps.savemaster.vars.save("aos_system/apps/minesweeper/clear", apps.minesweeper.vars.clear, 1);
                                 break;
                             case 3:
                                 apps.minesweeper.vars.safe = Math.abs(apps.minesweeper.vars.safe - 1);
-                                apps.savemaster.vars.save("APP_MSw_safe", apps.minesweeper.vars.safe, 1);
+                                apps.savemaster.vars.save("aos_system/apps/minesweeper/safe", apps.minesweeper.vars.safe, 1);
                                 break;
                             case 4:
                                 apps.minesweeper.vars.easyClear = Math.abs(apps.minesweeper.vars.easyClear - 1);
-                                apps.savemaster.vars.save("APP_MSw_easyClear", apps.minesweeper.vars.easyClear, 1);
+                                apps.savemaster.vars.save("aos_system/apps/minesweeper/easyClear", apps.minesweeper.vars.easyClear, 1);
                                 break;
                             case 5:
                                 apps.minesweeper.vars.cheat();
@@ -13980,15 +13886,15 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    if(typeof USERFILES.APP_PETCURSORS_cursors === "string"){
+                    if(ufload("aos_system/apps/petCursors/cursors")){
                         try{
-                            this.vars.cursors = JSON.parse(USERFILES.APP_PETCURSORS_cursors);
+                            this.vars.cursors = JSON.parse(ufload("aos_system/apps/petCursors/cursors"));
                         }catch(err){
                             doLog('Pet Cursors save file is corrupt!', '#F00');
                         }
                     }
-                    if(typeof USERFILES.APP_PETCURSORS_enabled === "string"){
-                        if(USERFILES.APP_PETCURSORS_enabled === "1"){
+                    if(ufload("aos_system/apps/petCursors/app_enabled")){
+                        if(ufload("aos_system/apps/petCursors/app_enabled") === "1"){
                             this.vars.toggleApp(1);
                         }
                     }
@@ -14161,7 +14067,7 @@ c(function(){
                 this.saveCursors();
             },
             saveCursors: function(){
-                ufsave('APP_PETCURSORS_cursors', JSON.stringify(this.cursors));
+                ufsave('aos_system/apps/petCursors/cursors', JSON.stringify(this.cursors));
             },
             toggleApp: function(nosave){
                 if(this.enabled){
@@ -14170,7 +14076,7 @@ c(function(){
                     this.startCursors();
                 }
                 if(!nosave){
-                    ufsave('APP_PETCURSORS_enabled', '' + this.enabled);
+                    ufsave('aos_system/apps/petCursors/app_enabled', '' + this.enabled);
                 }
             },
             enabled: 0,
@@ -14390,7 +14296,7 @@ function icomove(e, elem){
         var newYCoord = icomoveOrY + (e.pageY - icomovey) * (1 / screenScale);
         newXCoord = Math.round(newXCoord / 108) * 108 + 8;
         newYCoord = Math.round(newYCoord / 83) * 83 + 8;
-        apps.savemaster.vars.save('DSKTP_ico_' + icomoveSelect, '[' + newXCoord + ',' + newYCoord + ']', 1);
+        ufsave('aos_system/desktop/ico_' + icomoveSelect, '[' + newXCoord + ',' + newYCoord + ']');
         getId(icomoveSelect).style.left = newXCoord + "px";
         getId(icomoveSelect).style.top = newYCoord + "px";
     }
