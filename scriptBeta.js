@@ -6001,7 +6001,7 @@ c(function(){
                     },
                     allowStnWindow: {
                         option: 'File Browser Debug',
-                        description: function(){return 'Allows File Browser to access the Window object. Dangerous, so by default ALWAYS off.'},
+                        description: function(){return 'Allows File Browser to access the global Window object. Dangerous!'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togFILwin()">Toggle</button>'}
                     }
                     /*
@@ -6881,6 +6881,7 @@ c(function(){
                 }else{
                     this.FILcanWin = 1;
                 }
+                ufsave("aos_system/apps/files/window_debug", '' + this.FILcanWin);
             },
             enabWinImg: 1,
             currWinImg: 'winimg.png',
@@ -8120,7 +8121,7 @@ c(function(){
                 }
                 */
                 
-                if(filename.indexOf('/USERFILES/') !== 0){
+                if(filename.indexOf('/USERFILES/') !== 0 && filename.indexOf('/LOCALFILES/') !== 0){
                     if(filename.indexOf('/window/') !== 0){
                         if(filename[0] === '/'){
                             filename = '/USERFILES' + filename;
@@ -8182,7 +8183,7 @@ c(function(){
                 }
                 */
                 
-                if(filename.indexOf('/USERFILES/') !== 0){
+                if(filename.indexOf('/USERFILES/') !== 0 && filename.indexOf("/LOCALFILES/") !== 0){
                     if(filename.indexOf('/window/') !== 0){
                         if(filename[0] === '/'){
                             filename = '/USERFILES' + filename;
@@ -8200,6 +8201,13 @@ c(function(){
                         return;
                     }
                     apps.savemaster.vars.save(shortfilename, getId("np2Screen").value, 1);
+                }else if(filename.indexOf('/LOCALFILES/') === 0){
+                    var shortfilename = filename.substring(12, filename.length);
+                    if(shortfilename.length === 0){
+                        apps.prompt.vars.alert("Failed to save: No filename provided.", "Okay", function(){}, "Text Editor");
+                        return;
+                    }
+                    lfsave(shortfilename, getId("np2Screen").value);
                 }else{
                     try{
                         var oldfilecontent = apps.bash.vars.getRealDir(filename);
@@ -8540,10 +8548,10 @@ c(function(){
             "04/04/2019: B0.11.2.0\n : Apps now wait until the window closing animation is finished before clearing their content, looks way better now.\n : Fixed error when right clicking a file with a period in its name in FIL2.\n : Properties app now uses bash file paths instead of JS object paths.\n : Fixed window titles overlapping buttons on right side.\n : Fixed some apps not clearing their window content after being closed.\n : Fixed the LiveElement system erroring out in its error handler.\n\n" +
             "04/05/2019: B0.11.3.0\n + Sidebar in the File Manager including the new Home, Favorites and Navigation features.\n : The main page of the File Manager is now called Home\n + Favorites list in File Manager, to save important locations.\n + Navigation list in File Manager, to jump around in the current path.\n : Buttons for touch and mkdir in File Manager moved to the right side.\n + Add Favorite button added to left side of File Manager's toolbar.\n + Descriptions for the File Manager's toolbar buttons will now appear when hovered over.\n + Rounded corners on the top edge of the File Manager's content.\n : The left edge of the File Manager's Location and Search boxes are now lined up with the left edge of the main content.\n : Fixed caption bars in the Windows 98 theme.\n\n" +
             "04/07/2019: B0.11.3.1\n + Progress bar for shutdown.\n : Fixed shutdown screen.\n\n" +
-            "01/10/2019: B0.12.0.0\n + New aos_system folder in USERFILES\n - system files are no longer dumped into the root directory of USERFILES >.<\n : All system files moved into the aos_system folder.\n : All system files given new, more sensible names\n : Fixed Minesweeper Easy Clear setting not saving.\n : Fixed APM using old text editor.\n : Boot should be slightly faster, as several slow functions were sped up.",
+            "01/10/2019: B0.12.0.0\n + LOCALFILES, a place to save files locally instead of online.\n + New aos_system folder in USERFILES\n - system files are no longer dumped into the root directory of USERFILES >.<\n : All system files moved into the aos_system folder.\n : All system files given new, more sensible names\n + File Browser Debug is now persistent.\n : Added missing icon for File Browser Debug.\n : Fixed Minesweeper Easy Clear setting not saving.\n : Fixed APM using old text editor.\n : Boot should be slightly faster, as several slow functions were sped up.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.12.0.0 (04/10/2019) r0';
+    window.aOSversion = 'B0.12.0.0 (04/10/2019) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -8956,9 +8964,13 @@ c(function(){
                     '</div><div class="cursorPointer" onClick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.next(\'USERFILES/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/USERFILES/\\\');toTop(apps.properties)\'])">' +
                     '<img src="files2/small/folder.png"> ' +
                     '/USERFILES/' +
+                    '</div><div class="cursorPointer" onClick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.next(\'LOCALFILES/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/LOCALFILES/\\\');toTop(apps.properties)\'])">' +
+                    '<img src="files2/small/folder.png"> ' +
+                    '/LOCALFILES/' +
                     function(){
                         if(apps.settings.vars.FILcanWin){
                             return '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'window/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/window/\\\');toTop(apps.properties)\'])">' +
+                                '<img src="files2/small/folder.png"> ' +
                                 '<span style="color:#F00">window/</span>';
                         }else{
                             return '';
@@ -8999,6 +9011,9 @@ c(function(){
                     }
                     if(ufload("aos_system/apps/files/favorites")){
                         this.vars.favorites = JSON.parse(ufload("aos_system/apps/files/favorites"));
+                    }
+                    if(ufload("aos_system/apps/files/window_debug")){
+                        apps.settings.vars.FILcanWin = parseInt(ufload("aos_system/apps/files/window_debug"));
                     }
                     break;
                 case 'shutdown':
@@ -9072,6 +9087,13 @@ c(function(){
                         }
                         this.update();
                     }.bind(this), "File Manager");
+                }else if(this.currLoc.indexOf('/LOCALFILES/') === 0){
+                    apps.prompt.vars.prompt('Enter a name for the new folder.<br><br>Folder will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
+                        if(str){
+                            lfmkdir(this.currLoc.substring(12, this.currLoc.length) + str);
+                        }
+                        this.update();
+                    }.bind(this), "File Manager");
                 }else if(this.currLoc !== '/apps/'){
                     apps.prompt.vars.prompt('Enter a name for the new folder.<br><br>Folder will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
                         if(str){
@@ -9090,6 +9112,13 @@ c(function(){
                     apps.prompt.vars.prompt('Enter a name for the new file.<br><br>File will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
                         if(str){
                             ufsave(this.currLoc.substring(11, this.currLoc.length) + str, '');
+                        }
+                        this.update();
+                    }.bind(this), "File Manager");
+                }else if(this.currLoc.indexOf('/LOCALFILES/') === 0){
+                    apps.prompt.vars.prompt('Enter a name for the new file.<br><br>File will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
+                        if(str){
+                            lfsave(this.currLoc.substring(12, this.currLoc.length) + str, '');
                         }
                         this.update();
                     }.bind(this), "File Manager");
@@ -9201,9 +9230,13 @@ c(function(){
                         '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'USERFILES/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/USERFILES/\\\');toTop(apps.properties)\'])">' +
                         '<img src="files2/small/folder.png"> ' +
                         'USERFILES/' +
+                        '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'LOCALFILES/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/LOCALFILES/\\\');toTop(apps.properties)\'])">' +
+                        '<img src="files2/small/folder.png"> ' +
+                        'LOCALFILES/' +
                         function(){
                             if(apps.settings.vars.FILcanWin){
                                 return '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'window/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/window/\\\');toTop(apps.properties)\'])">' +
+                                    '<img src="files2/small/folder.png"> ' +
                                     '<span style="color:#F00">window/</span>';
                             }else{
                                 return '';
@@ -9238,6 +9271,23 @@ c(function(){
                         });
                         var temphtml = '';
                         if(this.currLoc.indexOf("/USERFILES/") === 0){
+                            for(var item in this.currDirList){
+                                if(this.currDirList[item]){
+                                    // if item is a folder
+                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
+                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                            '<img src="files2/small/folder.png"> ' +
+                                            this.currDirList[item] +
+                                            '</div>';
+                                    }else{
+                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                            '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
+                                            this.currDirList[item] + '<span style="opacity:0.5;float:right;">' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
+                                            '</div>';
+                                    }
+                                }
+                            }
+                        }else if(this.currLoc.indexOf("/LOCALFILES/") === 0){
                             for(var item in this.currDirList){
                                 if(this.currDirList[item]){
                                     // if item is a folder
@@ -15063,6 +15113,41 @@ c(function(){
     }
 });
 fadeResizeText();
+
+window.LOCALFILES = {};
+// set up LOCALFILES
+if(localStorageSupported){
+    if(localStorage.hasOwnProperty("LOCALFILES")){
+        LOCALFILES = JSON.parse(localStorage.getItem("LOCALFILES"));
+    }
+}
+window.lfsave = function(file, content){
+    sh("mkdir /LOCALFILES/" + file);
+    eval(apps.bash.vars.translateDir('/LOCALFILES/' + file) + ' = content');
+    localStorage.setItem("LOCALFILES", JSON.stringify(LOCALFILES));
+};
+window.lfload = function(file, debug){
+    try{
+        if(debug){
+            doLog("lfload " + file + ":", '#ABCDEF');
+            doLog(apps.bash.vars.getRealDir('/LOCALFILES/' + file), '#ABCDEF');
+        }
+        return apps.bash.vars.getRealDir('/LOCALFILES/' + file);
+    }catch(err){
+        if(debug){
+            doLog(err, '#FFCDEF');
+        }
+        return null;
+    }
+};
+window.lfmkdir = function(dirname){
+    sh("mkdir /LOCALFILES/" + dirname);
+    localStorage.setItem("LOCALFILES", JSON.stringify(LOCALFILES));
+};
+window.lfdel = function(filename){
+    eval("delete " + apps.bash.vars.translateDir("/LOCALFILES/" + filename));
+    localStorage.setItem("LOCALFILES", JSON.stringify(LOCALFILES));
+};
 
 //auto-resize display on window change
 window.addEventListener('resize', fitWindow);
