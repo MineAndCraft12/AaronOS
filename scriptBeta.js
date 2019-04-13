@@ -15302,14 +15302,6 @@ c(function(){
     //corsPing(function(text){
     //    doLog('NORAA search service ping: ' + text[0] + ' &micro;s with status ' + text[1]);
     //});
-    try{
-        if(localStorage.getItem('notifyFilesDeletion') !== "1"){
-            localStorage.setItem('notifyFilesDeletion', "1");
-            apps.prompt.vars.notify('(2/25/2019) Please back up anything important in your USERFILES folder. It will be cleared in a couple weeks to improve compatibility with a future update.', [], function(){}, 'Important Notice', 'appicons/ds/FIL.png');
-        }
-    }catch(localStorageNotSupported){
-        apps.prompt.vars.notify('(2/25/2019) Please back up anything important in your USERFILES folder. It will be cleared in a couple weeks to improve compatibility with a future update.', [], function(){}, 'Important Notice', 'appicons/ds/FIL.png');
-    }
     if(window.navigator.vendor !== "Google Inc."){
         doLog('Looks like you are not using Google Chrome. Make sure you use Google Chrome to access aOS. Otherwise, certain features will be missing or broken.', '#F00;text-decoration:underline');
         try{
