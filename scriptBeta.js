@@ -6032,8 +6032,8 @@ c(function(){
                         description: function(){return 'AaronOS is &copy; <i>2016 Aaron Adams</i>'}, //         <-- COPYRIGHT NOTICE
                         buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' +
                             function(){
-                                if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0){
-                                    return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaron-os-mineandcraft12.c9.io/aosBeta.php">https://aaron-os-mineandcraft12.c9.io/aosBeta.php</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';
+                                if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0 && window.location.href.indexOf('https://aaronos.dev/AaronOS/') !== 0){
+                                    return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaronos.dev/AaronOS/aosBeta.php">https://aaronos.dev/AaronOS/aosBeta.php</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';
                                 }else{
                                     return '<br><br>The AaronOS project is sponsored by Spiderling Studios, which is in turn sponsored by your generous Patreon Pledge. Click the Spiderling banner to donate!<br><br><a target="_blank" href="https://www.patreon.com/spiderlingstudio" class="cursorPointer"><img src="spiderling.png" style="box-shadow:0 0 3px #000;width:100%;margin-left:-3px;"></a>';
                                 }
@@ -8338,7 +8338,7 @@ c(function(){
             "08/17/2016: A1.2.6.0\n + Properties now displays the size of functions.\n + When needed, Properties now shows KB, MB, and GB so values are easier to count.\n : Battery no longer has blue background, and instead gives the foreground a blue tint when charging.\n + Performance Monitor app shows CPU usage stats.\n : Changelog is easier to read.\n : Properties app shows shorter description for file sizes.\n + Windows now have texture to their borders, looks good if you can find a glassy texture like Windows has (i wont steal theirs) or if your device cant run windowblur.\n + Rightclick menu lets you open an app from its icon.\n + App controls are now accessible from the app's window caption.\n : Camera app now resizes correctly.\n : Music Visualizer now waits for the song to load before trying to play it.\n - Application List can no longer be moved or resized.\n + If JavaScript is disabled or unsupported, the loading page will nag you to enable it.\n + Alerts, confirms, and prompts can now tell you where they came from.\n + Music Visualizer now shows loading progress and song playtime progress.\n + New simple version of Music Visualizer, uses a canvas (thus looks worse), and runs on one color only: black (with a green screen behind it), which achieves 60fps instead of 15.\n + New Ringtone for Messaging.\n + New Looketh Over There ringtone for Messaging.\n + Fix for double quotes in Messaging.\n + Apps can now stay Always On Top.\n : Notepad reworked.\n : Fixed NORAA looking up definitions.\n + Copy/Paste added.\n : Fixed Fullscreen Dimensions.\n\n" +
             "09/23/2016: A1.2.7.0\n + Mathway app Added.\n : Developers can now keep their app out of the apps list, in case it acts as a utility of sorts..\n + Icon added to music visualizer.\n + Apps can now be opened by Files browser.\n + Files can now be deleted in File Browser.\n + New AppBrowser, for opening any app installed on the system.\n : Task Manager is now capitalized in application list.\n + Simon Says App.\n : Updated the appearance of apps on the desktop; two-word names no longer overlap the icon, and it looks a bit cleaner and easier to read with bright and dark backgrounds alike.\n + Smoother animations in desktop icons and window borders and buttons.\n + Taskbar now shows which app is active.\n : Stylish Battery icon now looks like a AA battery rather than just a box.\n : OS loads your files more cautiously, notifies you of errors.\n : Fixed inconsitency in desktop icon ctxMenus.\n : Changelog is a little better.\n : Apps can no longer interrup each others saving processes.\n : Deleting now works properly again.\n + Shut down and restart are now a feature; lets apps save their progress if you do it while they running.\n + Large additions to aOS API documentation.\n + Complete aOS API Documentation started in the aOS Help App.\n + Raw battery information is now stored outside of an anonymous function.\n : aOS now tries up to three times to set up the battery.\n + Bug Central app, to track and document known bugs.\n + Donation button added.\n + Indycar app added; the first app not written 100% by hand.\n + Added Dont-Save argument to most settings.\n\n" +
             "09/23/2016: A1.2.8.0\n + New changelog mechanic - Because aOS is updated live, it's harder to keep one version number on everything. Updates will be tracked in more detail, adding a fourth update number, and dates will be closer together so you can tell exactly when each visible change was made.\n : Controls changed in House game.\n + New sprites in House game, explosion animation and soldiers now shoot at an angle.\n + Experimental RDP system. No, it's not perfect, but it's a start.\n\n" +
-            "09/24/2016: A1.2.8.1\n : Complete rewrite of render system for music visualizer, you now get max fps instead of 10.\n : Along with this new render system, by clicking on the visualization it will resize to fit its window. Theoretically, it will work for any width 2048 pixels or less, and for any height physically possible.\n + You can access Visualizer as its own separate browser window! Visit https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/cnv.php, and that way the OS itself wont slow down the visualizer and you can also put it into true fullscreen.\n\n" +
+            "09/24/2016: A1.2.8.1\n : Complete rewrite of render system for music visualizer, you now get max fps instead of 10.\n : Along with this new render system, by clicking on the visualization it will resize to fit its window. Theoretically, it will work for any width 2048 pixels or less, and for any height physically possible.\n + You can access Visualizer as its own separate browser window! Visit https://aaronos.dev/AaronOS/unrelated/keyfingers/cnv.php, and that way the OS itself wont slow down the visualizer and you can also put it into true fullscreen.\n\n" +
             "09/25/2016: A1.2.8.2\n : New look for the Settings app.\n + Context menus can now have disabled options.\n\n" +
             "09/30/2016: A1.2.9.3\n + New Mouse Control app; purely experimental.\n + Added function grapher, to help with math students.\n + Added external debug window for if you have trouble clicking on aOS.\n\n" +
             "10/01/2016: A1.3.0.0\n : User can now drag to move windows instead of having to click several times.\n\n" +
@@ -10687,6 +10687,13 @@ c(function(){
                     "readsetting": "true",
                     "writesetting": "true",
                     "js": "true"
+                },
+                "https://aaronos.dev": {
+                    "fs": "true",
+                    "prompt": "true",
+                    "readsetting": "true",
+                    "writesetting": "true",
+                    "js": "true"
                 }
             },
             updatePermissions: function(){
@@ -11281,7 +11288,7 @@ c(function(){
                 site: 'Embed a website via URL'
             },
             objExamp: {
-                img: '[img]https://aaron-os-mineandcraft12.c9.io/appicons/aOS.png[/img]',
+                img: '[img]https://aaronos.dev/AaronOS/appicons/aOS.png[/img]',
                 url: '[url]https://duckduckgo.com[/url]',
                 b: '[b]This is bold text.[/b]',
                 i: '[i]This is italic text.[/i]',
@@ -12118,7 +12125,7 @@ c(function(){
             }
         },
         {
-            appInfo: 'This is the official AaronOS Music Visualizer. To see all compatible songs, visit https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/music and type the name of a song from there - for example, "music/Neurology.mp3"',
+            appInfo: 'This is the official AaronOS Music Visualizer. To see all compatible songs, visit https://aaronos.dev/AaronOS/unrelated/keyfingers/music and type the name of a song from there - for example, "music/Neurology.mp3"',
             intervalMade: 0,
             beforeColor: '',
             working: 0,
@@ -12205,7 +12212,7 @@ c(function(){
         {
             appInfo: 'This is the official AaronOS Music Player. Select a folder of songs to loop through.',
             updateStyle: function(){
-                getId("MPlframe").contentWindow.postMessage({dark: darkMode, style: getId("aosCustomStyle").innerHTML}, "https://aaron-os-mineandcraft12.c9.io");
+                //getId("MPlframe").contentWindow.postMessage({dark: darkMode, style: getId("aosCustomStyle").innerHTML}, "https://aaron-os-mineandcraft12.c9.io");
             }
         }, 0, 'musicPlayer', 'appicons/ds/MSC.png'
     );
