@@ -127,9 +127,9 @@
     }
     // push javascript to set server variables
     echo 'window.SRVRKEYWORD="'.$_COOKIE['keyword'].'";';
-    try{
+    if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
         echo 'window.IPADDRESS="'.$_SERVER['HTTP_X_FORWARDED_FOR'].'";';
-    }catch(Exception $e){
+    }else{
         echo 'window.IPADDRESS="undefined";';
     }
     // if it needs to be refreshed, tell the client via js
