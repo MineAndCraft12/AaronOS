@@ -12161,7 +12161,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
+                this.appWindow.setContent('<iframe id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="musicPlayer/"></iframe>');
             }
             this.appWindow.setCaption('Music Player');
             this.appWindow.setDims("auto", "auto", 500, 500);
