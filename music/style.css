@@ -1,0 +1,57 @@
+html, body{
+    background:none;
+}
+
+div{
+    position:relative;
+}
+
+#progressContainer{
+    background:#000;
+    width:100%;
+    height:5px;
+    border:1px solid #000;
+}
+#progress{
+    background:#0F0;
+    height:5px;
+}
+#songList{
+    border:1px solid #000;
+    width:100%;
+    height:300px;
+    overflow:auto;
+    font-family:aosProFont, Courier, monospace;
+    font-size:12px;
+}
+#songList div{
+    cursor:pointer;
+    padding:3px;
+    margin:3px;
+}
+#songList div:hover{
+    background:rgba(127, 127, 127, 0.25);
+}
+#currentlyPlaying{
+    width:100%;
+    border:1px solid #000;
+    font-family:aosProFont;
+    font-size:24px;
+}
+#controls{
+    width:100%;
+    text-align:center;
+    border:1px solid #000;
+}
+
+.darkMode #progressContainer, .darkMode #songList, .darkMode #currentlyPlaying, .darkMode #controls{
+    border-color:#FFF;
+}
+
+.selected{
+    background:rgba(127, 127, 127, 0.1);
+}
+.disabled{
+    opacity:0.5;
+    pointer-events:none;
+}
