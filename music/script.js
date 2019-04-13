@@ -127,13 +127,16 @@ function refresh(){
 }
 
 function getStyleInfo(event){
-    if(event.origin.indexOf("https://aaron-os-mineandcraft12.c9.io") === 0){
-        if(event.data.dark === 1){
-            document.body.classList.add("darkMode");
-        }
-        if(event.data.style){
-            getId("aosCustomStyle").innerHTML = event.data.style;
-        }
+    console.log(event.data);
+    if(event.data === "aosreply:success:readsetting:darkmode:true"){
+        document.body.classList.add("darkMode");
+    }else if(event.data.indexOf("aosreply:success:readsetting:customstyle:") === 0){
+        getId("aosCustomStyle").innerHTML = event.data.substring(41, event.data.length);
     }
 }
 window.addEventListener("message", getStyleInfo);
+
+if(window.self !== window.top){
+    window.top.postMessage("aos:readsetting:darkmode");
+    window.top.postMessage("aos:readsetting:customstyle");
+}
