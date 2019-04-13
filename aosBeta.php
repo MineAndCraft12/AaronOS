@@ -148,7 +148,7 @@
     require 'filepreloaderBeta.php';
     echo '</script>';
     echo '<script>';
-    require 'test_ssl.php';
+    //require 'test_ssl.php';
     echo '</script>';
 ?>
 </html>
