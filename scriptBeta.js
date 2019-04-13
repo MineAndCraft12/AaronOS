@@ -15309,6 +15309,16 @@ c(function(){
     //corsPing(function(text){
     //    doLog('NORAA search service ping: ' + text[0] + ' &micro;s with status ' + text[1]);
     //});
+    if(window.location.href.indexOf("aaron-os-mineandcraft12.c9.io") > -1 && false){
+        try{
+            if(localStorage.getItem('notifyaaronosdev') !== "1"){
+                localStorage.setItem('notifyaaronosdev', "1");
+                apps.prompt.vars.notify("AaronOS is moving to a new home! Visit https://aaronos.dev/ and make yourself at home in the new server. This old server will go offline in around a month or so. (4/13/2019)", ['Okay', 'Go to aaronos.dev'], function(btn){if(btn){window.location = "https://aaronos.dev"}}, 'Important Notice', 'appicons/ds/aOS.png');
+            }
+        }catch(localStorageNotSupported){
+            apps.prompt.vars.notify("AaronOS is moving to a new home! Visit https://aaronos.dev/ and make yourself at home in the new server. This old server will go offline in around a month or so. (4/13/2019)", ['Okay', 'Go to aaronos.dev'], function(btn){if(btn){window.location = "https://aaronos.dev"}}, 'Important Notice', 'appicons/ds/aOS.png');
+        }
+    }
     if(window.navigator.vendor !== "Google Inc."){
         doLog('Looks like you are not using Google Chrome. Make sure you use Google Chrome to access aOS. Otherwise, certain features will be missing or broken.', '#F00;text-decoration:underline');
         try{
