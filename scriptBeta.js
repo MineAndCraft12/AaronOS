@@ -8548,10 +8548,11 @@ c(function(){
             "04/04/2019: B0.11.2.0\n : Apps now wait until the window closing animation is finished before clearing their content, looks way better now.\n : Fixed error when right clicking a file with a period in its name in FIL2.\n : Properties app now uses bash file paths instead of JS object paths.\n : Fixed window titles overlapping buttons on right side.\n : Fixed some apps not clearing their window content after being closed.\n : Fixed the LiveElement system erroring out in its error handler.\n\n" +
             "04/05/2019: B0.11.3.0\n + Sidebar in the File Manager including the new Home, Favorites and Navigation features.\n : The main page of the File Manager is now called Home\n + Favorites list in File Manager, to save important locations.\n + Navigation list in File Manager, to jump around in the current path.\n : Buttons for touch and mkdir in File Manager moved to the right side.\n + Add Favorite button added to left side of File Manager's toolbar.\n + Descriptions for the File Manager's toolbar buttons will now appear when hovered over.\n + Rounded corners on the top edge of the File Manager's content.\n : The left edge of the File Manager's Location and Search boxes are now lined up with the left edge of the main content.\n : Fixed caption bars in the Windows 98 theme.\n\n" +
             "04/07/2019: B0.11.3.1\n + Progress bar for shutdown.\n : Fixed shutdown screen.\n\n" +
-            "01/10/2019: B0.12.0.0\n : Context Menu has recieved a visual overhaul.\n + LOCALFILES, a place to save files locally instead of online.\n + New aos_system folder in USERFILES\n - system files are no longer dumped into the root directory of USERFILES >.<\n : All system files moved into the aos_system folder.\n : All system files given new, more sensible names\n + File Browser Debug is now persistent.\n : Added missing icon for File Browser Debug.\n : Fixed Minesweeper Easy Clear setting not saving.\n : Fixed APM using old text editor.\n : Boot should be slightly faster, as several slow functions were sped up.",
+            "04/10/2019: B0.12.0.0\n : Context Menu has recieved a visual overhaul.\n + LOCALFILES, a place to save files locally instead of online.\n + New aos_system folder in USERFILES\n - system files are no longer dumped into the root directory of USERFILES >.<\n : All system files moved into the aos_system folder.\n : All system files given new, more sensible names\n + File Browser Debug is now persistent.\n : Added missing icon for File Browser Debug.\n : Fixed Minesweeper Easy Clear setting not saving.\n : Fixed APM using old text editor.\n : Boot should be slightly faster, as several slow functions were sped up.\n\n" +
+            "04/12/2019: B0.13.0.0\n + Added Music Player",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.12.0.0 (04/10/2019) r2';
+    window.aOSversion = 'B0.13.0.0 (04/10/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -12148,6 +12149,65 @@ c(function(){
                 }
             }
         }, 0, 'musicVis', 'appicons/ds/MSC.png'
+    );
+    getId('aOSloadingInfo').innerHTML = 'Apps Browser';
+});
+c(function(){
+    m('init MSC');
+    apps.musicPlayer = new Application(
+        'MPl',
+        'Music Player',
+        0,
+        function(){
+            if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
+                this.appWindow.setContent('<iframe id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
+            }
+            this.appWindow.setCaption('Music Player');
+            this.appWindow.setDims("auto", "auto", 500, 500);
+            blockScreensaver("apps.musicVis");
+            this.appWindow.openWindow();
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        },
+        {
+            appInfo: 'This is the official AaronOS Music Player. Select a folder of songs to loop through.',
+            updateStyle: function(){
+                getId("MPlframe").contentWindow.postMessage({dark: darkMode, style: getId("aosCustomStyle").innerHTML}, "https://aaron-os-mineandcraft12.c9.io");
+            }
+        }, 0, 'musicPlayer', 'appicons/ds/MSC.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Apps Browser';
 });
