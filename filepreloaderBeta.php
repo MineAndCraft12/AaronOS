@@ -162,4 +162,7 @@
     $newUsers = fopen('USERFILES/newUsers.txt', 'w');
     fwrite($newUsers, join("\n", $newList));
     fclose($newUsers);
+    
+    // renew your keyword cookie
+    setcookie('keyword', $_COOKIE['keyword'], time() + 321408000);
 ?>

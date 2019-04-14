@@ -15309,7 +15309,7 @@ c(function(){
     //corsPing(function(text){
     //    doLog('NORAA search service ping: ' + text[0] + ' &micro;s with status ' + text[1]);
     //});
-    if(window.location.href.indexOf("aaron-os-mineandcraft12.c9.io") > -1 && false){
+    if(window.location.href.indexOf("aaron-os-mineandcraft12.c9.io") > -1){
         try{
             if(localStorage.getItem('notifyaaronosdev') !== "1"){
                 localStorage.setItem('notifyaaronosdev', "1");
