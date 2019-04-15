@@ -6033,7 +6033,7 @@ c(function(){
                         buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' +
                             function(){
                                 if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0 && window.location.href.indexOf('https://aaronos.dev/AaronOS/') !== 0){
-                                    return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaronos.dev/AaronOS/aosBeta.php">https://aaronos.dev/AaronOS/aosBeta.php</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';
+                                    return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaronos.dev/">https://aaronos.dev/</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';
                                 }else{
                                     return '<br><br>The AaronOS project is sponsored by Spiderling Studios, which is in turn sponsored by your generous Patreon Pledge. Click the Spiderling banner to donate!<br><br><a target="_blank" href="https://www.patreon.com/spiderlingstudio" class="cursorPointer"><img src="spiderling.png" style="box-shadow:0 0 3px #000;width:100%;margin-left:-3px;"></a>';
                                 }
@@ -8549,10 +8549,11 @@ c(function(){
             "04/05/2019: B0.11.3.0\n + Sidebar in the File Manager including the new Home, Favorites and Navigation features.\n : The main page of the File Manager is now called Home\n + Favorites list in File Manager, to save important locations.\n + Navigation list in File Manager, to jump around in the current path.\n : Buttons for touch and mkdir in File Manager moved to the right side.\n + Add Favorite button added to left side of File Manager's toolbar.\n + Descriptions for the File Manager's toolbar buttons will now appear when hovered over.\n + Rounded corners on the top edge of the File Manager's content.\n : The left edge of the File Manager's Location and Search boxes are now lined up with the left edge of the main content.\n : Fixed caption bars in the Windows 98 theme.\n\n" +
             "04/07/2019: B0.11.3.1\n + Progress bar for shutdown.\n : Fixed shutdown screen.\n\n" +
             "04/10/2019: B0.12.0.0\n : Context Menu has recieved a visual overhaul.\n + LOCALFILES, a place to save files locally instead of online.\n + New aos_system folder in USERFILES\n - system files are no longer dumped into the root directory of USERFILES >.<\n : All system files moved into the aos_system folder.\n : All system files given new, more sensible names\n + File Browser Debug is now persistent.\n : Added missing icon for File Browser Debug.\n : Fixed Minesweeper Easy Clear setting not saving.\n : Fixed APM using old text editor.\n : Boot should be slightly faster, as several slow functions were sped up.\n\n" +
-            "04/12/2019: B0.13.0.0\n + Added Music Player",
+            "04/12/2019: B0.13.0.0\n + Added Music Player\n\n" +
+            "04/14/2019: B0.13.0.1\n + Added aaronos.dev as the new official AaronOS server.\n : Updated README, EULA, and privacy policy to reflect the new server address.\n : Fixed several serverside issues.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.13.0.0 (04/10/2019) r0';
+    window.aOSversion = 'B0.13.0.1 (04/14/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
