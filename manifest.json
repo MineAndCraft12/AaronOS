@@ -11,6 +11,6 @@
     "display": "standalone",
     "background_color": "#384450",
     "theme_color": "#384450",
-    "orientation": "landscape",
+    "orientation": "any",
     "start_url": "aosBeta.php"
 }
