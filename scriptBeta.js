@@ -1485,7 +1485,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                         aeroOffset[0] = -30;
                     }
                     try{
-                        calcWindowblur(this.objName);
+                        calcWindowblur(this.objName, 1);
                     }catch(err){
                         getId("win_" + this.objName + "_aero").style.backgroundPosition = (-1 * xOff + 40 + aeroOffset[0]) + "px " + (-1 * (yOff * (yOff > -1)) + 40 + aeroOffset[1]) + "px";
                     }
@@ -7308,6 +7308,7 @@ c(function(){
                 perfStart('settings');
                 getId('aOSloadingBg').style.backgroundImage = "url(" + getId('bckGrndImg').value + ")";
                 getId("monitor").style.backgroundImage = "url(" + getId("bckGrndImg").value + ")";
+                getId("bgSizeElement").src = getId("bckGrndImg").value;
                 //if(this.isAero){
                 this.tempArray = document.getElementsByClassName("winAero");
                 for(var elem = 0; elem < this.tempArray.length; elem++){
