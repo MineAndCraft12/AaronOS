@@ -8551,10 +8551,11 @@ c(function(){
             "04/10/2019: B0.12.0.0\n : Context Menu has recieved a visual overhaul.\n + LOCALFILES, a place to save files locally instead of online.\n + New aos_system folder in USERFILES\n - system files are no longer dumped into the root directory of USERFILES >.<\n : All system files moved into the aos_system folder.\n : All system files given new, more sensible names\n + File Browser Debug is now persistent.\n : Added missing icon for File Browser Debug.\n : Fixed Minesweeper Easy Clear setting not saving.\n : Fixed APM using old text editor.\n : Boot should be slightly faster, as several slow functions were sped up.\n\n" +
             "04/12/2019: B0.13.0.0\n + Added Music Player\n\n" +
             "04/14/2019: B0.13.0.1\n + Added aaronos.dev as the new official AaronOS server.\n : Updated README, EULA, and privacy policy to reflect the new server address.\n : Fixed several serverside issues.\n\n" +
-            "04/15/2019: B0.13.0.2\n + Unlocked rotation on PWA.\n : Fixed password screen using old background instead of new one.\n - Removed accidental debug logging to console on arranging icons.",
+            "04/15/2019: B0.13.0.2\n + Unlocked rotation on PWA.\n : Fixed password screen using old background instead of new one.\n - Removed accidental debug logging to console on arranging icons.\n\n" +
+            "04/17/2019: B0.13.0.3\n + Hidden iFrame Browser app for debugging.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.13.0.2 (04/15/2019) r0';
+    window.aOSversion = 'B0.13.0.3 (04/15/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13032,6 +13033,66 @@ c(function(){
     getId('aOSloadingInfo').innerHTML = 'JS Paint';
 });
 c(function(){
+    apps.iFrameBrowser = new Application(
+        'iFB',
+        'iFrame Browser',
+        0,
+        function(){
+            if(!this.appIcon){
+                this.appWindow.paddingMode(0);
+                this.appWindow.setDims("auto", "auto", 800, 600);
+                this.appWindow.setCaption('iFrame Browser');
+                this.appWindow.setContent('<div style="font-family:aosProFont, Courier, monospace; font-size:12px;height:25px;border-bottom:1px solid #000; width:100%">' +
+                '<input id="iFBinput" placeholder="https://" style="width:75%;"> <button onclick="apps.iFrameBrowser.vars.go(getId(\'iFBinput\').value)">Go</button>' +
+                '</div>' +
+                '<iframe id="iFBframe" src="ifbHomepage.php" style="border:none; width:100%; height:calc(100% - 26px); margin-top:26px; display:block;"></iframe>');
+            }
+            this.appWindow.openWindow();
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        },
+        {
+            appInfo: 'The iFrame Browser is a placeholder app to view a webpage in an iframe within an app. This app is not a full web browser. If aOS is loaded over HTTPS, you won\'t be able to view HTTP sites here. Many sites block iFrames.',
+            go: function(url){
+                getId("iFBframe").src = url || "ifbHomepage.php";
+            }
+        }, 2, 'iFrameBrowser', 'appicons/ds/systemApp.png'
+    );
+    getId('aOSloadingInfo').innerHTML = 'JS Paint';
+});
+c(function(){
     apps.jsPaint = new Application(
         'jsP',
         'JS Paint',
@@ -15315,10 +15376,10 @@ c(function(){
         try{
             if(localStorage.getItem('notifyaaronosdev') !== "1"){
                 localStorage.setItem('notifyaaronosdev', "1");
-                apps.prompt.vars.notify("AaronOS is moving to a new home! Visit https://aaronos.dev/ and make yourself at home in the new server. This old server will go offline in around a month or so. (4/13/2019)", ['Okay', 'Go to aaronos.dev'], function(btn){if(btn){window.location = "https://aaronos.dev"}}, 'Important Notice', 'appicons/ds/aOS.png');
+                apps.prompt.vars.notify("AaronOS is moving to a new home! Visit https://aaronos.dev/ and make yourself at home in the new server. This old server will go offline in around a month or so. (4/13/2019)", ['Okay', 'Go to aaronos.dev'], function(btn){if(btn === 1){window.location = "https://aaronos.dev"}}, 'Important Notice', 'appicons/ds/aOS.png');
             }
         }catch(localStorageNotSupported){
-            apps.prompt.vars.notify("AaronOS is moving to a new home! Visit https://aaronos.dev/ and make yourself at home in the new server. This old server will go offline in around a month or so. (4/13/2019)", ['Okay', 'Go to aaronos.dev'], function(btn){if(btn){window.location = "https://aaronos.dev"}}, 'Important Notice', 'appicons/ds/aOS.png');
+            apps.prompt.vars.notify("AaronOS is moving to a new home! Visit https://aaronos.dev/ and make yourself at home in the new server. This old server will go offline in around a month or so. (4/13/2019)", ['Okay', 'Go to aaronos.dev'], function(btn){if(btn === 1){window.location = "https://aaronos.dev"}}, 'Important Notice', 'appicons/ds/aOS.png');
         }
     }
     if(window.navigator.vendor !== "Google Inc."){

@@ -2,16 +2,16 @@
 <html>
     <head>
         <title>aOS Minesweeper</title>
-        <link rel="stylesheet" href="/customStyles/Windows98/aosCustomStyle.css">
+        <link rel="stylesheet" href="customStyles/Windows98/aosCustomStyle.css">
         <link rel="stylesheet" href="" id="minecraft">
         <style>
             @font-face{
                 font-family: "aosProFont";
                 src:
-                    url('/ProFont/ProFontOnline.ttf') format('truetype'),
-                    url('/ProFont/ProFontOnline.woff') format('woff'),
-                    url('/ProFont/ProFontOnline.eot'),
-                    url('/ProFont/ProFontOnline.svg') format('svg');
+                    url('ProFont/ProFontOnline.ttf') format('truetype'),
+                    url('ProFont/ProFontOnline.woff') format('woff'),
+                    url('ProFont/ProFontOnline.eot'),
+                    url('ProFont/ProFontOnline.svg') format('svg');
             }
             div{
                 position:absolute;
@@ -57,7 +57,7 @@
                         [0, 0]
                     ],
                     minecraftMode: function(){
-                        getId("minecraft").setAttribute("href", "/minecraftsweeper.css?" + Math.random());
+                        getId("minecraft").setAttribute("href", "minecraftsweeper.css?" + Math.random());
                         minecraftMode = 1;
                     },
                     newGame: function(firstX, firstY){
