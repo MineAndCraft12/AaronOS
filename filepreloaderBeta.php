@@ -11,6 +11,7 @@
         mkdir('USERFILES/!ERROR');
         mkdir('USERFILES/!MESSAGE');
         file_put_contents('USERFILES/newUsers.txt', '');
+        file_put_contents('USERFILES/.htaccess', 'Deny from all');
         if(!file_exists('USERFILES/!MESSAGE/m0.txt')){
             file_put_contents('USERFILES/!MESSAGE/m0.txt', '{"i":" ","n":" ","c":"This is the beginning of the message history.","t":"1","l":"0"}');
             //file_put_contents('setting.txt', '0');
