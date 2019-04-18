@@ -1484,7 +1484,11 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     }else if(tskbrToggle.tskbrPos === 2){
                         aeroOffset[0] = -30;
                     }
-                    getId("win_" + this.objName + "_aero").style.backgroundPosition = (-1 * xOff + 40 + aeroOffset[0]) + "px " + (-1 * (yOff * (yOff > -1)) + 40 + aeroOffset[1]) + "px";
+                    try{
+                        calcWindowblur(this.objName);
+                    }catch(err){
+                        getId("win_" + this.objName + "_aero").style.backgroundPosition = (-1 * xOff + 40 + aeroOffset[0]) + "px " + (-1 * (yOff * (yOff > -1)) + 40 + aeroOffset[1]) + "px";
+                    }
                     //getId("win" + this.dsktpIcon + "a").style.width = xSiz + 80 + "px";
                     //getId("win" + this.dsktpIcon + "a").style.height = ySiz + 80 + "px";
                     if(typeof this.dimsSet === 'function' && !ignoreDimsSet){
@@ -5794,6 +5798,9 @@ c(function(){
                             if(ufload("aos_system/apps/settings/mobile_mode")){
                                 apps.settings.vars.setMobileMode(ufload("aos_system/apps/settings/mobile_mode"), 1)
                             }
+                            if(ufload("aos_system/desktop/background_fit")){
+                                apps.settings.vars.setBgFit(ufload("aos_system/desktop/background_fit"), 1);
+                            }
                             if(ufload("aos_system/desktop/background_live_enabled")){
                                 if(ufload("aos_system/desktop/background_live_enabled")){
                                     apps.settings.vars.togLiveBg(1);
@@ -5954,8 +5961,13 @@ c(function(){
                     image: 'settingIcons/beta/dsktpBack.png',
                     setUrl: {
                         option: 'Background Image URL',
-                        description: function(){return 'Images tile to cover the screen.<br><img style="height:200px" src="' + ufload("aos_system/desktop/background_image") + '">'},
+                        description: function(){return 'Set an image as your desktop background. This can be png, jpg, gif, or any other web-compatible image. If aOS is loaded over HTTPS, make sure your image is on HTTPS as well.'},
                         buttons: function(){return '<input id="bckGrndImg" style="display:inline-block; width:500px" value="' + ufload("aos_system/desktop/background_image") + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
+                    },
+                    bgFit: {
+                        option: 'Background Image Fit',
+                        description: function(){return 'Current: <span class="liveElement" liveVar="apps.settings.vars.bgFit">?</span>. This determines the size and positioning of your background.'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.setBgFit(\'corner\')">Corner</button> <button onclick="apps.settings.vars.setBgFit(\'center\')">Center</button> <button onclick="apps.settings.vars.setBgFit(\'cover\')">Cover</button> <button onclick="apps.settings.vars.setBgFit(\'stretch\')">Stretch</button> <button onclick="apps.settings.vars.setBgFit(\'fit\')">Fit</button>'}
                     },
                     liveBackground: {
                         option: 'Live Background',
@@ -6969,6 +6981,18 @@ c(function(){
                     getId('windowFrameOverlay').style.borderRadius = '';
                 }
             },
+            bgFit: 'cover',
+            setBgFit: function(newFit, nosave){
+                this.bgFit = newFit;
+                if(!nosave){
+                    ufsave("aos_system/desktop/background_fit", newFit);
+                }
+                try{
+                    updateBgSize();
+                }catch(err){
+                    
+                }
+            },
             getWidgetList: function(){
                 var nodes = getId('time').childNodes;
                 var str = '<li>';
@@ -7284,14 +7308,19 @@ c(function(){
                 perfStart('settings');
                 getId('aOSloadingBg').style.backgroundImage = "url(" + getId('bckGrndImg').value + ")";
                 getId("monitor").style.backgroundImage = "url(" + getId("bckGrndImg").value + ")";
-                if(this.isAero){
-                    this.tempArray = document.getElementsByClassName("winAero");
-                    for(var elem = 0; elem < this.tempArray.length; elem++){
-                        this.tempArray[elem].style.backgroundImage = "url(" + getId("bckGrndImg").value + ")";
-                    }
+                //if(this.isAero){
+                this.tempArray = document.getElementsByClassName("winAero");
+                for(var elem = 0; elem < this.tempArray.length; elem++){
+                    this.tempArray[elem].style.backgroundImage = "url(" + getId("bckGrndImg").value + ")";
                 }
+                //}
                 if(!nosave){
                     ufsave("aos_system/desktop/background_image", getId("bckGrndImg").value);
+                }
+                try{
+                    updateBgSize();
+                }catch(err){
+                    
                 }
                 d(1, perfCheck('settings') + '&micro;s to set background');
             },
@@ -7514,6 +7543,11 @@ c(function(){
                 }
                 if(!nosave){
                     ufsave('aos_system/taskbar/position', newPos);
+                }
+                try{
+                    updateBgSize();
+                }catch(err){
+                    
                 }
                 openapp(apps.startMenu, 'srtup');
             },
@@ -8552,10 +8586,11 @@ c(function(){
             "04/12/2019: B0.13.0.0\n + Added Music Player\n\n" +
             "04/14/2019: B0.13.0.1\n + Added aaronos.dev as the new official AaronOS server.\n : Updated README, EULA, and privacy policy to reflect the new server address.\n : Fixed several serverside issues.\n\n" +
             "04/15/2019: B0.13.0.2\n + Unlocked rotation on PWA.\n : Fixed password screen using old background instead of new one.\n - Removed accidental debug logging to console on arranging icons.\n\n" +
-            "04/17/2019: B0.13.0.3\n + Hidden iFrame Browser app for debugging.",
+            "04/17/2019: B0.13.0.3\n + Hidden iFrame Browser app for debugging.\n\n" +
+            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.13.0.3 (04/15/2019) r0';
+    window.aOSversion = 'B0.14.0.0 (04/18/2019) r0';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14400,7 +14435,6 @@ function winmove(e){
         getId("winmove").style.display = "block";
         //winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 1);
         winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 4);
-        console.log(winmoveSelect);
         winmovex = e.pageX;
         winmovey = e.pageY;
         //winmoveOrX = parseInt(getId(winmoveSelect).style.left);
@@ -14522,7 +14556,6 @@ function winres(e){
         getId("winres").style.display = "block";
         //winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 1);
         winmoveSelect = e.currentTarget.id.substring(0, e.currentTarget.id.length - 5);
-        console.log(winmoveSelect);
         winmovex = e.pageX;
         winmovey = e.pageY;
         //winmoveOrX = parseInt(getId(winmoveSelect).style.left);
@@ -14977,6 +15010,124 @@ function toggleFlowMode(){
     }
 }
 
+window.bgNaturalSize = [1920, 1080];
+window.bgSize = [1920,1080];
+window.bgPosition = [0, 0];
+
+function updateBgSize(noWinblur){
+    bgNaturalSize = [
+        getId("bgSizeElement").naturalWidth,
+        getId("bgSizeElement").naturalHeight
+    ];
+    switch(apps.settings.vars.bgFit){
+        case 'corner':
+            bgSize = [bgNaturalSize[0], bgNaturalSize[1]];
+            bgPosition = [0, 0];
+            break;
+        case 'stretch':
+            bgSize = [parseInt(getId("monitor").style.width), parseInt(getId("monitor").style.height)];
+            bgPosition = [0, 0];
+            break;
+        case 'center':
+            var monsize = [parseInt(getId("monitor").style.width), parseInt(getId("monitor").style.height)];
+            bgSize = [bgNaturalSize[0], bgNaturalSize[1]];
+            bgPosition = [monsize[0] / 2 - bgSize[0] / 2, monsize[1] / 2 - bgSize[1] / 2];
+            break;
+        case 'fit':
+            var monsize = [parseInt(getId("monitor").style.width), parseInt(getId("monitor").style.height)];
+            var sizeratio = [monsize[0] / bgNaturalSize[0], monsize[1] / bgNaturalSize[1]];
+            if(sizeratio[0] <= sizeratio[1]){
+                bgSize = [monsize[0], Math.round(bgNaturalSize[1] * (monsize[0] / bgNaturalSize[0]))];
+                bgPosition = [0, Math.round((monsize[1] - bgSize[1]) / 2)];
+            }else{
+                bgSize = [Math.round(bgNaturalSize[0] * (monsize[1] / bgNaturalSize[1])), monsize[1]];
+                bgPosition = [Math.round((monsize[0] - bgSize[0]) / 2), 0];
+            }
+            break;
+        case 'cover':
+            var monsize = [parseInt(getId("monitor").style.width), parseInt(getId("monitor").style.height)];
+            var sizeratio = [monsize[0] / bgNaturalSize[0], monsize[1] / bgNaturalSize[1]];
+            if(sizeratio[0] >= sizeratio[1]){
+                bgSize = [monsize[0], Math.round(bgNaturalSize[1] * (monsize[0] / bgNaturalSize[0]))];
+                bgPosition = [0, Math.round((monsize[1] - bgSize[1]) / 2)];
+            }else{
+                bgSize = [Math.round(bgNaturalSize[0] * (monsize[1] / bgNaturalSize[1])), monsize[1]];
+                bgPosition = [Math.round((monsize[0] - bgSize[0]) / 2), 0];
+            }
+            break;
+        default:
+            bgSize = [bgNaturalSize[0], bgNaturalSize[1]];
+            bgPosition = [0, 0];
+    }
+    getId("monitor").style.backgroundSize = bgSize[0] + 'px ' + bgSize[1] + 'px';
+    getId("monitor").style.backgroundPosition = bgPosition[0] + 'px ' + bgPosition[1] + 'px';
+    if(!noWinblur){
+        calcWindowblur(null, 1);
+    }
+}
+
+function calcWindowblur(win, noBgSize){
+    if(!noBgSize){
+        updateBgSize(1);
+    }
+    var aeroOffset = [0, 0];
+    if(tskbrToggle.tskbrPos === 1){
+        aeroOffset[1] = -30;
+    }else if(tskbrToggle.tskbrPos === 2){
+        aeroOffset[0] = -30;
+    }
+    if(screenScale === 1 || screenScale < 0.25){
+        getId('monitor').style.transform = '';
+        var numberOfScreenScale = 1;
+    }else{
+        getId('monitor').style.transform = 'scale(' + screenScale + ')';
+        var numberOfScreenScale = screenScale;
+    }
+    if(win === "taskbar"){
+        getId("tskbrAero").style.backgroundSize = bgSize[0] + 'px ' + bgSize[1] + 'px';
+        switch(tskbrToggle.tskbrPos){
+            case 0:
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 50 + bgPosition[1]) + "px";
+                break;
+            case 1:
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
+                break;
+            case 2:
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
+                break;
+            case 3:
+                getId("tskbrAero").style.backgroundPosition = (-1 * (window.innerWidth * (1 / numberOfScreenScale)) + 50 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
+                break;
+            default:
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 50 + bgPosition[1]) + "px";
+        }
+    }else if(win){
+        getId('win_' + win + '_aero').style.backgroundPosition = (-1 * apps[win].appWindow.windowX + 40 + aeroOffset[0] + bgPosition[0]) + "px " + (-1 * (apps[win].appWindow.windowY * (apps[win].appWindow.windowY > -1)) + 40 + aeroOffset[1] + bgPosition[1]) + "px"
+    }else{
+        for(var i in apps){
+            getId('win_' + i + '_aero').style.backgroundSize = bgSize[0] + 'px ' + bgSize[1] + 'px';
+            getId('win_' + i + '_aero').style.backgroundPosition = (-1 * apps[i].appWindow.windowX + 40 + aeroOffset[0] + bgPosition[0]) + "px " + (-1 * (apps[i].appWindow.windowY * (apps[i].appWindow.windowY > -1)) + 40 + aeroOffset[1] + bgPosition[1]) + "px";
+        }
+        getId("tskbrAero").style.backgroundSize = bgSize[0] + 'px ' + bgSize[1] + 'px';
+        switch(tskbrToggle.tskbrPos){
+            case 0:
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 50 + bgPosition[1]) + "px";
+                break;
+            case 1:
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
+                break;
+            case 2:
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
+                break;
+            case 3:
+                getId("tskbrAero").style.backgroundPosition = (-1 * (window.innerWidth * (1 / numberOfScreenScale)) + 50 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
+                break;
+            default:
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 50 + bgPosition[1]) + "px";
+        }
+    }
+}
+
 function fitWindow(){
     perfStart('fitWindow');
     if(screenScale === 1 || screenScale < 0.25){
@@ -15063,6 +15214,11 @@ function fitWindow(){
     }
     checkMobileSize();
     arrangeDesktopIcons();
+    try{
+        updateBgSize();
+    }catch(err){
+        
+    }
 }
 function fitWindowOuter(){
     perfStart('fitWindow');
@@ -15081,6 +15237,9 @@ function fitWindowOuter(){
     //getId("taskbar").style.top = window.outerHeight - 30 + "px";
     getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (window.outerHeight * (1 / numberOfScreenScale)) + 50) + "px";
     getId("tskbrAero").style.width = window.outerWidth * (1 / numberOfScreenScale) + 40 + "px";
+    getId("tskbrAero").style.height = '';
+    getId('tskbrAero').style.transform = '';
+    getId('tskbrAero').style.transformOrigin = '';
     //getId("icons").style.width = window.outerWidth * (1 / numberOfScreenScale) + "px";
     //doLog(perfCheck('fitWindow') + '&micro;s to fit aOS to screen');
     
@@ -15136,6 +15295,11 @@ function fitWindowOuter(){
     }
     checkMobileSize();
     arrangeDesktopIcons();
+    try{
+        updateBgSize();
+    }catch(err){
+        
+    }
 }
 function fitWindowRes(newmonX, newmonY){
     perfStart('fitWindow');
@@ -15154,6 +15318,9 @@ function fitWindowRes(newmonX, newmonY){
     //getId("taskbar").style.top = newmonY - 30 + "px";
     getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (newmonY * (1 / numberOfScreenScale)) + 50) + "px";
     getId("tskbrAero").style.width = newmonX * (1 / numberOfScreenScale) + 40 + "px";
+    getId("tskbrAero").style.height = '';
+    getId('tskbrAero').style.transform = '';
+    getId('tskbrAero').style.transformOrigin = '';
     //getId("icons").style.width = newmonX * (1 / numberOfScreenScale) + "px";
     //doLog(perfCheck('fitWindow') + '&micro;s to fit aOS to custom size');
     
@@ -15209,6 +15376,11 @@ function fitWindowRes(newmonX, newmonY){
     }
     checkMobileSize();
     arrangeDesktopIcons();
+    try{
+        updateBgSize();
+    }catch(err){
+        
+    }
 }
 var sessionStorageSupported = 1;
 try{
@@ -15426,6 +15598,11 @@ bootFileHTTP.onreadystatechange = function(){
                 alert("Error initializing " + app + ":\n\n" + err);
             }
         }
+        try{
+            updateBgSize();
+        }catch(err){
+            
+        }
         requestAnimationFrame(function(){bootFileHTTP = null;});
         doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to exec USERFILES_DONE.');
         doLog('Took ' + Math.round(performance.now() * 10) / 10 + 'ms grand total to reach desktop.');
@@ -15450,6 +15627,11 @@ c(function(){
             }catch(err){
                 alert("Error initializing " + app + ":\n\n" + err);
             }
+        }
+        try{
+            updateBgSize();
+        }catch(err){
+            
         }
         requestAnimationFrame(function(){bootFileHTTP = null;});
         doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to exec USERFILES_DONE.');
