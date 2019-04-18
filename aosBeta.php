@@ -122,6 +122,7 @@
             </div>
         </div>
     </div>
+    <img style="display:none" id="bgSizeElement" src="p.png" onload="try{updateBgSize()}catch(err){}">
 </body>
 <!--<script defer src="script.js"></script>-->
 <?php
