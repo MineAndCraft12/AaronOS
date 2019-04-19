@@ -8532,10 +8532,10 @@ c(function(){
             "04/14/2019: B0.13.0.1\n + Added aaronos.dev as the new official AaronOS server.\n : Updated README, EULA, and privacy policy to reflect the new server address.\n : Fixed several serverside issues.\n\n" +
             "04/15/2019: B0.13.0.2\n + Unlocked rotation on PWA.\n : Fixed password screen using old background instead of new one.\n - Removed accidental debug logging to console on arranging icons.\n\n" +
             "04/17/2019: B0.13.0.3\n + Hidden iFrame Browser app for debugging.\n\n" +
-            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)",
+            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)\n + Added ownedByApp attribute for iframes, will bring the specified app to top if the iframe has focus.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.14.0.0 (04/18/2019) r0';
+    window.aOSversion = 'B0.14.0.0 (04/18/2019) r1';
     document.title = 'aOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -10811,7 +10811,7 @@ c(function(){
                         this.appWindow.setCaption(this.appDesc);
                         if(!this.appWindow.appIcon){
                             this.appWindow.paddingMode(0);
-                            this.appWindow.setContent('<iframe style="width:100%;height:100%;border:none;" src="' + this.vars.appURL + '"></iframe>');
+                            this.appWindow.setContent('<iframe ownedByApp="' + this.objName + '" style="width:100%;height:100%;border:none;" src="' + this.vars.appURL + '"></iframe>');
                             this.appWindow.setDims("auto", "auto", this.vars.sizeX, this.vars.sizeY);
                         }
                         this.appWindow.openWindow();
@@ -10873,7 +10873,7 @@ c(function(){
             this.appWindow.setCaption("aOS Calculator");
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe id="CalcFrame" style="width:100%;height:100%;border:none;font-family:aosProFont, monospace;font-size:12px;" src="Calculator/"></iframe>');
+                this.appWindow.setContent('<iframe ownedByApp="calculator" id="CalcFrame" style="width:100%;height:100%;border:none;font-family:aosProFont, monospace;font-size:12px;" src="Calculator/"></iframe>');
                 this.appWindow.setDims("auto", "auto", 600, 400);
             }
             this.appWindow.openWindow();
@@ -11222,7 +11222,7 @@ c(function(){
                     if(str.indexOf('http://') !== 0 && str.indexOf('https://') !== 0 && str.indexOf('/') !== 0){
                         str = 'https://' + encodeURI(str);
                     }
-                    return '<div style="position:relative;display:block;width:100%;border:none;background:#FFF;margin-top:-3px;margin-bottom:-3px;border-radius:10px;box-shadow:inset 0 0 5px #000;height:400px;" onclick="if(event.target.tagName.toLowerCase() === \'button\'){this.outerHTML = \'<iframe src=\\\'\' + this.getAttribute(\'aosMessagingSiteURL\') + \'\\\' style=\\\'\' + this.getAttribute(\'style\') + \'\\\'></iframe>\'}" aosMessagingSiteURL="' + str + '"><p style="margin-top:188px;text-align:center;"><button>Click to load site:<br>' + str + '</button></p></div>';
+                    return '<div style="position:relative;display:block;width:100%;border:none;background:#FFF;margin-top:-3px;margin-bottom:-3px;border-radius:10px;box-shadow:inset 0 0 5px #000;height:400px;" onclick="if(event.target.tagName.toLowerCase() === \'button\'){this.outerHTML = \'<iframe ownedByApp=\\\'messaging\\\' src=\\\'\' + this.getAttribute(\'aosMessagingSiteURL\') + \'\\\' style=\\\'\' + this.getAttribute(\'style\') + \'\\\'></iframe>\'}" aosMessagingSiteURL="' + str + '"><p style="margin-top:188px;text-align:center;"><button>Click to load site:<br>' + str + '</button></p></div>';
                 }
             },
             objSafe: {
@@ -12055,7 +12055,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe id="MSCframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="unrelated/keyfingers/cnv.php"></iframe>');
+                this.appWindow.setContent('<iframe ownedByApp="musicVis" id="MSCframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="unrelated/keyfingers/cnv.php"></iframe>');
                 if(darkMode){
                     getId('MSCframe').onload = function(){
                         getId('MSCframe').contentDocument.getElementById('btns').style.filter = 'invert(1)';
@@ -12151,7 +12151,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
+                this.appWindow.setContent('<iframe ownedByApp="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
             }
             this.appWindow.setCaption('Music Player');
             this.appWindow.setDims("auto", "auto", 500, 500);
@@ -12310,7 +12310,7 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 646, 502);
                 this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'ICrFrame\').contentDocument.title">');
-                this.appWindow.setContent('<iframe id="ICrFrame" src="INDYCAR/index.html" style="border:none;width:640px;height:480px;overflow:hidden;"></iframe>');
+                this.appWindow.setContent('<iframe ownedByApp="indycar" id="ICrFrame" src="INDYCAR/index.html" style="border:none;width:640px;height:480px;overflow:hidden;"></iframe>');
                 apps.prompt.vars.alert("Controls:<br><br>Player 1: WASD for driving, X for brakes<br><br>Player 2: IJKL or &uarr;&larr;&darr;&rarr; for driving, M for brakes<br><br>Camera: Press T to change camera modes.", "Okay", function(){}, "Indycar");
             }
             blockScreensaver("apps.indycar");
@@ -12369,7 +12369,7 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 1015, 633);
                 this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'HsGFrame\').contentDocument.title">');
-                this.appWindow.setContent('<iframe id="HsGFrame" src="HOUSEGAME/index.html" style="border:none;width:1009px;height:609px;overflow:hidden;"></iframe>');
+                this.appWindow.setContent('<iframe ownedByApp="housegame" id="HsGFrame" src="HOUSEGAME/index.html" style="border:none;width:1009px;height:609px;overflow:hidden;"></iframe>');
                 apps.prompt.vars.notify("Controls:<br>Up: W<br>Down: D<br>Shoot: Space<br>Reinforcements: T", ["Close"], function(){}, "House Game", "appicons/HsG.png");
             }
             blockScreensaver("apps.housegame");
@@ -12585,7 +12585,7 @@ c(function(){
                     this.appWindow.setDims("auto", "auto", 400, 400);
                     this.appWindow.toggleFullscreen();
                     this.appWindow.setCaption('Custom Style Editor');
-                    this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe src="aosBeta.php?styletemplate=true&nofiles=true" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
+                    this.appWindow.setContent('<textarea ownedByApp="styleEditor" id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe ownedByApp="styleEditor" src="aosBeta.php?styletemplate=true&nofiles=true" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
                     if(ufload("aos_system/user_custom_style")){
                         getId('CSEtextarea').innerHTML = ufload("aos_system/user_custom_style");
                         //this.vars.updateFrame();
@@ -12662,7 +12662,7 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setCaption('GTK2aOS');
                 this.appWindow.setDims("auto", "auto", 400, 400);
-                this.appWindow.setContent('<iframe src="gtk/" style="border:none;width:100%;height:100%;display:block;"></iframe>');
+                this.appWindow.setContent('<iframe ownedByApp="gtk2aOS" src="gtk/" style="border:none;width:100%;height:100%;display:block;"></iframe>');
             }
             this.appWindow.openWindow();
         },
@@ -12968,7 +12968,7 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 800, 600);
                 this.appWindow.setCaption('Cookie Clicker');
-                this.appWindow.setContent('<iframe src="COOKIE" style="border:none; width:100%; height:100%; display:block;"></iframe>');
+                this.appWindow.setContent('<iframe ownedByApp="cookieClicker" src="COOKIE" style="border:none; width:100%; height:100%; display:block;"></iframe>');
             }
             this.appWindow.openWindow();
         },
@@ -13025,7 +13025,7 @@ c(function(){
                 this.appWindow.setContent('<div style="font-family:aosProFont, Courier, monospace; font-size:12px;height:25px;border-bottom:1px solid #000; width:100%">' +
                 '<input id="iFBinput" placeholder="https://" style="width:75%;"> <button onclick="apps.iFrameBrowser.vars.go(getId(\'iFBinput\').value)">Go</button>' +
                 '</div>' +
-                '<iframe id="iFBframe" src="ifbHomepage.php" style="border:none; width:100%; height:calc(100% - 26px); margin-top:26px; display:block;"></iframe>');
+                '<iframe ownedByApp="iFrameBrowser" id="iFBframe" src="ifbHomepage.php" style="border:none; width:100%; height:calc(100% - 26px); margin-top:26px; display:block;"></iframe>');
             }
             this.appWindow.openWindow();
         },
@@ -13082,7 +13082,7 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 753, 507);
                 this.appWindow.setCaption('JS Paint');
-                this.appWindow.setContent('<iframe src="https://jspaint.app/" style="border:none; width:100%; height:100%; display:block;background-color:#C0C0C0"></iframe>');
+                this.appWindow.setContent('<iframe ownedByApp="jsPaint" src="https://jspaint.app/" style="border:none; width:100%; height:100%; display:block;background-color:#C0C0C0"></iframe>');
             }
             this.appWindow.openWindow();
         },
@@ -15583,6 +15583,19 @@ c(function(){
         doLog('Took ' + Math.round(performance.now() * 10) / 10 + 'ms grand total to reach desktop.');
         console.log("Load successful, apps alerted, and bootFileHTTP deleted.");
     }
+});
+c(function(){
+    window.iframeblurcheck = function(){
+        try{
+            if(document.activeElement.getAttribute("ownedByApp")){
+                toTop(apps[document.activeElement.getAttribute("ownedByApp")]);
+            }
+        }catch(err){
+            
+        }
+    };
+    setInterval(iframeblurcheck, 500);
+    addEventListener("blur", iframeblurcheck)
 });
 totalWaitingCodes = codeToRun.length;
 // 2000 lines of code! 9/18/2015
