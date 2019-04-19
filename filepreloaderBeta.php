@@ -11,7 +11,6 @@
         mkdir('USERFILES/!ERROR');
         mkdir('USERFILES/!MESSAGE');
         file_put_contents('USERFILES/newUsers.txt', '');
-        file_put_contents('USERFILES/.htaccess', 'Deny from all');
         if(!file_exists('USERFILES/!MESSAGE/m0.txt')){
             file_put_contents('USERFILES/!MESSAGE/m0.txt', '{"i":" ","n":" ","c":"This is the beginning of the message history.","t":"1","l":"0"}');
             //file_put_contents('setting.txt', '0');
@@ -128,9 +127,9 @@
     }
     // push javascript to set server variables
     echo 'window.SRVRKEYWORD="'.$_COOKIE['keyword'].'";';
-    if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
+    try{
         echo 'window.IPADDRESS="'.$_SERVER['HTTP_X_FORWARDED_FOR'].'";';
-    }else{
+    }catch(Exception $e){
         echo 'window.IPADDRESS="undefined";';
     }
     // if it needs to be refreshed, tell the client via js
@@ -163,7 +162,4 @@
     $newUsers = fopen('USERFILES/newUsers.txt', 'w');
     fwrite($newUsers, join("\n", $newList));
     fclose($newUsers);
-    
-    // renew your keyword cookie
-    setcookie('keyword', $_COOKIE['keyword'], time() + 321408000);
 ?>

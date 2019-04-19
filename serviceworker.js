@@ -1,6 +1,6 @@
-var CACHE_NAME = 'aos-servicecache-' + location.host + '-v1';
+var CACHE_NAME = 'aos-servicecache-v1';
 var urlsToCache = [
-  'servicecache.txt'
+  '/servicecache.txt'
 ];
 
 self.addEventListener('install', function(event){

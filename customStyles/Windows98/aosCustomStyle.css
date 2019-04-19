@@ -148,7 +148,6 @@ hr{
     padding-left:2px;
     padding-right:23px;
     margin-top:1px;
-    width:calc(100% - var(--windowBorderWidth) - var(--windowBorderWidth) - 23px);
 }
 .winHTML{
     border-radius: 0;
