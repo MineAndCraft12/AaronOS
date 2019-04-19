@@ -5437,7 +5437,7 @@ c(function(){
             appInfo: 'This is a prompt or alert box used for applications to create simple messages or get simple input from the user.',
             prompts: [],
             currprompt: [],
-            checkPrompts: function(){
+            checkPrompts: function(usePwdInput){
                 //type is [0], text is [1], buttons are [2], callback is [3]
                 if(!apps.prompt.appWindow.appIcon && getId('notifWindow').style.pointerEvents === 'none'){
                     if(this.prompts.length !== 0){
@@ -5475,7 +5475,7 @@ c(function(){
                                 }else{
                                     apps.prompt.appWindow.setCaption('Enter some info for an anonymous app:');
                                 }
-                                getId('PMTbuttons').innerHTML = '<input id="PMTtextIn"> <button id="PMTalertButton" onClick="apps.prompt.signalHandler(\'close\');apps.prompt.vars.currprompt[3](getId(\'PMTtextIn\').value)">' + this.currprompt[2] + '</button>';
+                                getId('PMTbuttons').innerHTML = '<input id="PMTtextIn" type="' + usePwdInput ? 'password' : 'text' + '"> <button id="PMTalertButton" onClick="apps.prompt.signalHandler(\'close\');apps.prompt.vars.currprompt[3](getId(\'PMTtextIn\').value)">' + this.currprompt[2] + '</button>';
                                 c(function(){
                                     getId('PMTtextIn').focus();
                                     getId('PMTtextIn').addEventListener('keydown', function(event){
@@ -5531,9 +5531,9 @@ c(function(){
                 this.prompts.push([2, cText, cButtons, cCallback, cCaption]);
                 this.checkPrompts();
             },
-            prompt: function(pText, pButton, pCallback, pCaption){    //test script: apps.prompt.vars.prompt('test caption', 'test button', function(text){doLog(text)})
+            prompt: function(pText, pButton, pCallback, pCaption, usePwdInput){    //test script: apps.prompt.vars.prompt('test caption', 'test button', function(text){doLog(text)})
                 this.prompts.push([3, pText, pButton, pCallback, pCaption]);
-                this.checkPrompts();
+                this.checkPrompts(usePwdInput);
             },
             notify: function(nText, nButtons, nCallback ,nCaption, nImage){
                 this.prompts.push([4, nText, nButtons, nCallback, nCaption, nImage]);
@@ -7406,7 +7406,7 @@ c(function(){
                             }else{
                                 apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
                             }
-                        }, 'Settings');
+                        }, 'Settings', true);
                     }else{
                         apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
                     }
