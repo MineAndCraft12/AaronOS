@@ -8532,11 +8532,11 @@ c(function(){
             "04/14/2019: B0.13.0.1\n + Added aaronos.dev as the new official AaronOS server.\n : Updated README, EULA, and privacy policy to reflect the new server address.\n : Fixed several serverside issues.\n\n" +
             "04/15/2019: B0.13.0.2\n + Unlocked rotation on PWA.\n : Fixed password screen using old background instead of new one.\n - Removed accidental debug logging to console on arranging icons.\n\n" +
             "04/17/2019: B0.13.0.3\n + Hidden iFrame Browser app for debugging.\n\n" +
-            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)\n + Added ownedByApp attribute for iframes, will bring the specified app to top if the iframe has focus.",
+            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)\n + Added ownedByApp attribute for iframes, will bring the specified app to top if the iframe has focus.\n + The currently focused app is displayed on the window's title.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
     window.aOSversion = 'B0.14.0.0 (04/18/2019) r1';
-    document.title = 'aOS ' + aOSversion;
+    document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
 c(function(){
@@ -14321,7 +14321,18 @@ function toTop(appToNudge, dsktpClick){
         getId("win_" + appToNudge.objName + "_cap").style.opacity = "1";
         getId("win_" + appToNudge.objName + "_aero").style.opacity = "1";
         getId('icn_' + appToNudge.objName).style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
+        try{
+            document.title = appToNudge.appDesc + ' | aOS ' + aOSversion;
+        }catch(err){
+            document.title = 'AaronOS';
+        }
         //getId("win" + appToNudge.dsktpIcon).style.boxShadow = "0 0 30px #000";
+    }else{
+        try{
+            document.title = 'AaronOS ' + aOSversion;
+        }catch(err){
+            document.title = 'AaronOS';
+        }
     }
     if(appToNudge !== apps.startMenu && apps.startMenu.appWindow.appIcon){
         apps.startMenu.signalHandler('shrink');
