@@ -39,8 +39,8 @@
     -->
     <div id="bootLanguage" style="display:none"><?php
         if(isset($_COOKIE['keyword'])){
-            if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_LANG.txt')){
-                echo file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_LANG.txt');
+            if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/language.txt')){
+                echo file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/language.txt');
             }
         }else{
             echo 'en';
@@ -90,15 +90,15 @@
         <!--<div id="aOSloadingBg"></div>-->
         <?php
             if(isset($_COOKIE['keyword'])){
-                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_BACKGROUND.txt')){
-                    if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_DIRTYLOAD.txt')){
-                        if(file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_DIRTYLOAD.txt') == '1'){
-                            echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_BACKGROUND.txt').');opacity:0"></div><script defer>requestAnimationFrame(function(){getId("desktop").style.display = "";getId("taskbar").style.display = "";});window.dirtyLoadingEnabled = 1;</script>';
+                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt')){
+                    if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/apps/settings/ugly_boot.txt')){
+                        if(file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/apps/settings/ugly_boot.txt') == '1'){
+                            echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt').');opacity:0"></div><script defer>requestAnimationFrame(function(){getId("desktop").style.display = "";getId("taskbar").style.display = "";});window.dirtyLoadingEnabled = 1;</script>';
                         }else{
-                            echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_BACKGROUND.txt').');"></div>';
+                            echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt').');"></div>';
                         }
                     }else{
-                        echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_BACKGROUND.txt').');"></div>';
+                        echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt').');"></div>';
                     }
                 }else{
                     echo '<div id="aOSloadingBg"></div>';
@@ -122,6 +122,7 @@
             </div>
         </div>
     </div>
+    <img style="display:none" id="bgSizeElement" src="p.png" onload="try{updateBgSize()}catch(err){}">
 </body>
 <!--<script defer src="script.js"></script>-->
 <?php
@@ -148,7 +149,7 @@
     require 'filepreloaderBeta.php';
     echo '</script>';
     echo '<script>';
-    require 'test_ssl.php';
+    //require 'test_ssl.php';
     echo '</script>';
 ?>
 </html>

@@ -3,14 +3,14 @@
     "name": "AaronOS",
     "icons": [
         {
-            "src": "/appicons/ds/aOS.png",
+            "src": "appicons/ds/aOS.png",
             "type": "image/png",
             "sizes": "256x256"
         }
     ],
     "display": "standalone",
-    "background_color": "#ABCDEF",
-    "theme_color": "#ABCDEF",
-    "orientation": "landscape",
-    "start_url": "/aosBeta.php"
+    "background_color": "#384450",
+    "theme_color": "#384450",
+    "orientation": "any",
+    "start_url": "aosBeta.php"
 }

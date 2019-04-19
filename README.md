@@ -4,7 +4,7 @@ Welcome to the AaronOS repository!
 
 This is where all the open-source bits of aOS will reside, so the public can read it and even make pull requests if you wish.
 
-AaronOS is usable at https://aaron-os-mineandcraft12.c9.io/aosBeta.php
+AaronOS is usable at https://aaronos.dev/
 
 If you wish to deploy AaronOS on your own server, you MUST read and follow the End User License Agreement at /eula.txt
 By downloading or otherwise using this source code in any way, you agree to the terms listed in that file.
@@ -26,6 +26,6 @@ Not Included:
 
 The main PHP file is /aosBeta.php
 
-The main JavaScript file is /scriptBeta.php
+The main JavaScript file is /scriptBeta.js
 
-The main CSS file is /styleBeta.php
+The main CSS file is /styleBeta.css
