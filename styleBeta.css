@@ -186,6 +186,38 @@ div{
 		height:570px;
 		overflow:visible;
     }
+        .smarticon{
+            display:inline-block;
+            position:relative;
+        }
+            .smarticon div{
+                pointer-events:none;
+            }
+            .smarticon_bg{
+                width:100%;
+                height:100%;
+                background-size:contain !important;
+                overflow:hidden;
+                border-radius:100%;
+                display:block;
+            }
+                .smarticon_fg{
+                    width:100%;
+                    height:100%;
+                    background-size:contain !important;
+                }
+                .smarticon_border{
+                    width:100%;
+                    height:100%;
+                    background:none;
+                    border-radius:100%;
+                }
+            .smarticon_nobg{
+                width:100%;
+                height:100%;
+                background-size:contain !important;
+                display:none;
+            }
         #hideall{
             width: 100%;
             height: 100%;
@@ -256,7 +288,7 @@ div{
                     background-position: 40px 40px !important;
                 }
                 #tskbrAero{
-                    height: 70px;
+                    height: 72px;
                     width: 1090px;
                     left: -20px;
                     top: -20px;
@@ -282,7 +314,7 @@ div{
                 width: calc(100% - 98px); /* fallback */
                 width:calc(100% - 92px - var(--windowBorderWidth) - var(--windowBorderWidth));
                 white-space:nowrap;
-                height:21px;
+                height:32px;
                 text-shadow:0px 0px 2px #000;
                 color:#FFF;
                 /*cursor:url(cursors/move.png) 14 14, move;*/
@@ -291,11 +323,22 @@ div{
                 .leftCaptionButtons .winCap{
                     padding-left:69px;
                 }
+                .winCap .legacyCaptionIcon{
+                    width:32px;
+                    height:32px;
+                }
+                .winCap .winCaptionTitle{
+                    position:relative;
+                    display:inline-block;
+                    padding-left:8px;
+                    height:32px;
+                    line-height:32px;
+                }
             .winHTML{
                 width:calc(100% - 9px); /* fallback */
-                height:calc(100% - 24px); /* fallback */
+                height:calc(100% - 35px); /* fallback */
                 width:calc(100% - 3px - var(--windowBorderWidth) - var(--windowBorderWidth));
-                height:calc(100% - 21px - var(--windowBorderWidth));
+                height:calc(100% - 32px - var(--windowBorderWidth));
                 bottom:3px; /* fallback */
                 left:3px; /* fallback */
                 bottom:var(--windowBorderWidth);
@@ -307,7 +350,7 @@ div{
             }
                 .mobileMode .winHTML{
                     width:calc(100% - 3px) !important;
-                    height:calc(100% - 21px) !important;
+                    height:calc(100% - 32px) !important;
                     bottom: 0;
                     left:0 !important;
                     border-radius:0;
@@ -361,7 +404,7 @@ div{
                     font-family:aosProFont, monospace;
                     font-size:12px;
                 }
-                #FIL2tbl div, .FIL2sidetbl div{
+                #FIL2tbl > div, .FIL2sidetbl > div{
                     font-family:aosProFont, monospace;
                     position:relative;
                     white-space:nowrap;
@@ -370,10 +413,10 @@ div{
                 .FIL2sidetbl{
                     position:relative;
                 }
-                #FIL2tbl div:hover, .FIL2sidetbl div:hover{
+                #FIL2tbl > div:hover, .FIL2sidetbl > div:hover{
                     background-color:#AAA;
                 }
-                    .darkMode #FIL2tbl div:hover, .darkMode .FIL2sidetbl div:hover{
+                    .darkMode #FIL2tbl > div:hover, .darkMode .FIL2sidetbl > div:hover{
                         background-color:#555;
                     }
                     
@@ -389,7 +432,7 @@ div{
                         filter:invert(1);
                     }
                 
-                #FIL2tbl .FIL2aosAppIcon, .FIL2sidetbl .FIL2aosAppIcon{
+                #FIL2tbl .FIL2aosAppIcon, .FIL2sidetbl .FIL2aosAppIcon, #FIL2tbl .smarticon, .FIL2sidetbl .smarticon{
                     width:16px;
                     height:16px;
                     margin-top:0;
@@ -400,7 +443,7 @@ div{
                         filter:none;
                     }
                 
-                .FIL2viewCompact div{
+                .FIL2viewCompact > div{
                     font-size:12px;
                     width:148px;
                     height:18px;
@@ -408,15 +451,15 @@ div{
                     display:inline-block;
                     margin-left:3px;
                     margin-top:3px;
-                    margin-bottom:-4px;
+                    margin-bottom:-3px;
                     border:1px solid #000;
                     padding:1px;
                 }
-                    .darkMode .FIL2viewCompact div{
+                    .darkMode .FIL2viewCompact > div{
                         border:1px solid #FFF;
                     }
                 
-                .FIL2viewSmall div{
+                .FIL2viewSmall > div{
                     font-size:12px;
                     width:298px;
                     height:18px;
@@ -424,15 +467,15 @@ div{
                     display:inline-block;
                     margin-left:3px;
                     margin-top:3px;
-                    margin-bottom:-4px;
+                    margin-bottom:-3px;
                     border:1px solid #000;
                     padding:1px;
                 }
-                    .darkMode .FIL2viewSmall div{
+                    .darkMode .FIL2viewSmall > div{
                         border:1px solid #FFF;
                     }
                 
-                .FIL2viewMedium div{
+                .FIL2viewMedium > div{
                     font-size:12px;
                     width:calc(100% - 8px);
                     height:14px;
@@ -442,12 +485,12 @@ div{
                     margin-top:1px;
                     padding:1px;
                 }
-                    #FIL2tbl.FIL2viewMedium .FIL2aosAppIcon, .FIL2sidetbl.FIL2viewMedium .FIL2aosAppIcon{
+                    #FIL2tbl.FIL2viewMedium .FIL2aosAppIcon, .FIL2sidetbl.FIL2viewMedium .FIL2aosAppIcon, #FIL2tbl.FIL2viewMedium .smarticon, .FIL2sidetbl.FIL2viewMedium .smarticon{
                         margin-top:-1px;
                         margin-bottom:-5px;
                     }
                 
-                .FIL2viewLarge div{
+                .FIL2viewLarge > div{
                     font-size:12px;
                     width:calc(100% - 10px);
                     height:18px;
@@ -458,7 +501,7 @@ div{
                     border:1px solid #000;
                     padding:1px;
                 }
-                    .darkMode .FIL2viewLarge div{
+                    .darkMode .FIL2viewLarge > div{
                         border:1px solid #FFF;
                     }
                 
@@ -542,19 +585,18 @@ div{
                     overflow:visible;
                 }
             .winExit{
-                height:16px;
+                height:17px;
                 right: 3px; /* fallback */
                 right:var(--windowBorderWidth);
+                top:5px;
                 width:16px;
                 padding-left:2px;
+                padding-top:1px;
                 font-family:aosProFont, Courier;
                 font-size:24px;
                 line-height:14px;
                 border:1px solid rgba(255, 255, 255, .3);
-                border-top:none;
                 border-radius:5px;
-                border-top-right-radius:0;
-                border-top-left-radius:0;
                 color:rgba(255, 255, 255, .3);
                 text-align:center;
                 box-shadow:0 0 1px #000;
@@ -576,17 +618,16 @@ div{
                     right:initial;
                 }
             .winShrink, .winBig, .winFld{
-                height:16px;
+                height:17px;
                 width:16px;
                 padding-left:2px;
+                padding-top:1px;
+                top:5px;
                 font-family:aosProFont, Courier;
                 font-size:24px;
                 line-height:14px;
                 border:1px solid rgba(255, 255, 255, .3);
-                border-top:none;
                 border-radius:5px;
-                border-top-right-radius:0;
-                border-top-left-radius:0;
                 color:rgba(255, 255, 255, .3);
                 text-align:center;
                 box-shadow:0 0 1px #000;
@@ -665,7 +706,6 @@ div{
                 text-shadow:0px 0px 5px #000;
                 width:100px;
                 font-size:50px;
-                top:-6px;
                 overflow:visible;
             }
             .appIcon img{
@@ -724,7 +764,7 @@ div{
 	bottom:0;
 	left:0;
 	width:1050px;
-	height:30px;
+	height:32px;
 	/*Aero theme if supported
 	background-color:rgba(190, 190, 255, .6);*/
 	color:#FFF;
@@ -736,12 +776,12 @@ div{
     transform-origin:15px 15px;
 }
 	#icons{
-		height:30px;
+		height:32px;
 		/*width:600px;*/
 	}
-        .icon{
-            height:30px;
-            width:45px;
+        #icons .icon{
+            height:32px;
+            width:44px;
             /*border-right:2px solid rgba(100, 100, 155, .6);*/
             border-radius:2px;
             display:none;
@@ -750,22 +790,21 @@ div{
             position:static;
             transition:background-color .5s;
         }
-        .icon:hover{
+        #icons .icon:hover{
             background:radial-gradient(25px at 50% 100%, rgba(220, 220, 255, .8) 0px, rgba(220, 220, 255, 0) 25px);
         }
-            .iconImg{
-                margin-top:3px;
+            #icons .iconImg{
+                margin-top:5px;
                 position:static;
                 text-align:center;
             }
-            .imageIco{
+            #icons .imageIco{
                 max-height:32px; /* 25 25 */
                 max-width:32px;
-                margin-top:-1px;
                 margin-left:6px;
             }
 	#time{
-		height:29px;
+	    height:32px;
 		right:2px;
 		top:0;
 		text-align:right;
@@ -1077,7 +1116,8 @@ div{
     }
 
 .widget{
-    height:100%;
+    padding-top:1px;
+    height:31px;
     color:#FFF;
     text-shadow:0 0 1px #000;
     position:static;
@@ -1232,6 +1272,7 @@ div{
 #widgetMenu .winExit, #notifWindow .winExit{
     color:#000;
     border-color:#000;
+    top:3px;
 }
 .darkMode #widgetMenu .winExit, .darkMode #notifWindow .winExit{
     color:#FFF;

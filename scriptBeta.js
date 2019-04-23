@@ -1364,6 +1364,87 @@ function pinApp(app){
     }
     ufsave('aos_system/taskbar/pinned_apps', JSON.stringify(pinnedApps));
 }
+
+// Smart Icon Builder
+var smartIconOptions = {
+    radiusTopLeft: 100,
+    radiusTopRight: 100,
+    radiusBottomLeft: 100,
+    radiusBottomRight: 100,
+    backgroundOpacity: 1,
+    bgColor: ''
+};
+function updateSmartIconStyle(){
+    getId("smartIconStyle").innerHTML = '.smarticon_bg{border-top-left-radius:' + smartIconOptions.radiusTopLeft + '%;border-top-right-radius:' + smartIconOptions.radiusTopRight + '%;border-bottom-left-radius:' + smartIconOptions.radiusBottomLeft + '%;border-bottom-right-radius:' + smartIconOptions.radiusBottomRight + '%;display:' + function(){if(smartIconOptions.backgroundOpacity){return 'block'}else{return 'none'}}() + ';' + function(){if(smartIconOptions.bgColor){return 'background-color:' + smartIconOptions.bgColor.split(';')[0] + ' !important;'}else{return ''}}() + '}.smarticon_nobg{display:' + function(){if(smartIconOptions.backgroundOpacity){return 'none'}else{return 'block'}}() + ';}';
+    var allSmartIconsBG = document.getElementsByClassName("smarticon_bg");
+    for(var i = 0; i < allSmartIconsBG.length; i++){
+        var currSize = parseFloat(allSmartIconsBG[i].getAttribute("data-smarticon-size"));
+        allSmartIconsBG[i].style.borderTopLeftRadius = Math.round((currSize / 2) * (smartIconOptions.radiusTopLeft / 100)) + 'px';
+        allSmartIconsBG[i].style.borderTopRightRadius = Math.round((currSize / 2) * (smartIconOptions.radiusTopRight / 100)) + 'px';
+        allSmartIconsBG[i].style.borderBottomLeftRadius = Math.round((currSize / 2) * (smartIconOptions.radiusBottomLeft / 100)) + 'px';
+        allSmartIconsBG[i].style.borderBottomRightRadius = Math.round((currSize / 2) * (smartIconOptions.radiusBottomRight / 100)) + 'px';
+    }
+    var allSmartIconsBorder = document.getElementsByClassName("smarticon_border");
+    for(var i = 0; i < allSmartIconsBorder.length; i++){
+        var currSize = parseFloat(allSmartIconsBorder[i].getAttribute("data-smarticon-size"));
+        allSmartIconsBorder[i].style.borderTopLeftRadius = Math.round((currSize / 2) * (smartIconOptions.radiusTopLeft / 100)) + 'px';
+        allSmartIconsBorder[i].style.borderTopRightRadius = Math.round((currSize / 2) * (smartIconOptions.radiusTopRight / 100)) + 'px';
+        allSmartIconsBorder[i].style.borderBottomLeftRadius = Math.round((currSize / 2) * (smartIconOptions.radiusBottomLeft / 100)) + 'px';
+        allSmartIconsBorder[i].style.borderBottomRightRadius = Math.round((currSize / 2) * (smartIconOptions.radiusBottomRight / 100)) + 'px';
+    }
+}
+/*
+options{
+    backgroundColor: "#FFFFFF",
+    background: "smarticons/aOS/bg.png",
+    backgroundBorder: {
+        thickness: 1,
+        color: "#000000"
+    },
+    foreground: "smarticons/aOS/fg.png",
+}
+*/
+function buildSmartIcon(size, options, optionalcss){
+    if(typeof options === "string"){
+        options = {foreground:options};
+    }
+    if(!options){
+        options = {};
+    }
+    var icoTemp = '<div class="smarticon" style="width:' + size + 'px;height:' + size + 'px;';
+    if(optionalcss){
+        icoTemp += optionalcss;
+    }
+    icoTemp += '">';
+    if(options.foreground){
+        icoTemp += '<div class="smarticon_nobg" style="background:url(' + cleanStr(options.foreground.split(";")[0]) + ');"></div>';
+    }
+    icoTemp += '<div class="smarticon_bg" data-smarticon-size="' + size + '" style="' +
+        'border-top-left-radius:' + Math.round((size / 2) * (smartIconOptions.radiusTopLeft / 100)) + 'px;' +
+        'border-top-right-radius:' + Math.round((size / 2) * (smartIconOptions.radiusTopRight / 100)) + 'px;' +
+        'border-bottom-left-radius:' + Math.round((size / 2) * (smartIconOptions.radiusBottomLeft / 100)) + 'px;' +
+        'border-bottom-right-radius:' + Math.round((size / 2) * (smartIconOptions.radiusBottomRight / 100)) + 'px;';
+    if(options.background){
+        icoTemp += 'background:url(' + cleanStr(options.background.split(';')[0]) + ');';
+    }
+    if(options.backgroundColor){
+        icoTemp += 'background-color:' + cleanStr(options.backgroundColor.split(';')[0]) + ';';
+    }
+    icoTemp += '">';
+    if(options.foreground){
+        icoTemp += '<div class="smarticon_fg" style="background:url(' + cleanStr(options.foreground.split(";")[0]) + ');"></div>';
+    }
+    if(options.backgroundBorder){
+        icoTemp += '<div class="smarticon_border" data-smarticon-size="' + size + '" style="box-shadow:inset 0 0 0 ' + (size / 32 * (options.backgroundBorder.thickness || 1)) + 'px ' + cleanStr(options.backgroundBorder.color.split(";")[0]) + ';' +
+            'border-top-left-radius:' + Math.round((size / 2) * (smartIconOptions.radiusTopLeft / 100)) + 'px;' +
+            'border-top-right-radius:' + Math.round((size / 2) * (smartIconOptions.radiusTopRight / 100)) + 'px;' +
+            'border-bottom-left-radius:' + Math.round((size / 2) * (smartIconOptions.radiusBottomLeft / 100)) + 'px;' +
+            'border-bottom-right-radius:' + Math.round((size / 2) * (smartIconOptions.radiusBottomRight / 100)) + 'px;"></div>';
+    }
+    icoTemp += '</div></div>';
+    return icoTemp;
+}
+
 // Application class
 m('init Application class');
 var apps = {};
@@ -1480,9 +1561,9 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     }
                     var aeroOffset = [0, 0];
                     if(tskbrToggle.tskbrPos === 1){
-                        aeroOffset[1] = -30;
+                        aeroOffset[1] = -32;
                     }else if(tskbrToggle.tskbrPos === 2){
-                        aeroOffset[0] = -30;
+                        aeroOffset[0] = -32;
                     }
                     try{
                         calcWindowblur(this.objName, 1);
@@ -1567,7 +1648,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     this.folded = 0;
                 }else{
                     getId('win_' + this.objName + '_html').style.display = 'none';
-                    getId('win_' + this.objName + '_top').style.height = 21 + apps.settings.vars.winBorder + 'px';
+                    getId('win_' + this.objName + '_top').style.height = 32 + apps.settings.vars.winBorder + 'px';
                     this.folded = 1;
                 }
             },
@@ -1659,10 +1740,11 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             },
             setCaption: function(newCap){
                 d(1, 'Changing caption.');
-                if(appImg){
-                    getId("win_" + this.objName + "_cap").innerHTML = '<img src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'" style="height:32px;margin-bottom:-11px;margin-top:-6px;"> ' + newCap;
+                if(this.appImg){
+                    //getId("win_" + this.objName + "_cap").innerHTML = '<img class="legacyCaptionIcon" src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'"><div class="winCaptionTitle">' + newCap + '</div>';
+                    getId("win_" + this.objName + "_cap").innerHTML = buildSmartIcon(32, this.appImg) + '<div class="winCaptionTitle">' + newCap + '</div>';
                 }else{
-                    getId("win_" + this.objName + "_cap").innerHTML = this.dsktpIcon + '|' + newCap;
+                    getId("win_" + this.objName + "_cap").innerHTML = '<div class="winCaptionTitle">' + this.dsktpIcon + '|' + newCap + '</div>';
                 }
             },
             setContent: function(newHTML){
@@ -1682,10 +1764,14 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 }
             }
         };
-        if(appImg){
+        if(typeof this.appWindow.appImg === "string"){
+            this.appWindow.appImg = {foreground:this.appWindow.appImg};
+        }
+        if(this.appWindow.appImg){
             getId("desktop").innerHTML +=
                 '<div class="app cursorPointer" id="app_' + appPath + '" oncontextmenu="ctxMenu(baseCtx.appXXX, 1, event, [event, \'' + appPath + '\', \'' + appIcon + '\'])">' +
-                '<div class="appIcon" id="ico_' + appPath + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
+                //'<div class="appIcon" id="ico_' + appPath + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
+                '<div class="appIcon" id="ico_' + appPath + '" style="pointer-events:none">' + buildSmartIcon(64, this.appWindow.appImg) + '</div>' +
                 '<div class="appDesc" id="dsc_' + appPath + '">' + this.appDesc + '</div>' +
                 '</div></div>';
         }else{
@@ -1736,11 +1822,11 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             '</div>' +
             '<div class="winExit cursorPointer" id="win_' + appPath + '_exit">x' +
             '</div></div>';
-        if(appImg){
+        if(this.appWindow.appImg){
             getId("icons").innerHTML +=
                 '<div class="icon cursorPointer" id="icn_' + appPath + '">' +
-                '<img class="imageIco" src="' + appImg +
-                '" onerror="this.src=\'appicons/ds/redx.png\'"></div>';
+                //'<img class="imageIco" src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>';
+                buildSmartIcon(32, this.appWindow.appImg, "margin-left:6px") + '</div>';
         }else{
             getId("icons").innerHTML +=
                 '<div class="icon cursorPointer" id="icn_' + appPath + '">' +
@@ -2474,7 +2560,8 @@ c(function(){
                                 for(var appHandle in appsSorted){
                                     c(function(app){
                                         if(apps[app].keepOffDesktop < 2){
-                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:64px;height:64px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
+                                            //apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:64px;height:64px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
+                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th>' + buildSmartIcon(64, apps[app].appWindow.appImg) + '</th><td>' + apps[app].appDesc + '</td></tr>';
                                         }
                                     }, appsSorted[appHandle]);
                                 }
@@ -2501,7 +2588,8 @@ c(function(){
                                 for(var appHandle in appsSorted){
                                     c(function(app){
                                         if(apps[app].keepOffDesktop < 2){
-                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:32px;height:32px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
+                                            //apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:32px;height:32px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
+                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th>' + buildSmartIcon(32, apps[app].appWindow.appImg) + '</th><td>' + apps[app].appDesc + '</td></tr>';
                                         }
                                     }, appsSorted[appHandle]);
                                 }
@@ -2528,7 +2616,8 @@ c(function(){
                                 for(var appHandle in appsSorted){
                                     c(function(app){
                                         if(apps[app].keepOffDesktop < 2){
-                                            apps.startMenu.vars.listOfApps += '<div class="cursorPointer" style="min-height:96px;max-height:96px;display:inline-block;position:static;text-align:center;min-width:25%;max-width:25%" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><img style="width:32px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"><br>' + apps[app].appDesc + '</div>';
+                                            //apps.startMenu.vars.listOfApps += '<div class="cursorPointer" style="min-height:96px;max-height:96px;display:inline-block;position:static;text-align:center;min-width:25%;max-width:25%" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><img style="width:32px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"><br>' + apps[app].appDesc + '</div>';
+                                            apps.startMenu.vars.listOfApps += '<div class="cursorPointer" style="min-height:96px;max-height:96px;display:inline-block;position:static;text-align:center;min-width:25%;max-width:25%" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')">' + buildSmartIcon(32, apps[app].appWindow.appImg) + '<br>' + apps[app].appDesc + '</div>';
                                         }
                                     }, appsSorted[appHandle]);
                                 }
@@ -4052,7 +4141,8 @@ c(function(){
                     this.appWindow.setCaption('App Info: ' + apps[launchtype].appDesc);
                     this.appWindow.setContent(
                         '<div style="font-size:12px;font-family:aosProFont, monospace;top:0;right:0;color:#7F7F7F">' + apps[launchtype].dsktpIcon + '</div>' +
-                        '<img src="' + apps[launchtype].appWindow.appImg + '" style="margin-left:calc(50% - 128px);width:256px;height:256px" onerror="this.src=\'appicons/ds/redx.png\'">' +
+                        //'<img src="' + apps[launchtype].appWindow.appImg + '" style="margin-left:calc(50% - 128px);width:256px;height:256px" onerror="this.src=\'appicons/ds/redx.png\'">' +
+                        buildSmartIcon(256, apps[launchtype].appWindow.appImg, 'margin-left:calc(50% - 128px);') +
                         '<h1 style="text-align:center;">' + apps[launchtype].appDesc + '</h1>' +
                         '<hr>' + (apps[launchtype].vars.appInfo || "There is no help page for this app.")
                     );
@@ -4301,7 +4391,7 @@ c(function(){
             },
             updateTsk: function(){
                 if(apps.taskManager.vars.changed){
-                    c(function(){getId("tMgTaskList").innerHTML = "<li>APP<ul><li>TaskName | Command | Interval (ms)</li></ul></li>";});
+                    c(function(){try{getId("tMgTaskList").innerHTML = "<li>APP<ul><li>TaskName | Command | Interval (ms)</li></ul></li>";}catch(err){}});
                     for(var apptasky in apps.taskManager.vars.running){
                         c(function(apptask){
                             apps.taskManager.vars.currTaskStr = "<li>" + apptask + "<ul>";
@@ -4316,7 +4406,7 @@ c(function(){
                             }
                             apps.taskManager.vars.currTaskStr += "</ul></li>";
                         }, apptasky);
-                        c(function(){getId("tMgTaskList").innerHTML += apps.taskManager.vars.currTaskStr;});
+                        c(function(){try{getId("tMgTaskList").innerHTML += apps.taskManager.vars.currTaskStr;}catch(err){}});
                     }
                     apps.taskManager.vars.runningLast = apps.taskManager.vars.running;
                     apps.taskManager.vars.changed = 0;
@@ -4470,11 +4560,11 @@ c(function(){
                 m('Running jsC Input');
                 d(1, 'Running jsC input');
                 this.lastInputUsed = getId("cnsIn").value;
-                doLog("-> " + cleanStr(getId("cnsIn").value), "#0D0");
+                doLog("-> " + cleanStr(getId("cnsIn").value), "#0A0");
                 try{
                     this.tempOutput = eval(getId("cnsIn").value);
-                    doLog("=> " + this.tempOutput, "#DD0");
-                    doLog("?> " + typeof this.tempOutput, "#DD0");
+                    doLog("=> " + this.tempOutput, "#0AA");
+                    doLog("?> " + typeof this.tempOutput, "#0AA");
                 }catch(err){
                     doLog("=> " + err, "#F00");
                     doLog("?> Module: " + module, "#F00");
@@ -5787,7 +5877,7 @@ c(function(){
                             if(ufload("aos_system/apps/settings/cors_proxy")){
                                 apps.settings.vars.corsProxy = ufload("aos_system/apps/settings/cors_proxy");
                             }
-                            if(ufload("aos_system/user_custom_style") === "string"){
+                            if(ufload("aos_system/user_custom_style")){
                                 getId('aosCustomStyle').innerHTML = ufload("aos_system/user_custom_style");
                             }
                             if(ufload("aos_system/windows/dark_mode")){
@@ -6060,7 +6150,7 @@ c(function(){
                     osPassword: {
                         option: 'aOS Password',
                         description: function(){return 'This is the password required to access your AaronOS.'},
-                        buttons: function(){return '<input id="STNosPass"> <button onclick="apps.settings.vars.newPassword()">Set</button>'}
+                        buttons: function(){return '<input id="STNosPass" type="password"> <button onclick="apps.settings.vars.newPassword()">Set</button>'}
                     },
                     osVersion: {
                         option: 'aOS Version',
@@ -6717,11 +6807,12 @@ c(function(){
             newPassword: function(){
                 apps.savemaster.vars.save('aOSpassword', getId('STNosPass').value, 1, 'SET_PASSWORD');
                 USERFILES.aOSpassword = '*****';
-                apps.settings.vars.tmpPasswordSet = getId('STNosPass').value;
-                setTimeout(function(){
-                    document.cookie = 'password=' + apps.settings.vars.tmpPasswordSet + '; Max-Age=315576000';
-                    apps.settings.vars.tmpPasswordSet = "";
+                var tmpPasswordSet = getId('STNosPass').value;
+                setTimeout(() => {
+                    document.cookie = 'password=' + tmpPasswordSet + '; Max-Age=315576000';
+                    //apps.settings.vars.tmpPasswordSet = "";
                 }, 5000);
+                getId("STNosPass").value = "";
             },
             calcFLOPS: function(){
                 var intOps = 0;
@@ -7414,7 +7505,7 @@ c(function(){
             },
             setTskbrPos: function(newPos, nosave){
                 tskbrToggle.tskbrPos = newPos;
-                getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * parseInt(getId('monitor').style.height) + 50) + "px";
+                getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * parseInt(getId('monitor').style.height) + 52) + "px";
                 getId("tskbrAero").style.width = parseInt(getId('monitor').style.width) + 40 + "px";
                 getId("tskbrAero").style.height = '';
                 getId('tskbrAero').style.transform = '';
@@ -7424,7 +7515,7 @@ c(function(){
                         getId('desktop').style.left = '';
                         getId('desktop').style.top = '';
                         getId('desktop').style.width = getId('monitor').style.width;
-                        getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 30 + "px";
+                        getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 32 + "px";
                         getId('taskbar').style.top = '';
                         getId('taskbar').style.left = '';
                         getId('taskbar').style.right = '';
@@ -7435,9 +7526,9 @@ c(function(){
                         break;
                     case 1:
                         getId('desktop').style.left = '';
-                        getId('desktop').style.top = '30px';
+                        getId('desktop').style.top = '32px';
                         getId('desktop').style.width = getId('monitor').style.width;
-                        getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 30 + "px";
+                        getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 32 + "px";
                         getId('taskbar').style.top = '0';
                         getId('taskbar').style.left = '';
                         getId('taskbar').style.right = '';
@@ -7445,12 +7536,12 @@ c(function(){
                         getId('taskbar').style.transform = '';
                         getId('taskbar').style.width = getId('monitor').style.width;
                         getId('tskbrAero').style.backgroundPosition = "20px 20px";
-                        getId('windowFrameOverlay').style.transform = 'translate(0, 30px)';
+                        getId('windowFrameOverlay').style.transform = 'translate(0, 32px)';
                         break;
                     case 2:
-                        getId('desktop').style.left = '30px';
+                        getId('desktop').style.left = '32px';
                         getId('desktop').style.top = '';
-                        getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+                        getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 32 + "px";
                         getId('desktop').style.height = getId('monitor').style.height;
                         getId('taskbar').style.top = '0';
                         getId('taskbar').style.left = '';
@@ -7460,25 +7551,25 @@ c(function(){
                         getId('taskbar').style.width = getId('monitor').style.height;
                         getId('tskbrAero').style.backgroundPosition = "20px 20px";
                         getId('tskbrAero').style.transform = 'rotate(-90deg)';
-                        getId('tskbrAero').style.width = '70px';
+                        getId('tskbrAero').style.width = '72px';
                         getId('tskbrAero').style.height = parseInt(getId('monitor').style.height) + 40 + "px";
                         getId('tskbrAero').style.transformOrigin = '35px 35px';
-                        getId('windowFrameOverlay').style.transform = 'translate(30px, 0)';
+                        getId('windowFrameOverlay').style.transform = 'translate(32px, 0)';
                         break;
                     case 3:
                         getId('desktop').style.left = '';
                         getId('desktop').style.top = '';
-                        getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+                        getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 32 + "px";
                         getId('desktop').style.height = getId('monitor').style.height;
                         getId('taskbar').style.top = '';
-                        getId('taskbar').style.left = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+                        getId('taskbar').style.left = parseInt(getId('monitor').style.width, 10) - 32 + "px";
                         getId('taskbar').style.right = '';
                         getId('taskbar').style.bottom = '';
                         getId('taskbar').style.transform = 'rotate(-90deg)';
                         getId('taskbar').style.width = getId('monitor').style.height;
-                        getId('tskbrAero').style.backgroundPosition = (-1 * parseInt(getId('monitor').style.width) + 50) + "px 20px";
-                        getId('tskbrAero').style.transform = 'rotate(90deg) translateY(-' + (parseInt(getId('monitor').style.height) - 30) + 'px)';
-                        getId('tskbrAero').style.width = '70px';
+                        getId('tskbrAero').style.backgroundPosition = (-1 * parseInt(getId('monitor').style.width) + 52) + "px 20px";
+                        getId('tskbrAero').style.transform = 'rotate(90deg) translateY(-' + (parseInt(getId('monitor').style.height) - 32) + 'px)';
+                        getId('tskbrAero').style.width = '72px';
                         getId('tskbrAero').style.height = parseInt(getId('monitor').style.height) + 40 + "px";
                         getId('tskbrAero').style.transformOrigin = '35px 35px';
                         getId('windowFrameOverlay').style.transform = '';
@@ -7592,8 +7683,170 @@ c(function(){
             }
         }, 0, "settings", "appicons/ds/STN.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Desktop Icon Maker';
+    getId('aOSloadingInfo').innerHTML = 'Smart Icon Creator';
 });
+c(function(){
+    m('init smart icon maker');
+    apps.smartIconCreator = new Application(
+        'SIC',
+        'Smart Icon Creator',
+        1,
+        function(launchtype){
+            this.appWindow.setCaption("Smart Icon Creator");
+            this.appWindow.setDims("auto", "auto", 500, 600);
+            this.appWindow.setContent("coming soon");
+            this.appWindow.openWindow();
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
+            }
+        },
+        {
+            appInfo: 'This app is used to create Smart Icons.',
+            
+        }, 2, 'smartIconCreator', 'appicons/ds/IcM.png'
+    );
+    getId('aOSloadingInfo').innerHTML = 'Icon Maker';
+});
+c(function(){
+    m('init smart icon maker');
+    apps.smartIconSettings = new Application(
+        'SIS',
+        'Smart Icon Settings',
+        1,
+        function(launchtype){
+            this.appWindow.setCaption("Smart Icon Settings");
+            this.appWindow.setDims("auto", "auto", 800, 600);
+            this.appWindow.setContent(
+                '<div style="position:relative;width:100%;height:256px;padding-top:10px;padding-bottom:10px;background:#000;box-shadow:0 0 5px #000;text-align:center;">' +
+                buildSmartIcon(256, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(128, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(64, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(32, this.vars.aOSicon) +
+                '</div>' +
+                '<br><br>&nbsp;Border Radius:<br>' +
+                '&nbsp;<input id="smartIconSettings_tl" value="100" size="3" placeholder="100"> ' + '<div style="width:64px;position:relative;display:inline-block"></div> ' +
+                '<input id="smartIconSettings_tr" value="100" size="3" placeholder="100">' + '<br>' +
+                '&nbsp;<input id="smartIconSettings_bl" value="100" size="3" placeholder="100"> ' + buildSmartIcon(64, this.vars.testSmartIcon, 'margin-top:-1em') + ' ' +
+                '<input id="smartIconSettings_br" value="100" size="3" placeholder="100">' + '<br><br>' +
+                '&nbsp;<button onclick="apps.smartIconSettings.vars.saveRadiuses()">Save</button> ' +
+                '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br><br>' +
+                '<input id="smartIconSettings_bgcolor" placeholder="color"> <button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button>'
+            );
+            this.appWindow.paddingMode(0);
+            this.appWindow.openWindow();
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
+            }
+        },
+        {
+            appInfo: 'This app is used to configure Smart Icons.',
+            testSmartIcon: {
+                background: "smarticons/_template/shadowEdges.png",
+                backgroundColor: "#FF7F00",
+                backgroundBorder: {
+                    thickness: 1,
+                    color: "#009900"
+                },
+                foreground: "smarticons/_template/template_fg.png"
+            },
+            aOSicon: {
+                backgroundColor: "#303947",
+                foreground: "smarticons/aOS/fg.png",
+                backgroundBorder: {
+                    thickness: 2,
+                    color: "#252F3A"
+                }
+            },
+            saveRadiuses: function(radiuses){
+                if(radiuses){
+                    
+                }else{
+                    var tempR = [
+                        getId("smartIconSettings_tl").value, getId("smartIconSettings_tr").value,
+                        getId("smartIconSettings_bl").value, getId("smartIconSettings_br").value
+                    ];
+                    smartIconOptions.radiusTopLeft = tempR[0];
+                    smartIconOptions.radiusTopRight = tempR[1];
+                    smartIconOptions.radiusBottomLeft = tempR[2];
+                    smartIconOptions.radiusBottomRight = tempR[3];
+                    updateSmartIconStyle();
+                }
+            },
+            toggleBG: function(nosave){
+                smartIconOptions.backgroundOpacity = Math.abs(smartIconOptions.backgroundOpacity - 1);
+                updateSmartIconStyle();
+            },
+            setColor: function(color){
+                if(color){
+                    
+                }else{
+                    smartIconOptions.bgColor = getId("smartIconSettings_bgcolor").value;
+                    updateSmartIconStyle();
+                }
+            }
+        }, 2, 'smartIconSettings', 'appicons/ds/IcM.png'
+    );
+    getId('aOSloadingInfo').innerHTML = 'Icon Maker';
+})
 c(function(){
     m('init icon maker');
     apps.iconMaker = new Application(
@@ -7749,14 +8002,16 @@ c(function(){
                     apps.iconMaker.vars.iconClicks['c' + apps.iconMaker.vars.decompiled[0]] = apps.iconMaker.vars.decompiled[5];
                     getId('desktop').innerHTML +=
                         '<div class="app cursorPointer" id="app' + apps.iconMaker.vars.decompiled[0] + '" style="left:' + apps.iconMaker.vars.decompiled[1] + 'px;top:' + apps.iconMaker.vars.decompiled[2] + 'px" onclick="eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/console.png\', \'\', \'ctxMenu/beta/x.png\'], \' Execute\', \'eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')\', \'+Move Icon\', \'icnmove(event, \\\'' + apps.iconMaker.vars.decompiled[0] + '\\\')\', \' Delete Icon\', \'apps.iconMaker.vars.deleteIcon(' + apps.iconMaker.vars.decompiled[0] + ')\'])">' +
-                        '<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="appicons/ds/jsC.png" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
+                        //'<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="appicons/ds/jsC.png" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
+                        '<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none">' + buildSmartIcon(64, apps.jsConsole.appWindow.appImg) + '</div>' +
                         '<div class="appDesc" id="dsc' + apps.iconMaker.vars.decompiled[0] + '">' + apps.iconMaker.vars.decompiled[4] + '</div>' +
                         '</div>';
                 }else{
                     apps.iconMaker.vars.iconClicks['c' + apps.iconMaker.vars.decompiled[0]] = 'openapp(' + apps.iconMaker.vars.decompiled[5] + ', "dsktp")';
                     getId("desktop").innerHTML +=
                         '<div class="app cursorPointer" id="app' + apps.iconMaker.vars.decompiled[0] + '" style="left:' + apps.iconMaker.vars.decompiled[1] + 'px;top:' + apps.iconMaker.vars.decompiled[2] + 'px" onclick="eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'\', \'ctxMenu/beta/x.png\'], \' Open\', \'eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')\', \'+Move Icon\', \'icnmove(event, \\\'' + apps.iconMaker.vars.decompiled[0] + '\\\')\', \' Delete Icon\', \'apps.iconMaker.vars.deleteIcon(' + apps.iconMaker.vars.decompiled[0] + ')\'])">' +
-                        '<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + vartry('eval(' + apps.iconMaker.vars.decompiled[5] + ').appWindow.appImg') + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
+                        //'<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + vartry('eval(' + apps.iconMaker.vars.decompiled[5] + ').appWindow.appImg') + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
+                        '<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none">' + buildSmartIcon(64, eval(apps.iconMaker.vars.decompiled[5]).appWindow.appImg) + '</div>' +
                         '<div class="appDesc" id="dsc' + apps.iconMaker.vars.decompiled[0] + '">' + apps.iconMaker.vars.decompiled[4] + '</div>' +
                         '</div>';
                 }
@@ -8532,10 +8787,13 @@ c(function(){
             "04/14/2019: B0.13.0.1\n + Added aaronos.dev as the new official AaronOS server.\n : Updated README, EULA, and privacy policy to reflect the new server address.\n : Fixed several serverside issues.\n\n" +
             "04/15/2019: B0.13.0.2\n + Unlocked rotation on PWA.\n : Fixed password screen using old background instead of new one.\n - Removed accidental debug logging to console on arranging icons.\n\n" +
             "04/17/2019: B0.13.0.3\n + Hidden iFrame Browser app for debugging.\n\n" +
-            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)\n + Added ownedByApp attribute for iframes, will bring the specified app to top if the iframe has focus.\n + The currently focused app is displayed on the window's title.",
+            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)\n + Added ownedByApp attribute for iframes, will bring the specified app to top if the iframe has focus.\n + The currently focused app is displayed on the window's title.\n\n" +
+            "04/19/2019: B0.15.0.0\n : Window captions are now 32px high to fit the whole icon.\n : Window caption buttons are now whole instead of hanging on to the top of the window.\n + Begun work on Smart Icons.\n + Smart Icons Settings.\n + Smart Icon Creator.\n + Smart Icon Template Files.\n\n" +
+            "04/21/2019: B0.15.0.1\n : All app icons are now treated as Smart Icons. Any legacy icons are converted.\n : Made JSConsole colors readable.\n\n" +
+            "04/23/2019: B0.15.0.2\n : Fixed CustomStyles\n : Fixed Task Manager trying to update its content when its window is closed.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.14.0.0 (04/18/2019) r1';
+    window.aOSversion = 'B0.15.0.2 (04/23/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -9294,7 +9552,8 @@ c(function(){
                                     // if item is a folder
                                     if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
                                         temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                            '<img class="FIL2aosAppIcon" src="' + (apps[this.currDirList[item].split('/')[0]].appWindow.appImg || "appicons/ds/redx.png") + '"> ' +
+                                            //'<img class="FIL2aosAppIcon" src="' + (apps[this.currDirList[item].split('/')[0]].appWindow.appImg || "appicons/ds/redx.png") + '"> ' +
+                                            buildSmartIcon(16, apps[this.currDirList[item].split('/')[0]].appWindow.appImg) + ' ' +
                                             this.currDirList[item] +
                                             '</div>';
                                     }else{
@@ -9347,7 +9606,8 @@ c(function(){
                 for(var i in pathSplit){
                     if(pathSplit.indexOf("apps") === 0 && navDepth === 1){
                         tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + navPath + '\';apps.files2.vars.next(\'' + pathSplit[i] + '/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (navPath + pathSplit[i]) + '/\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                            '<img class="FIL2aosAppIcon" src="' + (apps[pathSplit[i]] || {appWindow:{appImg:"appicons/ds/redx.png"}}).appWindow.appImg + '"> ' +
+                            //'<img class="FIL2aosAppIcon" src="' + (apps[pathSplit[i]] || {appWindow:{appImg:"appicons/ds/redx.png"}}).appWindow.appImg + '"> ' +
+                            buildSmartIcon(16, (apps[pathSplit[i]] || {appWindow:{appImg:{foreground:"appicons/ds/redx.png"}}}).appWindow.appImg) + ' ' +
                             pathSplit[i] + "/" +
                             '</div>';
                     }else{
@@ -9394,7 +9654,8 @@ c(function(){
                         var currName = currPath[currPath.length - 1];
                         if(currPath.indexOf("apps") === 0 && currPath.length === 2){
                             tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + this.favorites[i] + '\';apps.files2.vars.update()" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + this.favorites[i] + '\\\');toTop(apps.properties)\', \'+Remove Favorite\', \'apps.files2.vars.toggleFavorite(\\\'' + this.favorites[i] + '\\\')\', \'_Delete\', \'\'])">' +
-                                '<img class="FIL2aosAppIcon" src="' + (apps[currName] || {appWindow:{appImg:"appicons/ds/redx.png"}}).appWindow.appImg + '"> ' +
+                                //'<img class="FIL2aosAppIcon" src="' + (apps[currName] || {appWindow:{appImg:"appicons/ds/redx.png"}}).appWindow.appImg + '"> ' +
+                                buildSmartIcon(16, (apps[currName] || {appWindow:{appImg:{foreground:"appicons/ds/redx.png"}}}).appWindow.appImg) + ' ' +
                                 currName + "/" +
                                 '</div>';
                         }else{
@@ -12245,7 +12506,8 @@ c(function(){
                     }else{
                         this.vars.currAppBuiltIn = 'Built-In aOS App';
                     }
-                    getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';"><img style="height:128px;width:128px;" src="' + this.vars.currAppImg + '" onerror="this.src=\'appicons/ds/redx.png\'"><div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
+                    //getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';"><img style="height:128px;width:128px;" src="' + this.vars.currAppImg + '" onerror="this.src=\'appicons/ds/redx.png\'"><div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
+                    getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';">' + buildSmartIcon(128, this.vars.currAppImg) + '<div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
                     getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], \' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', \' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', \'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  \' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/' + app + '/\\\')})})\'' + function(appname, builtin){if(builtin === "User-Made APM App"){return ', \' Open Source File\', \'c(function(){openapp(apps.notepad2, \\\'open\\\');apps.notepad2.vars.openFile(\\\'aos_system/apm_apps/app_' + appname + '\\\')})\'';}else{return ''}}(app, this.vars.currAppBuiltIn) + '])})">v</button>';
                     this.vars.appsListed++;
                 }
@@ -15028,9 +15290,9 @@ function calcWindowblur(win, noBgSize){
     }
     var aeroOffset = [0, 0];
     if(tskbrToggle.tskbrPos === 1){
-        aeroOffset[1] = -30;
+        aeroOffset[1] = -32;
     }else if(tskbrToggle.tskbrPos === 2){
-        aeroOffset[0] = -30;
+        aeroOffset[0] = -32;
     }
     if(screenScale === 1 || screenScale < 0.25){
         getId('monitor').style.transform = '';
@@ -15043,7 +15305,7 @@ function calcWindowblur(win, noBgSize){
         getId("tskbrAero").style.backgroundSize = bgSize[0] + 'px ' + bgSize[1] + 'px';
         switch(tskbrToggle.tskbrPos){
             case 0:
-                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 50 + bgPosition[1]) + "px";
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 52 + bgPosition[1]) + "px";
                 break;
             case 1:
                 getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
@@ -15052,10 +15314,10 @@ function calcWindowblur(win, noBgSize){
                 getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
                 break;
             case 3:
-                getId("tskbrAero").style.backgroundPosition = (-1 * (window.innerWidth * (1 / numberOfScreenScale)) + 50 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
+                getId("tskbrAero").style.backgroundPosition = (-1 * (window.innerWidth * (1 / numberOfScreenScale)) + 52 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
                 break;
             default:
-                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 50 + bgPosition[1]) + "px";
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 52 + bgPosition[1]) + "px";
         }
     }else if(win){
         getId('win_' + win + '_aero').style.backgroundPosition = (-1 * apps[win].appWindow.windowX + 40 + aeroOffset[0] + bgPosition[0]) + "px " + (-1 * (apps[win].appWindow.windowY * (apps[win].appWindow.windowY > -1)) + 40 + aeroOffset[1] + bgPosition[1]) + "px"
@@ -15067,7 +15329,7 @@ function calcWindowblur(win, noBgSize){
         getId("tskbrAero").style.backgroundSize = bgSize[0] + 'px ' + bgSize[1] + 'px';
         switch(tskbrToggle.tskbrPos){
             case 0:
-                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 50 + bgPosition[1]) + "px";
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 52 + bgPosition[1]) + "px";
                 break;
             case 1:
                 getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
@@ -15076,10 +15338,10 @@ function calcWindowblur(win, noBgSize){
                 getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
                 break;
             case 3:
-                getId("tskbrAero").style.backgroundPosition = (-1 * (window.innerWidth * (1 / numberOfScreenScale)) + 50 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
+                getId("tskbrAero").style.backgroundPosition = (-1 * (window.innerWidth * (1 / numberOfScreenScale)) + 52 + bgPosition[0]) + "px " + (20 + bgPosition[1]) + "px";
                 break;
             default:
-                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 50 + bgPosition[1]) + "px";
+                getId("tskbrAero").style.backgroundPosition = (20 + bgPosition[0]) + "px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 52 + bgPosition[1]) + "px";
         }
     }
 }
@@ -15096,10 +15358,10 @@ function fitWindow(){
     getId("monitor").style.width = window.innerWidth * (1 / numberOfScreenScale) + "px";
     getId("monitor").style.height = window.innerHeight * (1 / numberOfScreenScale) + "px";
     getId("desktop").style.width = window.innerWidth * (1 / numberOfScreenScale) + "px";
-    getId("desktop").style.height = window.innerHeight * (1 / numberOfScreenScale) - 30 + "px";
+    getId("desktop").style.height = window.innerHeight * (1 / numberOfScreenScale) - 32 + "px";
     getId("taskbar").style.width = window.innerWidth * (1 / numberOfScreenScale) + "px";
     //getId("taskbar").style.top = window.innerHeight - 30 + "px";
-    getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 50) + "px";
+    getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (window.innerHeight * (1 / numberOfScreenScale)) + 52) + "px";
     getId("tskbrAero").style.width = window.innerWidth * (1 / numberOfScreenScale) + 40 + "px";
     getId("tskbrAero").style.height = '';
     getId('tskbrAero').style.transform = '';
@@ -15111,9 +15373,9 @@ function fitWindow(){
     switch(tskbrToggle.tskbrPos){
         case 1:
             getId('desktop').style.left = '';
-            getId('desktop').style.top = '30px';
+            getId('desktop').style.top = '32px';
             getId('desktop').style.width = getId('monitor').style.width;
-            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 30 + "px";
+            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 32 + "px";
             getId('taskbar').style.top = '0';
             getId('taskbar').style.left = '';
             getId('taskbar').style.right = '';
@@ -15123,9 +15385,9 @@ function fitWindow(){
             getId('tskbrAero').style.backgroundPosition = "20px 20px";
             break;
         case 2:
-            getId('desktop').style.left = '30px';
+            getId('desktop').style.left = '32px';
             getId('desktop').style.top = '';
-            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 32 + "px";
             getId('desktop').style.height = getId('monitor').style.height;
             getId('taskbar').style.top = '0';
             getId('taskbar').style.left = '';
@@ -15135,24 +15397,24 @@ function fitWindow(){
             getId('taskbar').style.width = getId('monitor').style.height;
             getId('tskbrAero').style.backgroundPosition = "20px 20px";
             getId('tskbrAero').style.transform = 'rotate(-90deg)';
-            getId('tskbrAero').style.width = '70px';
+            getId('tskbrAero').style.width = '72px';
             getId('tskbrAero').style.height = window.innerHeight * (1 / numberOfScreenScale) + 40 + "px";
             getId('tskbrAero').style.transformOrigin = '35px 35px';
             break;
         case 3:
             getId('desktop').style.left = '';
             getId('desktop').style.top = '';
-            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 32 + "px";
             getId('desktop').style.height = getId('monitor').style.height;
             getId('taskbar').style.top = '';
-            getId('taskbar').style.left = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+            getId('taskbar').style.left = parseInt(getId('monitor').style.width, 10) - 32 + "px";
             getId('taskbar').style.right = '';
             getId('taskbar').style.bottom = '';
             getId('taskbar').style.transform = 'rotate(-90deg)';
             getId('taskbar').style.width = getId('monitor').style.height;
-            getId('tskbrAero').style.backgroundPosition = (-1 * (window.innerWidth * (1 / numberOfScreenScale)) + 50) + "px 20px";
-            getId('tskbrAero').style.transform = 'rotate(90deg) translateY(-' + (window.innerHeight * (1 / numberOfScreenScale) - 30) + 'px)';
-            getId('tskbrAero').style.width = '70px';
+            getId('tskbrAero').style.backgroundPosition = (-1 * (window.innerWidth * (1 / numberOfScreenScale)) + 52) + "px 20px";
+            getId('tskbrAero').style.transform = 'rotate(90deg) translateY(-' + (window.innerHeight * (1 / numberOfScreenScale) - 32) + 'px)';
+            getId('tskbrAero').style.width = '72px';
             getId('tskbrAero').style.height = window.innerHeight * (1 / numberOfScreenScale) + 40 + "px";
             getId('tskbrAero').style.transformOrigin = '35px 35px';// + (window.innerHeight * (1 / numberOfScreenScale) + 5) + 'px';
             break;
@@ -15160,7 +15422,7 @@ function fitWindow(){
             getId('desktop').style.left = '';
             getId('desktop').style.top = '';
             getId('desktop').style.width = getId('monitor').style.width;
-            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 30 + "px";
+            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 32 + "px";
             getId('taskbar').style.top = '';
             getId('taskbar').style.left = '';
             getId('taskbar').style.right = '';
@@ -15188,10 +15450,10 @@ function fitWindowOuter(){
     getId("monitor").style.width = window.outerWidth * (1 / numberOfScreenScale) + "px";
     getId("monitor").style.height = window.outerHeight * (1 / numberOfScreenScale) + "px";
     getId("desktop").style.width = window.outerWidth * (1 / numberOfScreenScale) + "px";
-    getId("desktop").style.height = window.outerHeight * (1 / numberOfScreenScale) - 30 + "px";
+    getId("desktop").style.height = window.outerHeight * (1 / numberOfScreenScale) - 32 + "px";
     getId("taskbar").style.width = window.outerWidth * (1 / numberOfScreenScale) + "px";
     //getId("taskbar").style.top = window.outerHeight - 30 + "px";
-    getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (window.outerHeight * (1 / numberOfScreenScale)) + 50) + "px";
+    getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (window.outerHeight * (1 / numberOfScreenScale)) + 52) + "px";
     getId("tskbrAero").style.width = window.outerWidth * (1 / numberOfScreenScale) + 40 + "px";
     getId("tskbrAero").style.height = '';
     getId('tskbrAero').style.transform = '';
@@ -15203,9 +15465,9 @@ function fitWindowOuter(){
     switch(tskbrToggle.tskbrPos){
         case 1:
             getId('desktop').style.left = '';
-            getId('desktop').style.top = '30px';
+            getId('desktop').style.top = '32px';
             getId('desktop').style.width = getId('monitor').style.width;
-            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 30 + "px";
+            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 32 + "px";
             getId('taskbar').style.top = '0';
             getId('taskbar').style.left = '';
             getId('taskbar').style.right = '';
@@ -15214,9 +15476,9 @@ function fitWindowOuter(){
             getId('taskbar').style.width = getId('monitor').style.width;
             break;
         case 2:
-            getId('desktop').style.left = '30px';
+            getId('desktop').style.left = '32px';
             getId('desktop').style.top = '';
-            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 32 + "px";
             getId('desktop').style.height = getId('monitor').style.height;
             getId('taskbar').style.top = '0';
             getId('taskbar').style.left = '';
@@ -15228,10 +15490,10 @@ function fitWindowOuter(){
         case 3:
             getId('desktop').style.left = '';
             getId('desktop').style.top = '';
-            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 32 + "px";
             getId('desktop').style.height = getId('monitor').style.height;
             getId('taskbar').style.top = '';
-            getId('taskbar').style.left = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+            getId('taskbar').style.left = parseInt(getId('monitor').style.width, 10) - 32 + "px";
             getId('taskbar').style.right = '';
             getId('taskbar').style.bottom = '';
             getId('taskbar').style.transform = 'rotate(-90deg)';
@@ -15241,7 +15503,7 @@ function fitWindowOuter(){
             getId('desktop').style.left = '';
             getId('desktop').style.top = '';
             getId('desktop').style.width = getId('monitor').style.width;
-            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 30 + "px";
+            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 32 + "px";
             getId('taskbar').style.top = '';
             getId('taskbar').style.left = '';
             getId('taskbar').style.right = '';
@@ -15269,10 +15531,10 @@ function fitWindowRes(newmonX, newmonY){
     getId("monitor").style.width = newmonX * (1 / numberOfScreenScale) + "px";
     getId("monitor").style.height = newmonY * (1 / numberOfScreenScale) + "px";
     getId("desktop").style.width = newmonX * (1 / numberOfScreenScale) + "px";
-    getId("desktop").style.height = newmonY * (1 / numberOfScreenScale) - 30 + "px";
+    getId("desktop").style.height = newmonY * (1 / numberOfScreenScale) - 32 + "px";
     getId("taskbar").style.width = newmonX * (1 / numberOfScreenScale) + "px";
     //getId("taskbar").style.top = newmonY - 30 + "px";
-    getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (newmonY * (1 / numberOfScreenScale)) + 50) + "px";
+    getId("tskbrAero").style.backgroundPosition = "20px " + (-1 * (newmonY * (1 / numberOfScreenScale)) + 52) + "px";
     getId("tskbrAero").style.width = newmonX * (1 / numberOfScreenScale) + 40 + "px";
     getId("tskbrAero").style.height = '';
     getId('tskbrAero').style.transform = '';
@@ -15284,9 +15546,9 @@ function fitWindowRes(newmonX, newmonY){
     switch(tskbrToggle.tskbrPos){
         case 1:
             getId('desktop').style.left = '';
-            getId('desktop').style.top = '30px';
+            getId('desktop').style.top = '32px';
             getId('desktop').style.width = getId('monitor').style.width;
-            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 30 + "px";
+            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 32 + "px";
             getId('taskbar').style.top = '0';
             getId('taskbar').style.left = '';
             getId('taskbar').style.right = '';
@@ -15295,9 +15557,9 @@ function fitWindowRes(newmonX, newmonY){
             getId('taskbar').style.width = getId('monitor').style.width;
             break;
         case 2:
-            getId('desktop').style.left = '30px';
+            getId('desktop').style.left = '32px';
             getId('desktop').style.top = '';
-            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 32 + "px";
             getId('desktop').style.height = getId('monitor').style.height;
             getId('taskbar').style.top = '0';
             getId('taskbar').style.left = '';
@@ -15309,10 +15571,10 @@ function fitWindowRes(newmonX, newmonY){
         case 3:
             getId('desktop').style.left = '';
             getId('desktop').style.top = '';
-            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+            getId('desktop').style.width = parseInt(getId('monitor').style.width, 10) - 32 + "px";
             getId('desktop').style.height = getId('monitor').style.height;
             getId('taskbar').style.top = '';
-            getId('taskbar').style.left = parseInt(getId('monitor').style.width, 10) - 30 + "px";
+            getId('taskbar').style.left = parseInt(getId('monitor').style.width, 10) - 32 + "px";
             getId('taskbar').style.right = '';
             getId('taskbar').style.bottom = '';
             getId('taskbar').style.transform = 'rotate(-90deg)';
@@ -15322,7 +15584,7 @@ function fitWindowRes(newmonX, newmonY){
             getId('desktop').style.left = '';
             getId('desktop').style.top = '';
             getId('desktop').style.width = getId('monitor').style.width;
-            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 30 + "px";
+            getId('desktop').style.height = parseInt(getId('monitor').style.height, 10) - 32 + "px";
             getId('taskbar').style.top = '';
             getId('taskbar').style.left = '';
             getId('taskbar').style.right = '';

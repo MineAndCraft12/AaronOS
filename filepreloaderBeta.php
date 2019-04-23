@@ -18,6 +18,7 @@
         }
         if(!is_dir('messageUsernames')){
             mkdir('messageUsernames');
+        file_put_contents('messageUsernames/.htaccess', 'Deny from all');
         }
         echo 'alert("By hosting AaronOS or otherwise using its code or resources, you are agreeing to the End User License Agreement which will open in a new window/tab when you click anywhere on the aOS desktop.");window.tosClick=function(){window.open("eula.txt","_blank");window.removeEventListener("click",window.tosClick)};window.addEventListener("click",window.tosClick);';
     }
