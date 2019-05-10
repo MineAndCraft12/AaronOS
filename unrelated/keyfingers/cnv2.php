@@ -33,6 +33,7 @@
             var ctx;
             var vctx;
             var ctxMusic;
+            var delayNode;
             var audio;
             var audioMusic;
             var audioSrc;
@@ -161,6 +162,10 @@
                     analyser.minDecibels = parseInt(document.getElementById('db').value, 10);
                     analyser.smoothingTimeConstant = 0;
                     audioSrc.connect(analyser);
+                    delayNode = ctx.createDelay();
+                    delayNode.delayTime.value = parseFloat(document.getElementById('delayTime').value) / 10;
+                    analyser.connect(delayNode);
+                    delayNode.connect(ctx.destination);
                     frequencyData = new Uint8Array(analyser.frequencyBinCount);
                     loadsReady = 0;
                     loadStr = "Local File";
@@ -168,7 +173,7 @@
                         if(loadsReady){
                             //document.getElementById('songname').value = loadStr;
                             setTimeout(function(){
-                                audioMusic.play();
+                                //audioMusic.play();
                             }, parseInt(document.getElementById('delayTime').value, 10));
                             audio.play();
                             document.getElementById('loadTotal').style.width = Math.floor(audioMusic.buffered.end(0) / audioMusic.duration * 1024) + "px";
@@ -187,7 +192,7 @@
                         if(loadsReady){
                             //document.getElementById('songname').value = loadStr;
                             setTimeout(function(){
-                                audioMusic.play();
+                                //audioMusic.play();
                             }, parseInt(document.getElementById('delayTime').value, 10));
                             audio.play();
                             document.getElementById('loadTotal').style.width = Math.floor(audioMusic.buffered.end(0) / audioMusic.duration * 1024) + "px";
@@ -277,7 +282,7 @@
             <button onclick="audio.play();audioMusic.play();">&gt;</button>
             <!--<button style="background-color:red;" onclick="audio.pause();audioMusic.pause();audio.currentTime += 5;audioMusic.currentTime += 5;audio.play();audioMusic.play();">&gt;&gt;</button>-->
             <button onclick="window.location='cnv.php'">New</button>
-            Delay ms: <input id="delayTime" style="font-family:monospace;" value="200" size="4">
+            Delay 0-9: <input id="delayTime" style="font-family:monospace;" value="2" size="4">
             Min decibels: <input id="db" style="font-family:monospace;" value="-70" size="4">
             <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/cnv.php?random=true';">Randomize</button>
             <button onclick="window.location='https://aaron-os-mineandcraft12.c9.io/unrelated/keyfingers/recolor.php';">Window Recolor</button>

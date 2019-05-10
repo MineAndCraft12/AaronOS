@@ -19,10 +19,18 @@ div{
 #songList{
     border:1px solid #000;
     width:100%;
-    height:300px;
+    height:calc(100% - 75px);
     overflow:auto;
     font-family:aosProFont, Courier, monospace;
     font-size:12px;
+}
+#visualizer{
+    position:absolute;
+    left:4px;
+    bottom:4px;
+    width:calc(100% - 8px);
+    height:calc(100% - 81px);
+    background:#F00;
 }
 #songList div{
     cursor:pointer;
@@ -34,12 +42,16 @@ div{
 }
 #currentlyPlaying{
     width:100%;
+    height:24px;
+    max-height:24px;
     border:1px solid #000;
     font-family:aosProFont;
     font-size:24px;
 }
 #controls{
     width:100%;
+    height:38px;
+    max-height:38px;
     text-align:center;
     border:1px solid #000;
 }
@@ -52,6 +64,5 @@ div{
     background:rgba(127, 127, 127, 0.1);
 }
 .disabled{
-    opacity:0.5;
-    pointer-events:none;
+    display:none;
 }

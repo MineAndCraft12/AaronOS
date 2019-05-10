@@ -47,7 +47,14 @@ function loadFolder(event){
         }
     }
     listSongs();
-    getId("controls").classList.remove("disabled");
+    var disabledElements = document.getElementsByClassName('disabled');
+    console.log(disabledElements);
+    while(disabledElements.length > 0){
+        disabledElements[0].classList.remove('disabled');
+    }
+    console.log(disabledElements);
+    getId("introduction").classList.add('disabled');
+    getId("visualizer").classList.add('disabled');
 }
 
 var currentSong = -1;
