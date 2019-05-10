@@ -11,7 +11,7 @@
                 googlePlay = '?GooglePlay=true';
             }
             function acceptPassword(token){
-                document.cookie="logintoken=" + token;
+                document.cookie = "logintoken=" + token + ';secure;';
                 window.location = 'aosBeta.php' + googlePlay;
             }
             function rejectPassword(message){
@@ -29,7 +29,7 @@
                             if(xhttp.status === 200){
                                 if(xhttp.responseText === 'REJECT'){
                                     rejectPassword("Password incorrect.");
-                                }else if(xhttp.responseText == parseFloat(xhttp.responseText) && xhttp.responseText !== ''){
+                                }else if(xhttp.responseText.indexOf(' ') === -1 && xhttp.responseText.length === 30 && xhttp.responseText !== ''){
                                     acceptPassword(xhttp.responseText);
                                 }else{
                                     rejectPassword("Error: " + xhttp.responseText + '.');
@@ -250,8 +250,8 @@
                 }
             ?><br><br>
             OS ID: <?php echo $_COOKIE['keyword'] ?><br>
-            <span id="error"></span><br>
             &nbsp;<br>
+            <span id="error"></span><br>
             <input type="password" placeholder="Password" onkeypress="if(event.keyCode === 13){checkPassword();}" id="password"> <button onclick="checkPassword()">Log In</button><br><br>
             Or, if this isn't your account, <button onclick="skipPassword()">Create a New One</button>.<br><br>
         </div>
