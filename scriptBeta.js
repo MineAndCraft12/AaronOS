@@ -7651,7 +7651,7 @@ c(function(){
                                     //apps.savemaster.vars.save();
                                     getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Goodbye!</div></div></div>';
                                     if(logout){
-                                        document.cookie = "loginkey=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+                                        document.cookie = "logintoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
                                     window.location = 'blackScreen.html#restart-beta';
                                 });
@@ -7696,7 +7696,7 @@ c(function(){
                                     //apps.savemaster.vars.save();
                                     getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Goodbye!</div></div></div>';
                                     if(logout){
-                                        document.cookie = "loginkey=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+                                        document.cookie = "logintoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
                                     window.location = 'blackScreen.html#beta';
                                 });
