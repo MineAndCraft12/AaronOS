@@ -24,7 +24,23 @@ function dirToArray($dir) {
 if(isset($_COOKIE['keyword'])){
     if(is_dir('USERFILES/'.$_COOKIE['keyword'])){
         if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){
-            if(isset($_COOKIE['password'])){
+            if(isset($_COOKIE['logintoken'])){
+                if((require 'checkToken.php') === 0){
+                    echo '{}';
+                }else{
+                    $jsonResult = json_encode(dirToArray('USERFILES/'.$_COOKIE['keyword']));
+                    if($jsonResult == "null"){
+                        echo '{}';
+                    }else{
+                        $jsonResult = str_replace("/script", "\\/script", $jsonResult);
+                        echo $jsonResult;
+                    }
+                }
+            }else{
+                echo '{}';
+            }
+            
+            /*if(isset($_COOKIE['password'])){
                 $passwordFile = fopen('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt', 'r');
                 $currPassword = fread($passwordFile, filesize('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt'));
                 fclose($passwordFile);
@@ -55,6 +71,7 @@ if(isset($_COOKIE['keyword'])){
             }else{
                 echo '{}';
             }
+            */
         }else{
             $jsonResult = json_encode(dirToArray('USERFILES/'.$_COOKIE['keyword']));
             if($jsonResult == "null"){

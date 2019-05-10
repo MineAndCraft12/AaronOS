@@ -2846,7 +2846,14 @@ c(function(){
                     });
                 }, 'ctxMenu/beta/folder.png']
             ]
-        }, 2, "startMenu", "appicons/ds/aOS.png"
+        }, 2, "startMenu", {
+            backgroundColor: "#303947",
+        	foreground: "smarticons/aOS/fg.png",
+        	backgroundBorder: {
+        		thickness: 2,
+        		color: "#252F3A"
+        	}
+        }
     );
     apps.startMenu.main('srtup');
     getId('aOSloadingInfo').innerHTML = 'NORAA';
@@ -6809,7 +6816,24 @@ c(function(){
                 USERFILES.aOSpassword = '*****';
                 var tmpPasswordSet = getId('STNosPass').value;
                 setTimeout(() => {
-                    document.cookie = 'password=' + tmpPasswordSet + '; Max-Age=315576000';
+                    var passxhr = new XMLHttpRequest();
+                    passxhr.onreadystatechange = () => {
+                        if(passxhr.readyState === 4){
+                            if(passxhr.status === 200){
+                                if(passxhr.responseText == parseFloat(passxhr.responseText)){
+                                    document.cookie = 'logintoken=' + passxhr.responseText;
+                                }else{
+                                    alert("There was an issue setting your password. Try again.\n" + passxhr.responseText);
+                                }
+                            }else{
+                                alert("There was an issue setting your password. Try again.\n" + passxhr.status);
+                            }
+                        }
+                    }
+                    passxhr.open('POST', 'checkPassword.php');
+                    var passfd = new FormData();
+                    passfd.append('pass', tmpPasswordSet);
+                    passxhr.send(passfd);
                     //apps.settings.vars.tmpPasswordSet = "";
                 }, 5000);
                 getId("STNosPass").value = "";
@@ -7485,19 +7509,19 @@ c(function(){
             tempchPass: '',
             changeKey: function(){
                 //this.tempchKey = prompt('What is the key of your target aOS system? Keep in mind that you need a password file (aOSpassword) set on the current OS to get back to it later. Press Cancel if you need to.');
-                apps.prompt.vars.prompt('What is the key of your target aOS system? Keep in mind that you need a password set on the current OS to get back to it later. Leave blank to cancel.', 'Submit', function(tmpChKey){
+                apps.prompt.vars.prompt('What is the key of your target aOS system?<br>Leave blank to cancel.<br>Keep in mind, if the target system has no password, this will fail.<br>If this works, you should be sent to a password screen.', 'Submit', function(tmpChKey){
                     apps.settings.vars.tempchKey = tmpChKey;
                     if(apps.settings.vars.tempchKey !== ''){
                         //this.tempchPass = prompt('What is the password of your target aOS system? You still have a chance to press Cancel.');
-                        apps.prompt.vars.prompt('What is the password of your target aOS system? You still have a chance to cancel, by leaving the field blank.', 'Submit', function(tmpChPass){
-                            apps.settings.vars.tempchPass = tmpChPass;
-                            if(apps.settings.vars.tempchPass !== ''){
-                                document.cookie = 'password=' + tmpChPass + ';expires=2147483647';
-                                window.location = '?changeKey=' + apps.settings.vars.tempchKey + '&changePass=' + apps.settings.vars.tempchPass;
-                            }else{
-                                apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
-                            }
-                        }, 'Settings');
+                        //apps.prompt.vars.prompt('What is the password of your target aOS system? You still have a chance to cancel, by leaving the field blank.', 'Submit', function(tmpChPass){
+                        //    apps.settings.vars.tempchPass = tmpChPass;
+                        //    if(apps.settings.vars.tempchPass !== ''){
+                                //document.cookie = 'password=' + tmpChPass + ';expires=2147483647';
+                                window.location = '?changeKey=' + apps.settings.vars.tempchKey// + '&changePass=' + apps.settings.vars.tempchPass;
+                        //    }else{
+                        //        apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
+                        //    }
+                        //}, 'Settings');
                     }else{
                         apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
                     }
@@ -7627,7 +7651,7 @@ c(function(){
                                     //apps.savemaster.vars.save();
                                     getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Goodbye!</div></div></div>';
                                     if(logout){
-                                        document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+                                        document.cookie = "loginkey=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
                                     window.location = 'blackScreen.html#restart-beta';
                                 });
@@ -7672,7 +7696,7 @@ c(function(){
                                     //apps.savemaster.vars.save();
                                     getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Goodbye!</div></div></div>';
                                     if(logout){
-                                        document.cookie = "password=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+                                        document.cookie = "loginkey=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
                                     window.location = 'blackScreen.html#beta';
                                 });
@@ -7754,7 +7778,7 @@ c(function(){
                 '<br><br>&nbsp;Border Radius:<br>' +
                 '&nbsp;<input id="smartIconSettings_tl" value="100" size="3" placeholder="100"> ' + '<div style="width:64px;position:relative;display:inline-block"></div> ' +
                 '<input id="smartIconSettings_tr" value="100" size="3" placeholder="100">' + '<br>' +
-                '&nbsp;<input id="smartIconSettings_bl" value="100" size="3" placeholder="100"> ' + buildSmartIcon(64, this.vars.testSmartIcon, 'margin-top:-1em') + ' ' +
+                '&nbsp;<input id="smartIconSettings_bl" value="100" size="3" placeholder="100"> ' + buildSmartIcon(64, this.vars.aOSicon, 'margin-top:-1em') + ' ' +
                 '<input id="smartIconSettings_br" value="100" size="3" placeholder="100">' + '<br><br>' +
                 '&nbsp;<button onclick="apps.smartIconSettings.vars.saveRadiuses()">Save</button> ' +
                 '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br><br>' +
@@ -7799,7 +7823,7 @@ c(function(){
         },
         {
             appInfo: 'This app is used to configure Smart Icons.',
-            testSmartIcon: {
+            testSmartIconOriginal: {
                 background: "smarticons/_template/shadowEdges.png",
                 backgroundColor: "#FF7F00",
                 backgroundBorder: {
@@ -7808,13 +7832,21 @@ c(function(){
                 },
                 foreground: "smarticons/_template/template_fg.png"
             },
+            testSmartIcon: {
+                backgroundColor: "#303947",
+            	foreground: "smarticons/aOS/fg.png",
+            	backgroundBorder: {
+            		thickness: 2,
+            		color: "#252F3A"
+            	}
+            },
             aOSicon: {
                 backgroundColor: "#303947",
-                foreground: "smarticons/aOS/fg.png",
-                backgroundBorder: {
-                    thickness: 2,
-                    color: "#252F3A"
-                }
+            	foreground: "smarticons/aOS/fg.png",
+            	backgroundBorder: {
+            		thickness: 2,
+            		color: "#252F3A"
+            	}
             },
             saveRadiuses: function(radiuses){
                 if(radiuses){
@@ -7843,7 +7875,14 @@ c(function(){
                     updateSmartIconStyle();
                 }
             }
-        }, 2, 'smartIconSettings', 'appicons/ds/IcM.png'
+        }, 2, 'smartIconSettings', {
+        	backgroundColor: "#303947",
+        	foreground: "smarticons/aOS/fg.png",
+        	backgroundBorder: {
+        		thickness: 2,
+        		color: "#252F3A"
+        	}
+        }
     );
     getId('aOSloadingInfo').innerHTML = 'Icon Maker';
 })
@@ -8790,10 +8829,12 @@ c(function(){
             "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)\n + Added ownedByApp attribute for iframes, will bring the specified app to top if the iframe has focus.\n + The currently focused app is displayed on the window's title.\n\n" +
             "04/19/2019: B0.15.0.0\n : Window captions are now 32px high to fit the whole icon.\n : Window caption buttons are now whole instead of hanging on to the top of the window.\n + Begun work on Smart Icons.\n + Smart Icons Settings.\n + Smart Icon Creator.\n + Smart Icon Template Files.\n\n" +
             "04/21/2019: B0.15.0.1\n : All app icons are now treated as Smart Icons. Any legacy icons are converted.\n : Made JSConsole colors readable.\n\n" +
-            "04/23/2019: B0.15.0.2\n : Fixed CustomStyles\n : Fixed Task Manager trying to update its content when its window is closed.",
+            "04/23/2019: B0.15.0.2\n : Fixed CustomStyles\n : Fixed Task Manager trying to update its content when its window is closed.\n\n" +
+            "04/27/2019: B0.15.0.3\n + Testing more Smart Icons\n : Fixed CSE's text editor focusing its window on click, making the context menu unusable.\n : Fixed constantly bringing iframe owner to top unnecessarily, breaking context menus and such.\n\n" +
+            "05/09/2019: B0.15.0.4\n : Fixed security in login system.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.15.0.2 (04/23/2019) r0';
+    window.aOSversion = 'B0.15.0.4 (05/09/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11681,7 +11722,14 @@ c(function(){
                 apps.savemaster.vars.saving = 3;
                 taskbarShowHardware();
             }
-        }, 0, "messaging", "appicons/ds/MSG.png"
+        }, 0, "messaging", {
+        	backgroundColor: "#303947",
+        	foreground: "smarticons/messaging/fg.png",
+        	backgroundBorder: {
+        		thickness: 2,
+        		color: "#252F3A"
+        	}
+        }
     );
     getId('aOSloadingInfo').innerHTML = 'Camera';
 });
@@ -12847,7 +12895,7 @@ c(function(){
                     this.appWindow.setDims("auto", "auto", 400, 400);
                     this.appWindow.toggleFullscreen();
                     this.appWindow.setCaption('Custom Style Editor');
-                    this.appWindow.setContent('<textarea ownedByApp="styleEditor" id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe ownedByApp="styleEditor" src="aosBeta.php?styletemplate=true&nofiles=true" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
+                    this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe ownedByApp="styleEditor" src="aosBeta.php?styletemplate=true&nofiles=true" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
                     if(ufload("aos_system/user_custom_style")){
                         getId('CSEtextarea').innerHTML = ufload("aos_system/user_custom_style");
                         //this.vars.updateFrame();
@@ -14561,8 +14609,10 @@ c(function(){
 });
 m('init finalizing');
 //function to open apps
+var currTopApp = '';
 function toTop(appToNudge, dsktpClick){
     m('Moving App ' + appToNudge.dsktpIcon + ' to Top');
+    currTopApp = '';
     if(dsktpClick !== 2){
         for(var appLication in apps){
             if(getId("win_" + apps[appLication].objName + "_top").style.zIndex !== "100"){
@@ -14584,6 +14634,7 @@ function toTop(appToNudge, dsktpClick){
         getId("win_" + appToNudge.objName + "_aero").style.opacity = "1";
         getId('icn_' + appToNudge.objName).style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
         try{
+            currTopApp = appToNudge.objName;
             document.title = appToNudge.appDesc + ' | aOS ' + aOSversion;
         }catch(err){
             document.title = 'AaronOS';
@@ -15861,7 +15912,9 @@ c(function(){
     window.iframeblurcheck = function(){
         try{
             if(document.activeElement.getAttribute("ownedByApp")){
-                toTop(apps[document.activeElement.getAttribute("ownedByApp")]);
+                if(currTopApp !== document.activeElement.getAttribute("ownedByApp")){
+                    toTop(apps[document.activeElement.getAttribute("ownedByApp")]);
+                }
             }
         }catch(err){
             

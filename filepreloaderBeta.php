@@ -20,7 +20,15 @@
             mkdir('messageUsernames');
         file_put_contents('messageUsernames/.htaccess', 'Deny from all');
         }
+        if(!is_dir('logins')){
+            mkdir('logins');
+            file_put_contents('logins/.htaccess', 'Deny from all');
+        }
         echo 'alert("By hosting AaronOS or otherwise using its code or resources, you are agreeing to the End User License Agreement which will open in a new window/tab when you click anywhere on the aOS desktop.");window.tosClick=function(){window.open("eula.txt","_blank");window.removeEventListener("click",window.tosClick)};window.addEventListener("click",window.tosClick);';
+    }
+    
+    if(isset($_COOKIE['password'])){
+        setcookie('password', '', time() - 3600);
     }
     
     // if the page needs to be refreshed
@@ -31,6 +39,12 @@
         if(is_dir('USERFILES/'.$changeKey)){
             // if the user has a password
             if(file_exists('USERFILES/'.$changeKey.'/aOSpassword.txt')){
+                // tell the browser the new user name
+                setcookie('keyword', $changeKey, time() + 321408000);// time() + 321408000);
+                setcookie('logintoken', '', time() - 3600);
+                header('Location: askPassword.php');
+                die();
+                /*
                 // grab the users password
                 $passfile = fopen('USERFILES/'.$changeKey.'/aOSpassword.txt', 'r');
                 $targetPass = fread($passfile, filesize('USERFILES/'.$changeKey.'/aOSpassword.txt'));
@@ -56,6 +70,7 @@
                         $_COOKIE['keyword'] = $changeKey;
                     }
                 }
+                */
             }
         }
         // page needs to be refreshed on clientside
@@ -95,6 +110,14 @@
         $_COOKIE['keyword'] = $newcode;
     }
     if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){
+        if(isset($_COOKIE['logintoken'])){
+            if((require 'checkToken.php') === 0){
+                header('Location: askPassword.php');
+            }
+        }else{
+            header('Location: askPassword.php');
+        }
+        /*
         if(isset($_COOKIE['password'])){
             $passwordFile = fopen('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt', 'r');
             $currPassword = fread($passwordFile, filesize('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt'));
@@ -126,6 +149,7 @@
                 header('Location: askPassword.php');
             }
         }
+        */
     }
     // push javascript to set server variables
     echo 'window.SRVRKEYWORD="'.$_COOKIE['keyword'].'";';

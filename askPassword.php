@@ -3,13 +3,49 @@
     <head>
         <title>AaronOS - Password</title>
         <script defer>
+            function getId(target){
+                return document.getElementById(target);
+            }
             var googlePlay = "";
             if(window.location.href.indexOf('GooglePlay=true') > -1){
                 googlePlay = '?GooglePlay=true';
             }
-            function checkPassword(){
-                document.cookie = 'password=' + document.getElementById('password').value + "; Max-Age:315576000";
+            function acceptPassword(token){
+                document.cookie="logintoken=" + token;
                 window.location = 'aosBeta.php' + googlePlay;
+            }
+            function rejectPassword(message){
+                getId("error").innerHTML = message;
+                getId('password').value = '';
+            }
+            var running = 0;
+            function checkPassword(){
+                //document.cookie = 'password=' + document.getElementById('password').value + "; Max-Age:315576000";
+                //window.location = 'aosBeta.php' + googlePlay;
+                if(!running){
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = () => {
+                        if(xhttp.readyState === 4){
+                            if(xhttp.status === 200){
+                                if(xhttp.responseText === 'REJECT'){
+                                    rejectPassword("Password incorrect.");
+                                }else if(xhttp.responseText == parseFloat(xhttp.responseText) && xhttp.responseText !== ''){
+                                    acceptPassword(xhttp.responseText);
+                                }else{
+                                    rejectPassword("Error: " + xhttp.responseText + '.');
+                                }
+                            }else{
+                                rejectPassword("Connection error " + xhttp.status + ". Try again.");
+                            }
+                            running = 0;
+                        }
+                    };
+                    var fd = new FormData();
+                    fd.append("pass", document.getElementById('password').value);
+                    xhttp.open('POST', 'checkPassword.php');
+                    xhttp.send(fd);
+                    running = 1;
+                }
             }
             function skipPassword(){
                 if(confirm("Are you sure you want to create a new account and potentially lose all the data associated with your old one?")){
@@ -213,7 +249,8 @@
                     echo 'Welcome';
                 }
             ?><br><br>
-            OS ID: <?php echo $_COOKIE['keyword'] ?><br><br>
+            OS ID: <?php echo $_COOKIE['keyword'] ?><br>
+            <span id="error"></span><br>
             &nbsp;<br>
             <input type="password" placeholder="Password" onkeypress="if(event.keyCode === 13){checkPassword();}" id="password"> <button onclick="checkPassword()">Log In</button><br><br>
             Or, if this isn't your account, <button onclick="skipPassword()">Create a New One</button>.<br><br>
