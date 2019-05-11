@@ -108,12 +108,14 @@
                     vctx.clearRect(0, 0, 1024 * transformFact[0], 255 * transformFact[1]);
                     if(!big){
                         for(var i = 0; i < 1024; i++){
+                            i*=4;
                             vctx.beginPath();
                             //vctx.strokeStyle = 'rgb(0, ' + frequencyData[i] + ',' + (255 - frequencyData[i]) + ')';
                             vctx.strokeStyle = 'rgb(' + ((frequencyData[i] > 200) * ((frequencyData[i] - 200) * 4.6)) + ', ' + (frequencyData[i] - ((frequencyData[i] > 220) * ((frequencyData[i] - 220) * 7.2))) + ',' + (255 - frequencyData[i]) + ')';
-                            vctx.moveTo(i + 0.5, 255);
-                            vctx.lineTo(i + 0.5, (255 - frequencyData[i]));
+                            vctx.moveTo(i/4 + 0.5, 255);
+                            vctx.lineTo(i/4 + 0.5, (255 - frequencyData[i]));
                             vctx.stroke();
+                            i/=4;
                         }
                     }else{
                         for(var i = 0; i < 1024; i++){

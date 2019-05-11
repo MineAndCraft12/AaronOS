@@ -19,17 +19,12 @@
                 <button onclick="shuffle()">Shuffle</button> |
                 <button onclick="refresh()">Refresh</button>
                 <br>
-                Visualizer: <select>
-                    <option value="none">None</option>
-                    <option value="normal" disabled>Normal</option>
-                </select> |
-                Color Scheme: <select>
-                    <option value="bgr" disabled>B-&gt;G-&gt;R</option>
-                </select>
+                Visualizer: <select id="visfield" onchange="setVis(this.value)"></select> |
+                Color Scheme: <select id="colorfield" onchange="setColor(this.value)"></select>
             </div>
             <div id="progressContainer" class="disabled"><div id="progress"></div></div>
             <div id="songList" class="disabled"></div>
-            <div id="visualizer" class="disabled"></div>
+            <div id="visualizer" class="disabled"><canvas id="visCanvas" onclick="toggleFullscreen()"></canvas></div>
         </div>
     </body>
     <script defer src="script.js"></script>

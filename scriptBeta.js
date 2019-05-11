@@ -8831,10 +8831,11 @@ c(function(){
             "04/21/2019: B0.15.0.1\n : All app icons are now treated as Smart Icons. Any legacy icons are converted.\n : Made JSConsole colors readable.\n\n" +
             "04/23/2019: B0.15.0.2\n : Fixed CustomStyles\n : Fixed Task Manager trying to update its content when its window is closed.\n\n" +
             "04/27/2019: B0.15.0.3\n + Testing more Smart Icons\n : Fixed CSE's text editor focusing its window on click, making the context menu unusable.\n : Fixed constantly bringing iframe owner to top unnecessarily, breaking context menus and such.\n\n" +
-            "05/09/2019: B0.15.0.4\n : Fixed security in login system.",
+            "05/09/2019: B0.15.0.4\n : Fixed security in login system.\n\n" +
+            "05/11/2019: B0.16.0.0\n + Music Player recieves a huge upgrade, with visualizations and color schemes. This is work-in-progress.\n : The Music Visualizer app will be assimilated into Music Player and removed in a future update.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.15.0.4 (05/09/2019) r0';
+    window.aOSversion = 'B0.16.0.0 (05/11/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -12463,7 +12464,7 @@ c(function(){
                 this.appWindow.setContent('<iframe ownedByApp="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
             }
             this.appWindow.setCaption('Music Player');
-            this.appWindow.setDims("auto", "auto", 500, 500);
+            this.appWindow.setDims("auto", "auto", 1038, 626);
             blockScreensaver("apps.musicVis");
             this.appWindow.openWindow();
         },
