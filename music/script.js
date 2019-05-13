@@ -601,9 +601,11 @@ var vis = {
                 var strength = 0;
                 for(var j = 0; j < 16; j++){
                     //strength = Math.max(visData[i * 16 + j], strength);
-                    strength += visData[i * 16 + j];
+                    //strength += visData[i * 16 + j];
+                    //strength += Math.pow(visData[i * 16 + j], 2) / 255;
+                    strength += Math.sqrt(visData[i * 16 + j]) * this.sqrt255;
                 }
-                strength /= 16;
+                strength = Math.round(strength / 16);
                 
                 canvas.fillStyle = getColor(strength);
                 canvas.fillRect(
@@ -620,7 +622,8 @@ var vis = {
         },
         stop: function(){
             
-        }
+        },
+        sqrt255: Math.sqrt(255)
     },/*
     monstercat2: {
         name: "Monstercat 2",
