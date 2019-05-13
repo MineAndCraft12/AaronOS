@@ -80,7 +80,7 @@ function loadFolder(event){
     mediaSource = audioContext.createMediaElementSource(audio);
     
     delayNode = audioContext.createDelay();
-    delayNode.delayTime.value = 0.17;
+    delayNode.delayTime.value = 0.2;
     delayNode.connect(audioContext.destination);
     
     analyser = audioContext.createAnalyser();
@@ -318,6 +318,12 @@ function toggleFullscreen(){
         getId("visCanvas").height = size[1];
         document.body.style.background = '';
         fullscreen = 0;
+        if(currVis !== "none"){
+            resizeSmoke();
+            if(vis[currVis].sizechange){
+                vis[currVis].sizechange();
+            }
+        }
     }else{
         size = [window.innerWidth, window.innerHeight];
         getId("visualizer").style.border = "none";
@@ -329,6 +335,12 @@ function toggleFullscreen(){
         getId("visCanvas").height = size[1];
         document.body.style.background = '#000';
         fullscreen = 1;
+        if(currVis !== "none"){
+            resizeSmoke();
+            if(vis[currVis].sizechange){
+                vis[currVis].sizechange();
+            }
+        }
     }
 }
 
@@ -343,6 +355,9 @@ function toggleFPS(){
 var canvasElement = getId("visCanvas");
 var canvas = canvasElement.getContext("2d");
 
+var smokeElement = getId("smokeCanvas");
+var smoke = smokeElement.getContext("2d");
+
 function globalFrame(){
     requestAnimationFrame(globalFrame);
     if(winsize[0] !== window.innerWidth || winsize[1] !== window.innerHeight){
@@ -354,9 +369,20 @@ function globalFrame(){
         }
         getId("visCanvas").width = size[0];
         getId("visCanvas").height = size[1];
+        if(currVis !== "none"){
+            if(smokeEnabled){
+                resizeSmoke();
+            }
+            if(vis[currVis].sizechange){
+                vis[currVis].sizechange();
+            }
+        }
     }
     if(currVis !== "none"){
         analyser.getByteFrequencyData(visData);
+        if(smokeEnabled){
+            smokeFrame();
+        }
         vis[currVis].frame();
         if(fpsEnabled){
             fps++;
@@ -414,7 +440,7 @@ var colors = {
     redglow: {
         name: "Red Glow",
         func: function(amount){
-            return 'rgb(' + amount + ',0,0)';
+            return 'rgba(255,0,0,' + (amount / 255) + ')';
         }
     },
     green: {
@@ -426,7 +452,7 @@ var colors = {
     greenglow: {
         name: "Green Glow",
         func: function(amount){
-            return 'rgb(0,' + amount + ',0)';
+            return 'rgba(0,255,0,' + (amount / 255) + ')';
         }
     },
     blue: {
@@ -438,7 +464,7 @@ var colors = {
     blueglow: {
         name: "Blue Glow",
         func: function(amount){
-            return 'rgb(0,0,' + amount + ')';
+            return 'rgba(0,0,255,' + (amount / 255) + ')';
         }
     },
     indigo: {
@@ -462,6 +488,9 @@ function setVis(newvis){
         currVis = newvis;
     }else{
         currVis = "none";
+    }
+    if(smokeEnabled){
+        resizeSmoke();
     }
     vis[currVis].start();
 }
@@ -549,6 +578,7 @@ var vis = {
                     }
                 }
             }
+            updateSmoke();
         },
         stop: function(){
             
@@ -583,14 +613,82 @@ var vis = {
                     Math.round(strength / 255 * maxHeight + 5)
                 );
             }
+            updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
             canvas.fillStyle = '#FFF';
             canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
-            canvas.fillText(fileNames[currentSong][0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
+            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
         },
         stop: function(){
             
         }
-    },
+    },/*
+    monstercat2: {
+        name: "Monstercat 2",
+        start: function(){
+            if(!getId("monstercat2canvas")){
+                getId("visualizer").innerHTML += '<canvas id="monstercat2canvas" width="' + size[0] + '" height="' + size[1] + '" style="z-index:900;width:100%;height:100%;filter:blur(' + Math.round((size[0] + size[1]) / 50) + 'px) brightness(3)"></canvas>';
+                //getId("visualizer").style.backgroundColor = "#1A1A1A";
+                canvasElement = getId("visCanvas");
+                canvas = canvasElement.getContext("2d");
+                canvasElement.style.backgroundImage = 'url(smoke_transparent.png)';
+                this.smokePos = 0;
+                canvasElement.style.backgroundPosition = "0";
+                this.mc2ctx = getId("monstercat2canvas").getContext("2d");
+            }
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            var left = size[0] * 0.1;
+            var maxWidth = size[0] * 0.8;
+            var barWidth = maxWidth / 96;
+            var barSpacing = maxWidth / 64;
+            var maxHeight = size[1] * 0.5 - size[1] * 0.2;
+            
+            for(var i = 0; i < 64; i++){
+                var strength = 0;
+                for(var j = 0; j < 16; j++){
+                    //strength = Math.max(visData[i * 16 + j], strength);
+                    strength += visData[i * 16 + j];
+                }
+                strength /= 16;
+                
+                canvas.fillStyle = getColor(strength);
+                canvas.fillRect(
+                    Math.round(left + i * barSpacing),
+                    Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
+                    Math.round(barWidth),
+                    Math.round(strength / 255 * maxHeight + 5)
+                );
+            }
+            canvas.fillStyle = '#FFF';
+            canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
+            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
+            this.mc2ctx.clearRect(0, 0, size[0], size[1]);
+            this.mc2ctx.putImageData(canvas.getImageData(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10), left, size[1] * 0.2);
+            this.smokePos++;
+            if(this.smokePos >= size[1]){
+                smokePos = size[1];
+            }
+            canvasElement.style.backgroundPosition = (this.smokePos * 2) + "px " + this.smokePos +  "px";
+        },
+        stop: function(){
+            if(getId("monstercat2canvas")){
+                this.mc2ctx = null;
+                getId("monstercat2canvas").style.filter = "";
+                getId("visualizer").removeChild(getId("monstercat2canvas"));
+                //getId("visualizer").style.backgroundColor = "";
+                canvasElement.style.backgroundImage = "";
+                canvasElement.style.backgroundPosition = "";
+            }
+        },
+        sizechange: function(){
+            getId("monstercat2canvas").width = size[0];
+            getId("monstercat2canvas").height = size[1];
+            getId("monstercat2canvas").style.filter = "blur(" + Math.round((size[0] + size[1]) / 50) + "px) brightness(3)";
+        },
+        smokePos: 0,
+        mc2ctx: null
+    },*/
     rings: {
         name: "Rings",
         start: function(){
@@ -623,6 +721,7 @@ var vis = {
                 canvas.strokeStyle = getColor(strength * 255);
                 this.degArc(center[0], center[1], ringWidth * 2 * (i + 1), this.ringPositions[i], this.ringPositions[i] + 180);
             }
+            updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
         },
         stop: function(){
             canvas.lineWidth = 1;
@@ -785,3 +884,48 @@ for(var i in colors){
 for(var i in vis){
     getId('visfield').innerHTML += '<option value="' + i + '">' + vis[i].name + '</option>';
 }
+
+var smokeEnabled = 0;
+var smokePos = [0, 0];
+function toggleSmoke(){
+    if(smokeEnabled){
+        smokeElement.style.filter = "";
+        smoke.clearRect(0, 0, size[0], size[1]);
+        smokeElement.classList.add("disabled");
+        canvasElement.style.backgroundPosition = "";
+        canvasElement.style.backgroundImage = "";
+        smokeEnabled = 0;
+    }else{
+        smokeElement.classList.remove("disabled");
+        canvasElement.style.backgroundPosition = "0px 0px";
+        canvasElement.style.backgroundImage = "url(smoke_transparent.png)";
+        smokeEnabled = 1;
+        resizeSmoke();
+    }
+}
+function resizeSmoke(){
+    smokeElement.width = size[0];
+    smokeElement.height = size[1];
+    if(smokeEnabled){
+        smokeElement.style.filter = "blur(" + Math.round((size[0] + size[1]) / 50) + "px) brightness(3)";
+    }
+}
+function updateSmoke(leftpos, toppos, shortwidth, shortheight){
+    if(smokeEnabled){
+        smoke.clearRect(0, 0, size[0], size[1]);
+        smoke.putImageData(canvas.getImageData(leftpos || 0, toppos || 0, shortwidth || size[0], shortheight || size[1]), leftpos || 0, toppos || 0);
+    }
+}
+function smokeFrame(){
+    smokePos[0] += 2;
+    smokePos[1]++;
+    if(smokePos[0] >= 1000){
+        smokePos[0] -= 1000;
+    }
+    if(smokePos[1] >= 1000){
+        smokePos[1] -= 1000;
+    }
+    canvasElement.style.backgroundPosition = smokePos[0] + "px " + smokePos[1] + "px";
+}
+
+resizeSmoke();
