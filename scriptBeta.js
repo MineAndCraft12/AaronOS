@@ -8833,10 +8833,10 @@ c(function(){
             "04/27/2019: B0.15.0.3\n + Testing more Smart Icons\n : Fixed CSE's text editor focusing its window on click, making the context menu unusable.\n : Fixed constantly bringing iframe owner to top unnecessarily, breaking context menus and such.\n\n" +
             "05/09/2019: B0.15.0.4\n : Fixed security in login system.\n\n" +
             "05/11/2019: B0.16.0.0\n + Music Player recieves a huge upgrade, with visualizations and color schemes. This is work-in-progress.\n : The Music Visualizer app will be assimilated into Music Player and removed in a future update.\n\n" +
-            "05/12/2019: B0.16.1.0\n + Added Smoke effect to Music Player.",
+            "05/12/2019: B0.16.1.0\n + Added Smoke effect to Music Player.\n + Added Eclipse and various color schemes to Music Player.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.16.1.0 (05/12/2019) r0';
+    window.aOSversion = 'B0.16.1.0 (05/12/2019) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

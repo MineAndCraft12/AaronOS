@@ -403,7 +403,7 @@ function globalFrame(){
 
 var colors = {
     bluegreenred: {
-        name: "Blue-Green-Red",
+        name: "Default",
         func: function(amount){
             return 'rgb(' +
                 ((amount > 200) * ((amount - 200) * 4.6)) + ',' +
@@ -412,29 +412,99 @@ var colors = {
         }
     },
     bluegreen: {
-        name: "Blue-Green",
+        name: "Default (no red)",
         func: function(amount){
             return 'rgb(0,' + amount + ',' + (255 - amount) + ')';
+        }
+    },
+    bluegreenred2: {
+        name: "Default 2",
+        func: function(amount){
+            return 'rgba(' +
+                ((amount > 200) * ((amount - 200) * 4.6)) + ',' +
+                (amount - ((amount > 220) * ((amount - 220) * 7.2))) + ',' +
+                (255 - amount) + ',' +
+                (amount / 255) + ')';
+        }
+    },
+    intensity: {
+        name: "Intensity",
+        func: function(amount){
+            return 'rgb(' +
+                ((amount >= 127) * 255 + (amount < 127) * (amount * 2)) + ',' +
+                ((amount < 127) * 255 + (amount >= 127) * ((254.5 - amount) * 2)) + ',' +
+                '0)';
+        }
+    },
+    'SEPARATOR_THEMES" disabled="': {
+        name: "---------------",
+        func: function(){
+            return '#000';
         }
     },
     fire: {
         name: "Fire",
         func: function(amount){
-            return 'rgb(' +
-                amount + ',' +
-                ((amount > 200) * amount * 0.25 + (amount > 127) * amount * 0.5 + (amount <= 127) * amount * 0.1) + ',0)';
+            //return 'rgba(' +
+            //    amount + ',' +
+            //    ((amount > 200) * amount * 0.25 + (amount > 127) * amount * 0.5 + (amount <= 127) * amount * 0.1) + ',0, ' + (amount / 255) + ')';
+            return 'rgba(255,' +
+                (Math.pow(amount, 2) / 255) + ',0,' +
+                (amount / 255) + ')';
+        }
+    },
+    'SEPARATOR_SOLID_COLORS" disabled="': {
+        name: "---------------",
+        func: function(){
+            return '#000';
         }
     },
     white: {
-        name: "White",
+        name: "Solid White",
         func: function(amount){
             return '#FFF';
         }
     },
     red: {
-        name: "Red",
+        name: "Solid Red",
         func: function(amount){
             return '#A00';
+        }
+    },
+    green: {
+        name: "Solid Green",
+        func: function(amount){
+            return '#0A0';
+        }
+    },
+    blue: {
+        name: "Solid Blue",
+        func: function(amount){
+            return '#00A';
+        }
+    },
+    electric: {
+        name: "Solid Electric",
+        func: function(amount){
+            return '#0FF';
+        }
+    },
+    indigo: {
+        name: "Solid Indigo",
+        func: function(amount){
+            return '#4B0082';
+        }
+    },
+    'SEPARATOR_GLOWS" disabled="': {
+        name: "---------------",
+        func: function(){
+            return '#000';
+        }
+    },
+    whiteglow: {
+        name: "White Glow",
+        func: function(amount){
+            return 'rgba(255, 255, 255, ' + (amount / 255) + ')';
         }
     },
     redglow: {
@@ -443,22 +513,10 @@ var colors = {
             return 'rgba(255,0,0,' + (amount / 255) + ')';
         }
     },
-    green: {
-        name: "Green",
-        func: function(amount){
-            return '#0A0';
-        }
-    },
     greenglow: {
         name: "Green Glow",
         func: function(amount){
             return 'rgba(0,255,0,' + (amount / 255) + ')';
-        }
-    },
-    blue: {
-        name: "Blue",
-        func: function(amount){
-            return '#00A';
         }
     },
     blueglow: {
@@ -467,10 +525,16 @@ var colors = {
             return 'rgba(0,0,255,' + (amount / 255) + ')';
         }
     },
-    indigo: {
-        name: "Indigo",
+    electricglow: {
+        name: "Electric Glow",
         func: function(amount){
-            return 'indigo';
+            return 'rgba(0,255,255,' + (amount / 255) + ')';
+        }
+    },
+    indigoglow: {
+        name: "Indigo Glow",
+        func: function(amount){
+            return 'rgba(75, 0, 130, ' + (amount / 255) + ')';
         }
     }
 }
@@ -498,7 +562,7 @@ function setVis(newvis){
 var currVis = null;
 var vis = {
     none: {
-        name: "None",
+        name: "Song List",
         start: function(){
             getId("visualizer").classList.add("disabled");
             getId("songList").classList.remove("disabled");
@@ -516,6 +580,159 @@ var vis = {
             //mediaSource.connect(analyser);
             //analyser.connect(delayNode);
         }
+    },
+    'SEPARATOR" disabled="': {
+        name: '---------------',
+        start: function(){
+
+        },
+        frame: function(){
+
+        },
+        stop: function(){
+
+        }
+    },
+    monstercat: {
+        name: "Monstercat",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            var left = size[0] * 0.1;
+            var maxWidth = size[0] * 0.8;
+            var barWidth = maxWidth / 96;
+            var barSpacing = maxWidth / 64;
+            var maxHeight = size[1] * 0.5 - size[1] * 0.2;
+            
+            for(var i = 0; i < 64; i++){
+                var strength = 0;
+                for(var j = 0; j < 16; j++){
+                    //strength = Math.max(visData[i * 16 + j], strength);
+                    //strength += visData[i * 16 + j];
+                    //strength += Math.pow(visData[i * 16 + j], 2) / 255;
+                    strength += Math.sqrt(visData[i * 16 + j]) * this.sqrt255;
+                }
+                strength = Math.round(strength / 16);
+                
+                canvas.fillStyle = getColor(strength);
+                canvas.fillRect(
+                    Math.round(left + i * barSpacing),
+                    Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
+                    Math.round(barWidth),
+                    Math.round(strength / 255 * maxHeight + 5)
+                );
+            }
+            updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
+            canvas.fillStyle = '#FFF';
+            canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
+            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
+        },
+        stop: function(){
+            
+        },
+        sqrt255: Math.sqrt(255)
+    },
+    rings: {
+        name: "Rings",
+        start: function(){
+            this.ringPositions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.8);
+            var ringWidth = Math.round(ringHeight * 0.023);
+            canvas.lineWidth = ringWidth;
+            canvas.lineCap = "round";
+            var ringPools = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            //var ringAvgs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
+            for(var i = 0; i < 1024; i++){
+                var currPool = Math.floor(i / 102.4);
+                ringPools[currPool] = Math.max(visData[i], ringPools[currPool]);
+                //ringPools[currPool] += visData[i];
+                //ringAvgs[currPool]++;
+            }
+            //for(var i in ringPools){
+            //    ringPools[i] /= ringAvgs[i];
+            //}
+            for(var i = 0; i < 10; i++){
+                var strength = Math.pow(ringPools[i], 2) / 65025;
+                this.ringPositions[i] += strength * 5;
+                if(this.ringPositions[i] >= 360){
+                    this.ringPositions[i] -= 360;
+                }
+                canvas.strokeStyle = getColor(strength * 255);
+                this.degArc(center[0], center[1], ringWidth * 2 * (i + 1), this.ringPositions[i], this.ringPositions[i] + 180);
+            }
+            updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
+        },
+        stop: function(){
+            canvas.lineWidth = 1;
+            canvas.lineCap = "butt";
+        },
+        ringPositions: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        TAU: Math.PI * 2,
+        degArc: function(x, y, r, a, b){
+            canvas.beginPath();
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            canvas.stroke();
+        }
+    },
+    eclipse: {
+        name: "Eclipse",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.8);
+            var ringWidth = ringHeight * 0.5 - 1;
+            var strokeWidth = ringWidth * 0.2;
+            var strokePosition = ringWidth * 0.9;
+            canvas.lineWidth = strokeWidth;
+            var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
+            for(var i = 510; i > -1; i -= 2){
+                var strength = Math.max(visData[i], visData[i + 1]);
+                canvas.strokeStyle = getColor(strength);
+                var linePosition = (i * 0.5) * this.ratio_360_1024;
+                this.degArc(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
+                canvas.stroke();
+                linePosition *= -1;
+                this.degArc(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
+                canvas.stroke();
+            }
+            for(var i = 512; i < 1024; i += 2){
+                var strength = Math.max(visData[i], visData[i + 1]);
+                canvas.strokeStyle = getColor(strength);
+                var linePosition = (i * 0.5) * this.ratio_360_1024;
+                this.degArc(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
+                canvas.stroke();
+                linePosition *= -1;
+                this.degArc(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
+                canvas.stroke();
+            }
+            updateSmoke(center[0] - ringWidth - 1, center[1] - ringWidth - 1, ringHeight + 1, ringHeight + 1);
+            //smoke.putImageData(smoke.getImageData(center[0], center[1] - ringWidth - 1, -1 * ringWidth - 1, ringHeight), center[0], center[1] - ringWidth - 1);
+            var ringGradient = canvas.createRadialGradient(center[0], center[1], (ringWidth + 1) * 0.8, center[0], center[1], ringWidth + 1);
+            ringGradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+            ringGradient.addColorStop(0.95, 'rgba(0, 0, 0, 0.9)');
+            ringGradient.addColorStop(1, 'rgba(0, 0, 0, 0.8)');
+            canvas.clearRect(0, 0, size[0], size[1]);
+            canvas.fillStyle = ringGradient;
+            this.degArc(center[0], center[1], ringWidth + 1, 0, 360);
+            canvas.fill();
+        },
+        stop: function(){
+            canvas.lineWidth = 1;
+        },
+        TAU: Math.PI * 2,
+        degArc: function(x, y, r, a, b){
+            canvas.beginPath();
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+        },
+        ratio_360_1024: 360 / 1024
     },
     spikes: {
         name: "Spikes",
@@ -582,160 +799,6 @@ var vis = {
         },
         stop: function(){
             
-        }
-    },
-    monstercat: {
-        name: "Monstercat",
-        start: function(){
-            
-        },
-        frame: function(){
-            canvas.clearRect(0, 0, size[0], size[1]);
-            var left = size[0] * 0.1;
-            var maxWidth = size[0] * 0.8;
-            var barWidth = maxWidth / 96;
-            var barSpacing = maxWidth / 64;
-            var maxHeight = size[1] * 0.5 - size[1] * 0.2;
-            
-            for(var i = 0; i < 64; i++){
-                var strength = 0;
-                for(var j = 0; j < 16; j++){
-                    //strength = Math.max(visData[i * 16 + j], strength);
-                    //strength += visData[i * 16 + j];
-                    //strength += Math.pow(visData[i * 16 + j], 2) / 255;
-                    strength += Math.sqrt(visData[i * 16 + j]) * this.sqrt255;
-                }
-                strength = Math.round(strength / 16);
-                
-                canvas.fillStyle = getColor(strength);
-                canvas.fillRect(
-                    Math.round(left + i * barSpacing),
-                    Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
-                    Math.round(barWidth),
-                    Math.round(strength / 255 * maxHeight + 5)
-                );
-            }
-            updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
-            canvas.fillStyle = '#FFF';
-            canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
-            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
-        },
-        stop: function(){
-            
-        },
-        sqrt255: Math.sqrt(255)
-    },/*
-    monstercat2: {
-        name: "Monstercat 2",
-        start: function(){
-            if(!getId("monstercat2canvas")){
-                getId("visualizer").innerHTML += '<canvas id="monstercat2canvas" width="' + size[0] + '" height="' + size[1] + '" style="z-index:900;width:100%;height:100%;filter:blur(' + Math.round((size[0] + size[1]) / 50) + 'px) brightness(3)"></canvas>';
-                //getId("visualizer").style.backgroundColor = "#1A1A1A";
-                canvasElement = getId("visCanvas");
-                canvas = canvasElement.getContext("2d");
-                canvasElement.style.backgroundImage = 'url(smoke_transparent.png)';
-                this.smokePos = 0;
-                canvasElement.style.backgroundPosition = "0";
-                this.mc2ctx = getId("monstercat2canvas").getContext("2d");
-            }
-        },
-        frame: function(){
-            canvas.clearRect(0, 0, size[0], size[1]);
-            var left = size[0] * 0.1;
-            var maxWidth = size[0] * 0.8;
-            var barWidth = maxWidth / 96;
-            var barSpacing = maxWidth / 64;
-            var maxHeight = size[1] * 0.5 - size[1] * 0.2;
-            
-            for(var i = 0; i < 64; i++){
-                var strength = 0;
-                for(var j = 0; j < 16; j++){
-                    //strength = Math.max(visData[i * 16 + j], strength);
-                    strength += visData[i * 16 + j];
-                }
-                strength /= 16;
-                
-                canvas.fillStyle = getColor(strength);
-                canvas.fillRect(
-                    Math.round(left + i * barSpacing),
-                    Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
-                    Math.round(barWidth),
-                    Math.round(strength / 255 * maxHeight + 5)
-                );
-            }
-            canvas.fillStyle = '#FFF';
-            canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
-            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
-            this.mc2ctx.clearRect(0, 0, size[0], size[1]);
-            this.mc2ctx.putImageData(canvas.getImageData(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10), left, size[1] * 0.2);
-            this.smokePos++;
-            if(this.smokePos >= size[1]){
-                smokePos = size[1];
-            }
-            canvasElement.style.backgroundPosition = (this.smokePos * 2) + "px " + this.smokePos +  "px";
-        },
-        stop: function(){
-            if(getId("monstercat2canvas")){
-                this.mc2ctx = null;
-                getId("monstercat2canvas").style.filter = "";
-                getId("visualizer").removeChild(getId("monstercat2canvas"));
-                //getId("visualizer").style.backgroundColor = "";
-                canvasElement.style.backgroundImage = "";
-                canvasElement.style.backgroundPosition = "";
-            }
-        },
-        sizechange: function(){
-            getId("monstercat2canvas").width = size[0];
-            getId("monstercat2canvas").height = size[1];
-            getId("monstercat2canvas").style.filter = "blur(" + Math.round((size[0] + size[1]) / 50) + "px) brightness(3)";
-        },
-        smokePos: 0,
-        mc2ctx: null
-    },*/
-    rings: {
-        name: "Rings",
-        start: function(){
-            this.ringPositions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        },
-        frame: function(){
-            canvas.clearRect(0, 0, size[0], size[1]);
-            var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.8);
-            var ringWidth = Math.round(ringHeight * 0.023);
-            canvas.lineWidth = ringWidth;
-            canvas.lineCap = "round";
-            var ringPools = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            //var ringAvgs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
-            for(var i = 0; i < 1024; i++){
-                var currPool = Math.floor(i / 102.4);
-                ringPools[currPool] = Math.max(visData[i], ringPools[currPool]);
-                //ringPools[currPool] += visData[i];
-                //ringAvgs[currPool]++;
-            }
-            //for(var i in ringPools){
-            //    ringPools[i] /= ringAvgs[i];
-            //}
-            for(var i = 0; i < 10; i++){
-                var strength = Math.pow(ringPools[i], 2) / 65025;
-                this.ringPositions[i] += strength * 5;
-                if(this.ringPositions[i] >= 360){
-                    this.ringPositions[i] -= 360;
-                }
-                canvas.strokeStyle = getColor(strength * 255);
-                this.degArc(center[0], center[1], ringWidth * 2 * (i + 1), this.ringPositions[i], this.ringPositions[i] + 180);
-            }
-            updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
-        },
-        stop: function(){
-            canvas.lineWidth = 1;
-            canvas.lineCap = "butt";
-        },
-        ringPositions: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        TAU: Math.PI * 2,
-        degArc: function(x, y, r, a, b){
-            canvas.beginPath();
-            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
-            canvas.stroke();
         }
     },
     spectrogram: {
@@ -876,6 +939,31 @@ var vis = {
         },
         stop: function(){
             
+        }
+    },
+    colorTest: {
+        name: "Color Test",
+        start: function(){
+
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            canvas.fillStyle = '#111';
+            canvas.fillRect(0, 0, size[0], size[1] * 0.15);
+            for(var i = 0; i < size[0]; i++){
+                canvas.fillStyle = getColor(i / size[0] * 255);
+                canvas.fillRect(i, size[1] * 0.75, 1, size[1] * 0.25);
+            }
+            updateSmoke();
+            canvas.clearRect(0, 0, size[0], size[1]);
+            for(var i = 0; i < size[0]; i++){
+                canvas.fillStyle = getColor(i / size[0] * 255);
+                canvas.fillRect(i, 0, 1, size[1]);
+            }
+            canvas.clearRect(0, size[1] * 0.5, size[0], size[1] * 0.25);
+        },
+        stop: function(){
+
         }
     }
 };
