@@ -75,6 +75,9 @@ function loadFolder(event){
     while(disabledElements.length > 0){
         disabledElements[0].classList.remove('disabled');
     }
+    if(!smokeEnabled){
+        smokeElement.classList.add("disabled");
+    }
     
     audioContext = new AudioContext();
     mediaSource = audioContext.createMediaElementSource(audio);
@@ -289,11 +292,16 @@ function refresh(){
 }
 
 function getStyleInfo(event){
-    console.log(event.data);
-    if(event.data === "aosreply:success:readsetting:darkmode:true"){
-        document.body.classList.add("darkMode");
-    }else if(event.data.indexOf("aosreply:success:readsetting:customstyle:") === 0){
-        getId("aosCustomStyle").innerHTML = event.data.substring(41, event.data.length);
+    try{
+        console.log(event.data);
+        if(event.data === "aosreply:success:readsetting:darkmode:true"){
+            document.body.classList.add("darkMode");
+        }else if(event.data.indexOf("aosreply:success:readsetting:customstyle:") === 0){
+            getId("aosCustomStyle").innerHTML = event.data.substring(41, event.data.length);
+        }
+    }catch(err){
+        console.log("something done did the big oof when i tried to do the style thingy or whatever...");
+        console.log(err);
     }
 }
 window.addEventListener("message", getStyleInfo);
@@ -405,21 +413,6 @@ var colors = {
     bluegreenred: {
         name: "Default",
         func: function(amount){
-            return 'rgb(' +
-                ((amount > 200) * ((amount - 200) * 4.6)) + ',' +
-                (amount - ((amount > 220) * ((amount - 220) * 7.2))) + ',' +
-                (255 - amount) + ')';
-        }
-    },
-    bluegreen: {
-        name: "Default (no red)",
-        func: function(amount){
-            return 'rgb(0,' + amount + ',' + (255 - amount) + ')';
-        }
-    },
-    bluegreenred2: {
-        name: "Default 2",
-        func: function(amount){
             return 'rgba(' +
                 ((amount > 200) * ((amount - 200) * 4.6)) + ',' +
                 (amount - ((amount > 220) * ((amount - 220) * 7.2))) + ',' +
@@ -427,8 +420,32 @@ var colors = {
                 (amount / 255) + ')';
         }
     },
-    intensity: {
+    beta: {
+        name: "Beta",
+        func: function(amount){
+            return 'rgb(' +
+                ((amount > 200) * ((amount - 200) * 4.6)) + ',' +
+                (amount - ((amount > 220) * ((amount - 220) * 7.2))) + ',' +
+                (255 - amount) + ')';
+        }
+    },
+    alpha: {
+        name: "Alpha",
+        func: function(amount){
+            return 'rgb(0,' + amount + ',' + (255 - amount) + ')';
+        }
+    },
+    intensityGlow: {
         name: "Intensity",
+        func: function(amount){
+            return 'rgba(' +
+                ((amount >= 127) * 255 + (amount < 127) * (amount * 2)) + ',' +
+                ((amount < 127) * 255 + (amount >= 127) * ((254.5 - amount) * 2)) + ',' +
+                '0,' + (amount / 255) + ')';
+        }
+    },
+    intensity: {
+        name: "Intensity Solid",
         func: function(amount){
             return 'rgb(' +
                 ((amount >= 127) * 255 + (amount < 127) * (amount * 2)) + ',' +
@@ -451,6 +468,94 @@ var colors = {
             return 'rgba(255,' +
                 (Math.pow(amount, 2) / 255) + ',0,' +
                 (amount / 255) + ')';
+        }
+    },
+    prideGlow: {
+        name: "Pride",
+        func: function(amount){
+            return 'rgb(' +
+                (
+                    (amount < 95) * 255 +
+                    (amount >= 95 && amount < 159) * (159 - amount) * colors.prideGlow.divide255by64 +
+                    (amount >= 207) * ((207 - amount) * -1) * colors.prideGlow.divide255by96
+                ) + ',' +
+                (
+                    (amount < 95) * amount * colors.prideGlow.divide255by96 +
+                    (amount >= 95 && amount < 159) * 255 +
+                    (amount >= 159 && amount < 207) * (207 - amount) * colors.prideGlow.divide255by48
+                ) + ',' +
+                (
+                    (amount >= 159 && amount < 207) * ((159 - amount) * -1) * colors.prideGlow.divide255by48 +
+                    (amount >= 207) * 255
+                ) + ',' + (amount / 255) + ')';
+        },
+        divide255by96: 255 / 96,
+        divide255by64: 255 / 64,
+        divide255by48: 255 / 48
+    },
+    pride: {
+        name: "Pride Solid",
+        func: function(amount){
+            return 'rgb(' +
+                (
+                    (amount < 95) * 255 +
+                    (amount >= 95 && amount < 159) * (159 - amount) * colors.pride.divide255by64 +
+                    (amount >= 207) * ((207 - amount) * -1) * colors.pride.divide255by96
+                ) + ',' +
+                (
+                    (amount < 95) * amount * colors.pride.divide255by96 +
+                    (amount >= 95 && amount < 159) * 255 +
+                    (amount >= 159 && amount < 207) * (207 - amount) * colors.pride.divide255by48
+                ) + ',' +
+                (
+                    (amount >= 159 && amount < 207) * ((159 - amount) * -1) * colors.pride.divide255by48 +
+                    (amount >= 207) * 255
+                ) + ')';
+        },
+        divide255by96: 255 / 96,
+        divide255by64: 255 / 64,
+        divide255by48: 255 / 48
+    },
+    'SEPARATOR_GLOWS" disabled="': {
+        name: "---------------",
+        func: function(){
+            return '#000';
+        }
+    },
+    whiteglow: {
+        name: "White Glow",
+        func: function(amount){
+            return 'rgba(255, 255, 255, ' + (amount / 255) + ')';
+        }
+    },
+    redglow: {
+        name: "Red Glow",
+        func: function(amount){
+            return 'rgba(255,0,0,' + (amount / 255) + ')';
+        }
+    },
+    greenglow: {
+        name: "Green Glow",
+        func: function(amount){
+            return 'rgba(0,255,0,' + (amount / 255) + ')';
+        }
+    },
+    blueglow: {
+        name: "Blue Glow",
+        func: function(amount){
+            return 'rgba(0,0,255,' + (amount / 255) + ')';
+        }
+    },
+    electricglow: {
+        name: "Electric Glow",
+        func: function(amount){
+            return 'rgba(0,255,255,' + (amount / 255) + ')';
+        }
+    },
+    indigoglow: {
+        name: "Indigo Glow",
+        func: function(amount){
+            return 'rgba(75, 0, 130, ' + (amount / 255) + ')';
         }
     },
     'SEPARATOR_SOLID_COLORS" disabled="': {
@@ -493,48 +598,6 @@ var colors = {
         name: "Solid Indigo",
         func: function(amount){
             return '#4B0082';
-        }
-    },
-    'SEPARATOR_GLOWS" disabled="': {
-        name: "---------------",
-        func: function(){
-            return '#000';
-        }
-    },
-    whiteglow: {
-        name: "White Glow",
-        func: function(amount){
-            return 'rgba(255, 255, 255, ' + (amount / 255) + ')';
-        }
-    },
-    redglow: {
-        name: "Red Glow",
-        func: function(amount){
-            return 'rgba(255,0,0,' + (amount / 255) + ')';
-        }
-    },
-    greenglow: {
-        name: "Green Glow",
-        func: function(amount){
-            return 'rgba(0,255,0,' + (amount / 255) + ')';
-        }
-    },
-    blueglow: {
-        name: "Blue Glow",
-        func: function(amount){
-            return 'rgba(0,0,255,' + (amount / 255) + ')';
-        }
-    },
-    electricglow: {
-        name: "Electric Glow",
-        func: function(amount){
-            return 'rgba(0,255,255,' + (amount / 255) + ')';
-        }
-    },
-    indigoglow: {
-        name: "Indigo Glow",
-        func: function(amount){
-            return 'rgba(75, 0, 130, ' + (amount / 255) + ')';
         }
     }
 }
@@ -581,7 +644,7 @@ var vis = {
             //analyser.connect(delayNode);
         }
     },
-    'SEPARATOR" disabled="': {
+    'SEPARATOR_BARS" disabled="': {
         name: '---------------',
         start: function(){
 
@@ -600,6 +663,9 @@ var vis = {
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+            }
             var left = size[0] * 0.1;
             var maxWidth = size[0] * 0.8;
             var barWidth = maxWidth / 96;
@@ -616,15 +682,25 @@ var vis = {
                 }
                 strength = Math.round(strength / 16);
                 
-                canvas.fillStyle = getColor(strength);
+                var fillColor = getColor(strength);
+                canvas.fillStyle = fillColor;
                 canvas.fillRect(
                     Math.round(left + i * barSpacing),
                     Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
                     Math.round(barWidth),
                     Math.round(strength / 255 * maxHeight + 5)
                 );
+                if(smokeEnabled){
+                    smoke.fillStyle = fillColor;
+                    smoke.fillRect(
+                        Math.round(left + i * barSpacing),
+                        Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
+                        Math.round(barWidth),
+                        Math.round(strength / 255 * maxHeight + 5)
+                    );
+                }
             }
-            updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
+            //updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
             canvas.fillStyle = '#FFF';
             canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
             canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
@@ -634,6 +710,141 @@ var vis = {
         },
         sqrt255: Math.sqrt(255)
     },
+    obelisks: {
+        name: "Obelisks",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var left = size[0] * 0.1;
+            var maxWidth = size[0] * 0.8;
+            var barWidth = maxWidth / 96;
+            var barSpacing = maxWidth / 64;
+            var maxHeight = size[1] * 0.5 - size[1] * 0.2;
+            for(var i = 0; i < 64; i++){
+                var strength = 0;
+                for(var j = 0; j < 16; j++){
+                    //strength = Math.max(visData[i * 16 + j], strength);
+                    //strength += visData[i * 16 + j];
+                    //strength += Math.pow(visData[i * 16 + j], 2) / 255;
+                    strength += Math.sqrt(visData[i * 16 + j]) * this.sqrt255;
+                }
+                strength = Math.round(strength / 16);
+                
+                smoke.fillStyle = getColor(strength);
+                smoke.fillRect(
+                    Math.round(left + i * barSpacing),
+                    Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
+                    Math.round(barWidth),
+                    Math.round(strength / 255 * maxHeight + 5)
+                );
+                canvas.fillStyle = "rgba(0, 0, 0, 0.85)";
+                canvas.fillRect(
+                    Math.round(left + i * barSpacing),
+                    Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
+                    Math.round(barWidth),
+                    Math.round(strength / 255 * maxHeight + 5)
+                );
+                canvas.fillStyle = "rgba(0, 0, 0, 0.5)";
+                canvas.fillRect(
+                    Math.round(left + i * barSpacing) + 1,
+                    Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight) + 1,
+                    Math.round(barWidth) - 2,
+                    Math.round(strength / 255 * maxHeight + 5) - 2
+                )
+                canvas.fillStyle = "#000";
+                canvas.fillRect(
+                    Math.round(left + i * barSpacing) + 2,
+                    Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight) + 2,
+                    Math.round(barWidth) - 4,
+                    Math.round(strength / 255 * maxHeight + 5) - 4
+                );
+            }
+            //updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
+            canvas.fillStyle = '#FFF';
+            canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
+            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
+            if(!smokeEnabled){
+                canvas.font = "12px aosProFont, Courier, monospace";
+                canvas.fillText("Enable Smoke for this visualizer.", Math.round(left), size[1] * 0.25, Math.floor(maxWidth));
+            }
+        },
+        stop: function(){
+            
+        },
+        sqrt255: Math.sqrt(255)
+    },
+    spikes: {
+        name: "Spikes",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var step = size[0] / 1024;
+            var last = -1;
+            var heightFactor = size[1] / 255;
+            for(var i = 0; i < 1024; i++){
+                var strength = 0;
+                if(i === 0){
+                    strength = visData[i];
+                    this.drawLine(0, strength, heightFactor);
+                }else{
+                    var last = Math.floor(step * (i - 1));
+                    var curr = Math.floor(step * i);
+                    var next = Math.floor(step * (i + 1));
+                    if(last < curr - 1){
+                        // stretched
+                        for(var j = 0; j < curr - last - 1; j++){
+                            //strength = ((j + 1) / (curr - last + 1) * visData[i - 1] + (curr - last - j + 1) / (curr - last + 1) * visData[i]);
+                            strength = (visData[i] + visData[i - 1]) / 2;
+                            this.drawLine(curr - j - 1, strength, heightFactor);
+                        }
+                        strength = visData[i];
+                        this.drawLine(curr, strength, heightFactor);
+                    }else if(curr === last && next > curr){
+                        // compressed
+                        for(var j = 0; j < (1 / step); j++){
+                            strength += visData[i - j];
+                        }
+                        strength /= Math.floor(1 / step) + 1;
+                        this.drawLine(curr, strength, heightFactor);
+                    }else if(last === curr - 1){
+                        strength = visData[i];
+                        this.drawLine(curr, strength, heightFactor);
+                    }
+                }
+            }
+            //updateSmoke();
+        },
+        stop: function(){
+            
+        },
+        drawLine: function(x, h, fact){
+            var fillColor = getColor(h);
+            canvas.fillStyle = fillColor;
+            canvas.fillRect(x, (255 - h)  * fact, 1, size[1] - (255 - h) * fact);
+            if(smokeEnabled){
+                smoke.fillStyle = fillColor;
+                smoke.fillRect(x, (255 - h)  * fact, 1, size[1] - (255 - h) * fact);
+            }
+        }
+    },
+    'SEPARATOR_CIRCLES" disabled="': {
+        name: '---------------',
+        start: function(){
+
+        },
+        frame: function(){
+
+        },
+        stop: function(){
+
+        }
+    },
     rings: {
         name: "Rings",
         start: function(){
@@ -641,10 +852,15 @@ var vis = {
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+            }
             var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.8);
             var ringWidth = Math.round(ringHeight * 0.023);
             canvas.lineWidth = ringWidth;
             canvas.lineCap = "round";
+            smoke.lineWidth = ringWidth;
+            smoke.lineCap = "round";
             var ringPools = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             //var ringAvgs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
             var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
@@ -659,18 +875,25 @@ var vis = {
             //}
             for(var i = 0; i < 10; i++){
                 var strength = Math.pow(ringPools[i], 2) / 65025;
+                var ringColor = getColor(strength * 255);
                 this.ringPositions[i] += strength * 5;
                 if(this.ringPositions[i] >= 360){
                     this.ringPositions[i] -= 360;
                 }
-                canvas.strokeStyle = getColor(strength * 255);
+                canvas.strokeStyle = ringColor;
+                smoke.strokeStyle = ringColor;
                 this.degArc(center[0], center[1], ringWidth * 2 * (i + 1), this.ringPositions[i], this.ringPositions[i] + 180);
+                if(smokeEnabled){
+                    this.degArcSmoke(center[0], center[1], ringWidth * 2 * (i + 1), this.ringPositions[i], this.ringPositions[i] + 180);
+                }
             }
-            updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
+            //updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
         },
         stop: function(){
             canvas.lineWidth = 1;
             canvas.lineCap = "butt";
+            smoke.lineWidth = "1";
+            smoke.lineCap = "butt";
         },
         ringPositions: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         TAU: Math.PI * 2,
@@ -678,6 +901,83 @@ var vis = {
             canvas.beginPath();
             canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
             canvas.stroke();
+        },
+        degArcSmoke: function(x, y, r, a, b){
+            smoke.beginPath();
+            smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            smoke.stroke();
+        }
+    },
+    ghostRings: {
+        name: "Ghost Rings",
+        start: function(){
+            this.ringPositions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.8);
+            var ringWidth = Math.round(ringHeight * 0.023);
+            canvas.lineCap = "round";
+            smoke.lineWidth = ringWidth;
+            smoke.lineCap = "round";
+            var ringPools = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            //var ringAvgs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
+            for(var i = 0; i < 1024; i++){
+                var currPool = Math.floor(i / 102.4);
+                ringPools[currPool] = Math.max(visData[i], ringPools[currPool]);
+                //ringPools[currPool] += visData[i];
+                //ringAvgs[currPool]++;
+            }
+            //for(var i in ringPools){
+            //    ringPools[i] /= ringAvgs[i];
+            //}
+            for(var i = 0; i < 10; i++){
+                var strength = Math.pow(ringPools[i], 2) / 65025;
+                var ringColor = getColor(strength * 255);
+                this.ringPositions[i] += strength * 5;
+                if(this.ringPositions[i] >= 360){
+                    this.ringPositions[i] -= 360;
+                }
+
+                smoke.strokeStyle = ringColor;
+                this.degArcSmoke(center[0], center[1], ringWidth * 2 * (i + 1), this.ringPositions[i], this.ringPositions[i] + 180);
+                /*
+                canvas.lineWidth = ringWidth;
+                canvas.strokeStyle = 'rgba(0, 0, 0, 0.85)';
+                this.degArc(center[0], center[1], ringWidth * 2 * (i + 1), this.ringPositions[i], this.ringPositions[i] + 180);
+                canvas.lineWidth = ringWidth - 4;
+                canvas.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+                this.degArc(center[0], center[1], ringWidth * 2 * (i + 1), this.ringPositions[i], this.ringPositions[i] + 180);
+                canvas.lineWidth = ringWidth - 8;
+                canvas.strokeStyle = '#000';
+                this.degArc(center[0], center[1], ringWidth * 2 * (i + 1), this.ringPositions[i], this.ringPositions[i] + 180);*/
+            }
+            if(!smokeEnabled){
+                canvas.fillStyle = '#FFF';
+                canvas.font = '12px aosProFont, Courier, monospace';
+                canvas.fillText("Enable Smoke for this visualizer.", center[0] - ringHeight / 2, center[1] - 6, ringHeight);
+            }
+            //updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
+        },
+        stop: function(){
+            canvas.lineWidth = 1;
+            canvas.lineCap = "butt";
+            smoke.lineWidth = "1";
+            smoke.lineCap = "butt";
+        },
+        ringPositions: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        TAU: Math.PI * 2,
+        degArc: function(x, y, r, a, b){
+            canvas.beginPath();
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            canvas.stroke();
+        },
+        degArcSmoke: function(x, y, r, a, b){
+            smoke.beginPath();
+            smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            smoke.stroke();
         }
     },
     eclipse: {
@@ -686,73 +986,91 @@ var vis = {
             
         },
         frame: function(){
-            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
             var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.8);
-            var ringWidth = ringHeight * 0.5 - 1;
-            var strokeWidth = ringWidth * 0.2;
-            var strokePosition = ringWidth * 0.9;
-            canvas.lineWidth = strokeWidth;
+            var ringWidth = ringHeight * 0.5;
+            var strokeWidth = ringWidth * 0.4;
+            var strokePosition = ringWidth * 0.8;
+            smoke.lineWidth = strokeWidth;
             var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
             for(var i = 510; i > -1; i -= 2){
-                var strength = Math.max(visData[i], visData[i + 1]);
-                canvas.strokeStyle = getColor(strength);
+                var strength = Math.pow(Math.max(visData[i], visData[i + 1]), 2) / 255;
+                smoke.strokeStyle = getColor(strength);
                 var linePosition = (i * 0.5) * this.ratio_360_1024;
-                this.degArc(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
-                canvas.stroke();
+                this.degArcSmoke(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
+                smoke.stroke();
                 linePosition *= -1;
-                this.degArc(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
-                canvas.stroke();
+                this.degArcSmoke(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
+                smoke.stroke();
             }
             for(var i = 512; i < 1024; i += 2){
-                var strength = Math.max(visData[i], visData[i + 1]);
-                canvas.strokeStyle = getColor(strength);
+                var strength = Math.pow(Math.max(visData[i], visData[i + 1]), 2) / 255;
+                smoke.strokeStyle = getColor(strength);
                 var linePosition = (i * 0.5) * this.ratio_360_1024;
-                this.degArc(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
-                canvas.stroke();
+                this.degArcSmoke(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
+                smoke.stroke();
                 linePosition *= -1;
-                this.degArc(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
-                canvas.stroke();
+                this.degArcSmoke(center[0], center[1], strokePosition, linePosition + 90, linePosition + 91);
+                smoke.stroke();
             }
-            updateSmoke(center[0] - ringWidth - 1, center[1] - ringWidth - 1, ringHeight + 1, ringHeight + 1);
+            //updateSmoke(center[0] - ringWidth - 1, center[1] - ringWidth - 1, ringHeight + 1, ringHeight + 1);
             //smoke.putImageData(smoke.getImageData(center[0], center[1] - ringWidth - 1, -1 * ringWidth - 1, ringHeight), center[0], center[1] - ringWidth - 1);
-            var ringGradient = canvas.createRadialGradient(center[0], center[1], (ringWidth + 1) * 0.8, center[0], center[1], ringWidth + 1);
+            var ringGradient = canvas.createRadialGradient(center[0], center[1], (ringWidth) * 0.8, center[0], center[1], ringWidth);
             ringGradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
             ringGradient.addColorStop(0.95, 'rgba(0, 0, 0, 0.9)');
             ringGradient.addColorStop(1, 'rgba(0, 0, 0, 0.8)');
             canvas.clearRect(0, 0, size[0], size[1]);
             canvas.fillStyle = ringGradient;
-            this.degArc(center[0], center[1], ringWidth + 1, 0, 360);
+            this.degArc(center[0], center[1], ringWidth, 0, 360);
             canvas.fill();
+            if(!smokeEnabled){
+                canvas.fillStyle = "#FFF";
+                canvas.font = "12px aosProFont, Courier, monospace";
+                canvas.fillText("Enable Smoke for this visualizer.", center[0] - ringWidth + 15, center[1] - 6, ringWidth - 30);
+            }
         },
         stop: function(){
-            canvas.lineWidth = 1;
+            smoke.lineWidth = 1;
         },
         TAU: Math.PI * 2,
+        sqrt255: Math.sqrt(255),
         degArc: function(x, y, r, a, b){
             canvas.beginPath();
             canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
         },
+        degArcSmoke: function(x, y, r, a, b){
+            smoke.beginPath();
+            smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+        },
         ratio_360_1024: 360 / 1024
     },
-    spikes: {
-        name: "Spikes",
+    'SEPARATOR_FULL_SCREEN" disabled="': {
+        name: '---------------',
+        start: function(){
+
+        },
+        frame: function(){
+
+        },
+        stop: function(){
+
+        }
+    },
+    spectrum: {
+        name: "Spectrum",
         start: function(){
             
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
             var step = size[0] / 1024;
             var last = -1;
-            var heightFactor = size[1] / 255;
             for(var i = 0; i < 1024; i++){
                 var strength = 0;
                 if(i === 0){
                     strength = visData[i];
-                    canvas.strokeStyle = getColor(strength);
-                    canvas.beginPath();
-                    canvas.moveTo(0.5, size[1]);
-                    canvas.lineTo(0.5, (255 - strength) * heightFactor);
-                    canvas.stroke();
+                    this.drawLine(0, strength);
                 }else{
                     var last = Math.floor(step * (i - 1));
                     var curr = Math.floor(step * i);
@@ -762,40 +1080,123 @@ var vis = {
                         for(var j = 0; j < curr - last - 1; j++){
                             //strength = ((j + 1) / (curr - last + 1) * visData[i - 1] + (curr - last - j + 1) / (curr - last + 1) * visData[i]);
                             strength = (visData[i] + visData[i - 1]) / 2;
-                            canvas.strokeStyle = getColor(strength);
-                            canvas.beginPath();
-                            canvas.moveTo(curr - j - 0.5, size[1]);
-                            canvas.lineTo(curr - j - 0.5, (255 - strength) * heightFactor);
-                            canvas.stroke();
+                            this.drawLine(curr - 1, strength);
                         }
                         strength = visData[i];
-                        canvas.strokeStyle = getColor(strength);
-                        canvas.beginPath();
-                        canvas.moveTo(curr + 0.5, size[1]);
-                        canvas.lineTo(curr + 0.5, (255 - strength) * heightFactor);
-                        canvas.stroke();
+                        this.drawLine(curr, strength);
                     }else if(curr === last && next > curr){
                         // compressed
                         for(var j = 0; j < (1 / step); j++){
                             strength += visData[i - j];
                         }
                         strength /= Math.floor(1 / step) + 1;
-                        canvas.strokeStyle = getColor(strength);
-                        canvas.beginPath();
-                        canvas.moveTo(curr + 0.5, size[1]);
-                        canvas.lineTo(curr + 0.5, (255 - strength) * heightFactor);
-                        canvas.stroke();
+                        this.drawLine(curr, strength);
                     }else if(last === curr - 1){
                         strength = visData[i];
-                        canvas.strokeStyle = getColor(strength);
-                        canvas.beginPath();
-                        canvas.moveTo(curr + 0.5, size[1]);
-                        canvas.lineTo(curr + 0.5, (255 - strength) * heightFactor);
-                        canvas.stroke();
+                        this.drawLine(curr, strength);
                     }
                 }
             }
-            updateSmoke();
+        },
+        stop: function(){
+            
+        },
+        drawLine: function(x, colorAmount){
+            if(smokeEnabled){
+                smoke.fillStyle = getColor(colorAmount);
+                smoke.fillRect(x, 0, 1, size[1]);
+            }else{
+                canvas.fillStyle = getColor(colorAmount);
+                canvas.fillRect(x, 0, 1, size[1]);
+            }
+        }
+    },
+    solidColor: {
+        name: "Solid Color",
+        start: function(){
+            
+        },
+        frame: function(){
+            var avg = 0;
+            var avgtotal = 0;
+            for(var i = 0; i < 1024; i++){
+                avg += Math.pow(visData[i], 2) / 255;
+            }
+            avg /= 1024;
+            //avg /= 1024;
+            //avg *= 255;
+            canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+                smoke.fillStyle = getColor(avg);
+                smoke.fillRect(0, 0, size[0], size[1]);
+            }else{
+                canvas.fillStyle = getColor(avg);
+                canvas.fillRect(0, 0, size[0], size[1]);
+            }
+        },
+        stop: function(){
+            
+        }
+    },
+    'SEPARATOR_TESTS" disabled="': {
+        name: '---------------',
+        start: function(){
+
+        },
+        frame: function(){
+
+        },
+        stop: function(){
+
+        }
+    },
+    spectrogram: {
+        name: "Spectrogram",
+        start: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+        },
+        frame: function(){
+            canvas.putImageData(canvas.getImageData(0, 0, size[0], size[1]), 0, -1);
+            var step = size[0] / 1024;
+            var last = -1;
+            var heightFactor = size[1] / 255;
+            for(var i = 0; i < 1024; i++){
+                var strength = 0;
+                if(i === 0){
+                    strength = visData[i];
+                    canvas.fillStyle = getColor(strength);
+                    canvas.fillRect(0, size[1] - 1, 1, 1);
+                }else{
+                    var last = Math.floor(step * (i - 1));
+                    var curr = Math.floor(step * i);
+                    var next = Math.floor(step * (i + 1));
+                    if(last < curr - 1){
+                        // stretched
+                        for(var j = 0; j < curr - last - 1; j++){
+                            //strength = ((j + 1) / (curr - last + 1) * visData[i - 1] + (curr - last - j + 1) / (curr - last + 1) * visData[i]);
+                            strength = (visData[i] + visData[i - 1]) / 2;
+                            canvas.fillStyle = getColor(strength);
+                            canvas.fillRect(curr - j - 1, size[1] - 1, 1, 1);
+                        }
+                        strength = visData[i];
+                        canvas.fillStyle = getColor(strength);
+                        canvas.fillRect(curr, size[1] - 1, 1, 1);
+                    }else if(curr === last && next > curr){
+                        // compressed
+                        for(var j = 0; j < (1 / step); j++){
+                            strength += visData[i - j];
+                        }
+                        strength /= Math.floor(1 / step) + 1;
+                        canvas.fillStyle = getColor(strength);
+                        canvas.fillRect(curr, size[1] - 1, 1, 1);
+                    }else if(last === curr - 1){
+                        strength = visData[i];
+                        canvas.fillStyle = getColor(strength);
+                        canvas.fillRect(curr, size[1] - 1, 1, 1);
+                    }
+                }
+            }
         },
         stop: function(){
             
@@ -852,109 +1253,20 @@ var vis = {
             
         }
     },
-    spectrum: {
-        name: "Spectrum",
-        start: function(){
-            
-        },
-        frame: function(){
-            canvas.clearRect(0, 0, size[0], size[1]);
-            var step = size[0] / 1024;
-            var last = -1;
-            for(var i = 0; i < 1024; i++){
-                var strength = 0;
-                if(i === 0){
-                    strength = visData[i];
-                    canvas.strokeStyle = getColor(strength);
-                    canvas.beginPath();
-                    canvas.moveTo(0.5, size[1]);
-                    canvas.lineTo(0.5, 0);
-                    canvas.stroke();
-                }else{
-                    var last = Math.floor(step * (i - 1));
-                    var curr = Math.floor(step * i);
-                    var next = Math.floor(step * (i + 1));
-                    if(last < curr - 1){
-                        // stretched
-                        for(var j = 0; j < curr - last - 1; j++){
-                            //strength = ((j + 1) / (curr - last + 1) * visData[i - 1] + (curr - last - j + 1) / (curr - last + 1) * visData[i]);
-                            strength = (visData[i] + visData[i - 1]) / 2;
-                            canvas.strokeStyle = getColor(strength);
-                            canvas.beginPath();
-                            canvas.moveTo(curr - j - 0.5, size[1]);
-                            canvas.lineTo(curr - j - 0.5, 0);
-                            canvas.stroke();
-                        }
-                        strength = visData[i];
-                        canvas.strokeStyle = getColor(strength);
-                        canvas.beginPath();
-                        canvas.moveTo(curr + 0.5, size[1]);
-                        canvas.lineTo(curr + 0.5, 0);
-                        canvas.stroke();
-                    }else if(curr === last && next > curr){
-                        // compressed
-                        for(var j = 0; j < (1 / step); j++){
-                            strength += visData[i - j];
-                        }
-                        strength /= Math.floor(1 / step) + 1;
-                        canvas.strokeStyle = getColor(strength);
-                        canvas.beginPath();
-                        canvas.moveTo(curr + 0.5, size[1]);
-                        canvas.lineTo(curr + 0.5, 0);
-                        canvas.stroke();
-                    }else if(last === curr - 1){
-                        strength = visData[i];
-                        canvas.strokeStyle = getColor(strength);
-                        canvas.beginPath();
-                        canvas.moveTo(curr + 0.5, size[1]);
-                        canvas.lineTo(curr + 0.5, 0);
-                        canvas.stroke();
-                    }
-                }
-            }
-        },
-        stop: function(){
-            
-        }
-    },
-    solidColor: {
-        name: "Solid Color",
-        start: function(){
-            
-        },
-        frame: function(){
-            var avg = 0;
-            var avgtotal = 0;
-            for(var i = 0; i < 1024; i++){
-                if(visData[i] > 75){
-                    avg += visData[i];
-                    avgtotal++;
-                }
-            }
-            avg /= (avgtotal || 1);
-            //avg /= 1024;
-            //avg *= 255;
-            canvas.fillStyle = getColor(avg);
-            canvas.fillRect(0, 0, size[0], size[1]);
-        },
-        stop: function(){
-            
-        }
-    },
     colorTest: {
         name: "Color Test",
         start: function(){
 
         },
         frame: function(){
-            canvas.clearRect(0, 0, size[0], size[1]);
-            canvas.fillStyle = '#111';
-            canvas.fillRect(0, 0, size[0], size[1] * 0.15);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            smoke.fillStyle = '#111';
+            smoke.fillRect(0, 0, size[0], size[1] * 0.15);
             for(var i = 0; i < size[0]; i++){
-                canvas.fillStyle = getColor(i / size[0] * 255);
-                canvas.fillRect(i, size[1] * 0.75, 1, size[1] * 0.25);
+                smoke.fillStyle = getColor(i / size[0] * 255);
+                smoke.fillRect(i, size[1] * 0.75, 1, size[1] * 0.25);
             }
-            updateSmoke();
+            //updateSmoke();
             canvas.clearRect(0, 0, size[0], size[1]);
             for(var i = 0; i < size[0]; i++){
                 canvas.fillStyle = getColor(i / size[0] * 255);
