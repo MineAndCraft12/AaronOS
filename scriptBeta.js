@@ -8834,10 +8834,11 @@ c(function(){
             "05/09/2019: B0.15.0.4\n : Fixed security in login system.\n\n" +
             "05/11/2019: B0.16.0.0\n + Music Player recieves a huge upgrade, with visualizations and color schemes. This is work-in-progress.\n : The Music Visualizer app will be assimilated into Music Player and removed in a future update.\n\n" +
             "05/12/2019: B0.16.1.0\n + Added Smoke effect to Music Player.\n + Added Eclipse and various color schemes to Music Player.\n\n" +
-            "05/14/2019: B0.16.2.0\n + Added Obelisk and Smoke Rings to music Player.\n + Added Pride colors to Music Player.\n :Renamed several colors in visualizer.\n : Drastic performance improvements in most of Music Player's visualizers. (typically double framerate in the really bad ones)\n : Reorganized visualizer and color menus in music player.",
+            "05/14/2019: B0.16.2.0\n + Added Obelisk and Smoke Rings to music Player.\n + Added Pride colors to Music Player.\n : Renamed several colors in visualizer.\n : Drastic performance improvements in most of Music Player's visualizers. (typically double framerate in the really bad ones)\n : Reorganized visualizer and color menus in music player.\n\n" +
+            "05/14/2019: B0.16.2.1\n + Added Window Color to Music Player (colors aOS windows to the beat)\n + Added Spikes 1:1 to Music Player (spikes, but not distorted)\n : Music Player's Monstercat and Obelisk bars are now sitting on a slightly reflective surface in Smoke mode.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.16.2.0 (05/14/2019) r0';
+    window.aOSversion = 'B0.16.2.1 (05/14/2019) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -12464,6 +12465,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setContent('<iframe ownedByApp="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
+                requestAnimationFrame(this.vars.colorWindows);
             }
             this.appWindow.setCaption('Music Player');
             this.appWindow.setDims("auto", "auto", 1038, 626);
@@ -12508,6 +12510,25 @@ c(function(){
             appInfo: 'This is the official AaronOS Music Player. Select a folder of songs to loop through.',
             updateStyle: function(){
                 //getId("MPlframe").contentWindow.postMessage({dark: darkMode, style: getId("aosCustomStyle").innerHTML}, "https://aaron-os-mineandcraft12.c9.io");
+            },
+            colorModified: 0,
+            colorWindows: function(){
+                if(apps.musicPlayer.appWindow.appIcon){
+                    var MPlTitle = getId("MPlframe").contentDocument.title;
+                    if(MPlTitle.indexOf("WindowRecolor:") === 0){
+                        apps.settings.vars.setWinColor(1, MPlTitle.split(":")[1]);
+                        if(!this.colorModified){
+                            this.colorModified = 1;
+                        }
+                    }else if(this.colorModified){
+                        apps.settings.vars.setWinColor(1, ufload("aos_system/windows/border_color") || 'rgba(190, 190, 255, 0.3)');
+                        this.colorModified = 0;
+                    }
+                    requestAnimationFrame(apps.musicPlayer.vars.colorWindows);
+                }else if(this.colorModified){
+                    apps.settings.vars.setWinColor(1, ufload("aos_system/windows/border_color") || 'rgba(190, 190, 255, 0.3)');
+                    this.colorModified = 0;
+                }
             }
         }, 0, 'musicPlayer', 'appicons/ds/MSC.png'
     );

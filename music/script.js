@@ -29,6 +29,8 @@ var analyser;
 
 var visData;
 
+var microphone;
+
 var folderInput = getId("folderInput");
 var fileInput = getId("fileInput");
 var fileWeirdInput = getId("fileWeirdInput");
@@ -215,6 +217,52 @@ function loadWeirdFiles(event){
     requestAnimationFrame(globalFrame);
 }
 
+var microphoneActive = 0;
+
+function loadMicrophone(event){
+    audio.pause();
+    currentSong = -1;
+
+    var disabledElements = document.getElementsByClassName('disabled');
+    while(disabledElements.length > 0){
+        disabledElements[0].classList.remove('disabled');
+    }
+    if(!smokeEnabled){
+        smokeElement.classList.add("disabled");
+    }
+    
+    audioContext = new AudioContext();
+    
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 32768;
+    analyser.minDecibels = -70;
+    analyser.smoothingTimeConstant = 0;
+    
+    visData = new Uint8Array(analyser.frequencyBinCount);
+    
+    getId("introduction").classList.add('disabled');
+    getId("visualizer").classList.add('disabled');
+    setVis("none");
+    
+    winsize = [window.innerWidth, window.innerHeight];
+    if(fullscreen){
+        size = [window.innerWidth, window.innerHeight];
+    }else{
+        size = [window.innerWidth - 8, window.innerHeight - 81];
+    }
+    getId("visCanvas").width = size[0];
+    getId("visCanvas").height = size[1];
+
+    navigator.webkitGetUserMedia({audio:true}, function(stream){
+        microphone = audioContext.createMediaStreamSource(stream);
+        microphone.connect(analyser);
+    }, function(){alert('error');});
+    
+    microphoneActive = 1;
+    
+    requestAnimationFrame(globalFrame);
+}
+
 var currentSong = -1;
 
 function selectSong(id){
@@ -232,14 +280,18 @@ function selectSong(id){
 }
 
 function play(){
-    if(currentSong === -1){
-        selectSong(0);
-    }else{
-        audio.play();
+    if(!microphoneActive){
+        if(currentSong === -1){
+            selectSong(0);
+        }else{
+            audio.play();
+        }
     }
 }
 function pause(){
-    audio.pause();
+    if(!microphoneActive){
+        audio.pause();
+    }
 }
 
 function firstPlay(){
@@ -249,22 +301,26 @@ function firstPlay(){
 audio.addEventListener("canplaythrough", firstPlay);
 
 function back(){
-    if(audio.currentTime < 3){
-        currentSong--;
-        if(currentSong < 0){
-            currentSong = fileNames.length - 1;
+    if(!microphoneActive){
+        if(audio.currentTime < 3){
+            currentSong--;
+            if(currentSong < 0){
+                currentSong = fileNames.length - 1;
+            }
+            selectSong(currentSong);
+        }else{
+            audio.currentTime = 0;
         }
-        selectSong(currentSong);
-    }else{
-        audio.currentTime = 0;
     }
 }
 function next(){
-    currentSong++;
-    if(currentSong > fileNames.length - 1){
-        currentSong = 0;
+    if(!microphoneActive){
+        currentSong++;
+        if(currentSong > fileNames.length - 1){
+            currentSong = 0;
+        }
+        selectSong(currentSong);
     }
-    selectSong(currentSong);
 }
 audio.addEventListener("ended", next);
 
@@ -279,12 +335,14 @@ function shuffleArray(array){
 }
 
 function shuffle(){
-    audio.pause();
-    audio.currentTime = 0;
-    currentSong = 0;
-    shuffleArray(fileNames);
-    listSongs();
-    selectSong(0);
+    if(!microphoneActive){
+        audio.pause();
+        audio.currentTime = 0;
+        currentSong = 0;
+        shuffleArray(fileNames);
+        listSongs();
+        selectSong(0);
+    }
 }
 
 function refresh(){
@@ -476,16 +534,16 @@ var colors = {
             return 'rgb(' +
                 (
                     (amount < 95) * 255 +
-                    (amount >= 95 && amount < 159) * (159 - amount) * colors.prideGlow.divide255by64 +
-                    (amount >= 207) * ((207 - amount) * -1) * colors.prideGlow.divide255by96
+                    (amount >= 95 && amount < 159) * (159 - amount) * this.divide255by64 +
+                    (amount >= 207) * ((207 - amount) * -1) * this.divide255by96
                 ) + ',' +
                 (
-                    (amount < 95) * amount * colors.prideGlow.divide255by96 +
+                    (amount < 95) * amount * this.divide255by96 +
                     (amount >= 95 && amount < 159) * 255 +
-                    (amount >= 159 && amount < 207) * (207 - amount) * colors.prideGlow.divide255by48
+                    (amount >= 159 && amount < 207) * (207 - amount) * this.divide255by48
                 ) + ',' +
                 (
-                    (amount >= 159 && amount < 207) * ((159 - amount) * -1) * colors.prideGlow.divide255by48 +
+                    (amount >= 159 && amount < 207) * ((159 - amount) * -1) * this.divide255by48 +
                     (amount >= 207) * 255
                 ) + ',' + (amount / 255) + ')';
         },
@@ -499,16 +557,16 @@ var colors = {
             return 'rgb(' +
                 (
                     (amount < 95) * 255 +
-                    (amount >= 95 && amount < 159) * (159 - amount) * colors.pride.divide255by64 +
-                    (amount >= 207) * ((207 - amount) * -1) * colors.pride.divide255by96
+                    (amount >= 95 && amount < 159) * (159 - amount) * this.divide255by64 +
+                    (amount >= 207) * ((207 - amount) * -1) * this.divide255by96
                 ) + ',' +
                 (
-                    (amount < 95) * amount * colors.pride.divide255by96 +
+                    (amount < 95) * amount * this.divide255by96 +
                     (amount >= 95 && amount < 159) * 255 +
-                    (amount >= 159 && amount < 207) * (207 - amount) * colors.pride.divide255by48
+                    (amount >= 159 && amount < 207) * (207 - amount) * this.divide255by48
                 ) + ',' +
                 (
-                    (amount >= 159 && amount < 207) * ((159 - amount) * -1) * colors.pride.divide255by48 +
+                    (amount >= 159 && amount < 207) * ((159 - amount) * -1) * this.divide255by48 +
                     (amount >= 207) * 255
                 ) + ')';
         },
@@ -601,10 +659,19 @@ var colors = {
         }
     }
 }
-var getColor = colors.bluegreenred.func;
+var currColor = "bluegreenred";
 
 function setColor(newcolor){
-    getColor = (colors[newcolor] || colors.bgr).func;
+    //getColor = (colors[newcolor] || colors.bgr).func;
+    if(colors[newcolor]){
+        currColor = newcolor;
+    }else{
+        currColor = "redgreenblue";
+    }
+}
+
+function getColor(power){
+    return colors[currColor].func(power);
 }
 
 function setVis(newvis){
@@ -672,6 +739,12 @@ var vis = {
             var barSpacing = maxWidth / 64;
             var maxHeight = size[1] * 0.5 - size[1] * 0.2;
             
+            var monstercatGradient = canvas.createLinearGradient(0, Math.round(size[1] / 2) + 4, 0, size[1]);
+            monstercatGradient.addColorStop(0, 'rgba(0, 0, 0, 0.9)');
+            monstercatGradient.addColorStop(0.1, 'rgba(0, 0, 0, 1)');
+            canvas.fillStyle = monstercatGradient;
+            canvas.fillRect(0, Math.round(size[1] / 2) + 4, size[0], Math.round(size[1] / 2) - 4);
+            
             for(var i = 0; i < 64; i++){
                 var strength = 0;
                 for(var j = 0; j < 16; j++){
@@ -690,20 +763,27 @@ var vis = {
                     Math.round(barWidth),
                     Math.round(strength / 255 * maxHeight + 5)
                 );
+                canvas.fillStyle = "#000";
+                canvas.fillRect(
+                    Math.round(left + i * barSpacing),
+                    Math.floor(size[1] / 2) + 5,
+                    Math.round(barWidth),
+                    Math.round(strength / 255 * maxHeight + 5)
+                );
                 if(smokeEnabled){
                     smoke.fillStyle = fillColor;
                     smoke.fillRect(
                         Math.round(left + i * barSpacing),
                         Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
                         Math.round(barWidth),
-                        Math.round(strength / 255 * maxHeight + 5)
+                        Math.round((strength / 255 * maxHeight + 5) * 2)
                     );
                 }
             }
             //updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
             canvas.fillStyle = '#FFF';
             canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
-            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
+            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left) + 0.5, size[1] * 0.75, Math.floor(maxWidth));
         },
         stop: function(){
             
@@ -723,6 +803,13 @@ var vis = {
             var barWidth = maxWidth / 96;
             var barSpacing = maxWidth / 64;
             var maxHeight = size[1] * 0.5 - size[1] * 0.2;
+
+            var monstercatGradient = canvas.createLinearGradient(0, Math.round(size[1] / 2) + 4, 0, size[1]);
+            monstercatGradient.addColorStop(0, 'rgba(0, 0, 0, 0.9)');
+            monstercatGradient.addColorStop(0.1, 'rgba(0, 0, 0, 1)');
+            canvas.fillStyle = monstercatGradient;
+            canvas.fillRect(0, Math.round(size[1] / 2) + 4, size[0], Math.round(size[1] / 2) - 4);
+
             for(var i = 0; i < 64; i++){
                 var strength = 0;
                 for(var j = 0; j < 16; j++){
@@ -738,37 +825,37 @@ var vis = {
                     Math.round(left + i * barSpacing),
                     Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
                     Math.round(barWidth),
-                    Math.round(strength / 255 * maxHeight + 5)
+                    Math.round((strength / 255 * maxHeight + 5) * 2)
                 );
                 canvas.fillStyle = "rgba(0, 0, 0, 0.85)";
                 canvas.fillRect(
                     Math.round(left + i * barSpacing),
                     Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
                     Math.round(barWidth),
-                    Math.round(strength / 255 * maxHeight + 5)
+                    Math.round((strength / 255 * maxHeight + 5) * 2)
                 );
                 canvas.fillStyle = "rgba(0, 0, 0, 0.5)";
                 canvas.fillRect(
                     Math.round(left + i * barSpacing) + 1,
                     Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight) + 1,
                     Math.round(barWidth) - 2,
-                    Math.round(strength / 255 * maxHeight + 5) - 2
+                    Math.round((strength / 255 * maxHeight + 5) * 2) - 2
                 )
                 canvas.fillStyle = "#000";
                 canvas.fillRect(
                     Math.round(left + i * barSpacing) + 2,
                     Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight) + 2,
                     Math.round(barWidth) - 4,
-                    Math.round(strength / 255 * maxHeight + 5) - 4
+                    Math.round((strength / 255 * maxHeight + 5) * 2) - 4
                 );
             }
             //updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
             canvas.fillStyle = '#FFF';
             canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
-            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left), size[1] * 0.75, Math.floor(maxWidth));
+            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left) + 0.5, size[1] * 0.75, Math.floor(maxWidth));
             if(!smokeEnabled){
                 canvas.font = "12px aosProFont, Courier, monospace";
-                canvas.fillText("Enable Smoke for this visualizer.", Math.round(left), size[1] * 0.25, Math.floor(maxWidth));
+                canvas.fillText("Enable Smoke for this visualizer.", Math.round(left) + 0.5, size[1] * 0.25, Math.floor(maxWidth));
             }
         },
         stop: function(){
@@ -830,6 +917,36 @@ var vis = {
             if(smokeEnabled){
                 smoke.fillStyle = fillColor;
                 smoke.fillRect(x, (255 - h)  * fact, 1, size[1] - (255 - h) * fact);
+            }
+        }
+    },
+    spikes1to1: {
+        name: "Spikes 1:1",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            canvas.fillStyle = "#000";
+            canvas.fillRect(0, size[1] / 2 + 127, size[0], size[1] / 2 - 127);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var left = size[0] / 2 - 512;
+            var top = size[1] / 2 - 128;
+            for(var i = 0; i < 1024; i++){
+                this.drawLine(i, visData[i], left, top);
+            }
+            //updateSmoke();
+        },
+        stop: function(){
+            
+        },
+        drawLine: function(x, h, l, t){
+            var fillColor = getColor(h);
+            canvas.fillStyle = fillColor;
+            canvas.fillRect(l + x, t + (255 - h), 1, h);
+            if(smokeEnabled){
+                smoke.fillStyle = fillColor;
+                smoke.fillRect(l + x, t + (255 - h), 1, h * 2);
             }
         }
     },
@@ -957,7 +1074,7 @@ var vis = {
             if(!smokeEnabled){
                 canvas.fillStyle = '#FFF';
                 canvas.font = '12px aosProFont, Courier, monospace';
-                canvas.fillText("Enable Smoke for this visualizer.", center[0] - ringHeight / 2, center[1] - 6, ringHeight);
+                canvas.fillText("Enable Smoke for this visualizer.", center[0] - ringHeight / 2 + 0.5, center[1] - 6, ringHeight);
             }
             //updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
         },
@@ -1026,7 +1143,7 @@ var vis = {
             if(!smokeEnabled){
                 canvas.fillStyle = "#FFF";
                 canvas.font = "12px aosProFont, Courier, monospace";
-                canvas.fillText("Enable Smoke for this visualizer.", center[0] - ringWidth + 15, center[1] - 6, ringWidth - 30);
+                canvas.fillText("Enable Smoke for this visualizer.", center[0] - ringWidth + 15.5, center[1] - 6, ringWidth - 30);
             }
         },
         stop: function(){
@@ -1120,7 +1237,7 @@ var vis = {
             var avg = 0;
             var avgtotal = 0;
             for(var i = 0; i < 1024; i++){
-                avg += Math.pow(visData[i], 2) / 255;
+                avg += Math.sqrt(visData[i]) * this.sqrt255;
             }
             avg /= 1024;
             //avg /= 1024;
@@ -1137,7 +1254,41 @@ var vis = {
         },
         stop: function(){
             
-        }
+        },
+        sqrt255: Math.sqrt(255)
+    },
+    windowRecolor: {
+        name: "Window Color",
+        start: function(){
+            
+        },
+        frame: function(){
+            var avg = 0;
+            var avgtotal = 0;
+            for(var i = 0; i < 1024; i++){
+                avg += Math.sqrt(visData[i]) * this.sqrt255;
+            }
+            avg /= 1024;
+            //avg /= 1024;
+            //avg *= 255;
+            canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+                smoke.fillStyle = getColor(avg);
+                smoke.fillRect(0, 0, size[0], size[1]);
+            }else{
+                canvas.fillStyle = getColor(avg);
+                canvas.fillRect(0, 0, size[0], size[1]);
+            }
+            canvas.fillStyle = "#FFF";
+            canvas.font = "12px aosProFont, Courier, monospace";
+            canvas.fillText("Load this visualizer in AaronOS and your window borders will color themselves to the beat.", 10.5, 20);
+            document.title = "WindowRecolor:" + getColor(avg);
+        },
+        stop: function(){
+            document.title = "AaronOS Music Player";
+        },
+        sqrt255: Math.sqrt(255)
     },
     'SEPARATOR_TESTS" disabled="': {
         name: '---------------',
