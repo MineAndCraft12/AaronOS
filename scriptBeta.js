@@ -8835,7 +8835,7 @@ c(function(){
             "05/11/2019: B0.16.0.0\n + Music Player recieves a huge upgrade, with visualizations and color schemes. This is work-in-progress.\n : The Music Visualizer app will be assimilated into Music Player and removed in a future update.\n\n" +
             "05/12/2019: B0.16.1.0\n + Added Smoke effect to Music Player.\n + Added Eclipse and various color schemes to Music Player.\n\n" +
             "05/14/2019: B0.16.2.0\n + Added Obelisk and Smoke Rings to music Player.\n + Added Pride colors to Music Player.\n : Renamed several colors in visualizer.\n : Drastic performance improvements in most of Music Player's visualizers. (typically double framerate in the really bad ones)\n : Reorganized visualizer and color menus in music player.\n\n" +
-            "05/14/2019: B0.16.2.1\n + Added Window Color to Music Player (colors aOS windows to the beat)\n + Added Spikes 1:1 to Music Player (spikes, but not distorted)\n : Music Player's Monstercat and Obelisk bars are now sitting on a slightly reflective surface in Smoke mode.",
+            "05/14/2019: B0.16.2.1\n + Added Window Color to Music Player (colors aOS windows to the beat)\n + Added Spikes 1:1 to Music Player (spikes, but not distorted)\n + Added microphone option to Music Player.\n : Music Player's Monstercat and Obelisk bars are now sitting on a slightly reflective surface in Smoke mode.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
     window.aOSversion = 'B0.16.2.1 (05/14/2019) r1';
@@ -12530,7 +12530,14 @@ c(function(){
                     this.colorModified = 0;
                 }
             }
-        }, 0, 'musicPlayer', 'appicons/ds/MSC.png'
+        }, 0, 'musicPlayer', {
+            backgroundColor: "#303947",
+            foreground: "smarticons/musicPlayer/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
     getId('aOSloadingInfo').innerHTML = 'Apps Browser';
 });

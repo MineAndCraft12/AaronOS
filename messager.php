@@ -2,15 +2,38 @@
 // recieve message from client
 if(isset($_COOKIE['keyword']) && isset($_POST['c']) && (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== FALSE || explode(':', $_SERVER['HTTP_HOST'])[0] === "localhost")){
     if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){
+        if(isset($_COOKIE['logintoken'])){
+            if((require 'checkToken.php') === 0){
+                echo 'Error - Not logged in.';
+                die();
+            }
+        }else{
+            echo 'Error - Not logged in.';
+            die();
+        }
+        
+        /*
+        if(strlen(file_get_contents('USERFILES/'.$_POST['k'].'/aOSpassword.txt')) === 64){
+            unlink('USERFILES/'.$_POST['k'].'/aOSpassword.txt');
+        }else{
+            if(strlen(file_get_contents('USERFILES/'.$_POST['k'].'/aOSpassword.txt')) !== 60){
+                $passbc = password_hash(file_get_contents('USERFILES/'.$_POST['k'].'/aOSpassword.txt'), PASSWORD_BCRYPT);
+                $passfile = fopen('USERFILES/'.$_POST['k'].'/aOSpassword.txt', 'w');
+                fwrite($passfile, $passbc);
+                fclose($passfile);
+                //$currPassword = $passbc;
+            }
+        }
         if(isset($_COOKIE['password'])){
-            if(!password_verify($_COOKIE['password'], file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt'))){
+            if(!password_verify($_COOKIE['password'], file_get_contents('USERFILES/'.$_POST['k'].'/aOSpassword.txt'))){
                 echo 'Error - Password incorrect.';
                 die();
             }
         }else{
-            echo 'Error - Password incorrect.';
+            echo 'Error - Password not provided.';
             die();
         }
+        */
     }
     
     // old message writer, insecure
