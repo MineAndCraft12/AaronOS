@@ -61,6 +61,42 @@
         box-shadow:inset 0 0 10px #222;
     }
 
+.marquee{
+    width:100%;
+    overflow:hidden;
+    position:relative;
+    display:block;
+    height:auto;
+}
+.marquee .marqueetext1{
+    width:100%;
+    animation:cssmarquee1 10s infinite linear;
+    position:relative;
+    height:0;
+    overflow:visible;
+}
+.marquee .marqueetext2{
+    width:100%;
+    animation:cssmarquee2 10s infinite linear;
+    position:relative;
+}
+@keyframes cssmarquee1{
+    from {
+        transform:translateX(100%);
+    }
+    to {
+        transform:translateX(0%);
+    }
+}
+@keyframes cssmarquee2{
+    from {
+        transform:translateX(0%);
+    }
+    to {
+        transform:translateX(-100%);
+    }
+}
+
 button{
     background-color:#FFF;
     box-shadow:inset 0 0 5px #CCC;

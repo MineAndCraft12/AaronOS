@@ -113,7 +113,7 @@
                 <h1>AaronOS</h1>
                 <hr>
                 <div id="aOSloadingInfoDiv">
-                    <div id="aOSloadingInfo" class="liveElement" liveVar="finishedWaitingCodes / totalWaitingCodes * 100 + '%'" liveTarget="style.width">Initializing...</div>
+                    <div id="aOSloadingInfo" class="liveElement" data-live-eval="finishedWaitingCodes / totalWaitingCodes * 100 + '%'" data-live-target="style.width">Initializing...</div>
                 </div><br><br>
                 &nbsp;<br>
                 <a href="?safeMode"><button>Safe Mode</button></a><br><br>

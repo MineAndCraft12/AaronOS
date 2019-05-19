@@ -1326,21 +1326,21 @@ function checkLiveElements(){
     liveElements = document.getElementsByClassName('liveElement');
     for(var elem in liveElements){
         if(elem == parseInt(elem)){
-            if(liveElements[elem].getAttribute('liveTarget') === null){
+            if(liveElements[elem].getAttribute('data-live-target') === null){
                 try{
-                    liveElements[elem].innerHTML = eval(liveElements[elem].getAttribute('liveVar'));
+                    liveElements[elem].innerHTML = eval(liveElements[elem].getAttribute('data-live-eval'));
                 }catch(err){
                     liveElements[elem].innerHTML = 'LiveElement Error: ' + err;
                 }
             }else{
                 try{
-                    eval('liveElements[' + elem + '].' + liveElements[elem].getAttribute('liveTarget') + ' = "' + eval(liveElements[elem].getAttribute('liveVar')) + '"');
+                    eval('liveElements[' + elem + '].' + liveElements[elem].getAttribute('data-live-target') + ' = "' + eval(liveElements[elem].getAttribute('data-live-eval')) + '"');
                 }catch(err){
                     //doLog(' ');
                     //doLog('LiveElement Error: ' + err, '#F00');
                     //doLog('Element #' + elem, '#F00');
-                    //doLog('Target ' + liveElements[elem].getAttribute('liveTarget'), '#F00');
-                    //doLog('Value ' + liveElements[elem].getAttribute('liveVar'), '#F00');
+                    //doLog('Target ' + liveElements[elem].getAttribute('data-live-target'), '#F00');
+                    //doLog('Value ' + liveElements[elem].getAttribute('data-live-eval'), '#F00');
                 }
             }
         }
@@ -1349,10 +1349,10 @@ function checkLiveElements(){
 }
 requestAnimationFrame(checkLiveElements);
 function logLiveElement(str){
-    doLog('<span class="liveElement" liveVar="' + str + '"></span>');
+    doLog('<span class="liveElement" data-live-eval="' + str + '"></span>');
 };
 function makeLiveElement(str){
-    return '<span class="liveElement" liveVar="' + str + '"></span>';
+    return '<span class="liveElement" data-live-eval="' + str + '"></span>';
 }
 // list of pinned apps
 var pinnedApps = [];
@@ -1443,6 +1443,10 @@ function buildSmartIcon(size, options, optionalcss){
     }
     icoTemp += '</div></div>';
     return icoTemp;
+}
+
+function buildMarquee(text, style){
+    return '<div class="marquee" style="' + (style || '') + '"><div class="marqueetext1">' + text + '</div><div class="marqueetext2">' + text + '</div></div>';
 }
 
 // Application class
@@ -1912,7 +1916,7 @@ var totalWidgets = 0;
 function addWidget(widgetName, nosave){
     if(widgets[widgetName]){
         if(widgets[widgetName].place === -1){
-            getId('time').innerHTML += '<div id="widget_' + widgetName + '" class="widget" aosWidgetName="' + widgetName + '" onclick="widgets.' + widgetName + '.main()"></div>';
+            getId('time').innerHTML += '<div id="widget_' + widgetName + '" class="widget" data-widget-name="' + widgetName + '" onclick="widgets.' + widgetName + '.main()"></div>';
             widgets[widgetName].element = getId('widget_' + widgetName);
             widgets[widgetName].place = totalWidgets;
             totalWidgets++;
@@ -3813,7 +3817,7 @@ c(function(){
                     'Have me watch the time for you, using an alert window.',
                     function(text){
                         apps.nora.vars.sayDynamic('okay');
-                        apps.prompt.vars.alert('<h1 class="liveElement" liveVar="Date()"></h1>', 'Close Time Monitor', function(){}, 'NORAA');
+                        apps.prompt.vars.alert('<h1 class="liveElement" data-live-eval="Date()"></h1>', 'Close Time Monitor', function(){}, 'NORAA');
                     }
                 ],
                 [
@@ -4308,20 +4312,20 @@ c(function(){
             perfStart('tMgPerfBench');
             this.appWindow.setContent(
                 "<table id='tMgMemTable'>" +
-                "<tr><td>Script Performance Benchmark:</td><td class='liveElement' liveVar='perfStart(\"tMgScptBench\");perfCheck(\"tMgScptBench\")'></td></tr>" +
-                "<tr><td>Visual Performance Benchmark:</td><td class='liveElement' liveVar='[perfCheck(\"tMgPerfBench\"),perfStart(\"tMgPerfBench\")][0]'></td></tr>" +
+                "<tr><td>Script Performance Benchmark:</td><td class='liveElement' data-live-eval='perfStart(\"tMgScptBench\");perfCheck(\"tMgScptBench\")'></td></tr>" +
+                "<tr><td>Visual Performance Benchmark:</td><td class='liveElement' data-live-eval='[perfCheck(\"tMgPerfBench\"),perfStart(\"tMgPerfBench\")][0]'></td></tr>" +
                 //"<tr><td>Memory Available:</td><td id='tMgMemAvailable'>Unvailable - try a different browser</td></tr>" +
                 //"<tr><td>aOS Memory Alloted:</td><td id='tMgMemTaken'>Unavailable</td></tr>" +
                 //"<tr><td>aOS Memory Active:</td><td id='tMgMemActive'>Unavailable</td></tr>" +
                 //"<tr><td>Available Memory Alloted:</td><td><span id='tMgMemUsage'>Unavailable </span>%</td></tr>" +
                 //"<tr><td>Alloted Memory In Use:</td><td><span id='tMgMemAlloted'>Unavailable </span>%</td></tr>" +
-                "<tr><td>Code Pieces Waiting to Run:</td><td><span id='tMgCodeWait' class='liveElement' liveVar='codeToRun.length'>0</span></td></tr>" +
-                "<tr><td>Temp Speech Running:</td><td><span id='tMgSpeechRun' class='liveElement' liveVar='numtf(apps.nora.vars.contRecogRunning)'>false</span></td></tr>" +
-                "<tr><td>Temp Speech Storage:</td><td><span id='tMgSpeechStore' class='liveElement' liveVar='apps.nora.vars.currContTrans'></span></td></tr>" +
-                "<tr><td>Current Selection:</td><td><span id='tMgCurrSelect' class='liveElement' liveVar='currentSelection'></span></td></tr>" +
-                "<tr><td>Live Elements Loaded:</td><td><span class='liveElement' liveVar='liveElements.length'></span></td></tr>" +
+                "<tr><td>Code Pieces Waiting to Run:</td><td><span id='tMgCodeWait' class='liveElement' data-live-eval='codeToRun.length'>0</span></td></tr>" +
+                "<tr><td>Temp Speech Running:</td><td><span id='tMgSpeechRun' class='liveElement' data-live-eval='numtf(apps.nora.vars.contRecogRunning)'>false</span></td></tr>" +
+                "<tr><td>Temp Speech Storage:</td><td><span id='tMgSpeechStore' class='liveElement' data-live-eval='apps.nora.vars.currContTrans'></span></td></tr>" +
+                "<tr><td>Current Selection:</td><td><span id='tMgCurrSelect' class='liveElement' data-live-eval='currentSelection'></span></td></tr>" +
+                "<tr><td>Live Elements Loaded:</td><td><span class='liveElement' data-live-eval='liveElements.length'></span></td></tr>" +
                 "</table>" +
-                "<p>modulelast, module: <br><span id='tMgModule' style='font-family:monospace' class='liveElement' liveVar='modulelast + \"<br>\" + module'>?<br>?</span></p>" +
+                "<p>modulelast, module: <br><span id='tMgModule' style='font-family:monospace' class='liveElement' data-live-eval='modulelast + \"<br>\" + module'>?<br>?</span></p>" +
                 "<ul style='font-family:monospace' id='tMgTaskList'></ul>"
             );
             getId('win_taskManager_html').style.overflowY = 'scroll';
@@ -6063,17 +6067,17 @@ c(function(){
                     },
                     bgFit: {
                         option: 'Background Image Fit',
-                        description: function(){return 'Current: <span class="liveElement" liveVar="apps.settings.vars.bgFit">?</span>. This determines the size and positioning of your background.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="apps.settings.vars.bgFit">?</span>. This determines the size and positioning of your background.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.setBgFit(\'corner\')">Corner</button> <button onclick="apps.settings.vars.setBgFit(\'center\')">Center</button> <button onclick="apps.settings.vars.setBgFit(\'cover\')">Cover</button> <button onclick="apps.settings.vars.setBgFit(\'stretch\')">Stretch</button> <button onclick="apps.settings.vars.setBgFit(\'fit\')">Fit</button>'}
                     },
                     liveBackground: {
                         option: 'Live Background',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.liveBackgroundEnabled)"></span>, Live Background allows you to set a website as your desktop wallpaper. Live Background is not fully compatible with WindowBlur. Not all websites work in Live Background.'},
+                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.liveBackgroundEnabled)"></span>, Live Background allows you to set a website as your desktop wallpaper. Live Background is not fully compatible with WindowBlur. Not all websites work in Live Background.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togLiveBg()">Toggle</button> | <input id="STNliveBg" placeholder="URL to site" value="' + apps.settings.vars.liveBackgroundURL + '"> <button onclick="apps.settings.vars.setLiveBg(getId(\'STNliveBg\').value)">Set URL</button>'}
                     },
                     parallaxBackground: {
                         option: 'Parallax Background',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.prlxBackgroundEnabled)"></span>, Parallax Background allows you to create your own wallpapers with depth in them. The wallpaper moves around as you move your mouse. Provide a comma-separated list of image URLs. The first image is displayed at the bottom of the stack.'},
+                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.prlxBackgroundEnabled)"></span>, Parallax Background allows you to create your own wallpapers with depth in them. The wallpaper moves around as you move your mouse. Provide a comma-separated list of image URLs. The first image is displayed at the bottom of the stack.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togPrlxBg()">Toggle</button> | <input id="STNprlxBg" placeholder="comma-separated image URLs" value="' + (apps.settings.vars.prlxBackgroundURLs || "p1.png,p2.png,p3.png,p4.png") + '"> <button onclick="apps.settings.vars.setPrlxBg(getId(\'STNprlxBg\').value)">Set URLs</button>'}
                     },
                     premade: {
@@ -6095,17 +6099,17 @@ c(function(){
                     image: 'settingIcons/beta/performance.png',
                     perfMode: {
                         option: 'Performance Mode',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.performanceMode)">' + numtf(apps.settings.vars.performanceMode) + '</span>; Performance Mode attempts to raise framerate by lowering the CPU usage of some system functions'},
+                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.performanceMode)">' + numtf(apps.settings.vars.performanceMode) + '</span>; Performance Mode attempts to raise framerate by lowering the CPU usage of some system functions'},
                         buttons: function(){return '<button onClick="apps.settings.vars.togPerformanceMode()">Toggle</button>'}
                     },
                     clickToMove: {
                         option: 'Legacy Window Moving',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.clickToMove)"></span>; Legacy support for window-moving, in which you must click the window to move and then click again somewhere on the screen to move it.'},
+                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.clickToMove)"></span>; Legacy support for window-moving, in which you must click the window to move and then click again somewhere on the screen to move it.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togClickToMove()">Toggle</button>'}
                     },
                     longTap: {
                         option: 'Double Tap Opens Context Menu',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.longTap)">' + numtf(apps.settings.vars.longTap) + '</span>; Only for mobile browsers, requires touch on top-level ctxmenu element (rightclicking a window will not give the desktop ctxmenu)'},
+                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.longTap)">' + numtf(apps.settings.vars.longTap) + '</span>; Only for mobile browsers, requires touch on top-level ctxmenu element (rightclicking a window will not give the desktop ctxmenu)'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togLongTap()">Toggle</button>'}
                     },
                     allowStnWindow: {
@@ -6171,7 +6175,7 @@ c(function(){
                     },
                     dataCollect: {
                         option: 'Anonymous Data Collection',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.collectData)">' + numtf(apps.settings.vars.collectData) + '</span>'},
+                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.collectData)">' + numtf(apps.settings.vars.collectData) + '</span>'},
                         buttons: function(){return '<a href="privacy.txt" target="_blank">Privacy Policy</a><br>' +
                             '<button onclick="apps.settings.vars.collectData = -1 * apps.settings.vars.collectData + 1">Toggle</button><br>' +
                             'All ongoing data collection campaigns will be detailed in full here:' +
@@ -6231,17 +6235,17 @@ c(function(){
                     */
                     netAndBat: {
                         option: 'Network and Battery Status',
-                        description: function(){return 'Network Online: <span class="liveElement" liveVar="window.navigator.onLine">' + window.navigator.onLine + '</span>. Battery Level (if -100, battery not detected): <span class="liveElement" liveVar="Math.round(batteryLevel * 100)">' + Math.round(batteryLevel * 100) + '</span>'},
+                        description: function(){return 'Network Online: <span class="liveElement" data-live-eval="window.navigator.onLine">' + window.navigator.onLine + '</span>. Battery Level (if -100, battery not detected): <span class="liveElement" data-live-eval="Math.round(batteryLevel * 100)">' + Math.round(batteryLevel * 100) + '</span>'},
                         buttons: function(){return 'These values are updated live as of aOS A1.2.8'}
                     },
                     textLanguage: {
                         option: 'Text Language',
-                        description: function(){return '<span class="liveElement" liveVar="languagepacks[currentlanguage]">' + languagepacks[currentlanguage] + '</span>; some apps support different languages. Translation is up to the developer of the app and may not be accurate. Some languages may be limited to few apps.'},
+                        description: function(){return '<span class="liveElement" data-live-eval="languagepacks[currentlanguage]">' + languagepacks[currentlanguage] + '</span>; some apps support different languages. Translation is up to the developer of the app and may not be accurate. Some languages may be limited to few apps.'},
                         buttons: function(){return apps.settings.vars.getTextLanguages()}
                     },
                     uglyLoading: {
                         option: 'Ugly Loading',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(dirtyLoadingEnabled)">' + numtf(dirtyLoadingEnabled) + '</span> Allows you to watch aOS load at startup, but looks dirty compared to having a loading screen.'},
+                        description: function(){return '<span class="liveElement" data-live-eval="numtf(dirtyLoadingEnabled)">' + numtf(dirtyLoadingEnabled) + '</span> Allows you to watch aOS load at startup, but looks dirty compared to having a loading screen.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togDirtyLoad()">Toggle</button>'}
                     },
                     corsProxy: {
@@ -6267,7 +6271,7 @@ c(function(){
                     },
                     currRes: {
                         option: 'aOS Monitor Resolution',
-                        description: function(){return '<span class="liveElement" liveVar="getId(\'monitor\').style.width">' + getId('monitor').style.width + '</span> by <span class="liveElement" liveVar="getId(\'monitor\').style.height">' + getId('monitor').style.height + '</span>'},
+                        description: function(){return '<span class="liveElement" data-live-eval="getId(\'monitor\').style.width">' + getId('monitor').style.width + '</span> by <span class="liveElement" data-live-eval="getId(\'monitor\').style.height">' + getId('monitor').style.height + '</span>'},
                         buttons: function(){return '<input id="STNscnresX">px by <input id="STNscnresY">px <button onclick="fitWindowRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Set aOS Screen Res</button>'}
                     },
                     saveRes: {
@@ -6277,12 +6281,12 @@ c(function(){
                     },
                     currWin: {
                         option: 'Current Browser Window Resolution',
-                        description: function(){return '<span class="liveElement" liveVar="window.innerWidth">' + window.innerWidth + '</span>px by <span class="liveElement" liveVar="window.innerHeight">' + window.innerHeight + '</span>px'},
+                        description: function(){return '<span class="liveElement" data-live-eval="window.innerWidth">' + window.innerWidth + '</span>px by <span class="liveElement" data-live-eval="window.innerHeight">' + window.innerHeight + '</span>px'},
                         buttons: function(){return '<button onclick="fitWindow()">Fit aOS to Window</button>'}
                     },
                     currScn: {
                         option: 'Current Screen Resolution',
-                        description: function(){return '<span class="liveElement" liveVar="screen.width">' + screen.width + '</span>px by <span class="liveElement" liveVar="screen.height">' + screen.height + '</span>px'},
+                        description: function(){return '<span class="liveElement" data-live-eval="screen.width">' + screen.width + '</span>px by <span class="liveElement" data-live-eval="screen.height">' + screen.height + '</span>px'},
                         buttons: function(){return '<button onclick="fitWindowOuter()">Fit aOS to Screen</button>'}
                     }
                 },
@@ -6323,7 +6327,7 @@ c(function(){
                     },
                     windowBlur: {
                         option: 'Windowblur',
-                        description: function(){return 'Current: <span class="liveElement" liveVar="numtf(parseInt(ufload(\'aos_system/windows/blur_enabled\') || \'0\'))">true</span>. Toggle Windowblur off to save on performance, but does not look as good.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(parseInt(ufload(\'aos_system/windows/blur_enabled\') || \'0\'))">true</span>. Toggle Windowblur off to save on performance, but does not look as good.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.togAero()">Toggle Windowblur Effect</button>'}
                     },
                     blurStrength: {
@@ -6338,7 +6342,7 @@ c(function(){
                     },
                     backdropFilter: {
                         option: 'CSS Backdrop Blur',
-                        description: function(){return 'Current: <span class="liveElement" liveVar="numtf(parseInt(ufload(\'aos_system/windows/backdropfilter_blur\') || \'0\'))">true</span>. Toggle experimental CSS backdrop filter for windowblur. So far, the API is only available for Safari on Mac, but the API is under development for Google Chrome.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(parseInt(ufload(\'aos_system/windows/backdropfilter_blur\') || \'0\'))">true</span>. Toggle experimental CSS backdrop filter for windowblur. So far, the API is only available for Safari on Mac, but the API is under development for Google Chrome.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.togBackdropFilter()">Toggle Backdrop Filter Blur</button>'}
                     },
                     fadeDist: {
@@ -6396,12 +6400,12 @@ c(function(){
                     image: 'settingIcons/beta/noraa.png',
                     advHelp: {
                         option: 'Advanced Help Pages',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.noraHelpTopics)">' + numtf(apps.settings.vars.noraHelpTopics) + '</span>; NORAA returns more advanced help pages when you ask for OS help, instead of plain text.'},
+                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.noraHelpTopics)">' + numtf(apps.settings.vars.noraHelpTopics) + '</span>; NORAA returns more advanced help pages when you ask for OS help, instead of plain text.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togNoraListen()">Toggle</button>'}
                     },
                     listen: {
                         option: 'NORAA Listening',
-                        description: function(){return '<span class="liveElement" liveVar="numtf(apps.settings.vars.currNoraListening)">' + numtf(apps.settings.vars.currNoraListening) + '</span>; NORAA listens for you to say a specified phrase that will activate him.'},
+                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.currNoraListening)">' + numtf(apps.settings.vars.currNoraListening) + '</span>; NORAA listens for you to say a specified phrase that will activate him.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togNoraListen()">Toggle</button>'}
                     },
                     listenFor: {
@@ -6416,7 +6420,7 @@ c(function(){
                     },
                     voices: {
                         option: 'NORAA\'s Voice',
-                        description: function(){return 'Current: <span class="liveElement" liveVar="apps.nora.vars.lang">' + apps.nora.vars.lang + '</span>. This is the voice NORAA uses to speak to you. Choose from one of the voices below that are supported by your browser.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="apps.nora.vars.lang">' + apps.nora.vars.lang + '</span>. This is the voice NORAA uses to speak to you. Choose from one of the voices below that are supported by your browser.'},
                         buttons: function(){return apps.settings.vars.getVoicesForNORAA()}
                     }
                 },
@@ -6446,7 +6450,7 @@ c(function(){
                     folderPath: 'apps.settings.vars.menus.clipboard',
                     size: {
                         option: 'Clipboard Slots',
-                        description: function(){return 'Current: <span class="liveElement" liveVar="textEditorTools.slots">' + textEditorTools.slots + '</span>. Number of slots in your clipboard. An excessively large clipboard may be difficult to manage.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="textEditorTools.slots">' + textEditorTools.slots + '</span>. Number of slots in your clipboard. An excessively large clipboard may be difficult to manage.'},
                         buttons: function(){return '<input id="STNclipboardSlots"> <button onclick="apps.settings.vars.setClipboardSlots(getId(\'STNclipboardSlots\').value)">Set</button>'}
                     },
                     clear: {
@@ -7056,14 +7060,14 @@ c(function(){
                 var nodes = getId('time').childNodes;
                 var str = '<li>';
                 for(var i = 0; i < nodes.length; i++){
-                    str += widgets[nodes[i].getAttribute('aosWidgetName')].name + '</li><li>';
+                    str += widgets[nodes[i].getAttribute('data-widget-name')].name + '</li><li>';
                 }
                 return str + '</li>';
             },
             getWidgetButtons: function(){
                 var str = '';
                 for(var i in widgets){
-                    //str += widgets[nodes[i].getAttribute('aosWidgetName')].name + '</li><li>';
+                    //str += widgets[nodes[i].getAttribute('data-widget-name')].name + '</li><li>';
                     if(widgets[i].place === -1){
                         str += '<button onclick="addWidget(\'' + widgets[i].codeName + '\');apps.settings.vars.showMenu(apps.settings.vars.menus.taskbar);">Add ' + widgets[i].name + ' Widget</button><br>';
                     }else{
@@ -7623,7 +7627,7 @@ c(function(){
                             getId('aOSloadingBg').style.display = 'block';
                             window.shutDownPercentComplete = 0;
                             window.shutDownTotalPercent = 1;
-                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Shutting down...</div></div></div>';
+                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Shutting down...</div></div></div>';
                             // getId('aOSisLoading').style.cursor = cursors.loadLight;
                             getId('aOSisLoading').classList.remove('cursorLoadDark');
                             getId('aOSisLoading').classList.add('cursorLoadLight');
@@ -7649,7 +7653,7 @@ c(function(){
                                 shutDownPercentComplete = 0;
                                 c(function(){
                                     //apps.savemaster.vars.save();
-                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Goodbye!</div></div></div>';
+                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Goodbye!</div></div></div>';
                                     if(logout){
                                         document.cookie = "logintoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
@@ -7668,7 +7672,7 @@ c(function(){
                             getId('aOSloadingBg').style.display = 'block';
                             window.shutDownPercentComplete = 0;
                             window.shutDownTotalPercent = 1;
-                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Shutting down...</div></div></div>';
+                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Shutting down...</div></div></div>';
                             // getId('aOSisLoading').style.cursor = cursors.loadLight;
                             getId('aOSisLoading').classList.remove('cursorLoadDark');
                             getId('aOSisLoading').classList.add('cursorLoadLight');
@@ -7694,7 +7698,7 @@ c(function(){
                                 shutDownPercentComplete = 0;
                                 c(function(){
                                     //apps.savemaster.vars.save();
-                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" liveVar="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" liveTarget="style.width">Goodbye!</div></div></div>';
+                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Goodbye!</div></div></div>';
                                     if(logout){
                                         document.cookie = "logintoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
@@ -8826,7 +8830,7 @@ c(function(){
             "04/14/2019: B0.13.0.1\n + Added aaronos.dev as the new official AaronOS server.\n : Updated README, EULA, and privacy policy to reflect the new server address.\n : Fixed several serverside issues.\n\n" +
             "04/15/2019: B0.13.0.2\n + Unlocked rotation on PWA.\n : Fixed password screen using old background instead of new one.\n - Removed accidental debug logging to console on arranging icons.\n\n" +
             "04/17/2019: B0.13.0.3\n + Hidden iFrame Browser app for debugging.\n\n" +
-            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)\n + Added ownedByApp attribute for iframes, will bring the specified app to top if the iframe has focus.\n + The currently focused app is displayed on the window's title.\n\n" +
+            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)\n + Added data-parent-app attribute for iframes, will bring the specified app to top if the iframe has focus.\n + The currently focused app is displayed on the window's title.\n\n" +
             "04/19/2019: B0.15.0.0\n : Window captions are now 32px high to fit the whole icon.\n : Window caption buttons are now whole instead of hanging on to the top of the window.\n + Begun work on Smart Icons.\n + Smart Icons Settings.\n + Smart Icon Creator.\n + Smart Icon Template Files.\n\n" +
             "04/21/2019: B0.15.0.1\n : All app icons are now treated as Smart Icons. Any legacy icons are converted.\n : Made JSConsole colors readable.\n\n" +
             "04/23/2019: B0.15.0.2\n : Fixed CustomStyles\n : Fixed Task Manager trying to update its content when its window is closed.\n\n" +
@@ -8835,10 +8839,11 @@ c(function(){
             "05/11/2019: B0.16.0.0\n + Music Player recieves a huge upgrade, with visualizations and color schemes. This is work-in-progress.\n : The Music Visualizer app will be assimilated into Music Player and removed in a future update.\n\n" +
             "05/12/2019: B0.16.1.0\n + Added Smoke effect to Music Player.\n + Added Eclipse and various color schemes to Music Player.\n\n" +
             "05/14/2019: B0.16.2.0\n + Added Obelisk and Smoke Rings to music Player.\n + Added Pride colors to Music Player.\n : Renamed several colors in visualizer.\n : Drastic performance improvements in most of Music Player's visualizers. (typically double framerate in the really bad ones)\n : Reorganized visualizer and color menus in music player.\n\n" +
-            "05/14/2019: B0.16.2.1\n + Added Window Color to Music Player (colors aOS windows to the beat)\n + Added Spikes 1:1 to Music Player (spikes, but not distorted)\n + Added microphone option to Music Player.\n : Music Player's Monstercat and Obelisk bars are now sitting on a slightly reflective surface in Smoke mode.",
+            "05/14/2019: B0.16.2.1\n + Added Window Color to Music Player (colors aOS windows to the beat)\n + Added Spikes 1:1 to Music Player (spikes, but not distorted)\n + Added microphone option to Music Player.\n : Music Player's Monstercat and Obelisk bars are now sitting on a slightly reflective surface in Smoke mode.\n\n" +
+            "05/18/2019: b0.16.2.2\n + Added buildMarquee(text), to create a custom marquee.\n : Changed all custom attributes to use data- names.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.16.2.1 (05/14/2019) r1';
+    window.aOSversion = 'B0.16.2.2 (05/18/2019) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -9142,7 +9147,7 @@ c(function(){
                         }() +
                         '</tr>';
                 }else{
-                    getId("FILpath").innerHTML = '<div id="FILgreen" class="liveElement" liveTarget="style.width" liveVar="apps.files.vars.currItem/apps.files.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div>' + this.currLoc + '</div>';
+                    getId("FILpath").innerHTML = '<div id="FILgreen" class="liveElement" data-live-target="style.width" data-live-eval="apps.files.vars.currItem/apps.files.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div>' + this.currLoc + '</div>';
                     this.currTotal = objLength(eval(this.currLoc));
                     this.currItem = 0;
                     for(var findElem in eval(this.currLoc)){
@@ -9538,7 +9543,7 @@ c(function(){
                     getId("FIL2cntn").style.backgroundImage="";
                     getId('FIL2cntn').classList.remove('cursorLoadDark');
                 }else{
-                    getId("FIL2path").innerHTML = '<div id="FIL2green" class="liveElement" liveTarget="style.width" liveVar="apps.files2.vars.currItem/apps.files2.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="' + this.currLoc + '"></div>';
+                    getId("FIL2path").innerHTML = '<div id="FIL2green" class="liveElement" data-live-target="style.width" data-live-eval="apps.files2.vars.currItem/apps.files2.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="' + this.currLoc + '"></div>';
                     this.currDirList = sh("ls '" + this.currLoc + "'").split('\n');
                     if(this.currDirList.length === 1 && this.currDirList[0] === ""){
                         if(typeof apps.bash.vars.getRealDir(this.currLoc) !== "object" || apps.bash.vars.getRealDir(this.currLoc) === null){
@@ -10414,8 +10419,8 @@ c(function(){
                 );});
                 c(function(){apps.appAPI.vars.newdoc(
                     'Live Elements',
-                    '&lt;span class="liveElement" liveVar="Date()"&gt;&lt;/span&gt; // => <span class="liveElement" liveVar="Date()"></span>',
-                    'A Live Element is any HTML element that will have its innerHTML constantly kept up-to-date with a given variable. Variables or expressions can be included within. class="liveElement" is what tells the LiveElement engine to watch your element and keep it up to date. liveVar="something" is the variable or expression that LiveElement will update the innerHTML of the element to. I recommend using &lt;span&gt; elements, but you can theoretically use any element that supports innerHTML.'
+                    '&lt;span class="liveElement" data-live-eval="Date()"&gt;&lt;/span&gt; // => <span class="liveElement" data-live-eval="Date()"></span>',
+                    'A Live Element is any HTML element that will have its innerHTML constantly kept up-to-date with a given variable. Variables or expressions can be included within. class="liveElement" is what tells the LiveElement engine to watch your element and keep it up to date. data-live-eval="something" is the variable or expression that LiveElement will update the innerHTML of the element to. I recommend using &lt;span&gt; elements, but you can theoretically use any element that supports innerHTML.'
                 );});
                 c(function(){apps.appAPI.vars.newdoc(
                     'm(message);',
@@ -11117,7 +11122,7 @@ c(function(){
                         this.appWindow.setCaption(this.appDesc);
                         if(!this.appWindow.appIcon){
                             this.appWindow.paddingMode(0);
-                            this.appWindow.setContent('<iframe ownedByApp="' + this.objName + '" style="width:100%;height:100%;border:none;" src="' + this.vars.appURL + '"></iframe>');
+                            this.appWindow.setContent('<iframe data-parent-app="' + this.objName + '" style="width:100%;height:100%;border:none;" src="' + this.vars.appURL + '"></iframe>');
                             this.appWindow.setDims("auto", "auto", this.vars.sizeX, this.vars.sizeY);
                         }
                         this.appWindow.openWindow();
@@ -11179,7 +11184,7 @@ c(function(){
             this.appWindow.setCaption("aOS Calculator");
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe ownedByApp="calculator" id="CalcFrame" style="width:100%;height:100%;border:none;font-family:aosProFont, monospace;font-size:12px;" src="Calculator/"></iframe>');
+                this.appWindow.setContent('<iframe data-parent-app="calculator" id="CalcFrame" style="width:100%;height:100%;border:none;font-family:aosProFont, monospace;font-size:12px;" src="Calculator/"></iframe>');
                 this.appWindow.setDims("auto", "auto", 600, 400);
             }
             this.appWindow.openWindow();
@@ -11479,6 +11484,9 @@ c(function(){
                         }
                     }
                 },
+                marquee: function(str){
+                    return buildMarquee(cleanStr(str));
+                },
                 glow: function(str, param){
                     if(param){
                         return '<span style="text-shadow:0 0 5px ' + param.split(';')[0].split(' ').join('') + ';">' + str + '</span>';
@@ -11528,7 +11536,7 @@ c(function(){
                     if(str.indexOf('http://') !== 0 && str.indexOf('https://') !== 0 && str.indexOf('/') !== 0){
                         str = 'https://' + encodeURI(str);
                     }
-                    return '<div style="position:relative;display:block;width:100%;border:none;background:#FFF;margin-top:-3px;margin-bottom:-3px;border-radius:10px;box-shadow:inset 0 0 5px #000;height:400px;" onclick="if(event.target.tagName.toLowerCase() === \'button\'){this.outerHTML = \'<iframe ownedByApp=\\\'messaging\\\' src=\\\'\' + this.getAttribute(\'aosMessagingSiteURL\') + \'\\\' style=\\\'\' + this.getAttribute(\'style\') + \'\\\'></iframe>\'}" aosMessagingSiteURL="' + str + '"><p style="margin-top:188px;text-align:center;"><button>Click to load site:<br>' + str + '</button></p></div>';
+                    return '<div style="position:relative;display:block;width:100%;border:none;background:#FFF;margin-top:-3px;margin-bottom:-3px;border-radius:10px;box-shadow:inset 0 0 5px #000;height:400px;" onclick="if(event.target.tagName.toLowerCase() === \'button\'){this.outerHTML = \'<iframe data-parent-app=\\\'messaging\\\' src=\\\'\' + this.getAttribute(\'data-messaging-site-url\') + \'\\\' style=\\\'\' + this.getAttribute(\'style\') + \'\\\'></iframe>\'}" data-messaging-site-url="' + str + '"><p style="margin-top:188px;text-align:center;"><button>Click to load site:<br>' + str + '</button></p></div>';
                 }
             },
             objSafe: {
@@ -11541,6 +11549,7 @@ c(function(){
                 hr: 0,
                 font: 1,
                 color: 1,
+                marquee: 1,
                 glow: 1,
                 outline: 1,
                 flip: 1,
@@ -11556,6 +11565,7 @@ c(function(){
                 hr: 1,
                 font: 0,
                 color: 0,
+                marquee: 0,
                 glow: 0,
                 outline: 0,
                 flip: 0,
@@ -11571,6 +11581,7 @@ c(function(){
                 hr: 'Insert a horizontal line.',
                 font: 'Format your text with a font.',
                 color: 'Format your text with a color.',
+                marquee: 'Format your text to scroll as a marquee.',
                 glow: 'Format your text with a colorful glow.',
                 outline: 'Format your text with an outline.',
                 flip: 'Flip your text upside-down.',
@@ -11586,6 +11597,7 @@ c(function(){
                 hr: 'Hello[hr]World',
                 font: '[font=Comic Sans MS]This text has a custom font.[/font]',
                 color: '[color=red]This is red text via name.[/color]<br><br>[color=#00AA00]This is green text via hex.[/color]',
+                marquee: '[marquee]This is scrolling marquee text.[/marquee]',
                 glow: '[glow=red]This is glowy red text.[/glow]',
                 outline: '[outline=red]This is red outlined text.[/outline]',
                 flip: '[flip]This is upside-down text.[/flip]',
@@ -11961,7 +11973,7 @@ c(function(){
                         '<code>Code Pieces Waiting to Run:</code> This is the number of code pieces that your apps and aOS have put off to run over time, in order to increase framerate. If things like context menus, the apps list, or the filebrowser are freezing, check this number and see how large it is. If you can see it counting down from a very large number, then some app is dumping alot of code into the system.<br><br>' +
                         '<code>Temp Speech Running:</code> This is a true/false value that tells you if NORAA is listening for you to say his activation phrase. If you do not want NORAA to listen, you can toggle this option in Settings -&gt; NORAA.<br><br>' +
                         '<code>Temp Speech Storage:</code> This is the temporary storage of the above listening system. If temp speech is running, this is what NORAA can hear you saying. If it sees his activation phrase in what you have said, it will clear the storage and activate NORAA. This sstorage is required for the system to work, so I allow the user to see what it hears.<br><br>' +
-                        '<code>Live Elements Loaded:</code> This is the number of aOS Live Elements that are currently loaded and running. A Live Element is some field that automatically updates itself to a value. For instance, here is a Live Element that displays the number of microseconds since aOS launch: <span class="liveElement" liveVar="Math.round(performance.now() * 1000)">0</span><br><br>' +
+                        '<code>Live Elements Loaded:</code> This is the number of aOS Live Elements that are currently loaded and running. A Live Element is some field that automatically updates itself to a value. For instance, here is a Live Element that displays the number of microseconds since aOS launch: <span class="liveElement" data-live-eval="Math.round(performance.now() * 1000)">0</span><br><br>' +
                         '<code>Modulelast, Module:</code> This is the current and latest module that aOS is running. Typically, these values will mostly be idle. When opening windows and other tasks such as these, the module will be updated. Remember that the OS and/or apps must manually set this value for it to appear... if you are performing a large task and it still says idle, then the developer probably did not implement their app into the module system.<br><br>' +
                         'Blue tasks are code that has been scheduled to run repeatedly over time; the interval between runs, in milliseconds, is displayed on the right side.<br><br>Green tasks are tasks that are waiting to run at some point in time; the time that they were set for in milliseconds is displayed on the right side.'
                 },
@@ -12368,7 +12380,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe ownedByApp="musicVis" id="MSCframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="unrelated/keyfingers/cnv.php"></iframe>');
+                this.appWindow.setContent('<iframe data-parent-app="musicVis" id="MSCframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="unrelated/keyfingers/cnv.php"></iframe>');
                 if(darkMode){
                     getId('MSCframe').onload = function(){
                         getId('MSCframe').contentDocument.getElementById('btns').style.filter = 'invert(1)';
@@ -12464,7 +12476,7 @@ c(function(){
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe ownedByApp="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
+                this.appWindow.setContent('<iframe data-parent-app="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
                 requestAnimationFrame(this.vars.colorWindows);
             }
             this.appWindow.setCaption('Music Player');
@@ -12650,8 +12662,8 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 646, 502);
-                this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'ICrFrame\').contentDocument.title">');
-                this.appWindow.setContent('<iframe ownedByApp="indycar" id="ICrFrame" src="INDYCAR/index.html" style="border:none;width:640px;height:480px;overflow:hidden;"></iframe>');
+                this.appWindow.setCaption('<span class="liveElement" data-live-eval="getId(\'ICrFrame\').contentDocument.title">');
+                this.appWindow.setContent('<iframe data-parent-app="indycar" id="ICrFrame" src="INDYCAR/index.html" style="border:none;width:640px;height:480px;overflow:hidden;"></iframe>');
                 apps.prompt.vars.alert("Controls:<br><br>Player 1: WASD for driving, X for brakes<br><br>Player 2: IJKL or &uarr;&larr;&darr;&rarr; for driving, M for brakes<br><br>Camera: Press T to change camera modes.", "Okay", function(){}, "Indycar");
             }
             blockScreensaver("apps.indycar");
@@ -12709,8 +12721,8 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 1015, 633);
-                this.appWindow.setCaption('<span class="liveElement" liveVar="getId(\'HsGFrame\').contentDocument.title">');
-                this.appWindow.setContent('<iframe ownedByApp="housegame" id="HsGFrame" src="HOUSEGAME/index.html" style="border:none;width:1009px;height:609px;overflow:hidden;"></iframe>');
+                this.appWindow.setCaption('<span class="liveElement" data-live-eval="getId(\'HsGFrame\').contentDocument.title">');
+                this.appWindow.setContent('<iframe data-parent-app="housegame" id="HsGFrame" src="HOUSEGAME/index.html" style="border:none;width:1009px;height:609px;overflow:hidden;"></iframe>');
                 apps.prompt.vars.notify("Controls:<br>Up: W<br>Down: D<br>Shoot: Space<br>Reinforcements: T", ["Close"], function(){}, "House Game", "appicons/HsG.png");
             }
             blockScreensaver("apps.housegame");
@@ -12926,7 +12938,7 @@ c(function(){
                     this.appWindow.setDims("auto", "auto", 400, 400);
                     this.appWindow.toggleFullscreen();
                     this.appWindow.setCaption('Custom Style Editor');
-                    this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe ownedByApp="styleEditor" src="aosBeta.php?styletemplate=true&nofiles=true" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
+                    this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe data-parent-app="styleEditor" src="aosBeta.php?styletemplate=true&nofiles=true" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
                     if(ufload("aos_system/user_custom_style")){
                         getId('CSEtextarea').innerHTML = ufload("aos_system/user_custom_style");
                         //this.vars.updateFrame();
@@ -13003,7 +13015,7 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setCaption('GTK2aOS');
                 this.appWindow.setDims("auto", "auto", 400, 400);
-                this.appWindow.setContent('<iframe ownedByApp="gtk2aOS" src="gtk/" style="border:none;width:100%;height:100%;display:block;"></iframe>');
+                this.appWindow.setContent('<iframe data-parent-app="gtk2aOS" src="gtk/" style="border:none;width:100%;height:100%;display:block;"></iframe>');
             }
             this.appWindow.openWindow();
         },
@@ -13309,7 +13321,7 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 800, 600);
                 this.appWindow.setCaption('Cookie Clicker');
-                this.appWindow.setContent('<iframe ownedByApp="cookieClicker" src="COOKIE" style="border:none; width:100%; height:100%; display:block;"></iframe>');
+                this.appWindow.setContent('<iframe data-parent-app="cookieClicker" src="COOKIE" style="border:none; width:100%; height:100%; display:block;"></iframe>');
             }
             this.appWindow.openWindow();
         },
@@ -13366,7 +13378,7 @@ c(function(){
                 this.appWindow.setContent('<div style="font-family:aosProFont, Courier, monospace; font-size:12px;height:25px;border-bottom:1px solid #000; width:100%">' +
                 '<input id="iFBinput" placeholder="https://" style="width:75%;"> <button onclick="apps.iFrameBrowser.vars.go(getId(\'iFBinput\').value)">Go</button>' +
                 '</div>' +
-                '<iframe ownedByApp="iFrameBrowser" id="iFBframe" src="ifbHomepage.php" style="border:none; width:100%; height:calc(100% - 26px); margin-top:26px; display:block;"></iframe>');
+                '<iframe data-parent-app="iFrameBrowser" id="iFBframe" src="ifbHomepage.php" style="border:none; width:100%; height:calc(100% - 26px); margin-top:26px; display:block;"></iframe>');
             }
             this.appWindow.openWindow();
         },
@@ -13423,7 +13435,7 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 753, 507);
                 this.appWindow.setCaption('JS Paint');
-                this.appWindow.setContent('<iframe ownedByApp="jsPaint" src="https://jspaint.app/" style="border:none; width:100%; height:100%; display:block;background-color:#C0C0C0"></iframe>');
+                this.appWindow.setContent('<iframe data-parent-app="jsPaint" src="https://jspaint.app/" style="border:none; width:100%; height:100%; display:block;background-color:#C0C0C0"></iframe>');
             }
             this.appWindow.openWindow();
         },
@@ -15942,9 +15954,9 @@ c(function(){
 c(function(){
     window.iframeblurcheck = function(){
         try{
-            if(document.activeElement.getAttribute("ownedByApp")){
-                if(currTopApp !== document.activeElement.getAttribute("ownedByApp")){
-                    toTop(apps[document.activeElement.getAttribute("ownedByApp")]);
+            if(document.activeElement.getAttribute("data-parent-app")){
+                if(currTopApp !== document.activeElement.getAttribute("data-parent-app")){
+                    toTop(apps[document.activeElement.getAttribute("data-parent-app")]);
                 }
             }
         }catch(err){
