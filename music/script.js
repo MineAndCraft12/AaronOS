@@ -200,22 +200,20 @@ function loadWeirdFiles(event){
     filesLength = 0;
     fileNames = [];
     for(var i = 0; i < filesAmount; i++){
-        if(fileName[fileName.length - 1] !== 'mid' && fileName[fileName.length - 1] !== 'midi'){
-            var fileName = files[i].name.split('.');
-            var filePath = '';
-            if(files[i].webkitRelativePath){
-                filePath = files[i].webkitRelativePath.split('/');
-                filePath.pop();
-                filePath.shift();
-                filePath.join(": ");
-                filePath += ': ';
-            }
-            filesLength++;
-            if(supportedFormats.indexOf(fileName[fileName.length - 1]) > -1){
-                fileName.pop();
-            }
-            fileNames.push([fileName.join('.'), i, URL.createObjectURL(files[i]), filePath]);
+        var fileName = files[i].name.split('.');
+        var filePath = '';
+        if(files[i].webkitRelativePath){
+            filePath = files[i].webkitRelativePath.split('/');
+            filePath.pop();
+            filePath.shift();
+            filePath.join(": ");
+            filePath += ': ';
         }
+        filesLength++;
+        if(supportedFormats.indexOf(fileName[fileName.length - 1]) > -1){
+            fileName.pop();
+        }
+        fileNames.push([fileName.join('.'), i, URL.createObjectURL(files[i]), filePath]);
     }
     listSongs();
     var disabledElements = document.getElementsByClassName('disabled');
