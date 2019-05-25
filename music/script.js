@@ -50,7 +50,7 @@ var URL;
 function listSongs(){
     var str = "";
     for(var i in fileNames){
-        str += '<div id="song' + i + '" onclick="selectSong(' + i + ')">' + fileNames[i][1] + ": " + fileNames[i][0] + '</div>';
+        str += '<div id="song' + i + '" onclick="selectSong(' + i + ')">' + fileNames[i][1] + ": " + fileNames[i][3] + fileNames[i][0] + '</div>';
     }
     songList.innerHTML = str;
 }
@@ -63,13 +63,27 @@ function loadFolder(event){
     filesLength = 0;
     fileNames = [];
     for(var i = 0; i < filesAmount; i++){
-        var fileName = files[i].name.split('.');
         if(files[i].type.indexOf("audio/") === 0){
-            filesLength++;
-            if(supportedFormats.indexOf(fileName[fileName.length - 1]) > -1){
-                fileName.pop();
+            var fileName = files[i].name.split('.');
+            if(fileName[fileName.length - 1] !== 'mid' && fileName[fileName.length - 1] !== 'midi'){
+                var filePath = '';
+                if(files[i].webkitRelativePath){
+                    filePath = files[i].webkitRelativePath.split('/');
+                    filePath.pop();
+                    filePath.shift();
+                    if(filePath.length > 0){
+                        filePath = filePath.join(": ");
+                        filePath += ': ';
+                    }else{
+                        filePath = '';
+                    }
+                }
+                filesLength++;
+                if(supportedFormats.indexOf(fileName[fileName.length - 1]) > -1){
+                    fileName.pop();
+                }
+                fileNames.push([fileName.join('.'), i, URL.createObjectURL(files[i]), filePath]);
             }
-            fileNames.push([fileName.join('.'), i, URL.createObjectURL(files[i])]);
         }
     }
     listSongs();
@@ -85,7 +99,7 @@ function loadFolder(event){
     mediaSource = audioContext.createMediaElementSource(audio);
     
     delayNode = audioContext.createDelay();
-    delayNode.delayTime.value = 0.2;
+    delayNode.delayTime.value = 0.25;
     delayNode.connect(audioContext.destination);
     
     analyser = audioContext.createAnalyser();
@@ -121,13 +135,23 @@ function loadFiles(event){
     filesLength = 0;
     fileNames = [];
     for(var i = 0; i < filesAmount; i++){
-        var fileName = files[i].name.split('.');
         if(files[i].type.indexOf("audio/") === 0){
-            filesLength++;
-            if(supportedFormats.indexOf(fileName[fileName.length - 1]) > -1){
-                fileName.pop();
+            var fileName = files[i].name.split('.');
+            if(fileName[fileName.length - 1] !== 'mid' && fileName[fileName.length - 1] !== 'midi'){
+                var filePath = '';
+                if(files[i].webkitRelativePath){
+                    filePath = files[i].webkitRelativePath.split('/');
+                    filePath.pop();
+                    filePath.shift();
+                    filePath.join(": ");
+                    filePath += ': ';
+                }
+                filesLength++;
+                if(supportedFormats.indexOf(fileName[fileName.length - 1]) > -1){
+                    fileName.pop();
+                }
+                fileNames.push([fileName.join('.'), i, URL.createObjectURL(files[i]), filePath]);
             }
-            fileNames.push([fileName.join('.'), i, URL.createObjectURL(files[i])]);
         }
     }
     listSongs();
@@ -140,7 +164,7 @@ function loadFiles(event){
     mediaSource = audioContext.createMediaElementSource(audio);
     
     delayNode = audioContext.createDelay();
-    delayNode.delayTime.value = 0.17;
+    delayNode.delayTime.value = 0.25;
     delayNode.connect(audioContext.destination);
     
     analyser = audioContext.createAnalyser();
@@ -176,8 +200,22 @@ function loadWeirdFiles(event){
     filesLength = 0;
     fileNames = [];
     for(var i = 0; i < filesAmount; i++){
-        var fileName = files[i].name;
-        fileNames.push([fileName, i, URL.createObjectURL(files[i])]);
+        if(fileName[fileName.length - 1] !== 'mid' && fileName[fileName.length - 1] !== 'midi'){
+            var fileName = files[i].name.split('.');
+            var filePath = '';
+            if(files[i].webkitRelativePath){
+                filePath = files[i].webkitRelativePath.split('/');
+                filePath.pop();
+                filePath.shift();
+                filePath.join(": ");
+                filePath += ': ';
+            }
+            filesLength++;
+            if(supportedFormats.indexOf(fileName[fileName.length - 1]) > -1){
+                fileName.pop();
+            }
+            fileNames.push([fileName.join('.'), i, URL.createObjectURL(files[i]), filePath]);
+        }
     }
     listSongs();
     var disabledElements = document.getElementsByClassName('disabled');
@@ -189,7 +227,7 @@ function loadWeirdFiles(event){
     mediaSource = audioContext.createMediaElementSource(audio);
     
     delayNode = audioContext.createDelay();
-    delayNode.delayTime.value = 0.17;
+    delayNode.delayTime.value = 0.25;
     delayNode.connect(audioContext.destination);
     
     analyser = audioContext.createAnalyser();
@@ -863,8 +901,38 @@ var vis = {
         },
         sqrt255: Math.sqrt(255)
     },
+    spikes1to1: {
+        name: "Spikes Classic",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            canvas.fillStyle = "#000";
+            canvas.fillRect(0, size[1] / 2 + 127, size[0], size[1] / 2 - 127);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var left = size[0] / 2 - 512;
+            var top = size[1] / 2 - 128;
+            for(var i = 0; i < 1024; i++){
+                this.drawLine(i, visData[i], left, top);
+            }
+            //updateSmoke();
+        },
+        stop: function(){
+            
+        },
+        drawLine: function(x, h, l, t){
+            var fillColor = getColor(h);
+            canvas.fillStyle = fillColor;
+            canvas.fillRect(l + x, t + (255 - h), 1, h);
+            if(smokeEnabled){
+                smoke.fillStyle = fillColor;
+                smoke.fillRect(l + x, t + (255 - h), 1, h * 2);
+            }
+        }
+    },
     spikes: {
-        name: "Spikes",
+        name: "Spikes Stretch",
         start: function(){
             
         },
@@ -917,36 +985,6 @@ var vis = {
             if(smokeEnabled){
                 smoke.fillStyle = fillColor;
                 smoke.fillRect(x, (255 - h)  * fact, 1, size[1] - (255 - h) * fact);
-            }
-        }
-    },
-    spikes1to1: {
-        name: "Spikes 1:1",
-        start: function(){
-            
-        },
-        frame: function(){
-            canvas.clearRect(0, 0, size[0], size[1]);
-            canvas.fillStyle = "#000";
-            canvas.fillRect(0, size[1] / 2 + 127, size[0], size[1] / 2 - 127);
-            smoke.clearRect(0, 0, size[0], size[1]);
-            var left = size[0] / 2 - 512;
-            var top = size[1] / 2 - 128;
-            for(var i = 0; i < 1024; i++){
-                this.drawLine(i, visData[i], left, top);
-            }
-            //updateSmoke();
-        },
-        stop: function(){
-            
-        },
-        drawLine: function(x, h, l, t){
-            var fillColor = getColor(h);
-            canvas.fillStyle = fillColor;
-            canvas.fillRect(l + x, t + (255 - h), 1, h);
-            if(smokeEnabled){
-                smoke.fillStyle = fillColor;
-                smoke.fillRect(l + x, t + (255 - h), 1, h * 2);
             }
         }
     },
@@ -1096,6 +1134,388 @@ var vis = {
             smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
             smoke.stroke();
         }
+    },
+    circle: {
+        name: "Treble Circle",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+            }
+            var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.6);
+            var ringMaxRadius = ringHeight * 0.5;
+            var ringMinRadius = ringHeight * 0.25;
+            var ringMaxExpand = Math.round(Math.min(size[0], size[1]) * 0.2);
+            var randomShake = Math.round(Math.min(size[0], size[1]) * 0.03);
+            var drumStrength = 0; // drums is all under line 150... lmao i didnt even measure that it's just a total guess
+            var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
+            for(var i = 0; i < 180; i++){
+                drumStrength += Math.pow(visData[i], 2) / 255;
+            }
+            drumStrength /= 180;
+
+            var randomOffset = [(Math.random() - 0.5) * drumStrength / 255 * randomShake, (Math.random() - 0.5) * drumStrength / 255 * randomShake];
+
+            for(var i = 0; i < 844; i += 4){
+                var strength = (visData[i + 180] + visData[i + 181] + visData[i + 182] + visData[i + 183]) / 4;
+                canvas.fillStyle = getColor(strength);
+                this.degArc(
+                    size[0] / 2 + randomOffset[0],
+                    size[1] / 2 + randomOffset[1],
+                    ringMinRadius + strength / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                    i / 844 * 180 + 90,
+                    (i + 4.1) / 844 * 180 + 90
+                );
+                this.degArc(
+                    size[0] / 2 + randomOffset[0],
+                    size[1] / 2 + randomOffset[1],
+                    ringMinRadius + strength / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                    90 - (i + 4.1) / 844 * 180,
+                    90 - i / 844 * 180
+                );
+                if(smokeEnabled){
+                    smoke.fillStyle = getColor(strength);
+                    this.degArcSmoke(
+                        size[0] / 2 + randomOffset[0],
+                        size[1] / 2 + randomOffset[1],
+                        ringMinRadius + strength / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                        i / 844 * 180 + 90,
+                        (i + 3.1) / 844 * 180 + 90
+                    );
+                    this.degArcSmoke(
+                        size[0] / 2 + randomOffset[0],
+                        size[1] / 2 + randomOffset[1],
+                        ringMinRadius + strength / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                        90 - (i + 4.1) / 844 * 180,
+                        90 - i / 844 * 180
+                    );
+                }
+            }
+
+            canvas.fillStyle = '#000';
+            this.degArc2(
+                size[0] / 2 + randomOffset[0],
+                size[1] / 2 + randomOffset[1],
+                ringMinRadius + drumStrength / 255 * ringMaxExpand - 5,
+                0,
+                360
+            );
+            if(smokeEnabled){
+                smoke.fillStyle = '#000';
+                this.degArc2smoke(
+                    size[0] / 2 + randomOffset[0],
+                    size[1] / 2 + randomOffset[1],
+                    ringMinRadius + drumStrength / 255 * ringMaxExpand - 5,
+                    0,
+                    360
+                );
+            }
+            //updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
+        },
+        stop: function(){
+
+        },
+        TAU: Math.PI * 2,
+        degArc: function(x, y, r, a, b){
+            canvas.beginPath();
+            canvas.moveTo(size[0] / 2, size[1] / 2);
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            canvas.fill();
+        },
+        degArc2: function(x, y, r, a, b){
+            canvas.beginPath();
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            canvas.fill();
+        },
+        degArcSmoke: function(x, y, r, a, b){
+            smoke.beginPath();
+            smoke.moveTo(size[0] / 2, size[1] / 2);
+            smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            smoke.fill();
+        },
+        degArc2smoke: function(x, y, r, a, b){
+            smoke.beginPath();
+            smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            smoke.fill();
+        },
+    },
+    bassCircle: {
+        name: "Bass Circle",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+            }
+            var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.6);
+            var ringMaxRadius = ringHeight * 0.5;
+            var ringMinRadius = ringHeight * 0.25;
+            var ringMaxExpand = Math.round(Math.min(size[0], size[1]) * 0.2);
+            var randomShake = Math.round(Math.min(size[0], size[1]) * 0.03);
+            var drumStrength = 0; // drums is all under line 150... lmao i didnt even measure that it's just a total guess
+            var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
+            for(var i = 0; i < 180; i++){
+                drumStrength += Math.pow(visData[i], 2) / 255;
+            }
+            drumStrength /= 180;
+
+            var randomOffset = [(Math.random() - 0.5) * drumStrength / 255 * randomShake, (Math.random() - 0.5) * drumStrength / 255 * randomShake];
+
+            for(var i = 0; i < 180; i++){
+                canvas.fillStyle = getColor(visData[i]);
+                this.degArc(
+                    size[0] / 2 + randomOffset[0],
+                    size[1] / 2 + randomOffset[1],
+                    ringMinRadius + visData[i] / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                    i + 90,
+                    (i + 1.1) + 90
+                );
+                this.degArc(
+                    size[0] / 2 + randomOffset[0],
+                    size[1] / 2 + randomOffset[1],
+                    ringMinRadius + visData[i] / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                    90 - (i + 1.1),
+                    90 - i
+                );
+                if(smokeEnabled){
+                    smoke.fillStyle = getColor(visData[i]);
+                    this.degArcSmoke(
+                        size[0] / 2 + randomOffset[0],
+                        size[1] / 2 + randomOffset[1],
+                        ringMinRadius + visData[i] / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                        i + 90,
+                        (i + 1.1) + 90
+                    );
+                    this.degArcSmoke(
+                        size[0] / 2 + randomOffset[0],
+                        size[1] / 2 + randomOffset[1],
+                        ringMinRadius + visData[i] / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                        90 - (i + 1.1),
+                        90 - i
+                    );
+                }
+            }
+
+            canvas.fillStyle = '#000';
+            this.degArc2(
+                size[0] / 2 + randomOffset[0],
+                size[1] / 2 + randomOffset[1],
+                ringMinRadius + drumStrength / 255 * ringMaxExpand - 5,
+                0,
+                360
+            );
+            if(smokeEnabled){
+                smoke.fillStyle = '#000';
+                this.degArc2smoke(
+                    size[0] / 2 + randomOffset[0],
+                    size[1] / 2 + randomOffset[1],
+                    ringMinRadius + drumStrength / 255 * ringMaxExpand - 5,
+                    0,
+                    360
+                );
+            }
+            //updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
+        },
+        stop: function(){
+
+        },
+        TAU: Math.PI * 2,
+        degArc: function(x, y, r, a, b){
+            canvas.beginPath();
+            canvas.moveTo(size[0] / 2, size[1] / 2);
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            canvas.fill();
+        },
+        degArc2: function(x, y, r, a, b){
+            canvas.beginPath();
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            canvas.fill();
+        },
+        degArcSmoke: function(x, y, r, a, b){
+            smoke.beginPath();
+            smoke.moveTo(size[0] / 2, size[1] / 2);
+            smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            smoke.fill();
+        },
+        degArc2smoke: function(x, y, r, a, b){
+            smoke.beginPath();
+            smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            smoke.fill();
+        },
+    },
+    layerCircle: {
+        name: "Layered Circle",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+            }
+            var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.6);
+            var ringMaxRadius = ringHeight * 0.5;
+            var ringMinRadius = ringHeight * 0.25;
+            var ringMaxExpand = Math.round(Math.min(size[0], size[1]) * 0.2);
+            var randomShake = Math.round(Math.min(size[0], size[1]) * 0.03);
+            var drumStrength = 0; // drums is all under line 150... lmao i didnt even measure that it's just a total guess
+            var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
+            for(var i = 0; i < 180; i++){
+                drumStrength += Math.pow(visData[i], 2) / 255;
+            }
+            drumStrength /= 180;
+
+            var randomOffset = [(Math.random() - 0.5) * drumStrength / 255 * randomShake, (Math.random() - 0.5) * drumStrength / 255 * randomShake];
+
+            canvas.fillStyle = getColor(127);
+            canvas.beginPath();
+            canvas.moveTo(size[0] / 2, size[1] / 2);
+
+            if(smokeEnabled){
+                smoke.fillStyle = getColor(127);
+                smoke.beginPath();
+                smoke.moveTo(size[0] / 2, size[1] / 2);
+            }
+
+            for(var i = -180; i < 181; i++){
+                this.degArc(
+                    size[0] / 2 + randomOffset[0],
+                    size[1] / 2 + randomOffset[1],
+                    ringMinRadius + visData[Math.abs(i)] / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                    i + 90,
+                    i + 90,
+                    //(i + 1.1) + 90
+                );
+                //this.degArc(
+                //    size[0] / 2 + randomOffset[0],
+                //    size[1] / 2 + randomOffset[1],
+                //    ringMinRadius + visData[i] / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                //    //90 - (i + 1.1),
+                //    90 - i,
+                //    90 - i
+                //);
+                if(smokeEnabled){
+                    this.degArcSmoke(
+                        size[0] / 2 + randomOffset[0],
+                        size[1] / 2 + randomOffset[1],
+                        ringMinRadius + visData[Math.abs(i)] / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                        i + 90,
+                        i + 90,
+                        //(i + 1.1) + 90
+                    );
+                    //this.degArcSmoke(
+                    //    size[0] / 2 + randomOffset[0],
+                    //    size[1] / 2 + randomOffset[1],
+                    //    ringMinRadius + visData[i] / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                    //    //90 - (i + 1.1),
+                    //    90 - i,
+                    //    90 - i
+                    //);
+                }
+            }
+
+            canvas.fill();
+            if(smokeEnabled){
+                smoke.fill();
+            }
+
+            canvas.fillStyle = getColor(255);
+            canvas.beginPath();
+            canvas.moveTo(size[0] / 2, size[1] / 2);
+
+            if(smokeEnabled){
+                smoke.fillStyle = getColor(255);
+                smoke.beginPath();
+                smoke.moveTo(size[0] / 2, size[1] / 2);
+            }
+
+            for(var i = -844; i < 845; i += 4){
+                var strength = (visData[Math.abs(i) + 180] + visData[Math.abs(i) + 181] + visData[Math.abs(i) + 182] + visData[Math.abs(i) + 183]) / 4;
+                
+                this.degArc(
+                    size[0] / 2 + randomOffset[0],
+                    size[1] / 2 + randomOffset[1],
+                    ringMinRadius + strength / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                    i / 844 * 180 + 90,
+                    i / 844 * 180 + 90,
+                    //(i + 4.1) / 844 * 180 + 90
+                );
+                //this.degArc(
+                //    size[0] / 2 + randomOffset[0],
+                //    size[1] / 2 + randomOffset[1],
+                //    ringMinRadius + strength / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                //    90 - (i + 4.1) / 844 * 180,
+                //    90 - i / 844 * 180
+                //);
+                if(smokeEnabled){
+                    this.degArcSmoke(
+                        size[0] / 2 + randomOffset[0],
+                        size[1] / 2 + randomOffset[1],
+                        ringMinRadius + strength / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                        i / 844 * 180 + 90,
+                        i / 844 * 180 + 90,
+                        //(i + 3.1) / 844 * 180 + 90
+                    );
+                    //this.degArcSmoke(
+                    //    size[0] / 2 + randomOffset[0],
+                    //    size[1] / 2 + randomOffset[1],
+                    //    ringMinRadius + strength / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand,
+                    //    90 - (i + 4.1) / 844 * 180,
+                    //    90 - i / 844 * 180
+                    //);
+                }
+            }
+
+            canvas.fill();
+            if(smokeEnabled){
+                smoke.fill();
+            }
+
+            canvas.fillStyle = '#000';
+            this.degArc2(
+                size[0] / 2 + randomOffset[0],
+                size[1] / 2 + randomOffset[1],
+                ringMinRadius + drumStrength / 255 * ringMaxExpand - 5,
+                0,
+                360
+            );
+            if(smokeEnabled){
+                smoke.fillStyle = '#000';
+                this.degArc2smoke(
+                    size[0] / 2 + randomOffset[0],
+                    size[1] / 2 + randomOffset[1],
+                    ringMinRadius + drumStrength / 255 * ringMaxExpand - 5,
+                    0,
+                    360
+                );
+            }
+            //updateSmoke(size[0] / 2 - ringHeight / 2, size[1] / 2 - ringHeight / 2, ringHeight, ringHeight);
+        },
+        stop: function(){
+
+        },
+        TAU: Math.PI * 2,
+        degArc: function(x, y, r, a, b){
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+        },
+        degArc2: function(x, y, r, a, b){
+            canvas.beginPath();
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            canvas.fill();
+        },
+        degArcSmoke: function(x, y, r, a, b){
+            smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+        },
+        degArc2smoke: function(x, y, r, a, b){
+            smoke.beginPath();
+            smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            smoke.fill();
+        },
     },
     eclipse: {
         name: "Eclipse",
@@ -1257,6 +1677,35 @@ var vis = {
         },
         sqrt255: Math.sqrt(255)
     },
+    bassSolidColor: {
+        name: "Bass Solid Color",
+        start: function(){
+            
+        },
+        frame: function(){
+            var avg = 0;
+            var avgtotal = 0;
+            for(var i = 0; i < 180; i++){
+                avg += Math.sqrt(visData[i]) * this.sqrt255;
+            }
+            avg /= 180;
+            //avg /= 1024;
+            //avg *= 255;
+            canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+                smoke.fillStyle = getColor(avg);
+                smoke.fillRect(0, 0, size[0], size[1]);
+            }else{
+                canvas.fillStyle = getColor(avg);
+                canvas.fillRect(0, 0, size[0], size[1]);
+            }
+        },
+        stop: function(){
+            
+        },
+        sqrt255: Math.sqrt(255)
+    },
     windowRecolor: {
         name: "Window Color",
         start: function(){
@@ -1290,6 +1739,39 @@ var vis = {
         },
         sqrt255: Math.sqrt(255)
     },
+    bassWindowRecolor: {
+        name: "Bass Window Color",
+        start: function(){
+            
+        },
+        frame: function(){
+            var avg = 0;
+            var avgtotal = 0;
+            for(var i = 0; i < 180; i++){
+                avg += Math.sqrt(visData[i]) * this.sqrt255;
+            }
+            avg /= 180;
+            //avg /= 1024;
+            //avg *= 255;
+            canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+                smoke.fillStyle = getColor(avg);
+                smoke.fillRect(0, 0, size[0], size[1]);
+            }else{
+                canvas.fillStyle = getColor(avg);
+                canvas.fillRect(0, 0, size[0], size[1]);
+            }
+            canvas.fillStyle = "#FFF";
+            canvas.font = "12px aosProFont, Courier, monospace";
+            canvas.fillText("Load this visualizer in AaronOS and your window borders will color themselves to the beat.", 10.5, 20);
+            document.title = "WindowRecolor:" + getColor(avg);
+        },
+        stop: function(){
+            document.title = "AaronOS Music Player";
+        },
+        sqrt255: Math.sqrt(255)
+    },
     'SEPARATOR_TESTS" disabled="': {
         name: '---------------',
         start: function(){
@@ -1302,61 +1784,34 @@ var vis = {
 
         }
     },
-    spectrogram: {
-        name: "Spectrogram",
+    spectrogramClassic: {
+        name: "Spectrogram Classic",
         start: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
         },
         frame: function(){
-            canvas.putImageData(canvas.getImageData(0, 0, size[0], size[1]), 0, -1);
-            var step = size[0] / 1024;
-            var last = -1;
-            var heightFactor = size[1] / 255;
+            var left = size[0] / 2 - 512;
+            canvas.putImageData(canvas.getImageData(left, 0, left + 1024, size[1]), left, -1);
+            var strength = 0;
             for(var i = 0; i < 1024; i++){
-                var strength = 0;
-                if(i === 0){
-                    strength = visData[i];
-                    canvas.fillStyle = getColor(strength);
-                    canvas.fillRect(0, size[1] - 1, 1, 1);
-                }else{
-                    var last = Math.floor(step * (i - 1));
-                    var curr = Math.floor(step * i);
-                    var next = Math.floor(step * (i + 1));
-                    if(last < curr - 1){
-                        // stretched
-                        for(var j = 0; j < curr - last - 1; j++){
-                            //strength = ((j + 1) / (curr - last + 1) * visData[i - 1] + (curr - last - j + 1) / (curr - last + 1) * visData[i]);
-                            strength = (visData[i] + visData[i - 1]) / 2;
-                            canvas.fillStyle = getColor(strength);
-                            canvas.fillRect(curr - j - 1, size[1] - 1, 1, 1);
-                        }
-                        strength = visData[i];
-                        canvas.fillStyle = getColor(strength);
-                        canvas.fillRect(curr, size[1] - 1, 1, 1);
-                    }else if(curr === last && next > curr){
-                        // compressed
-                        for(var j = 0; j < (1 / step); j++){
-                            strength += visData[i - j];
-                        }
-                        strength /= Math.floor(1 / step) + 1;
-                        canvas.fillStyle = getColor(strength);
-                        canvas.fillRect(curr, size[1] - 1, 1, 1);
-                    }else if(last === curr - 1){
-                        strength = visData[i];
-                        canvas.fillStyle = getColor(strength);
-                        canvas.fillRect(curr, size[1] - 1, 1, 1);
-                    }
-                }
+                strength = visData[i];
+                canvas.fillStyle = getColor(strength);
+                canvas.fillRect(left + i, size[1] - 1, 1, 1);
             }
+        },
+        sizechange: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
         },
         stop: function(){
             
         }
     },
     spectrogram: {
-        name: "Spectrogram",
+        name: "Spectrogram Stretch",
         start: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
         },
         frame: function(){
             canvas.putImageData(canvas.getImageData(0, 0, size[0], size[1]), 0, -1);
@@ -1400,9 +1855,119 @@ var vis = {
                 }
             }
         },
+        sizechange: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+        },
         stop: function(){
             
         }
+    },
+    piano: {
+        name: "Piano Test",
+        start: function(){
+            /*
+
+            1014 = 739.989 = F5#
+
+            957 = 698.456 = F5
+            
+            ----
+            
+            47 = 138.591 = C3#
+            
+            45 = 130.813 = C3
+            
+            ----
+            
+            lowest note line = 45
+            
+            highest note line = 1014
+            
+            0.0629514964 notes per line on average
+            
+            57 lines per note @ high
+            
+            2 lines per note @ low
+            
+            ----
+            
+            61 keys in total
+            
+            1014-45 = 969 screen lines
+
+            left edge = 40
+
+            45 47 50 53 56 59 63 67 71 75 80 84 89 95 100 106 112 119 126 134 142 150 159 169 179 189 200 212 225 238 253 268 284 301 320 339 359 379 402 426 452 478 507 537 569 603 638 676 717 759 808 855 907 960 1018 1078 1142 1210 1282 1358 1439
+            
+            */
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var finalKey = this.keys.length - 1;
+            var pianoWidth = finalKey * 20 + finalKey + 22;
+            var pianoLeft = size[0] / 2 - Math.floor(pianoWidth / 2);
+            var pianoTop = size[1] / 2 - 201;
+            canvas.fillStyle = "#7F7F7F";
+            canvas.fillRect(pianoLeft, pianoTop, pianoWidth, 402);
+            for(var i = 0; i <= finalKey; i++){
+                if(i === 0){
+                    var leftCount = Math.floor(this.keys[i] - (this.keys[i + 1] - this.keys[i]) * 0.25);
+                    var rightCount = Math.round(this.keys[i] + (this.keys[i + 1] - this.keys[i]) * 0.25);
+                }else if(i === finalKey){
+                    var leftCount = Math.floor(this.keys[i] - (this.keys[i] - this.keys[i - 1]) * 0.25);
+                    var rightCount = Math.round(this.keys[i] + (this.keys[i] - this.keys[i - 1]) * 0.25);
+                }else{
+                    var leftCount = Math.floor(this.keys[i] - (this.keys[i] - this.keys[i - 1]) * 0.25);
+                    var rightCount = Math.round(this.keys[i] + (this.keys[i + 1] - this.keys[i]) * 0.25);
+                }
+                var strength = 0;
+                for(var j = leftCount; j < rightCount; j++){
+                    //strength += Math.sqrt(visData[j]) * this.sqrt255;
+                    //strength += Math.pow(visData[j], 2) / 255;
+                    strength += visData[j];
+                    //strength = Math.max(strength, visData[j]);
+                }
+                strength /= rightCount - leftCount;
+                if(this.blackKeys[i]){
+                    canvas.fillStyle = "#000";
+                    canvas.fillRect(pianoLeft + i * 20 + i + 1, pianoTop + 1, 20, 200);
+                    canvas.fillStyle = getColor(strength);
+                    canvas.fillRect(pianoLeft + i * 20 + i + 1, pianoTop + 1, 20, 200);
+                    if(smokeEnabled){
+                        smoke.fillStyle = getColor(strength);
+                        smoke.fillRect(pianoLeft + i * 20 + i + 1, pianoTop + 1, 20, 200);
+                    }
+                }else{
+                    canvas.fillStyle = "#FFF";
+                    canvas.fillRect(pianoLeft + i * 20 + i + 1, pianoTop + 1, 20, 400);
+                    canvas.fillStyle = getColor(strength);
+                    canvas.fillRect(pianoLeft + i * 20 + i + 1, pianoTop + 1, 20, 400);
+                    if(smokeEnabled){
+                        smoke.fillStyle = getColor(strength);
+                        smoke.fillRect(pianoLeft + i * 20 + i + 1, pianoTop + 1, 20, 400);
+                    }
+                }
+            }
+        },
+        stop: function(){
+
+        },
+        sqrt255: Math.sqrt(255),
+        keys: [
+            45, 47, 50, 53, 56, 59, 63, 67, 71, 75, 80, 84, 89, 95,
+            100, 106, 112, 119, 126, 134, 142, 150, 159, 169, 179, 189,
+            200, 212, 225, 238, 253, 268, 284, 301, 320, 339, 359, 379,
+            402, 426, 452, 478, 507, 537, 569, 603, 638, 676, 717, 759,
+            808, 855, 907, 960, 1018, 1078, 1142, 1210, 1282, 1358, 1439
+        ],
+        blackKeys: [
+            0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0,
+            0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0,
+            0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0,
+            0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0,
+            0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0
+        ]
     },
     colorTest: {
         name: "Color Test",

@@ -30,7 +30,7 @@
                 Visualizer: <select id="visfield" onchange="setVis(this.value)"></select>
                 <button onclick="toggleSmoke()">Smoke</button> |
                 Color Scheme: <select id="colorfield" onchange="setColor(this.value)"></select> |
-                Delay: <input style="width: 50px" type="number" id="delayinput" min="0" max="1" value="0.2" step="0.01" onchange="setDelay(this.value)"> |
+                Delay: <input style="width: 50px" type="number" id="delayinput" min="0" max="1" value="0.25" step="0.01" onchange="setDelay(this.value)"> |
                 <button onclick="toggleFPS()">FPS</button>
             </div>
             <div id="progressContainer" class="disabled"><div id="progress"></div></div>
