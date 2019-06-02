@@ -1967,6 +1967,36 @@ var vis = {
             0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0, 0
         ]
     },
+    bassSplit: {
+        name: "Bass Split (&lt;180)",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            canvas.fillStyle = "#000";
+            canvas.fillRect(0, size[1] / 2 + 127, size[0], size[1] / 2 - 127);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var left = size[0] / 2 - 512;
+            var top = size[1] / 2 - 128;
+            for(var i = 0; i < 1024; i++){
+                this.drawLine(i, visData[i], left + (i >= 180) * 90 - (i < 180) * 90, top);
+            }
+            //updateSmoke();
+        },
+        stop: function(){
+            
+        },
+        drawLine: function(x, h, l, t){
+            var fillColor = getColor(h);
+            canvas.fillStyle = fillColor;
+            canvas.fillRect(l + x, t + (255 - h), 1, h);
+            if(smokeEnabled){
+                smoke.fillStyle = fillColor;
+                smoke.fillRect(l + x, t + (255 - h), 1, h * 2);
+            }
+        }
+    },
     colorTest: {
         name: "Color Test",
         start: function(){
