@@ -52,11 +52,6 @@ if(typeof window.requestAnimationFrame !== 'function'){
     console.log('requestAnimationFrame is not supported!');
 }
 
-module = 'Checking https';
-if(window.location.href.indexOf('https://') === -1){
-    window.location = "https://aaron-os-mineandcraft12.c9.io/COOKIE";
-}
-
 module = 'Setting getId and getClass';
 function getId(target){
     return document.getElementById(target);

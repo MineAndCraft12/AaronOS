@@ -1,0 +1,7 @@
+{
+    "name": "Aarons Custom Functions",
+    "id": "aaronscustomfunctions",
+    "version": "1.1",
+    "appType": "bootscript",
+    "scriptContent": "baseCtx.hideall.push(\n    [\"+Aaron's Custom Functions\", function(){\n        openapp(apps.appCenter, \"dsktp\");\n        getId(\"APPCENTER_SEARCH\").value = \"aaronos_official.aaronscustomfunctions\";\n    }, 'ctxMenu/beta/file.png']\n);\n\n// open the app in clipboard slot 1\nbaseCtx.hideall.push(\n    [' Open App in Clipboard Slot 1', function(){\n        openapp(eval(textEditorTools.clipboard[0]), \"dsktp\");\n    }, 'ctxMenu/beta/window.png']\n);"
+}

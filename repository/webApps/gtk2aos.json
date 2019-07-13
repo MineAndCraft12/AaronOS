@@ -1,0 +1,12 @@
+{
+    "name": "GTK3 Style Converter",
+    "id": "gtk2aos",
+    "version": "1.0",
+    "abbreviation": "GTK",
+    "appType": "webApp",
+    "homeURL": "gtk/",
+    "icon": {
+        "foreground": "appicons/ds/GTK.png"
+    },
+    "windowSize": [400, 400]
+}

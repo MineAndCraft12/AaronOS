@@ -1,0 +1,7 @@
+{
+    "name": "MacOS Theme",
+    "id": "highsierrastyle",
+    "version": "1.0",
+    "appType": "stylesheet",
+    "styleLink": "customStyles/macos/aosCustomStyle.css"
+}

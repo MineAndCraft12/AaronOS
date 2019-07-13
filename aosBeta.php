@@ -14,30 +14,10 @@
     <style id="smartIconStyle"></style>
     <style id="cursorStyle"></style>
     <style id="aosCustomStyle"></style>
-
-    <!--
-    <script defer src="html2canvas.js"></script>
-    html2canvas(document.body, {onrendered:function(canvas){getId('winjsCa').style.backgroundImage = 'url(' + canvas.toDataURL('image/png') + ')'}})
-    -->
 </head>
 <body style="background-color:#000" id="pagebody">
-    <!-- OLD VERSION AT https://www.codecademy.com/MineAndCraft12/codebits/RfyrKj -->
     <!-- helps JS find scrollbar stuff -->
     <div id="findScrollSize" style="height:100px; width:100px; overflow:scroll;"></div>
-    <!-- messaging relies on this -->
-    <!--<iframe id="messagingframe" style="display:none"></iframe>-->
-    <!-- Allows filesaving -->
-    <!--
-    <div id="mastersaveframediv" style="display:none">
-        <iframe id="mastersaveframe" name="mastersaveframe" src=""></iframe>
-        <form action="filesavernew.php" method="POST" target="mastersaveframe">
-            <input name="k" value="">
-            <input name="f" value="">
-            <textarea name="c"></textarea>
-            <input type="submit" id="savesubmit">
-        </form>
-    </div>
-    -->
     <div id="bootLanguage" style="display:none"><?php
         if(isset($_COOKIE['keyword'])){
             if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/language.txt')){
@@ -68,11 +48,6 @@
                 <div class="winExit cursorPointer" onClick="getId('notifWindow').style.opacity='0';getId('notifWindow').style.pointerEvents='none';getId('notifWindow').style.right = '-350px';window.setTimeout(function(){apps.prompt.vars.checkPrompts();}, 300);apps.prompt.vars.currprompt[3](-1);">x</div>
             </div>
         </div>
-        <!-- old window move/resize and icon move elements
-        <div id="winmove" onclick="winmove(event)" onmousemove="winmoving(event)"></div>
-        <div id="icomove" onclick="icomove(event)" onmousemove="icomoving(event)"></div>
-        <div id="winres" onclick="winres(event)" onmousemove="winresing(event)"></div>
-        -->
         <div id="winmove" class="cursorOpenHand" onmouseup="winmove(event)" onmousemove="winmoving(event)"></div>
         <div id="icomove" class="cursorOpenHand" onclick="icomove(event)" onmousemove="icomoving(event)"></div>
         <div id="icnmove" class="cursorOpenHand" onclick="icnmove(event)" onmousemove="icnmoving(event)"></div>
@@ -123,7 +98,7 @@
             </div>
         </div>
     </div>
-    <img style="display:none" id="bgSizeElement" src="p.png" onload="try{updateBgSize()}catch(err){}">
+    <img style="display:none" id="bgSizeElement" src="beta1.png" onload="try{updateBgSize()}catch(err){}">
 </body>
 <!--<script defer src="script.js"></script>-->
 <?php

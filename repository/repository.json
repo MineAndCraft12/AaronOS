@@ -1,0 +1,176 @@
+{
+    "repoName": "AaronOS Official",
+    "repoID": "aaronos_official",
+    "repoAliases": ["aaronos", "aos", "official"],
+    "repoVersion": "1.0",
+    "packages": {
+        "guitartab": {
+            "packageName": "Guitar Tab",
+            "packageID": "guitartab",
+            "packageAliases": ["guitar", "tabulature"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/guitartab.json",
+            "icon": {
+                "foreground": "appicons/ds/aOS.png"
+            },
+            "description": "Guitar Tabulature editor."
+        },
+        "cookieclicker": {
+            "packageName": "Cookie Clicker",
+            "packageID": "cookieclicker",
+            "packageAliases": ["cookie", "clicker"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/cookieclicker.json",
+            "icon": {
+                "foreground": "appicons/ds/CCl.png"
+            },
+            "description": "Cookie Clicker made by Aaron and JD."
+        },
+        "calculator": {
+            "packageName": "Calculator",
+            "packageID": "calculator",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/calculator.json",
+            "icon": {
+                "foreground": "appicons/ds/Clc.png"
+            },
+            "description": "Calculator made by Aaron while learning JavaScript. Includes some custom functions."
+        },
+        "gtk2aos": {
+            "packageName": "GTK3 Style Converter",
+            "packageID": "gtk2aos",
+            "packageAliases": ["gtk", "gtk-3.0", "gtk3"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/gtk2aos.json",
+            "icon": {
+                "foreground": "appicons/ds/GTK.png"
+            },
+            "description": "This app turns GTK3 themes into themes compatible with AaronOS. It is still a work in progress and results may vary in quality. My favorite themes to convert are Mint-Y-Dark and Arc-Dark."
+        },
+        "jspaint": {
+            "packageName": "JS Paint",
+            "packageID": "jspaint",
+            "packageAliases": ["paint", "mspaint", "ms paint", "microsoft paint"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/jspaint.json",
+            "icon": {
+                "foreground": "appicons/ds/CSE.png"
+            },
+            "description": "JS Paint was developed by Isaiah Odhner and embedded into an aOS app with his permission.\n\nFull site at https://jspaint.app"
+        },
+        "aaronscustomfunctions": {
+            "packageName": "Aarons Custom Functions",
+            "packageID": "aaronscustomfunctions",
+            "packageAliases": ["context menu", "desktop", "open app"],
+            "version": "1.1",
+            "packageType": "bootscript",
+            "installURL": "repository/scripts/aaronscustomfunctions.json",
+            "icon": {
+                "foreground": "appicons/ds/aOS.png"
+            },
+            "description": "Adds a custom functions to the desktop context menu.\n\nCopy an app ID (example, apps.settings) to the first slot of the clipboard. Right click your desktop, and there will be a button to open the app in that clipboard slot."
+        },
+        "glasswindows": {
+            "packageName": "Glass Windows",
+            "packageID": "glasswindows",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/styles/glasswindows.json",
+            "icon": {
+                "foreground": "repository/styles/glasswindows.png"
+            },
+            "description": "Extends the window caption glass into the entire window. You can see through the entire window."
+        },
+        "terminalstyle": {
+            "packageName": "Terminal Theme",
+            "packageID": "terminalstyle",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/styles/terminalstyle.json",
+            "icon": {
+                "foreground": "repository/styles/terminalstyle.png"
+            },
+            "description": "Themes aOS to look like a movie hacker terminal."
+        },
+        "mintystyle": {
+            "packageName": "Mint Y Theme",
+            "packageID": "mintystyle",
+            "packageAliases": ["dark"],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/styles/mintystyle.json",
+            "icon": {
+                "foreground": "repository/styles/mintystyle.png"
+            },
+            "description": "Themes aOS to look similar to Linux Mint's Y style. Includes dark theme support."
+        },
+        "win98style": {
+            "packageName": "Windows 98 Theme",
+            "packageID": "win98style",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/styles/win98style.json",
+            "icon": {
+                "foreground": "repository/styles/win98style.png"
+            },
+            "description": "Themes aOS to look similar to Microsoft's Windows 98."
+        },
+        "winxpstyle": {
+            "packageName": "Windows XP Theme",
+            "packageID": "winxpstyle",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/styles/winxpstyle.json",
+            "icon": {
+                "foreground": "repository/styles/winxpstyle.png"
+            },
+            "description": "Themes aOS to look similar to Microsoft's Windows XP."
+        },
+        "glassxpstyle": {
+            "packageName": "Windows XP Glass",
+            "packageID": "glassxpstyle",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/styles/glassxpstyle.json",
+            "icon": {
+                "foreground": "repository/styles/glassxpstyle.png"
+            },
+            "description": "Themes aOS to look similar to Microsoft's Windows XP.\n\nThis version has glass window borders that you can color any way you like."
+        },
+        "win7style": {
+            "packageName": "Windows 7 Theme",
+            "packageID": "win7style",
+            "packageAliases": ["aero"],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/styles/win7style.json",
+            "icon": {
+                "foreground": "repository/styles/win7style.png"
+            },
+            "description": "Themes aOS to look similar to Microsoft's beautiful Windows 7.\n\nRecommended settings:\nWindow Background Image: \"win7blur1080.png\"\nWindow Border Width: 6"
+        },
+        "highsierrastyle": {
+            "packageName": "MacOS Theme",
+            "packageID": "highsierrastyle",
+            "packageAliases": ["apple", "macbook", "air"],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/styles/highsierrastyle.json",
+            "icon": {
+                "foreground": "repository/styles/highsierrastyle.png"
+            },
+            "description": "Themes aOS to look similar to Apple's MacOS. Made by ElijahZAwesome"
+        }
+    }
+}

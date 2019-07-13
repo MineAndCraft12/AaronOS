@@ -17,7 +17,7 @@
         rmdir($dirPath);
     }
     if(strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== FALSE || explode(':', $_SERVER['HTTP_HOST'])[0] === "localhost"){ //aaron-os-mineandcraft12.c9.io'){
-        function error($errno, $errstr){
+        function error($errid, $errstr, $errfile, $errno){
             echo "Error - [" + $errno + '] ' + $errstr;
         }
         set_error_handler("error");
@@ -27,6 +27,17 @@
                 die();
             }
             if(file_exists('USERFILES/'.$_POST['k'].'/aOSpassword.txt')){
+                if(isset($_COOKIE['logintoken'])){
+                    if((require 'checkToken.php') === 0){
+                        echo 'Error - Not logged in.';
+                        die();
+                    }
+                }else{
+                    echo 'Error - Not logged in.';
+                    die();
+                }
+                
+                /*
                 if(strlen(file_get_contents('USERFILES/'.$_POST['k'].'/aOSpassword.txt')) === 64){
                     unlink('USERFILES/'.$_POST['k'].'/aOSpassword.txt');
                 }else{
@@ -47,13 +58,14 @@
                     echo 'Error - Password not provided.';
                     die();
                 }
+                */
             }
             
             if(strpos($_POST['f'], '..') != FALSE){
                 echo 'Error - keyword ".." not allowed.';
                 die();
             }
-            if(realpath('USERFILES/'.$_POST['k']) == realpath('USERFILES/'.$_POST['k'].'/'.$filepath)){
+            if(realpath('USERFILES/'.$_POST['k']) == realpath('USERFILES/'.$_POST['k'].'/'.$_POST['f'])){
                 echo 'Error - not allowed to delete root folder.';
                 die();
             }

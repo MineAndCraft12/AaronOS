@@ -307,6 +307,15 @@ function selectSong(id){
     audio.currentTime = 0;
     audio.src = fileNames[id][2];
     getId("currentlyPlaying").innerHTML = fileNames[id][1] + ": " + fileNames[id][0];
+    document.title = fileNames[id][0] + " | aOS Music Player";
+    if(iframeMode){
+        window.top.postMessage({
+            messageType: "request",
+            action: "appWindow:set_caption",
+            content: fileNames[id][0] + " | Music Player",
+            conversation: "set_caption"
+        });
+    }
     try{
         document.getElementsByClassName("selected")[0].classList.remove("selected");
     }catch(err){
@@ -388,10 +397,24 @@ function refresh(){
 function getStyleInfo(event){
     try{
         console.log(event.data);
-        if(event.data === "aosreply:success:readsetting:darkmode:true"){
-            document.body.classList.add("darkMode");
-        }else if(event.data.indexOf("aosreply:success:readsetting:customstyle:") === 0){
-            getId("aosCustomStyle").innerHTML = event.data.substring(41, event.data.length);
+        if(event.data.conversation === "darkmode"){
+            if(event.data.content === true){
+                document.body.classList.add("darkMode");
+            }
+        }else if(event.data.conversation === "customstyle"){
+            getId("aosCustomStyle").innerHTML = event.data.content.customStyle;
+            for(var i in event.data.content.styleLinks){
+                if(event.data.content.styleLinks[i][1] === "link"){
+                    var customElement = document.createElement("link");
+                    customElement.setAttribute("rel", "stylesheet");
+                    customElement.href = event.data.content.styleLinks[i][0];
+                    document.head.appendChild(customElement);
+                }else if(event.data.content.styleLinks[i][1] === "literal"){
+                    var customElement = document.createElement("style");
+                    customElement.innerHTML = event.data.content.styleLinks[i][0];
+                    document.head.appendChild(customElement);
+                }
+            }
         }
     }catch(err){
         console.log("something done did the big oof when i tried to do the style thingy or whatever...");
@@ -400,9 +423,19 @@ function getStyleInfo(event){
 }
 window.addEventListener("message", getStyleInfo);
 
+var iframeMode = false;
 if(window.self !== window.top){
-    window.top.postMessage("aos:readsetting:darkmode");
-    window.top.postMessage("aos:readsetting:customstyle");
+    iframeMode = true;
+    window.top.postMessage({
+        messageType: "request",
+        action: "getstyle:darkmode",
+        conversation: "darkmode"
+    });
+    window.top.postMessage({
+        messageType: "request",
+        action: "getstyle:customstyle",
+        conversation: "customstyle"
+    });
 }
 
 var winsize = [window.innerWidth, window.innerHeight];
@@ -985,6 +1018,46 @@ var vis = {
                 smoke.fillRect(x, (255 - h)  * fact, 1, size[1] - (255 - h) * fact);
             }
         }
+    },
+    spikesAccumulate: {
+        name: "Spikes Accumulate",
+        start: function(){
+            this.totals = new Array(1024).fill(0);
+            this.max = 0;
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var left = size[0] / 2 - 512;
+            var top = 0;
+            for(var i = 0; i < 1024; i++){
+                this.totals[i] += visData[i];
+                if(this.totals[i] > this.max){
+                    this.max = this.totals[i];
+                }
+                if(this.max / 255 > size[1]){
+                    this.drawLine(i, this.totals[i] / this.max * size[1], left, top, visData[i]);
+                }else{
+                    this.drawLine(i, this.totals[i] / 255, left, top, visData[i]);
+                }
+            }
+            //updateSmoke();
+        },
+        stop: function(){
+            this.totals = [];
+            this.max = 0;
+        },
+        drawLine: function(x, h, l, t, c){
+            var fillColor = getColor(c);
+            canvas.fillStyle = fillColor;
+            canvas.fillRect(l + x, t + (size[1] - h), 1, h);
+            if(smokeEnabled){
+                smoke.fillStyle = fillColor;
+                smoke.fillRect(l + x, t + (size[1] - h), 1, h * 2);
+            }
+        },
+        max: 0,
+        totals: []
     },
     'SEPARATOR_CIRCLES" disabled="': {
         name: '---------------',

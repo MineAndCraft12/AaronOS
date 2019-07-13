@@ -1,0 +1,12 @@
+{
+    "name": "Guitar Tab",
+    "id": "guitartab",
+    "version": "1.0",
+    "abbreviation": "GT",
+    "appType": "webApp",
+    "homeURL": "guitar/",
+    "icon": {
+        "foreground": "appicons/ds/aOS.png"
+    },
+    "windowSize": [500, 400]
+}

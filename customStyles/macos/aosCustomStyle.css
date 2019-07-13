@@ -1,4 +1,6 @@
 /* OSX HIGH SIERRA */
+/* BY ELIJAHZAWESOME */
+/* EDITED 6/13/2019 BY AARON FOR FIXES */
  ::-webkit-scrollbar{
      box-shadow: none;
      width:16px;
@@ -16,7 +18,7 @@
      box-shadow: none;
      background-color: #afafaf;
 }
- .winAero{
+ .winAero:not(#tskbrAero){
      display: none;
 }
  .winBImg{
@@ -38,6 +40,7 @@
      left: 0;
      padding-right:6px;
      bottom: 0px;
+     padding-top:3px;
 }
  button{
      background-color:#FFF;
@@ -55,10 +58,11 @@
  .winBig, .winExit, .winShrink, .winFld{
      text-indent:100%;
      padding-bottom:2px;
-     border-radius:7px;
-     top:5px;
-     width:11px;
-     height:11px;
+     border-radius:100%;
+     top:8px;
+     width:13px;
+     height:13px;
+     padding:0;
 }
  .winExit{
      font-size: 13px;
@@ -183,10 +187,12 @@
      overflow:visible;
 }
  #tskbrAero{
-     width:100%;
+     max-width:100%;
      height:100%;
      top:0;
      left:0;
+     border-top-left-radius:5px;
+     border-top-right-radius:5px;
 }
  #time{
      position:fixed;
@@ -194,6 +200,18 @@
      top:0;
      text-align:right;
      background:#d1d1d1;
+     color:#000;
+     box-shadow:0 0 10px #000;
+}
+.widget{
+    color:#000;
+    text-shadow:0 0 2px #FFF;
+}
+#widget_battery div:first-child{
+    outline: 1px solid #000;
+}
+#widget_battery div:last-child{
+    border:1px solid #000 !important;
 }
  #desktop{
      top:29px !important;
@@ -206,6 +224,7 @@
      top:26px;
      text-align:right;
 }
+/*
  .cursorDefault{
      cursor:url("https://ejb.000webhostapp.com/osx/Arrow.cur"), auto;
 }
@@ -225,13 +244,9 @@
      cursor:url("https://ejb.000webhostapp.com/osx/Link Select.cur"), auto;
 }
  .cursorLoadLight{
-    /*cursor:url(cursors/loadLight.png) 16 16, wait;
-    */
      cursor:url("https://ejb.000webhostapp.com/osx/Busy.cur"), auto;
 }
  .cursorLoadDark{
-    /*cursor:url(cursors/loadDark.png) 16 16, wait;
-    */
      cursor:url("https://ejb.000webhostapp.com/osx/Busy.cur"), auto;
 }
  .cursorForceLoad{
@@ -249,6 +264,7 @@ content: url("https://orig00.deviantart.net/dfed/f/2014/183/a/f/preference_icon_
 #icosh img, #icnsh img{
 content: url("https://cdn3.macworld.co.uk/cmsdata/features/3608274/Terminalicon2_thumb230.png");
 }
+*/
 #dscFIL{
     font-size:0px;
 }

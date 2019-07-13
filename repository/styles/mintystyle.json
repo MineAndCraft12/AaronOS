@@ -1,0 +1,7 @@
+{
+    "name": "Mint Y Theme",
+    "id": "mintystyle",
+    "version": "1.0",
+    "appType": "stylesheet",
+    "styleLink": "customStyles/MintYDark/aosCustomStyle.css"
+}

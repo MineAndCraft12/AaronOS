@@ -1,0 +1,12 @@
+{
+    "name": "Calculator",
+    "id": "calculator",
+    "version": "1.0",
+    "abbreviation": "Clc",
+    "appType": "webApp",
+    "homeURL": "Calculator/",
+    "icon": {
+        "foreground": "appicons/ds/Clc.png"
+    },
+    "windowSize": [600, 400]
+}

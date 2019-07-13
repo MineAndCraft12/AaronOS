@@ -11,30 +11,30 @@
     width:16px;
     background-color:#555;
     box-shadow:inset 0 0 10px #CCC;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 ::-webkit-scrollbar-corner{
     background-color:#555;
     box-shadow:inset 0 0 10px #CCC;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 ::-webkit-resizer{
     border-radius:8px;
     background-color:#CCC;
     box-shadow:inset 0 0 10px #555;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 ::-webkit-scrollbar-thumb{
     border-radius:8px;
     background-color:#CCC;
     box-shadow:inset 0 0 10px #555;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 ::-webkit-scrollbar-button{
     border-radius:8px;
     background-color:#CCC;
     box-shadow:inset 0 0 10px #555;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
     .darkMode ::-webkit-scrollbar{
         width:16px;
@@ -172,7 +172,7 @@ hr{
     background-size:100% 2px;
 }
 a{
-    cursor:url(cursors/beta/pointer.png) 20 4, pointer;
+    cursor:url(cursors/beta/pointer.png) 11 2, pointer;
 }
 #pagebody{
     margin:0;
@@ -206,7 +206,7 @@ div{
         aeroFriendly3 = url(http://i50.photobucket.com/albums/f331/HawaiiWirikidor/ththththStickPeople.gif)
         interesting1 = url(http://orig11.deviantart.net/dec2/f/2012/185/9/2/tileable_futuristic_grid_by_ndugger-d55yz5h.png)
     */
-    background-image:url(p.png);
+    background-image:url(beta1.png);
     /*background-size:cover;*/
     background-position:0 0;
     font-family:sans-serif;
@@ -308,7 +308,7 @@ div{
                 height:360px;
                 left:-40px;
                 top:-40px;
-                background-image:url(p.png);
+                background-image:url(beta1.png);
                 -webkit-filter:blur(5px);
                 filter:blur(5px);
                 opacity:1;
@@ -973,7 +973,7 @@ div{
     z-index:9999999999999998;
     transition:opacity 1s;
     background-color:#000;
-    background-image:url('p.png');
+    background-image:url('beta1.png');
     filter:blur(10px);
     background-position:center;
     background-size:cover;
@@ -1091,28 +1091,28 @@ div{
     }
 
 .cursorDefault{
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 .cursorMove{
-    cursor:url(cursors/beta/move.png) 20 20, move;
+    cursor:url(cursors/beta/move.png) 16 15, move;
 }
 .cursorOpenHand{
-    cursor:url(cursors/beta/movpre.png) 20 20, move;
+    cursor:url(cursors/beta/movpre.png) 15 16, move;
 }
 .cursorCloseHand{
-    cursor:url(cursors/beta/moving.png) 20 20, move;
+    cursor:url(cursors/beta/moving.png) 12 10, move;
 }
 .cursorPointer{
-    cursor:url(cursors/beta/pointer.png) 20 4, pointer;
+    cursor:url(cursors/beta/pointer.png) 11 2, pointer;
 }
 .cursorLoadLight{
-    cursor:url(cursors/beta/wait.png) 20 20, wait;
+    cursor:url(cursors/beta/wait.png) 14 13, wait;
 }
 .cursorLoadDark{
-    cursor:url(cursors/beta/wait.png) 20 20, wait;
+    cursor:url(cursors/beta/wait.png) 14 13, wait;
 }
 .cursorForceLoad{
-    cursor:url(cursors/beta/wait.png) 20 20, wait !important;
+    cursor:url(cursors/beta/wait.png) 14 13, wait !important;
 }
 
 .changeLogTitle, .changeLogDate, .changeLogAddition, .changeLogTweak, .changeLogRemoval, .changeLogUnknown{

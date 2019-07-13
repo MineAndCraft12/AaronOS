@@ -1393,6 +1393,9 @@ function updateSmartIconStyle(){
         allSmartIconsBorder[i].style.borderBottomRightRadius = Math.round((currSize / 2) * (smartIconOptions.radiusBottomRight / 100)) + 'px';
     }
 }
+function saveSmartIconStyle(){
+    ufsave("aos_system/smarticon_settings", JSON.stringify(smartIconOptions));
+}
 /*
 options{
     backgroundColor: "#FFFFFF",
@@ -1860,6 +1863,566 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
         }
     }
 };
+
+var repositories = {"repository/repository.json": {}};
+var repositoryIDs = {};
+var installedPackages = {};
+
+function repoSave(){
+    lfsave("aos_system/repositories", JSON.stringify(repositories));
+    lfsave("aos_system/repositories_installed", JSON.stringify(installedPackages));
+}
+
+function repoLoad(){
+    try{
+        repositories = JSON.parse(lfload("aos_system/repositories") || '{"repository/repository.json": {}}');
+    }catch(err){
+        alert(err);
+        repositories = {"repository/repository.json": {}};
+    }
+    try{
+        installedPackages = JSON.parse(lfload("aos_system/repositories_installed") || '{}');
+    }catch(err){
+        alert(err);
+        installedPackages = {};
+    }
+}
+
+function repoListInstalled(){
+    var results = [];
+    for(var i in installedPackages){
+        results.push(i);
+        for(var j in installedPackages[i]){
+            results.push(i + '.' + j);
+        }
+    }
+    return results;
+}
+
+function repoListAll(){
+    var results = [];
+    for(var i in repositories){
+        results.push(repositories[i].repoID);
+        for(var j in repositories[i].packages){
+            results.push(repositories[i].repoID + '.' + repositories[i].packages[j].packageID);
+        }
+    }
+    return results;
+}
+
+function repoPackageSearch(...query){
+    var results = [];
+    for(var repo in repositories){
+        if(repositories[repo].hasOwnProperty('packages')){
+            for(var package in repositories[repo].packages){
+                for(var item in query){
+                    if(query[item].indexOf('.') === -1){
+                        if(repositories[repo].packages[package].packageID.toLowerCase().indexOf(query[item].toLowerCase()) !== -1){
+                            results.push(repositories[repo].repoID + "." + repositories[repo].packages[package].packageID);
+                            break;
+                        }else if(repositories[repo].packages[package].packageName.toLowerCase().indexOf(query[item].toLowerCase()) !== -1){
+                            results.push(repositories[repo].repoID + "." + repositories[repo].packages[package].packageID);
+                            break;
+                        }else{
+                            var aliasFound = 0;
+                            for(var altName in repositories[repo].packages[package].packageAliases){
+                                if(repositories[repo].packages[package].packageAliases[altName].toLowerCase().indexOf(query[item].toLowerCase()) !== -1){
+                                    aliasFound = 1;
+                                    break;
+                                }
+                            }
+                            if(aliasFound){
+                                results.push(repositories[repo].repoID + "." + repositories[repo].packages[package].packageID);
+                                break;
+                            }
+                        }
+                    }else{
+                        if(repositories[repo].repoID.toLowerCase().indexOf(query[item].split('.')[0].toLowerCase()) !== -1){
+                            if(repositories[repo].packages[package].packageID.toLowerCase().indexOf(query[item].substring(query[item].indexOf('.') + 1, query[item].length).toLowerCase()) !== -1){
+                                results.push(repositories[repo].repoID + "." + repositories[repo].packages[package].packageID);
+                                break;
+                            }else if(repositories[repo].packages[package].packageName.toLowerCase().indexOf(query[item].substring(query[item].indexOf('.') + 1, query[item].length).toLowerCase()) !== -1){
+                                results.push(repositories[repo].repoID + "." + repositories[repo].packages[package].packageID);
+                                break;
+                            }else{
+                                var aliasFound = 0;
+                                for(var altName in repositories[repo].packages[package].packageAliases){
+                                    if(repositories[repo].packages[package].packageAliases[altName].toLowerCase().indexOf(query[item].substring(query[item].indexOf('.') + 1, query[item].length).toLowerCase())!== -1){
+                                        aliasFound = 1;
+                                        break;
+                                    }
+                                }
+                                if(aliasFound){
+                                    results.push(repositories[repo].repoID + "." + repositories[repo].packages[package].packageID);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return results;
+}
+
+function repoPackageSearchPrecise(...query){
+    var results = [];
+    for(var repo in repositories){
+        if(repositories[repo].hasOwnProperty('packages')){
+            for(var package in repositories[repo].packages){
+                for(var item in query){
+                    if(query[item].indexOf('.') === -1){
+                        if(repositories[repo].packages[package].packageID.toLowerCase() === query[item].toLowerCase()){
+                            results.push(repositories[repo].repoID + "." + repositories[repo].packages[package].packageID);
+                            break;
+                        }else if(repositories[repo].packages[package].packageName.toLowerCase() === query[item].toLowerCase()){
+                            results.push(repositories[repo].repoID + "." + repositories[repo].packages[package].packageID);
+                            break;
+                        }
+                    }else{
+                        if(query[item].split('.')[0].toLowerCase() === repositories[repo].repoID.toLowerCase()){
+                            if(query[item].substring(query[item].indexOf('.') + 1, query[item].length).toLowerCase() === repositories[repo].packages[package].packageID.toLowerCase()){
+                                results.push(repositories[repo].repoID + "." + repositories[repo].packages[package].packageID);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return results;
+}
+
+function repoSearch(...query){
+    var results = [];
+    for(var repo in repositories){
+        if(repositories[repo].hasOwnProperty('repoID')){
+            for(var item in query){
+                if(repositories[repo].repoID.toLowerCase().indexOf(query[item].toLowerCase()) !== -1){
+                    results.push(repositories[repo].repoID);
+                    break;
+                }else if(repositories[repo].repoName.toLowerCase().indexOf(query[item].toLowerCase()) !== 1){
+                    results.push(repositories[repo].repoID);
+                    break;
+                }else{
+                    var aliasFound = 0;
+                    for(var altName in repositories[repo].repoAliases){
+                        if(repositories[repo].repoAliases[altName].toLowerCase().indexOf(query[item].toLowerCase()) !== -1){
+                            aliasFound = 1;
+                            break;
+                        }
+                    }
+                    if(aliasFound){
+                        results.push(repositories[repo].repoID);
+                        break;
+                    }
+                    if(repo.toLowerCase().indexOf(query[item].toLowerCase()) !== -1){
+                        results.push(repositories[repo].repoID);
+                        break;
+                    }
+                }
+            }
+        }else{
+            for(var item in query){
+                if(repo.toLowerCase().indexOf(query[item].toLowerCase()) !== -1){
+                    results.push("Warning: No Repo ID: " + repo);
+                }
+            }
+        }
+    }
+    return results;
+}
+
+function repoSearchPrecise(...query){
+    var results = [];
+    for(var repo in repositories){
+        if(repositories[repo].hasOwnProperty('repoID')){
+            for(var item in query){
+                if(repositories[repo].repoID.toLowerCase() === query[item].toLowerCase()){
+                    results.push(repositories[repo].repoID);
+                    break;
+                }else if(repositories[repo].repoName.toLowerCase() === query[item].toLowerCase()){
+                    results.push(repositories[repo].repoID);
+                    break;
+                }else{
+                    if(repo.toLowerCase() === query[item].toLowerCase()){
+                        results.push(repositories[repo].repoID);
+                        break;
+                    }
+                }
+            }
+        }else{
+            for(var item in query){
+                if(repo.toLowerCase() === query[item].toLowerCase()){
+                    results.push("Warning: No Repo ID: " + repo);
+                }
+            }
+        }
+    }
+    return results;
+}
+
+function repoGetUpgradeable(versionNumbers){
+    var output = [];
+    for(var repository in installedPackages){
+        for(var package in installedPackages[repository]){
+            if(repositoryIDs.hasOwnProperty(repository)){
+                if(repositories.hasOwnProperty(repositoryIDs[repository])){
+                    if(repositories[repositoryIDs[repository]].packages.hasOwnProperty(package)){
+                        if(installedPackages[repository][package].version !== repositories[repositoryIDs[repository]].packages[package].version){
+                            if(versionNumbers){
+                                output.push(repositories[repositoryIDs[repository]].repoID + "." + repositories[repositoryIDs[repository]].packages[package].packageID + ": " + installedPackages[repository][package].version + " to " + repositories[repositoryIDs[repository]].packages[package].version);
+                            }else{
+                                output.push(repositories[repositoryIDs[repository]].repoID + "." + repositories[repositoryIDs[repository]].packages[package].packageID);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return output;
+}
+
+var repoUpdateOutput = [];
+
+function repoUpdateIntermediate(){
+    if(this.readyState === 4){
+        if(this.status === 200){
+            repoUpdateInstall(this.repositoryName, this.responseText);
+        }else{
+            repoUpdateCallback("Network Error: " + this.status + ": " + this.repositoryName);
+        }
+        repoStagedUpdates--;
+        if(repoStagedUpdates <= 0){
+            repoUpdateFinished();
+        }
+    }
+}
+
+function repoUpdateInstall(repoURL, repoResponse){
+    try{
+        var repoJSON = JSON.parse(repoResponse);
+        if(repoJSON.hasOwnProperty("repoName") &&
+            repoJSON.hasOwnProperty("repoID") &&
+            repoJSON.hasOwnProperty("repoAliases") &&
+            repoJSON.hasOwnProperty("packages")
+        ){
+            if(!repositoryIDs.hasOwnProperty(repoJSON.repoID)){
+                repositories[repoURL] = repoJSON;
+                repositoryIDs[repoJSON.repoID] = repoURL;
+                repoUpdateCallback("Success: " + repoURL);
+            }else if(repositoryIDs[repository] !== repoURL){
+                repoUpdateCallback("Error: " + repoJSON.repoID + " already exists: " + repoURL);
+            }
+        }
+    }catch(err){
+        repoUpdateCallback("Error: " + err + ": " + repoURL);
+    }
+}
+
+var repoStagedUpdates = 0;
+function repoUpdateFinished(){
+    try{
+        apps.saveMaster.vars.saving = 0;
+    }catch(err){
+        
+    }
+    try{
+        repoUpdateCallback("");
+        repoUpdateCallback(repoPackageSearch("").length + " total packages available.");
+        repoUpdateCallback(repoGetUpgradeable().length + " total updates available.");
+        //repoUpdateCallback(repoUpdateOutput);
+        try{
+            if(typeof repoUpdateFinishFunc === 'function'){
+                repoUpdateFinishFunc();
+            }
+        }catch(err){
+
+        }
+    }catch(err){
+
+    }
+    for(var i in repoUpdateXHR){
+        delete repoUpdateXHR[i];
+    }
+    repoUpdateXHR = {};
+    repoUpdateCallback = null;
+    repoUpdateOutput = [];
+    repoStagedUpdates = 0;
+    repoUpdateFinishFunc = null;
+    
+    repoSave();
+}
+
+var repoUpdateXHR = {};
+
+repoUpdateCallback = null;
+repoUpdateFinishFunc = null;
+
+function repoUpdate(callback, finishFunc){
+    if(repoStagedUpdates <= 0 && repoStagedUpgrades <= 0){
+        if(callback){
+            repoUpdateCallback = callback;
+        }else{
+            repoUpdateCallback = doLog;
+        }
+        if(finishFunc){
+            repoUpdateFinishFunc = finishFunc;
+        }else{
+            repoUpdateFinishFunc = null;
+        }
+        repositoryIDs = [];
+        repoUpdateOutput = [];
+        repoStagedUpdates = 0;
+        for(var repo in repositories){
+            repoUpdateXHR[repo] = new XMLHttpRequest();
+            repoUpdateXHR[repo].open('GET', repo);
+            repoUpdateXHR[repo].onreadystatechange = repoUpdateIntermediate;
+            repoUpdateXHR[repo].repositoryName = repo;
+            repoUpdateXHR[repo].send();
+            repoStagedUpdates++;
+        }
+        repoUpdateCallback("Updating " + repoStagedUpdates + " repositories");
+        repoUpdateCallback("");
+        try{
+            apps.saveMaster.vars.saving = 3;
+        }catch(err){
+            
+        }
+        return true;
+    }else{
+        return false;
+    }
+}
+
+var repoUpgradeXHR = {};
+var repoUpgradeOutput = [];
+var repoStagedUpgrades = 0;
+var repoUpgradeCallback = null;
+
+function repoUpgradeIntermediate(){
+    if(this.readyState === 4){
+        if(this.status === 200){
+            repoUpgradeInstall(this.repository, this.responseText);
+        }else{
+            repoUpgradeCallback("Error: " + this.status + ": " + this.repository.join('.'));
+        }
+        repoStagedUpgrades--;
+        if(repoStagedUpgrades <= 0){
+            repoUpgradeFinished();
+        }
+    }
+}
+
+function repoUpgradeInstall(targetPackage, packageData){
+    try{
+        var repoJSON = JSON.parse(packageData);
+        if(repoJSON.hasOwnProperty("name") &&
+            repoJSON.hasOwnProperty("id") &&
+            repoJSON.hasOwnProperty("version") &&
+            repoJSON.hasOwnProperty("appType")
+        ){
+            installedPackages[targetPackage[0]][targetPackage[1]] = repoJSON;
+            requireRestart();
+            repoUpgradeCallback("Success: " + targetPackage.join('.'));
+        }else{
+            repoUpgradeCallback("Error: response is not a valid package: " + targetPackage.join('.'));
+        }
+    }catch(err){
+        repoUpgradeCallback("Error: " + err + ": " + targetPackage.join('.'));
+    }
+}
+
+function repoUpgradeFinished(){
+    try{
+        apps.saveMaster.vars.saving = 0;
+    }catch(err){
+        
+    }
+    try{
+        repoUpgradeCallback("");
+        repoUpgradeCallback("Finished.");
+        //repoUpgradeCallback(repoUpgradeOutput);
+        try{
+            if(typeof repoUpgradeFinishedFunc === 'function'){
+                repoUpgradeFinishedFunc();
+            }
+        }catch(err){
+
+        }
+    }catch(err){
+
+    }
+    for(var i in repoUpgradeXHR){
+        delete repoUpgradeXHR[i];
+    }
+    repoUpgradeXHR = {};
+    repoUpgradeCallback = null;
+    repoUpgradeOutput = [];
+    repoStagedUpgrades = 0;
+    repoUpgradeFinishedFunc = null;
+
+    repoSave();
+}
+
+var repoUpgradeFinishedFunc = null;
+
+function repoUpgrade(callback, finishedFunc){
+    if(repoStagedUpdates <= 0 && repoStagedUpgrades <= 0){
+        var upgradeablePackages = repoGetUpgradeable();
+        if(upgradeablePackages.length === 0){
+            (callback || doLog)("Aborted - no updates available. Try repo update first?");
+            return false;
+        }
+        if(callback){
+            repoUpgradeCallback = callback;
+        }else{
+            repoUpgradeCallback = doLog;
+        }
+        if(finishedFunc){
+            repoUpgradeFinishedFunc = finishedFunc;
+        }else{
+            repoUpgradeFinishedFunc = null;
+        }
+        repoUpgradeOutput = [];
+        repoStagedUpgrades = 0;
+        repoUpgradeCallback("Upgrading the following packages: " + upgradeablePackages.join(", "));
+        for(var i in upgradeablePackages){
+            upgradeablePackages[i] = upgradeablePackages[i].split('.');
+        }
+        for(var i in upgradeablePackages){
+            repoUpgradeXHR[upgradeablePackages[i][0]] = new XMLHttpRequest();
+            repoUpgradeXHR[upgradeablePackages[i][0]].open("GET", repositories[repositoryIDs[upgradeablePackages[i][0]]].packages[upgradeablePackages[i][1]].installURL);
+            repoUpgradeXHR[upgradeablePackages[i][0]].onreadystatechange = repoUpgradeIntermediate;
+            repoUpgradeXHR[upgradeablePackages[i][0]].repository = upgradeablePackages[i];
+            repoUpgradeXHR[upgradeablePackages[i][0]].send();
+            repoStagedUpgrades++;
+        }
+        repoUpgradeCallback("Total upgrades: " + repoStagedUpgrades);
+        repoUpgradeCallback("");
+        try{
+            apps.saveMaster.vars.saving = 3;
+        }catch(err){
+            
+        }
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function repoAddRepository(url, callback, finishingFunc){
+    for(var i in repositoryIDs){
+        if(repositoryIDs[i] === url){
+            (callback || doLog)('Aborted - Repository already exists: ' + i);
+            return false;
+        }
+    }
+    repositories[url] = {};
+    (callback || doLog)('Added repository. Updating...');
+    repoUpdate(callback, finishingFunc);
+    return true;
+}
+
+function repoRemoveRepository(query, callback, finishingFunc){
+    var output = [];
+    var repositoriesToRemove = repoSearchPrecise(query);
+    if(repositoriesToRemove.indexOf('aaronos_official') !== -1){
+        (callback || doLog)('Failed: cannot remove this repo: aaronos_official');
+        repositoriesToRemove.splice(repositoriesToRemove.indexOf('aaronos_official'), 1);
+    }
+    if(repositoriesToRemove.length === 0){
+        (callback || doLog)('Nothing done, no removeable repositories found.');
+        return false;
+    }else{
+        for(var i in repositoriesToRemove){
+            if(repositoriesToRemove[i].indexOf('Warning: No Repo ID: ') === 0){
+                delete repositories[repositoriesToRemove[i].substring(21, repositoriesToRemove[i].length)];
+                (callback || doLog)('Deleted ' + repositoriesToRemove[i].substring(21, repositoriesToRemove[i].length));
+            }else{
+                delete repositories[repositoryIDs[repositoriesToRemove[i]]];
+                (callback || doLog)('Deleted ' + repositoriesToRemove[i] + ": " + repositoryIDs[repositoriesToRemove[i]]);
+            }
+        }
+        (callback || doLog)('Updating...');
+        repoUpdate(callback, finishingFunc);
+        return true;
+    }
+}
+
+function repoAddPackage(query, callback, finishingFunc){
+    var repoMatches = repoPackageSearchPrecise(query);
+    if(repoMatches.length === 0){
+        repoMatches = repoPackageSearch(query);
+        if(repoMatches.length === 0){
+            (callback || doLog)('No packages found.');
+            return false;
+        }else{
+            repoMatches.splice(0, 0, 'No packages found with that name. Maybe try again with one of these?');
+            for(var i in repoMatches){
+                (callback || doLog)(repoMatches[i]);
+            }
+            return false;
+        }
+    }else if(repoMatches.length === 1){
+        if(!installedPackages.hasOwnProperty(repoMatches[0].split('.')[0])){
+            installedPackages[repoMatches[0].split('.')[0]] = {};
+        }
+        installedPackages[repoMatches[0].split('.')[0]][repoMatches[0].split('.')[1]] = {
+            name: repositories[repositoryIDs[repoMatches[0].split('.')[0]]].packages[repoMatches[0].split('.')[1]].packageName,
+            id: repositories[repositoryIDs[repoMatches[0].split('.')[0]]].packages[repoMatches[0].split('.')[1]].packageID,
+            version: "UPDATE_NOW",
+            packageType: "UPDATE_THIS_PACKAGE"
+        };
+        (callback || doLog)('Installed package ' + repoMatches[0], 'Performing upgrade...');
+        repoUpgrade(callback, finishingFunc);
+        return true;
+    }else{
+        repoMatches.splice(0, 0, 'More than one package with that name. Try again with a more specific name:');
+        for(var i in repoMatches){
+            (callback || doLog)(repoMatches[i]);
+        }
+        return false;
+    }
+}
+
+function repoRemovePackage(query, callback){
+    var repoMatches = [];
+    for(var i in installedPackages){
+        for(var j in installedPackages[i]){
+            if(i + '.' + j === query || j === query){
+                repoMatches.push([i, j]);
+            }
+        }
+    }
+    if(repoMatches.length === 0){
+        (callback || doLog)('No matching packages found.');
+        return false;
+    }else if(repoMatches.length === 1){
+        delete installedPackages[repoMatches[0][0]][repoMatches[0][1]];
+        var repoLength = 0;
+        for(var i in installedPackages[repoMatches[0][0]]){
+            repoLength = 1;
+            break;
+        }
+        if(repoLength === 0){
+            delete installedPackages[repoMatches[0][0]];
+        }
+        repoSave();
+        (callback || doLog)('Package ' + repoMatches[0].join('.') + ' uninstalled.');
+        requireRestart();
+        return true;
+    }else{
+        repoMatches.splice(0, 0, ['More than one package with that name. Try again with a more specific name:']);
+        for(var i in repoMatches){
+            (callback || doLog)(repoMatches[i].join('.'));
+        }
+        return false;
+    }
+}
 
 function arrangeDesktopIcons(){
     appTotal = 0;
@@ -2873,10 +3436,12 @@ c(function(){
             if(launchtype === 'srtup'){
                 this.appWindow.paddingMode(0);
                 getId('win_nora_exit').style.display = "none";
-                getId('win_nora_big').style.right = '3px';
-                getId('win_nora_shrink').style.right = '26px';
+                getId('win_nora_big').style.display = 'none';
+                getId('win_nora_shrink').style.right = '3px';
                 getId('win_nora_cap').setAttribute('oncontextmenu', 'ctxMenu([[event.pageX, event.pageY, "ctxMenu/beta/minimize.png", "ctxMenu/beta/add.png"], " Hide", "apps.nora.signalHandler(\'shrink\');toTop({appIcon:\'DSKTP\'},1)", " Toggle Fullscreen", "apps.nora.appWindow.toggleFullscreen();toTop(apps.nora)"])');
                 this.appWindow.setCaption('NORAA');
+                getId('win_nora_cap').setAttribute('onmousedown','');
+                getId('win_nora_size').style.pointerEvents = "none";
                 this.appWindow.setDims(45, parseInt(getId('desktop').style.height, 10) - 500, 600, 500);
                 this.appWindow.setContent('<div id="NORAout">-- aOS Ready --</div><button id="NORAspeech" onclick="apps.nora.vars.speakIn()">Speak</button><input id="NORAin" onKeydown="if(event.keyCode === 13){apps.nora.vars.input()}"><button id="NORAbtn" onClick="apps.nora.vars.input()">Say</button>');
                 this.appWindow.openWindow();
@@ -2928,6 +3493,7 @@ c(function(){
                             apps.nora.vars.startContRecog();
                         }
                     };
+                    getId('win_nora_cap').setAttribute('oncontextmenu', 'ctxMenu(apps.nora.vars.captionCtx, 1, event)');
                 }else{
                     getId('NORAspeech').style.display = 'none';
                     getId('NORAin').style.left = '0';
@@ -3023,6 +3589,11 @@ c(function(){
         },
         {
             appInfo: 'This is the Virtual Assistant of AaronOS. Compare to Apple\'s Siri, or to Microsoft\'s Cortana.',
+            captionCtx: [
+                [' ' + lang('ctxMenu', 'hideApp'), function(){
+                    apps.nora.signalHandler('shrink');
+                }, 'ctxMenu/beta/minimize.png']
+            ],
             mood: 5,
             initing: 1,
             voices: [],
@@ -4128,7 +4699,14 @@ c(function(){
                     this.currentlySpeaking = 0;
                 }
             }
-        }, 2, "nora", "appicons/ds/NRA.png"
+        }, 2, "nora", {
+            backgroundColor: "#303947",
+            foreground: "smarticons/noraa/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
     apps.nora.main('srtup');
     // getId('aOSloadingInfo').innerHTML = 'aDE';
@@ -4581,7 +5159,14 @@ c(function(){
                     doLog("?> Module: " + module, "#F00");
                 }
             }
-        }, 0, "jsConsole", "appicons/ds/jsC.png"
+        }, 0, "jsConsole", {
+            backgroundColor: "#303947",
+            foreground: "smarticons/jsConsole/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
     apps.jsConsole.main();
     requestAnimationFrame(function(){
@@ -4648,8 +5233,8 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    this.vars.prefix = '[' + SRVRKEYWORD + '@aOS bash]$ ';
-                    this.vars.pastValue = '[' + SRVRKEYWORD + '@aOS bash]$ ';
+                    this.vars.prefix = '[' + SRVRKEYWORD.substring(0, 4) + '@aOS bash]$ ';
+                    this.vars.pastValue = '[' + SRVRKEYWORD.substring(0, 4) + '@aOS bash]$ ';
                     
                     if(ufload("aos_system/apps/bash/alias")){
                         this.vars.alias = JSON.parse(ufload("aos_system/apps/bash/alias"));
@@ -4676,7 +5261,10 @@ c(function(){
             workdirdepth: 0,
             translateDir: function(origworkdir){
                 this.workdirorig = origworkdir;
-                this.workdirtrans = this.workdirorig.split('\\').join('/');
+
+                //this.workdirtrans = this.workdirorig.split('\\').join('/');
+                this.workdirtrans = this.workdirorig;
+
                 this.workdirdepth = 0;
                 if(this.workdirorig[0] === '/'){
                     this.workdirfinal = "window";
@@ -4686,6 +5274,23 @@ c(function(){
                     this.workdirtrans = this.workdir + '/' + this.workdirtrans;
                 }
                 this.workdirtemp = this.workdirtrans.split('/');
+                var cleanEscapeRun = 0;
+                while(!cleanEscapeRun){
+                    cleanEscapeRun = 1;
+                    for(var i = 0; i < this.workdirtemp.length - 1; i++){
+                        if(this.workdirtemp[i][this.workdirtemp[i].length - 1] === '\\'){
+                            this.workdirtemp.splice(i, 2, this.workdirtemp[i].substring(0, this.workdirtemp[i].length - 1) + '/' + this.workdirtemp[i + 1]);
+                            cleanEscapeRun = 0;
+                            break;
+                        }
+                    }
+                    if(cleanEscapeRun && this.workdirtemp.length > 0){
+                        if(this.workdirtemp[this.workdirtemp.length - 1][this.workdirtemp[this.workdirtemp.length - 1].length - 1] === '\\'){
+                            this.workdirtemp.splice(i, 1, this.workdirtemp[this.workdirtemp.length - 1].substring(0, this.workdirtemp[this.workdirtemp.length - 1].length - 1) + '/');
+                            cleanEscapeRun = 0;
+                        }
+                    }
+                }
                 while(this.workdirdepth < this.workdirtemp.length){
                     if(this.workdirtemp[this.workdirdepth] !== ''){
                         if(this.workdirtemp[this.workdirdepth] === '..'){
@@ -4711,7 +5316,8 @@ c(function(){
                                 this.workdirtemp[this.workdirdepth].indexOf(' ') === -1 &&
                                 this.workdirtemp[this.workdirdepth].indexOf(';') === -1 &&
                                 this.workdirtemp[this.workdirdepth].indexOf('.') === -1 &&
-                                this.workdirtemp[this.workdirdepth].indexOf(',') === -1
+                                this.workdirtemp[this.workdirdepth].indexOf(',') === -1 &&
+                                this.workdirtemp[this.workdirdepth].indexOf('/') === -1
                             ){
                                 try{
                                     new Function(this.workdirtemp[this.workdirdepth], 'var ' + this.workdirtemp[this.workdirdepth]);
@@ -5056,42 +5662,95 @@ c(function(){
                     action: function(args){
                         if(args.length > 0){
                             this.vars.prevworkdir = apps.bash.vars.workdir;
-                            this.vars.tempadd = args[0].split('/');
-                            this.vars.tempstart = (apps.bash.vars.workdir[0] === '/');
-                            if(args[0][0] === '/' || apps.bash.vars.workdir === '/'){
-                                this.vars.tempdir = [];
-                                this.vars.tempstart = 1;
-                            }else{
-                                this.vars.tempdir = apps.bash.vars.workdir.split('/');
-                            }
-                            for(var i in this.vars.tempadd){
-                                if(this.vars.tempadd[i] === '..'){
-                                    this.vars.tempdir.pop();
-                                }else{
-                                    this.vars.tempdir.push(this.vars.tempadd[i]);
+                            try{
+                                this.vars.tempadd = args[0].split('/');
+                                console.log("tempadd");
+                                console.log(this.vars.tempadd);
+                                var cleanEscapeRun = 0;
+                                while(!cleanEscapeRun){
+                                    cleanEscapeRun = 1;
+                                    for(var i = 0; i < this.vars.tempadd.length - 1; i++){
+                                        if(this.vars.tempadd[i][this.vars.tempadd[i].length - 1] === '\\'){
+                                            this.vars.tempadd.splice(i, 2, this.vars.tempadd[i].substring(0, this.vars.tempadd[i].length) + '/' + this.vars.tempadd[i + 1]);
+                                            cleanEscapeRun = 0;
+                                            break;
+                                        }
+                                    }
+                                    if(cleanEscapeRun && this.vars.tempadd.length > 0){
+                                        if(this.vars.tempadd[this.vars.tempadd.length - 1][this.vars.tempadd[this.vars.tempadd.length - 1].length - 1] === '\\'){
+                                            this.vars.tempadd.splice(i, 1, this.vars.tempadd[this.vars.tempadd.length - 1].substring(0, this.vars.tempadd[this.vars.tempadd.length - 1].length) + '/');
+                                            cleanEscapeRun = 0;
+                                        }
+                                    }
                                 }
-                            }
-                            this.vars.temppath = this.vars.tempdir.join('/');
-                            if(this.vars.tempstart && this.vars.temppath[0] !== '/'){
-                                this.vars.temppath = '/' + this.vars.temppath;
-                            }
-                            this.vars.temppath = this.vars.temppath.split('\\').join('/').split('//').join('/');
-                            apps.bash.vars.workdir = this.vars.temppath;
-                            if(apps.bash.vars.getRealDir('') === undefined){
-                                throw "" + apps.bash.vars.workdir + ': No such file or directory';
+                                console.log(this.vars.tempadd);
+                                this.vars.tempstart = (apps.bash.vars.workdir[0] === '/');
+                                if(args[0][0] === '/' || apps.bash.vars.workdir === '/'){
+                                    this.vars.tempdir = [];
+                                    this.vars.tempstart = 1;
+                                }else{
+                                    this.vars.tempdir = apps.bash.vars.workdir.split('/');
+                                }
+                                console.log("tempdir");
+                                console.log(this.vars.tempdir);
+                                cleanEscapeRun = 0;
+                                while(!cleanEscapeRun){
+                                    cleanEscapeRun = 1;
+                                    for(var i = 0; i < this.vars.tempdir.length - 1; i++){
+                                        if(this.vars.tempdir[i][this.vars.tempdir[i].length - 1] === '\\'){
+                                            this.vars.tempdir.splice(i, 2, this.vars.tempdir[i].substring(0, this.vars.tempdir[i].length) + '/' + this.vars.tempdir[i + 1]);
+                                            cleanEscapeRun = 0;
+                                            break;
+                                        }
+                                    }
+                                    if(cleanEscapeRun && this.vars.tempdir.length > 0){
+                                        if(this.vars.tempdir[this.vars.tempdir.length - 1][this.vars.tempdir[this.vars.tempdir.length - 1].length - 1] === '\\'){
+                                            this.vars.tempdir.splice(i, 1, this.vars.tempdir[this.vars.tempdir.length - 1].substring(0, this.vars.tempdir[this.vars.tempdir.length - 1].length) + '/');
+                                            cleanEscapeRun = 0;
+                                        }
+                                    }
+                                }
+                                console.log(this.vars.tempdir);
+                                for(var i in this.vars.tempadd){
+                                    if(this.vars.tempadd[i] === '..'){
+                                        this.vars.tempdir.pop();
+                                    }else{
+                                        this.vars.tempdir.push(this.vars.tempadd[i]);
+                                    }
+                                }
+                                if(this.vars.tempdir.length > 0){
+                                    var lastTempAdd = this.vars.tempdir[this.vars.tempdir.length - 1];
+                                }else{
+                                    var lastTempAdd = '/';
+                                }
+                                this.vars.temppath = this.vars.tempdir.join('/');
+                                if(this.vars.tempstart && this.vars.temppath[0] !== '/'){
+                                    this.vars.temppath = '/' + this.vars.temppath;
+                                }
+                                this.vars.temppath = this.vars.temppath.split('//').join('/');
+                                apps.bash.vars.workdir = this.vars.temppath;
+                                if(apps.bash.vars.getRealDir('') === undefined){
+                                    var badworkdir = apps.bash.vars.workdir;
+                                    apps.bash.vars.workdir = this.vars.prevworkdir;
+                                    throw "" + badworkdir + ': No such file or directory';
+                                }else if(typeof apps.bash.vars.getRealDir('') !== 'object'){
+                                    var badworkdir = apps.bash.vars.workdir;
+                                    apps.bash.vars.workdir = this.vars.prevworkdir;
+                                    throw "" + badworkdir + ': Not a directory';
+                                }
+                                //apps.bash.vars.echo(this.vars.temppath);
+                                if(apps.bash.vars.workdir === '/'){
+                                    apps.bash.vars.prefix = '[' + SRVRKEYWORD.substring(0, 4) + '@aOS /]$ ';
+                                }else{
+                                    //apps.bash.vars.prefix = '[' + SRVRKEYWORD + '@aOS ' + apps.bash.vars.workdir.split('/')[apps.bash.vars.workdir.split('/').length - 1] + ']$ ';
+                                    apps.bash.vars.prefix = '[' + SRVRKEYWORD.substring(0, 4) + '@aOS ' + lastTempAdd + ']$ ';
+                                }
+                                apps.bash.vars.pastValue = apps.bash.vars.prefix;
+                                getId('bashInput').value = apps.bash.vars.prefix;
+                            }catch(err){
                                 apps.bash.vars.workdir = this.vars.prevworkdir;
-                            }else if(typeof apps.bash.vars.getRealDir('') !== 'object'){
-                                throw "" + apps.bash.vars.workdir + ': Not a directory';
-                                apps.bash.vars.workdir = this.vars.prevworkdir;
+                                throw err;
                             }
-                            //apps.bash.vars.echo(this.vars.temppath);
-                            if(apps.bash.vars.workdir === '/'){
-                                apps.bash.vars.prefix = '[' + SRVRKEYWORD + '@aOS /]$ ';
-                            }else{
-                                apps.bash.vars.prefix = '[' + SRVRKEYWORD + '@aOS ' + apps.bash.vars.workdir.split('/')[apps.bash.vars.workdir.split('/').length - 1] + ']$ ';
-                            }
-                            apps.bash.vars.pastValue = apps.bash.vars.prefix;
-                            getId('bashInput').value = apps.bash.vars.prefix;
                         }
                     },
                     vars: {
@@ -5153,15 +5812,15 @@ c(function(){
                                 for(var item in this.vars.selectedDir){
                                     dirSize++;
                                     if(dirSize > 1){
-                                        printBuffer += '\n' + item;
+                                        printBuffer += '\n' + item.split('/').join('\\/');
                                     }else{
-                                        printBuffer += item;
+                                        printBuffer += item.split('/').join('\\/');
                                     }
                                     if(typeof this.vars.selectedDir[item] === 'object'){
                                         printBuffer += '/';
                                         if(this.vars.printSub){
                                             for(var subitem in this.vars.selectedDir[item]){
-                                                printBuffer += '\n' + item + '/' + subitem;
+                                                printBuffer += '\n' + item.split('/').join('\\/') + '/' + subitem.split('/').join('\\/');
                                                 if(typeof this.vars.selectedDir[item][subitem] === 'object'){
                                                     printBuffer += '/';
                                                 }
@@ -5306,7 +5965,7 @@ c(function(){
                                         if(apps.bash.vars.getRealDir(this.vars.trace) === undefined){
                                             eval(apps.bash.vars.translateDir(this.vars.trace) + ' = {}');
                                         }else{
-                                            throw 'Failed to create ' + args[item] + ": " + this.vars.trace + ' already exists';
+                                            //throw 'Failed to create ' + args[item] + ": " + this.vars.trace + ' already exists';
                                         }
                                     }
                                 }
@@ -5378,9 +6037,98 @@ c(function(){
                             apps.bash.signalHandler('close');
                         }
                     }
+                },
+                {
+                    name: 'repo',
+                    usage: 'repo {install [repo.]pkg | remove [repo.]pkg | update | upgrade | add-repo repo | remove-repo repo | search [query | repo | repo.query] | list | list-all | list-updates}',
+                    desc: 'Manage the installed app repositories and packages.\n\n',
+                    action: function(args){
+                        if(args.length > 0){
+                            var currentAction = args.shift();
+                            args = args.join(' ');
+                            switch(currentAction){
+                                case 'install':
+                                    var result = repoAddPackage(args.trim(), apps.bash.vars.echo);
+                                    if(typeof result !== 'boolean'){
+                                        return result;
+                                    }
+                                    break;
+                                case 'remove':
+                                    var result = repoRemovePackage(args.trim(), apps.bash.vars.echo);
+                                    if(typeof result !== 'boolean'){
+                                        return result;
+                                    }
+                                    break;
+                                case 'update':
+                                    var result = repoUpdate(apps.bash.vars.echo);
+                                    if(typeof result !== 'boolean'){
+                                        return result;
+                                    }
+                                    break;
+                                case 'upgrade':
+                                    var result = repoUpgrade(apps.bash.vars.echo);
+                                    if(typeof result !== 'boolean'){
+                                        return result;
+                                    }
+                                    break;
+                                case 'search':
+                                    var result = repoPackageSearch(args.trim());
+                                    if(typeof result !== 'boolean'){
+                                        this.vars.batchEcho(result);
+                                    }
+                                    break;
+                                case 'add-repo':
+                                    var result = repoAddRepository(args.trim(), apps.bash.vars.echo);
+                                    if(typeof result !== 'boolean'){
+                                        return result;
+                                    }
+                                    break;
+                                case 'remove-repo':
+                                    var result = repoRemoveRepository(args.trim(), apps.bash.vars.echo);
+                                    if(typeof result !== 'boolean'){
+                                        return result;
+                                    }
+                                    break;
+                                case 'list-all':
+                                    var result = repoListAll();
+                                    if(typeof result !== 'boolean'){
+                                        this.vars.batchEcho(result);
+                                    }
+                                    break;
+                                case 'list':
+                                    var result = repoListInstalled();
+                                    if(typeof result !== 'boolean'){
+                                        this.vars.batchEcho(result);
+                                    }
+                                    break;
+                                case 'list-updates':
+                                    var result = repoGetUpgradeable();
+                                    if(typeof result !== 'boolean'){
+                                        this.vars.batchEcho(result);
+                                    }
+                                    break;
+                                default:
+                                    throw currentAction + ' is not a recognized repo command.';
+                            }
+                        }else{
+                            throw 'No arguments provided.';
+                        }
+                    },
+                    vars: {
+                        batchEcho: function(arr){
+                            apps.bash.vars.echo(arr.join('\n'));
+                        }
+                    }
                 }
             ]
-        }, 1, 'bash', 'appicons/ds/sh.png'
+        }, 1, 'bash', {
+            backgroundColor: "#303947",
+            foreground: "smarticons/bash/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
     window.sh = function(input){
         return apps.bash.vars.execute(input, 1);
@@ -5842,7 +6590,7 @@ c(function(){
                                 currentlanguage = ufload("aos_system/language");
                             }
                             if(ufload("aos_system/noraa/listen_enabled")){
-                                if(ufload("aos_system/noraa/listen_enabled")){
+                                if(ufload("aos_system/noraa/listen_enabled") === 1){
                                     apps.settings.vars.togNoraListen(1);
                                 }
                             }
@@ -6063,7 +6811,7 @@ c(function(){
                     setUrl: {
                         option: 'Background Image URL',
                         description: function(){return 'Set an image as your desktop background. This can be png, jpg, gif, or any other web-compatible image. If aOS is loaded over HTTPS, make sure your image is on HTTPS as well.'},
-                        buttons: function(){return '<input id="bckGrndImg" style="display:inline-block; width:500px" value="' + ufload("aos_system/desktop/background_image") + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
+                        buttons: function(){return '<input id="bckGrndImg" placeholder="beta1.png" style="display:inline-block; width:500px" value="' + ufload("aos_system/desktop/background_image") + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
                     },
                     bgFit: {
                         option: 'Background Image Fit',
@@ -6501,110 +7249,6 @@ c(function(){
                         }
                     }
                 },
-                customStyles: {
-                    folder: 0,
-                    folderName: "Custom Styles",
-                    folderPath: "apps.settings.vars.menus.customStyles",
-                    stylesheet: {
-                        option: 'Custom CSS Stylesheet',
-                        description: function(){return 'If you are an advanced aOS user and want nearly full customization ability for aOS, here is how to use the Custom Stylesheet feature...'},
-                        buttons: function(){return 'All you need to know is the CSS stylesheet language. Open the Custom Style Editor app and start writing your stylesheet. <i>It\'s that easy.</i> For reference, you can get to the official aOS stylesheet by visiting <a target="_blank" href="style.css">style.css</a>.'}
-                    },
-                    normal: {
-                        option: 'Default Styling',
-                        description: function(){return 'Restore aOS to its default stylesheet. If you are using a customized sheet, make sure to back it up, as this button will delete it.'},
-                        buttons: function(){return '<button onClick="apps.savemaster.vars.save(\'aos_system/user_custom_style\', \'/* DEFAULT */\', 1);getId(\'aosCustomStyle\').innerHTML = ufload(\'aos_system/user_custom_style\')">Restore</button>'}
-                    },
-                    aaronsCustom: {
-                        // put aaron's personal stylesheet here
-                        option: 'Aaron\'s Personal Styles',
-                        description: function(){return 'Style aOS to look similar to the developer\'s own modifications!'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/AaronsCustom/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    /*
-                    alpha: {
-                        option: 'AaronOS Alpha',
-                        description: function(){return 'Style aOS to look similar to how it did during the Alpha. Certain things may differ due to CSS limitations.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'/customStyles/aosAlpha/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    */
-                    terminal: {
-                        option: 'Terminal',
-                        description: function(){return 'Style aOS to look like an old green-on-black terminal! Recommend enabling dark mode so apps know the background is dark, and disabling windowblur for performance.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/terminal/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    glassWindows1: {
-                        option: 'Glass Windows 1',
-                        description: function(){return 'Style aOS will all-glass windows! This works on -most- apps, and gets rid of the default white background behind the apps. Now, the entire window is glass!'},
-                        buttons: function(){return '<button onClick="apps.savemaster.vars.save(\'aos_system/user_custom_style\', files.customStyles.glassWindows1, 1);getId(\'aosCustomStyle\').innerHTML = ufload(\'aos_system/user_custom_style\')">Install</button>'}
-                    },
-                    glassWindows2: {
-                        option: 'Glass Windows 2',
-                        description: function(){return 'Style aOS will all-glass windows! This works on -most- apps, and gets rid of the default white background behind the apps. This version also adds just a bit of a white shade to the windows, for better readability. Now, almost the entire window is glass!'},
-                        buttons: function(){return '<button onClick="apps.savemaster.vars.save(\'aos_system/user_custom_style\', files.customStyles.glassWindows2, 1);getId(\'aosCustomStyle\').innerHTML = ufload(\'aos_system/user_custom_style\')">Install</button>'}
-                    },
-                    elme: {
-                        option: 'Elme\'s Style',
-                        description: function(){return 'Style aOS to look like Elme Delos Santos\'s ideas for aOS. Elme is a developer from Quora that helped make some of the new icons for aOS. This style looks best with a white or very bright window color.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/elme/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    mintYDark: {
-                        // put aaron's personal stylesheet here
-                        option: 'Mint-Y',
-                        description: function(){return 'Style aOS to look similar to Linux Mint\'s Mint-Y theme! Compatible with Dark Mode! Linux Mint is the property of the Linux Mint team - this is simply a user-made file that I have included in the library of custom content.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/MintYDark/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    win98: {
-                        option: 'Windows 98<sup>&copy;</sup>',
-                        description: function(){return 'Style aOS to look similar to Microsoft\'s nostalgic Windows 98. Windows 98 is the sole property of Microsoft - this is simply a user-made file that I have included in the library of custom content.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/Windows98/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    winXP: {
-                        option: 'Windows XP<sup>&copy;</sup>',
-                        description: function(){return 'Style aOS to look similar to Microsoft\'s resilient Windows XP. Windows XP is the sole property of Microsoft - this is simply a user-made file that I have included in the library of custom content.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/WindowsXP/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    transXP: {
-                        option: 'Windows XP<sup>&copy;</sup> (colorable)',
-                        description: function(){return 'Same as above, but colorable and windowblur works (set window color to #0055EA for Windows XP color). Style aOS to look similar to Microsoft\'s resilient Windows XP. Windows XP is the sole property of Microsoft - this is simply a user-made file that I have included in the library of custom content.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/TransparentXP/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    win7: {
-                        option: 'Windows 7<sup>&copy;</sup>',
-                        description: function(){return 'Style aOS to look similar to Microsoft\'s beautiful Windows 7 (set window background image to /win7blur1080.png for glass reflections). Windows 7 is the sole property of Microsoft - this is simply a user-made file that I have included in the library of custom content.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/Windows7/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    win8: {
-                        option: 'Windows 8<sup>&copy;</sup>',
-                        description: function(){return 'Style aOS to look similar to Microsoft\'s metro Windows 8. Windows 8 is the sole property of Microsoft - this is simply a user-made file that I have included in the library of custom content.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/Windows8/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    win10: {
-                        option: 'Windows 10<sup>&copy;</sup>',
-                        description: function(){return 'Style aOS to look similar to Microsoft\'s modern Windows 10. Windows 10 is the sole property of Microsoft - this is simply a user-made file that I have included in the library of custom content.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/Windows10/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    elCapitan: {
-                        option: 'OSX El Capitan<sup>&copy;</sup>',
-                        description: function(){return 'Style aOS to look similar to Apple\'s OSX El Capitan. OSX is the sole property of Apple - this is simply a usermade file that I have included in the gallery of styles.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/elCapitan/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    highSierra: {
-                        option: 'OSX High Sierra<sup>&copy;</sup>',
-                        description: function(){return 'Style aOS to look similar to Apple\'s MacOS High Sierra. MacOS is the sole property of Apple - this is simply a usermade file that I have included in the gallery of styles. Credit for this stylesheet goes to ElijahZAwesome.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/macos/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    osjs: {
-                        option: 'OS.js<sup>&copy;</sup>',
-                        description: function(){return 'Style aOS to look similar to Anders Evenrud\'s OS.js. OS.js is the sole property of Anders - this is simply a usermade file that I have included in the gallery of styles.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/OSjs/aosCustomStyle.css\');">Install</button>'}
-                    },
-                    jdStyle: {
-                        option: 'JD\'s Style',
-                        description: function(){return 'Style aOS to look like JD\'s personal stylesheet. JD is the creator of JAos (not to be confused with aOS).'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.downloadCustomStyle(\'customStyles/jdStyle/aosCustomStyle.css\');">Install</button>'}
-                    }
-                },
                 advanced: {
                     folder: 0,
                     folderName: 'Advanced',
@@ -6654,30 +7298,13 @@ c(function(){
                 }
             },
             availableBackgrounds: [
+                'beta1.png',
                 'p.png',
                 'bgBeta.png',
                 'p-bin.png',
                 'p-phonebin_1.png'
             ],
             screensaverBlockNames: [],
-            customStyleHttp: null,
-            recievedCustomStyle: function(){
-                if(apps.settings.vars.customStyleHttp.readyState === 4){
-                    if(apps.settings.vars.customStyleHttp.status === 200){
-                        apps.savemaster.vars.save('aos_system/user_custom_style', apps.settings.vars.customStyleHttp.responseText/*.split("\n").join("\\n")*/, 1);
-                        getId('aosCustomStyle').innerHTML = ufload("aos_system/user_custom_style");
-                        apps.settings.vars.customStyleHttp = null;
-                    }else{
-                        apps.prompt.vars.alert('Network error ' + apps.settings.vars.customStyleHttp.status + ' while setting Custom Style.', 'Okay', function(){}, 'Settings');
-                    }
-                }
-            },
-            downloadCustomStyle: function(url){
-                this.customStyleHttp = new XMLHttpRequest();
-                this.customStyleHttp.open('GET', url);
-                this.customStyleHttp.onreadystatechange = apps.settings.vars.recievedCustomStyle;
-                this.customStyleHttp.send();
-            },
             corsProxy: 'https://cors-anywhere.herokuapp.com/',
             saveRes: function(newX, newY){
                 ufsave('aos_system/apps/settings/saved_screen_res', newX + '/' + newY);
@@ -7709,10 +8336,30 @@ c(function(){
                     }, 'aOS');
                 }
             }
-        }, 0, "settings", "appicons/ds/STN.png"
+        }, 0, "settings", {
+            backgroundColor: "#303947",
+            foreground: "smarticons/settings/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
+    window.restartRequired = 0;
+    window.requireRestart = function(){
+        if(restartRequired !== 1){
+            restartRequired = 1;
+            apps.prompt.vars.notify("A change was made that requires a restart of AaronOS.", ["Restart", "Dismiss"], function(btn){
+                if(btn === 0){
+                    apps.settings.vars.shutDown('restart');
+                }
+                restartRequired = 2;
+            }, "AaronOS", "appicons/ds/aOS.png");
+        }
+    }
     getId('aOSloadingInfo').innerHTML = 'Smart Icon Creator';
 });
+
 c(function(){
     m('init smart icon maker');
     apps.smartIconCreator = new Application(
@@ -7816,7 +8463,10 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    
+                    if(ufload("aos_system/smarticon_settings")){
+                        smartIconOptions = JSON.parse(ufload("aos_system/smarticon_settings"));
+                        updateSmartIconStyle();
+                    }
                     break;
                 case 'shutdown':
                         
@@ -7852,9 +8502,14 @@ c(function(){
             		color: "#252F3A"
             	}
             },
-            saveRadiuses: function(radiuses){
+            saveRadiuses: function(radiuses, nosave){
                 if(radiuses){
-                    
+                    var tempR = radiuses;
+                    smartIconOptions.radiusTopLeft = tempR[0];
+                    smartIconOptions.radiusTopRight = tempR[1];
+                    smartIconOptions.radiusBottomLeft = tempR[2];
+                    smartIconOptions.radiusBottomRight = tempR[3];
+                    updateSmartIconStyle();
                 }else{
                     var tempR = [
                         getId("smartIconSettings_tl").value, getId("smartIconSettings_tr").value,
@@ -7866,20 +8521,30 @@ c(function(){
                     smartIconOptions.radiusBottomRight = tempR[3];
                     updateSmartIconStyle();
                 }
+                if(!nosave){
+                    saveSmartIconStyle();
+                }
             },
             toggleBG: function(nosave){
                 smartIconOptions.backgroundOpacity = Math.abs(smartIconOptions.backgroundOpacity - 1);
                 updateSmartIconStyle();
+                if(!nosave){
+                    saveSmartIconStyle();
+                }
             },
-            setColor: function(color){
+            setColor: function(color, nosave){
                 if(color){
-                    
+                    smartIconOptions.bgColor = color;
+                    updateSmartIconStyle();
                 }else{
                     smartIconOptions.bgColor = getId("smartIconSettings_bgcolor").value;
                     updateSmartIconStyle();
                 }
+                if(!nosave){
+                    saveSmartIconStyle();
+                }
             }
-        }, 2, 'smartIconSettings', {
+        }, 1, 'smartIconSettings', {
         	backgroundColor: "#303947",
         	foreground: "smarticons/aOS/fg.png",
         	backgroundBorder: {
@@ -8409,6 +9074,8 @@ c(function(){
                 }
                 
                 try{
+                    console.log(filename);
+                    console.log(apps.bash.vars.translateDir(filename));
                     var filecontent = apps.bash.vars.getRealDir(filename);
                 }catch(err){
                     apps.prompt.vars.alert("Failed to open " + filename + ": " + err, "Okay", function(){}, "Text Editor");
@@ -8517,17 +9184,20 @@ c(function(){
                     }
                 }
             }
-        }, 0, "notepad2", "appicons/ds/TE.png"
+        }, 0, "notepad2", {
+            backgroundColor: "#303947",
+            foreground: "smarticons/textEditor/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
     getId('aOSloadingInfo').innerHTML = 'Files';
 });
 c(function(){
     m('init files');
     files = {
-        customStyles: {
-            glassWindows1: ".winHTML{\n    background:none;\n}\n.darkMode .winHTML{\n    background:none;\n}\n#FIL2cntn, #FIL2sidebar{\n    background:none !important;\n}\n#FIL2tbl div{\n    background:#FFF;\n}\n.darkMode #FIL2tbl div{\n    background:#000;\n}\n#FIL2search{\n    border-bottom-left-radius:5px;\n    border-bottom-right-radius:5px;\n}\n#win_notepad2_html div{\n    background:none !important;\n}\n#win_notepad2_html div div{\n    background:#FFF !important;\n}\n.darkMode #win_notepad2_html div div{\n    background:#000 !important;\n}\n#stickyNotePad{\n    background:none !important;\n    box-shadow:none;\n}\n.darkMode #stickyNotePad{\n    color:#FFF;\n}",
-            glassWindows2: ".winHTML{\n    background:rgba(255, 255, 255, 0.1);\n}\n.darkMode .winHTML{\n    background:rgba(0, 0, 0, 0.1);\n}\n#FIL2cntn, #FIL2sidebar{\n    background:rgba(255, 255, 255, 0.1) !important;\n}\n.darkMode #FIL2cntn, .darkMode #FIL2sidebar{\n    background:rgba(0, 0, 0, 0.1) !important;\n}\n#FIL2tbl div{\n    background:#FFF;\n}\n.darkMode #FIL2tbl div{\n    background:#000;\n}\n#FIL2search{\n    border-bottom-left-radius:5px;\n    border-bottom-right-radius:5px;\n}\n#win_notepad2_html div{\n    background:rgba(255, 255, 255, 0.1) !important;\n}\n.darkMode #win_notepad2_html div{\n    background:rgba(0, 0, 0, 0.1) !important;\n}\n#win_notepad2_html div div{\n    background:#FFF !important;\n}\n.darkMode #win_notepad2_html div div{\n    background:#000 !important;\n}\n#stickyNotePad{\n    background:rgba(255, 255, 127, 0.1) !important;\n}"
-        },
         changelog_old:
             "OLD CHANGELOG AND PLANNING SHEET\nThis could be found in a very large comment at the very top of the main script file before this file addition.\n\n" +
             "By Aaron Adams, original somewhere in codecademy.com/MineAndCraft12/codebits\n" +
@@ -8841,10 +9511,11 @@ c(function(){
             "05/14/2019: B0.16.2.0\n + Added Obelisk and Smoke Rings to music Player.\n + Added Pride colors to Music Player.\n : Renamed several colors in visualizer.\n : Drastic performance improvements in most of Music Player's visualizers. (typically double framerate in the really bad ones)\n : Reorganized visualizer and color menus in music player.\n\n" +
             "05/14/2019: B0.16.2.1\n + Added Window Color to Music Player (colors aOS windows to the beat)\n + Added Spikes 1:1 to Music Player (spikes, but not distorted)\n + Added microphone option to Music Player.\n : Music Player's Monstercat and Obelisk bars are now sitting on a slightly reflective surface in Smoke mode.\n\n" +
             "05/18/2019: B0.16.2.2\n + Added buildMarquee(text), to create a custom marquee.\n : Changed all custom attributes to use data- names.\n\n" +
-            "05/25/2019: B0.16.3.0\n + Yet another huge music player update. Too much content / fixes over several days to list everything.",
+            "05/25/2019: B0.16.3.0\n + Yet another huge music player update. Too much content / fixes over several days to list everything.\n\n" +
+            "07/13/2019: B1.0.0.0\n + Added the aOS Hub, where users can search for apps, scripts, etc.\n + Repository and package system added.\n : Apps moved to repository: Cookie Clicker, Calculator, GTK2aOS, JS Paint.\n : Fixed filenames and directories containing the / character breaking bash.\n - Removed old music visualizer.\n + Restored ability to delete files in USERFILES.\n + Boot Script editor now supports multiple boot scripts.\n : List of Custom Styles is moved to repository.\n + Custom Style system can now handle multiple 3rd-party stylesheets as well as the user's style.\n + Settings menu for Smart Icons.\n + Added Accumulative Spikes to Music Player.\n : Bash prompt uses first four characters of ID rather than the whole thing.\n + New default desktop background.\n + Lots of new icons.\n - Window titles no longer become transparent when defocused.\n + Apps can now tell aOS to prompt the user if a restart is required.\n : PostMessage system now uses JSON instead of strings.\n + Major upgrade to PostMessage.\n : Fixed file deletion.\n : Cropped cursor set to avoid deprecation of larger size.\n : Fixed error on displaying a notification with no preview image.\n : Fixed NORAA always listening if the setting was modified rather than if it was enabled.\n : Fixed Files 2 sometimes opening the old text editor instead of the new one.\n : Fixed bash cd not returning to current workdir on failure.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B0.16.3.0 (05/25/2019) r0';
+    window.aOSversion = 'B1.0.0.0 (07/13/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -9357,6 +10028,23 @@ c(function(){
             },
             back: function(){
                 this.currLoc = this.currLoc.split("/");
+                var cleanEscapeRun = 0;
+                while(!cleanEscapeRun){
+                    cleanEscapeRun = 1;
+                    for(var i = 0; i < this.currLoc.length - 1; i++){
+                        if(this.currLoc[i][this.currLoc[i].length - 1] === '\\'){
+                            this.currLoc.splice(i, 2, this.currLoc[i].substring(0, this.currLoc[i].length) + '/' + this.currLoc[i + 1]);
+                            cleanEscapeRun = 0;
+                            break;
+                        }
+                    }
+                    if(cleanEscapeRun && this.currLoc.length > 0){
+                        if(this.currLoc[this.currLoc.length - 1][this.currLoc[this.currLoc.length - 1].length - 1] === '\\'){
+                            this.currLoc.splice(i, 1, this.currLoc[this.currLoc.length - 1].substring(0, this.currLoc[this.currLoc.length - 1].length) + '/');
+                            cleanEscapeRun = 0;
+                        }
+                    }
+                }
                 this.currLoc.pop();
                 this.currLoc.pop();
                 this.currLoc = this.currLoc.join("/") + '/';
@@ -9367,12 +10055,22 @@ c(function(){
                 this.update();
             },
             next: function(nextName){
-                this.currLoc += nextName;
+                var tempNextName = nextName;
+                if(tempNextName.indexOf('/') !== -1 && tempNextName.indexOf('/') !== tempNextName.length - 1){
+                    tempNextName = tempNextName.split('/');
+                    if(tempNextName[tempNextName.length - 1] === ''){
+                        tempNextName.pop();
+                        tempNextName = tempNextName.join('\\/') + '/';
+                    }else{
+                        tempNextName = tempNextName.join('\\/');
+                    }
+                }
+                this.currLoc += tempNextName;
                 this.update();
             },
             mkdir: function(){
                 if(this.currLoc === '/'){
-                    apps.prompt.vars.alert('Please navigate to a directory to create a new folder.', 'Okay', function(){}, 'FIle Manager');
+                    apps.prompt.vars.alert('Please navigate to a directory to create a new folder.', 'Okay', function(){}, 'File Manager');
                 }else if(this.currLoc.indexOf('/USERFILES/') === 0){
                     apps.prompt.vars.prompt('Enter a name for the new folder.<br><br>Folder will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
                         if(str){
@@ -9395,12 +10093,12 @@ c(function(){
                         this.update();
                     }.bind(this), "File Manager");
                 }else{
-                    apps.prompt.vars.alert('Please navigate to a directory to create a new folder.', 'Okay', function(){}, 'FIle Manager');
+                    apps.prompt.vars.alert('Please navigate to a directory to create a new folder.', 'Okay', function(){}, 'File Manager');
                 }
             },
             mkfile: function(){
                 if(this.currLoc === '/'){
-                    apps.prompt.vars.alert('Please navigate to a directory to create a new file.', 'Okay', function(){}, 'FIle Manager');
+                    apps.prompt.vars.alert('Please navigate to a directory to create a new file.', 'Okay', function(){}, 'File Manager');
                 }else if(this.currLoc.indexOf('/USERFILES/') === 0){
                     apps.prompt.vars.prompt('Enter a name for the new file.<br><br>File will be created in ' + this.currLoc + '<br><br>Leave blank to cancel.', 'Submit', function(str){
                         if(str){
@@ -9423,9 +10121,53 @@ c(function(){
                         this.update();
                     }.bind(this), "File Manager");
                 }else{
-                    apps.prompt.vars.alert('Please navigate to a directory to create a new file.', 'Okay', function(){}, 'FIle Manager');
+                    apps.prompt.vars.alert('Please navigate to a directory to create a new file.', 'Okay', function(){}, 'File Manager');
                 }
                 
+            },
+            deleteItem: function(itemPath){
+                apps.prompt.vars.confirm("Are you sure you want to delete this item?<br><br>" + itemPath + "<br><br>WARNING: Deleting important files can cause major issues!", ["No, keep", "Yes, delete"], (btn) => {
+                    if(btn === 1){
+                        if(typeof apps.bash.vars.getRealDir === "object"){
+                            sh("rmdir " + itemPath);
+                        }else{
+                            sh("rm " + itemPath);
+                        }
+                        apps.files2.vars.update();
+                    }
+                }, 'File Manager');
+            },
+            deleteItemUF: function(itemPath){
+                apps.prompt.vars.confirm("Are you sure you want to delete this item?<br><br>" + itemPath + "<br><br>WARNING: This cannot be undone!", ["No, keep", "Yes, delete"], (btn) => {
+                    if(btn === 1){
+                        itemPath = itemPath.split('/');
+                        if(itemPath[0] === ""){
+                            itemPath.shift();
+                        }
+                        if(itemPath[0] === "USERFILES"){
+                            itemPath.shift();
+                        }
+                        itemPath = itemPath.join('/');
+                        ufdel(itemPath);
+                        apps.files2.vars.update();
+                    }
+                }, 'File Manager');
+            },
+            deleteItemLF: function(itemPath){
+                apps.prompt.vars.confirm("Are you sure you want to delete this item?<br><br>" + itemPath + "<br><br>WARNING: This cannot be undone!", ["No, keep", "Yes, delete"], (btn) => {
+                    if(btn === 1){
+                        itemPath = itemPath.split('/');
+                        if(itemPath[0] === ""){
+                            itemPath.shift();
+                        }
+                        if(itemPath[0] === "USERFILES"){
+                            itemPath.shift();
+                        }
+                        itemPath = itemPath.join('/');
+                        lfdel(itemPath);
+                        apps.files2.vars.update();
+                    }
+                }, 'File Manager');
             },
             navigate: function(newName){
                 if(newName[0] !== "/"){
@@ -9485,6 +10227,14 @@ c(function(){
                     },
                     "Folder.with.dots": {
                         secretMessage: "Yeet"
+                    },
+                    "file/with/slashes": "Wowza",
+                    "file/with/slash/at/end/": "oh boy",
+                    "folder/with/slash/at/end/": {
+                        "folder": {
+                            "wat": "odang"
+                        },
+                        "file": "oooooh"
                     }
                 },
                 stringFile: "Hello World",
@@ -9567,15 +10317,15 @@ c(function(){
                             for(var item in this.currDirList){
                                 if(this.currDirList[item]){
                                     // if item is a folder
-                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
-                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/" && this.currDirList[item][this.currDirList[item].length - 2] !== "\\"){
+                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.files2.vars.deleteItemUF(\\\'' + (this.currLoc + this.currDirList[item]) + '\\\')\'])">' +
                                             '<img src="files2/small/folder.png"> ' +
-                                            this.currDirList[item] +
+                                            this.currDirList[item].split('\\/').join('/') +
                                             '</div>';
                                     }else{
-                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.files2.vars.deleteItemUF(\\\'' + (this.currLoc + this.currDirList[item]) + '\\\')\'])">' +
                                             '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
-                                            this.currDirList[item] + '<span style="opacity:0.5;float:right;">' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
+                                            this.currDirList[item].split('\\/').join('/') + '<span style="opacity:0.5;float:right;">' + this.filetype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
                                             '</div>';
                                     }
                                 }
@@ -9584,15 +10334,15 @@ c(function(){
                             for(var item in this.currDirList){
                                 if(this.currDirList[item]){
                                     // if item is a folder
-                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
-                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/" && this.currDirList[item][this.currDirList[item].length - 2] !== "\\"){
+                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.files2.vars.deleteItemLF(\\\'' + (this.currLoc + this.currDirList[item]) + '\\\')\'])">' +
                                             '<img src="files2/small/folder.png"> ' +
-                                            this.currDirList[item] +
+                                            this.currDirList[item].split('\\/').join('/') +
                                             '</div>';
                                     }else{
-                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.files2.vars.deleteItemLF(\\\'' + (this.currLoc + this.currDirList[item]) + '\\\')\'])">' +
                                             '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
-                                            this.currDirList[item] + '<span style="opacity:0.5;float:right;">' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
+                                            this.currDirList[item].split('\\/').join('/') + '<span style="opacity:0.5;float:right;">' + this.filetype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
                                             '</div>';
                                     }
                                 }
@@ -9601,16 +10351,16 @@ c(function(){
                             for(var item in this.currDirList){
                                 if(this.currDirList[item]){
                                     // if item is a folder
-                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
-                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/" && this.currDirList[item][this.currDirList[item].length - 2] !== "\\"){
+                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'+Delete\', \'\'])">' +
                                             //'<img class="FIL2aosAppIcon" src="' + (apps[this.currDirList[item].split('/')[0]].appWindow.appImg || "appicons/ds/redx.png") + '"> ' +
                                             buildSmartIcon(16, apps[this.currDirList[item].split('/')[0]].appWindow.appImg) + ' ' +
-                                            this.currDirList[item] +
+                                            this.currDirList[item].split('\\/').join('/') +
                                             '</div>';
                                     }else{
-                                        temphtml += '<div class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.bash.vars.translateDir(this.currLoc + this.currDirList[item]).split("'").join("\\\'") + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\\\');toTop(apps.properties)\', \'+Delete\', \'\'])">' +
                                             '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
-                                            this.currDirList[item] + '<span style="opacity:0.5;float:right;">' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
+                                            this.currDirList[item].split('\\/').join('/') + '<span style="opacity:0.5;float:right;">' + this.filetype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
                                             '</div>';
                                     }
                                 }
@@ -9619,15 +10369,15 @@ c(function(){
                             for(var item in this.currDirList){
                                 if(this.currDirList[item]){
                                     // if item is a folder
-                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/"){
-                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                    if(this.currDirList[item][this.currDirList[item].length - 1] === "/" && this.currDirList[item][this.currDirList[item].length - 2] !== "\\"){
+                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.files2.vars.deleteItem(\\\'' + (this.currLoc + this.currDirList[item]) + '\\\')\'])">' +
                                             '<img src="files2/small/folder.png"> ' +
-                                            this.currDirList[item] +
+                                            this.currDirList[item].split('\\/').join('/') +
                                             '</div>';
                                     }else{
-                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'/window' + (this.currLoc + this.currDirList[item]) + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
+                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'/window' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\\\');toTop(apps.properties)\', \'+Delete\', \'apps.files2.vars.deleteItem(\\\'' + (this.currLoc + this.currDirList[item]) + '\\\')\'])">' +
                                             '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
-                                            this.currDirList[item] + '<span style="opacity:0.5;float:right;">' + (typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
+                                            this.currDirList[item].split('\\/').join('/') + '<span style="opacity:0.5;float:right;">' + this.filetype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
                                             '</div>';
                                     }
                                 }
@@ -9648,6 +10398,23 @@ c(function(){
                 if(pathSplit[pathSplit.length - 1] === ""){
                     pathSplit.pop();
                 }
+                var cleanEscapeRun = 0;
+                    while(!cleanEscapeRun){
+                        cleanEscapeRun = 1;
+                        for(var j = 0; j < pathSplit.length - 1; j++){
+                            if(pathSplit[j][pathSplit[j].length - 1] === '\\'){
+                                pathSplit.splice(j, 2, pathSplit[j].substring(0, pathSplit[j].length) + '/' + pathSplit[j + 1]);
+                                cleanEscapeRun = 0;
+                                break;
+                            }
+                        }
+                        if(cleanEscapeRun && pathSplit.length > 0){
+                            if(pathSplit[pathSplit.length - 1][pathSplit[pathSplit.length - 1].length - 1] === '\\'){
+                                pathSplit.splice(j, 1, pathSplit[pathSplit.length - 1].substring(0, pathSplit[pathSplit.length - 1].length) + '/');
+                                cleanEscapeRun = 0;
+                            }
+                        }
+                    }
                 var navDepth = 0;
                 var navPath = "/";
                 var tempHTML = '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.update()" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \'-Properties\', \'\', \'_Delete\', \'\'])">' +
@@ -9659,12 +10426,12 @@ c(function(){
                         tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + navPath + '\';apps.files2.vars.next(\'' + pathSplit[i] + '/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (navPath + pathSplit[i]) + '/\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
                             //'<img class="FIL2aosAppIcon" src="' + (apps[pathSplit[i]] || {appWindow:{appImg:"appicons/ds/redx.png"}}).appWindow.appImg + '"> ' +
                             buildSmartIcon(16, (apps[pathSplit[i]] || {appWindow:{appImg:{foreground:"appicons/ds/redx.png"}}}).appWindow.appImg) + ' ' +
-                            pathSplit[i] + "/" +
+                            pathSplit[i].split('\\/').join('/') + "/" +
                             '</div>';
                     }else{
                         tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + navPath + '\';apps.files2.vars.next(\'' + pathSplit[i] + '/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (navPath + pathSplit[i]) + '/\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
                             '<img src="files2/small/folder.png"> ' +
-                            pathSplit[i] + '/' +
+                            pathSplit[i].split('\\/').join('/') + '/' +
                             '</div>';
                     }
                     navPath += pathSplit[i] + '/';
@@ -9690,6 +10457,23 @@ c(function(){
                 var tempHTML = '';
                 for(var i in this.favorites){
                     var currPath = this.favorites[i].split('/');
+                    var cleanEscapeRun = 0;
+                    while(!cleanEscapeRun){
+                        cleanEscapeRun = 1;
+                        for(var j = 0; j < currPath.length - 1; j++){
+                            if(currPath[j][currPath[j].length - 1] === '\\'){
+                                currPath.splice(j, 2, currPath[j].substring(0, currPath[j].length) + '/' + currPath[j + 1]);
+                                cleanEscapeRun = 0;
+                                break;
+                            }
+                        }
+                        if(cleanEscapeRun && currPath.length > 0){
+                            if(currPath[currPath.length - 1][currPath[currPath.length - 1].length - 1] === '\\'){
+                                currPath.splice(j, 1, currPath[currPath.length - 1].substring(0, currPath[currPath.length - 1].length) + '/');
+                                cleanEscapeRun = 0;
+                            }
+                        }
+                    }
                     if(currPath[currPath.length - 1] === ""){
                         currPath.pop();
                     }
@@ -9703,16 +10487,17 @@ c(function(){
                             '</div>';
                     }else{
                         var currName = currPath[currPath.length - 1];
+                        console.log(this.favorites, i);
                         if(currPath.indexOf("apps") === 0 && currPath.length === 2){
                             tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + this.favorites[i] + '\';apps.files2.vars.update()" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + this.favorites[i] + '\\\');toTop(apps.properties)\', \'+Remove Favorite\', \'apps.files2.vars.toggleFavorite(\\\'' + this.favorites[i] + '\\\')\', \'_Delete\', \'\'])">' +
                                 //'<img class="FIL2aosAppIcon" src="' + (apps[currName] || {appWindow:{appImg:"appicons/ds/redx.png"}}).appWindow.appImg + '"> ' +
                                 buildSmartIcon(16, (apps[currName] || {appWindow:{appImg:{foreground:"appicons/ds/redx.png"}}}).appWindow.appImg) + ' ' +
-                                currName + "/" +
+                                currName.split('\\/').join('/') + "/" +
                                 '</div>';
                         }else{
                             tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + this.favorites[i] + '\';apps.files2.vars.update()" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + this.favorites[i] + '\\\');toTop(apps.properties)\', \'+Remove Favorite\', \'apps.files2.vars.toggleFavorite(\\\'' + this.favorites[i] + '\\\')\', \'_Delete\', \'\'])">' +
                                 '<img src="files2/small/folder.png"> ' +
-                                currName + '/' +
+                                currName.split('\\/').join('/') + '/' +
                                 '</div>';
                         }
                     }
@@ -9735,7 +10520,14 @@ c(function(){
                 }
                 this.updateFavorites();
             }
-        }, 0, "files2", "appicons/ds/FIL.png"
+        }, 0, "files2", {
+            backgroundColor: "#303947",
+            foreground: "smarticons/files/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
     getId('aOSloadingInfo').innerHTML = 'Changelog';
 });
@@ -10807,17 +11599,33 @@ c(function(){
         {
             appInfo: 'Use this tool to convert any compatible webpage into an app for aOS!<br><br>If you need to delete an app made with this tool, then open its window, right click its title bar, and click "About App". There will be a file name in that info window. You can delete that file in File Manager -> USERFILES, and the app will be uninstalled.',
             actions: {
+                context: {
+                    menu: function(input){
+                        return "";
+                    }
+                },
                 fs: {
-                    read: function(input){
-                        if(typeof USERFILES[input[0]] === "string"){
-                            return "success:fs:read:" + USERFILES[input[0]];
-                        }else{
-                            return "error:fs:read:file not found:" + input[0];
+                    read_uf: function(input){
+                        return ufload(input.targetFile);
+                    },
+                    write_uf: function(input){
+                        try{
+                            ufsave(input.targetFile, input.content);
+                            return "success";
+                        }catch(err){
+                            return "error: " + err
                         }
                     },
-                    write: function(input){
-                        apps.saveMaster.vars.save(input[0], input[1], 1);
-                        return "success:fs:write:" + input[0];
+                    read_lf: function(input){
+                        return lfload(input.targetFile);
+                    },
+                    write_lf: function(input){
+                        try{
+                            lfsave(input.targetFile, input.content);
+                            return "success";
+                        }catch(err){
+                            return "error: " + err
+                        }
                     }
                 },
                 prompt: {
@@ -10834,47 +11642,73 @@ c(function(){
                         
                     }
                 },
-                readsetting: {
+                getstyle: {
                     darkmode: function(input){
-                        return "success:readsetting:darkmode:" + numtf(darkMode);
+                        return numtf(darkMode);
                     },
                     customstyle: function(input){
-                        return "success:readsetting:customstyle:" + getId("aosCustomStyle").innerHTML;
+                        var tempStyleLinks = [];
+                        var tempStyleElements = document.getElementsByClassName('customstyle_appcenter');
+                        for(var i = 0; i < tempStyleElements.length; i++){
+                            if(tempStyleElements[i].tagName === "LINK"){
+                                tempStyleLinks.push([tempStyleElements[i].href, "link"]);
+                            }else if(tempStyleElements[i].tagName === "STYLE"){
+                                tempStyleLinks.push([tempStyleElements[i].innerHTML, "literal"]);
+                            }
+                        }
+                        return {
+                            customStyle: getId("aosCustomStyle").innerHTML,
+                            styleLinks: tempStyleLinks
+                        };
                     }
                 },
+                readsetting: {
+                    
+                },
                 writesetting: {
-                    darkmode: function(input){
-                        if(input[0] === "1"){
-                            if(!darkMode){
-                                apps.settings.vars.togDarkMode();
-                            }
-                            return "success:writesetting:darkmode:1"
-                        }else if(input[0] === "0"){
-                            if(darkMode){
-                                apps.settings.vars.togDarkMode();
-                            }
-                            return "success:writesetting:darkmode:0"
-                        }else{
-                            return "error:writesetting:darkmode:invalid value"
-                        }
-                    }
+
                 },
                 js: {
                     exec: function(input){
                         try{
-                            return "success:js:eval:" + eval(input[0]);
+                            return eval(input.content);
                         }catch(error){
-                            return "error:js:eval:" + error;
+                            return "Error: " + error;
+                        }
+                    }
+                },
+                appWindow: {
+                    set_caption: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.setCaption(input.content);
+                            }
+                        }
+                    },
+                    disable_padding: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.paddingMode(0);
+                            }
+                        }
+                    },
+                    enable_padding: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.paddingMode(1);
+                            }
                         }
                     }
                 }
             },
             actionDesc: {
-                fs: "access your USERFILES on aOS",
+                fs: "access your files on aOS",
                 prompt: "show prompts and notifications on aOS",
                 readsetting: "read your settings on aOS",
                 writesetting: "change your settings on aOS",
-                js: "execute JavaScript code on aOS"
+                js: "execute JavaScript code on aOS (DANGEROUS!)",
+                getstyle: "theme itself to aOS",
+                context: "use various context menus"
             },
             commandExamples: {
                 fs: {
@@ -10918,13 +11752,18 @@ c(function(){
                 },
                 js: {
                     exec: "Execute JS code on aOS"
+                },
+                appWindow: {
+                    set_caption: "Set the caption of the app window",
+                    disable_padding: "Disable default 3px of padding",
+                    enabled_padding: "Enable default 3px of padding"
                 }
             },
             alertAPI: function(){
                 apps.prompt.vars.alert('<div style="display:inline-block;position:relative;text-align:left"><h1>Web App API</h1>' +
                 'Using JavaScript\'s postMessage function, you can build functionality into your web app that lets you interface with aOS.<br><br>' +
                 'In order to send a request to aOS, you can use the following code:<br>' +
-                '<span style="background:#CCC;font-family:aosProFont, monospace">window.parent.postMessage("aos:command:goes:here", "https://aaron-os-mineandcraft12.c9.io");</span><br><br>' +
+                '<span style="background:#CCC;font-family:aosProFont, monospace">window.parent.postMessage("aos:command:goes:here", "https://aaronos.dev");</span><br><br>' +
                 'In order to recieve a reply from aOS, you can use the following code:<br>' +
                 '<div style="background:#CCC;position:relative;display:inline-block;font-family:aosProFont, monospace;text-align:left">window.addEventListener("message", function(msg){<br>' +
                 '&nbsp; if(String(msg.data).indexOf("aosreply:") === 0){<br>' +
@@ -10976,20 +11815,17 @@ c(function(){
                 return str;
             },
             trustedApps: {
-                "https://aaron-os-mineandcraft12.c9.io": {
-                    "fs": "true",
-                    "prompt": "true",
-                    "readsetting": "true",
-                    "writesetting": "true",
-                    "js": "true"
-                },
                 "https://aaronos.dev": {
                     "fs": "true",
-                    "prompt": "true",
                     "readsetting": "true",
                     "writesetting": "true",
                     "js": "true"
                 }
+            },
+            globalPermissions: {
+                "getstyle": "true",
+                "appWindow": "true",
+                "prompt": "true"
             },
             updatePermissions: function(){
                 ufsave("aos_system/apps/webAppMaker/trusted_apps", JSON.stringify(apps.webAppMaker.vars.trustedApps, null, 4));
@@ -11020,72 +11856,188 @@ c(function(){
             },
             recieveMessage: function(msg){
                 if(typeof msg.data === "string"){
-                    if(msg.data.indexOf("aos:") === 0){
-                        var msgData = msg.data.split(":");
-                        msgData.shift();
-                        if(msgData.length > 1){
-                            if(msgData[0] === "permission"){
-                                if(apps.webAppMaker.vars.actions[msgData[1]]){
-                                    if(!apps.webAppMaker.vars.trustedApps[msg.origin]){
-                                        apps.webAppMaker.vars.trustedApps[msg.origin] = {};
-                                    }
-                                    if(typeof apps.webAppMaker.vars.trustedApps[msg.origin][msgData[1]] === "string"){
-                                        apps.webAppMaker.vars.postReply("permission:" + msgData[1] + ":" + apps.webAppMaker.vars.trustedApps[msg.origin][msgData[1]], msg.origin, msg.source);
-                                    }else{doLog(typeof apps.webAppMaker.vars.trustedApps[msg.origin][msgData[1]]);
-                                        apps.webAppMaker.vars.askPermission(msg.origin, msgData[1]);
-                                    }
-                                }else{
-                                    apps.webAppMaker.vars.postReply("error:permission not found:" + msgData[1], msg.origin, msg.source);
-                                }
-                            }else{
-                                if(apps.webAppMaker.vars.trustedApps[msg.origin]){
-                                    if(apps.webAppMaker.vars.actions[msgData[0]]){
-                                        if(apps.webAppMaker.vars.trustedApps[msg.origin][msgData[0]] === "true"){
-                                            if(apps.webAppMaker.vars.actions[msgData[0]][msgData[1]]){
-                                                try{
-                                                    apps.webAppMaker.vars.postReply(apps.webAppMaker.vars.actions[msgData.shift()][msgData.shift()](msgData), msg.origin, msg.source);
-                                                }catch(err){
-                                                    apps.webAppMaker.vars.postReply("error:failed to execute command:" + err, msg.origin, msg.source);
-                                                };
-                                            }else{
-                                                apps.webAppMaker.vars.postReply("error:command not found:" + msgData[1], msg.origin, msg.source);
-                                            }
-                                        }else{
-                                            apps.webAppMaker.vars.postReply("error:permission not granted:" + msgData[0], msg.origin, msg.source);
-                                        }
-                                    }else{
-                                        apps.webAppMaker.vars.postReply("error:command group not found:" + msgData[0], msg.origin, msg.source);
-                                    }
-                                }else{
-                                    apps.webAppMaker.vars.postReply("error:origin not trusted:" + msg.origin.split("https://")[1], msg.origin, msg.source);
-                                }
-                            }
-                        }else{
-                            apps.webAppMaker.vars.postReply("error:invalid message", msg.origin, msg.source);
-                        }
-                    }else if(msg.data.indexOf("aosreply:") === 0){
-                        doLog(apps.webAppMaker.vars.sanitize(msg.data), '#ACE');
-                    }else{
-                        doLog("postMessage from " + msg.origin + ": " + apps.webAppMaker.vars.sanitize(msg.data), "#ACE");
-                    }
+                    doLog("String-formatted request is no longer supported. " + msg.origin, "#F00");
                 }else{
                     if(typeof msg.data === "object"){
-                        doLog("postMessage object from " + msg.origin + ":");
-                        debugArray(msg.data, 1);
+                        if(msg.data.messageType){
+                            if(msg.data.messageType === "request"){
+                                var returnMessage = {
+                                    messageType: "response",
+                                    conversation: ""
+                                };
+
+                                if(!msg.data.hasOwnProperty("action")){
+                                    returnMessage = {
+                                        messageType: "response",
+                                        content: "Error - no action provided"
+                                    };
+                                    if(msg.data.conversation){
+                                        returnMessage.conversation = msg.data.conversation;
+                                    }
+                                    apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                    return;
+                                }
+
+                                if(msg.data.action.split(":")[0] === "permission"){
+                                    returnMessage = {
+                                        messageType: "response",
+                                        content: "asking: " + msg.data.action.split(":")[1]
+                                    };
+                                    if(msg.data.conversation){
+                                        returnMessage.conversation = msg.data.conversation;
+                                    }
+
+                                    if(msg.data.action.split(":").length > 1){
+                                        if(apps.webAppMaker.vars.globalPermissions.hasOwnProperty(msg.data.action.split(":")[1])){
+                                            returnMessage.content = "granted: " + msg.data.action.split(":")[1];
+                                        }else if(apps.webAppMaker.vars.actions.hasOwnProperty(msg.data.action.split(":")[1])){
+                                            if(apps.webAppMaker.vars.trustedApps.hasOwnProperty(msg.origin)){
+                                                if(apps.webAppMaker.vars.trustedApps[msg.origin].hasOwnProperty(msg.data.action.split(":")[1])){
+                                                    if(apps.webAppMaker.vars.trustedApps[msg.origin][msg.data.action.split(":")[1]] === "true"){
+                                                        returnMessage.content = "granted: " + msg.data.action.split(":")[1];
+                                                    }
+                                                }
+                                            }
+                                        }else{
+                                            returnMessage.content = "unknown: " + msg.data.action.split(":")[1];
+                                        }
+                                    }
+
+                                    if(returnMessage.content.indexOf("asking") === 0){
+                                        if(msg.data.action.split(":").length === 1){
+                                            apps.webAppMaker.vars.askPermission(null, msg.origin, msg.source, (msg.data.conversation || null));
+                                        }else if(apps.webAppMaker.vars.actions.hasOwnProperty(msg.data.action.split(":")[1])){
+                                            apps.webAppMaker.vars.askPermission(msg.data.action.split(":")[1], msg.origin, msg.source, (msg.data.conversation || null));
+                                        }
+                                    }
+
+                                    apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                    return;
+                                }
+
+                                if(!apps.webAppMaker.vars.actions.hasOwnProperty(msg.data.action.split(":")[0])){
+                                    returnMessage = {
+                                        messageType: "response",
+                                        content: "Error - permission not recognized"
+                                    };
+                                    if(msg.data.conversation){
+                                        returnMessage.conversation = msg.data.conversation;
+                                    }
+                                    apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                    return;
+                                }
+                                
+                                if(!apps.webAppMaker.vars.trustedApps.hasOwnProperty(msg.origin)){
+                                    if(!apps.webAppMaker.vars.globalPermissions.hasOwnProperty(msg.data.action.split(":")[0])){
+                                        returnMessage = {
+                                            messageType: "response",
+                                            content: "Error - origin not recognized"
+                                        };
+                                        if(msg.data.conversation){
+                                            returnMessage.conversation = msg.data.conversation;
+                                        }
+                                        apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                        return;
+                                    }
+                                }else{
+                                    if(
+                                        !apps.webAppMaker.vars.trustedApps[msg.origin].hasOwnProperty(msg.data.action.split(":")[0]) &&
+                                        !apps.webAppMaker.vars.globalPermissions.hasOwnProperty(msg.data.action.split(":")[0])
+                                    ){
+                                        returnMessage = {
+                                            messageType: "response",
+                                            content: "Error - permission not granted by user"
+                                        };
+                                        if(msg.data.conversation){
+                                            returnMessage.conversation = msg.data.conversation;
+                                        }
+                                        apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                        return;
+                                    }
+                                    if(apps.webAppMaker.vars.trustedApps[msg.origin][msg.data.action.split(':')[0]] !== "true"){
+                                        if(apps.webAppMaker.vars.globalPermissions.hasOwnProperty(msg.data.action.split(":")[0])){
+                                            if(apps.webAppMaker.vars.globalPermissions[msg.data.action.split(":")[0]] !== "true"){
+                                                returnMessage = {
+                                                    messageType: "response",
+                                                    content: "Error - permission not granted by user"
+                                                };
+                                                if(msg.data.conversation){
+                                                    returnMessage.conversation = msg.data.conversation;
+                                                }
+                                                apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                                return;
+                                            }
+                                        }else{
+                                            returnMessage = {
+                                                messageType: "response",
+                                                content: "Error - permission not granted by user"
+                                            };
+                                            if(msg.data.conversation){
+                                                returnMessage.conversation = msg.data.conversation;
+                                            }
+                                            apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                            return;
+                                        }
+                                    }
+                                }
+
+                                returnMessage.messageType = "response";
+                                if(msg.data.conversation){
+                                    returnMessage.conversation = msg.data.conversation;
+                                }
+                                returnMessage.content = apps.webAppMaker.vars.actions[msg.data.action.split(":")[0]][msg.data.action.split(":")[1]](msg.data, msg.source, msg.origin);
+                                apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                            }else{
+                                doLog("postMessage from " + msg.origin + ": ", "#ACE");
+                                console.log(msg.data);
+                                debugArray(msg.data);
+                            }
+                        }else{
+                            doLog("postMessage from " + msg.origin + ": ", "#ACE");
+                            console.log(msg.data);
+                            debugArray(msg.data);
+                        }
                     }else{
                         doLog("postMessage from " + msg.origin + ": " + apps.webAppMaker.vars.sanitize(msg.data), "#ACE");
                     }
                 }
             },
             postReply: function(message, origin, src){
-                src.postMessage("aosreply:" + message, origin);
+                src.postMessage(message, origin);
             },
-            askPermission: function(origin, permission){
-                apps.prompt.vars.confirm("<span id='WAPpermissionOrigin'>" + origin + "</span> is requesting permission to " + this.actionDesc[permission] + "." + "<br><br>Permission Code: <span id='WAPpermissionType'>" + permission + "</span>", ['Deny', 'Allow'], function(btn){
-                    apps.webAppMaker.vars.trustedApps[getId("WAPpermissionOrigin").innerHTML][getId("WAPpermissionType").innerHTML] = "" + numtf(btn);
-                    apps.webAppMaker.vars.updatePermissions();
-                    //apps.webAppMaker.vars.postReply("permission:" + getId("WAPpermissionType").innerHTML + ":" + numtf(btn), getId("WAPpermissionOrigin").innerHTML);
-                }, 'AaronOS');
+            askPermission: function(permission, origin, source, conv){
+                if(permission){
+                    apps.prompt.vars.confirm(origin + " is requesting permission to " + this.actionDesc[permission] + "." + "<br><br>Permission Code: " + permission, ['Deny', 'Allow'], (btn) => {
+                        if(!apps.webAppMaker.vars.trustedApps.hasOwnProperty(origin)){
+                            apps.webAppMaker.vars.trustedApps[origin] = {};
+                        }
+                        apps.webAppMaker.vars.trustedApps[origin][permission] = "" + numtf(btn);
+                        apps.webAppMaker.vars.updatePermissions();
+                        if(btn){
+                            apps.webAppMaker.vars.postReply({
+                                messageType: "response",
+                                conversation: (conv || ""),
+                                content: "granted: " + permission
+                            }, origin, source);
+                        }else{
+                            apps.webAppMaker.vars.postReply({
+                                messageType: "response",
+                                conversation: (conv || ""),
+                                content: "denied: " + permission
+                            }, origin, source);
+                        }
+                    }, 'AaronOS');
+                }else{
+                    apps.prompt.vars.notify(origin + " is added to the permissions list.", 'Okay', () => {
+                        apps.webAppMaker.vars.trustedApps[origin] = {};
+                        apps.webAppMaker.vars.updatePermissions();
+                        apps.webAppMaker.vars.postReply({
+                            messageType: "response",
+                            conversation: (conv || ""),
+                            content: "granted"
+                        }, origin, source);
+                    }, 'AaronOS');
+                }
             },
             sanitize: function(text){
                 return String(text).split("<").join("&lt;").split(">").join("&gt;");
@@ -11172,61 +12124,6 @@ c(function(){
                 apps.webAppMaker.vars.numberOfApps++;
             }
         }, 0, "webAppMaker", "appicons/ds/APM.png"
-    );
-    getId('aOSloadingInfo').innerHTML = 'Calculator';
-});
-c(function(){
-    m('init Clc');
-    apps.calculator = new Application(
-        "Clc",
-        "Calculator",
-        0,
-        function(){
-            this.appWindow.setCaption("aOS Calculator");
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe data-parent-app="calculator" id="CalcFrame" style="width:100%;height:100%;border:none;font-family:aosProFont, monospace;font-size:12px;" src="Calculator/"></iframe>');
-                this.appWindow.setDims("auto", "auto", 600, 400);
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'This is the official AaronOS Calculator. It supports simple calculator functions as well as custom advanced functions by the developer.'
-        }, 1, "calculator", "appicons/ds/Clc.png"
     );
     getId('aOSloadingInfo').innerHTML = 'Messaging';
 });
@@ -12370,103 +13267,7 @@ c(function(){
             }
         }, 1, 'help', 'appicons/ds/HLP.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Music Visualizer';
-});
-c(function(){
-    m('init MSC');
-    apps.musicVis = new Application(
-        'MSC',
-        'Music Visualiser',
-        0,
-        function(){
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe data-parent-app="musicVis" id="MSCframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="unrelated/keyfingers/cnv.php"></iframe>');
-                if(darkMode){
-                    getId('MSCframe').onload = function(){
-                        getId('MSCframe').contentDocument.getElementById('btns').style.filter = 'invert(1)';
-                    }
-                }
-            }
-            if(!this.vars.intervalMade){
-                this.vars.intervalMade = 1;
-                makeInterval('MSC', 'winColorCheck', 'apps.musicVis.vars.checkColors()', 1);
-            }
-            this.appWindow.setCaption('Music Visualizer');
-            this.appWindow.setDims("auto", "auto", 1030, 309);
-            blockScreensaver("apps.musicVis");
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    unblockScreensaver("apps.musicVis", 1);
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    unblockScreensaver("apps.musicVis", 1);
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'This is the official AaronOS Music Visualizer. To see all compatible songs, visit https://aaronos.dev/AaronOS/unrelated/keyfingers/music and type the name of a song from there - for example, "music/Neurology.mp3"',
-            intervalMade: 0,
-            beforeColor: '',
-            working: 0,
-            currtitle: '',
-            currnumber: 0,
-            checkColors: function(){
-                if(getId("MSCframe") !== null){
-                    this.currtitle = getId("MSCframe").contentDocument.title;
-                    if(this.currtitle.indexOf(' recolor') > -1){
-                        if(!this.working){
-                            this.beforeColor = apps.settings.vars.currWinColor;
-                            this.working = 1;
-                        }
-                        this.currnumber = parseInt(this.currtitle);
-                        //apps.settings.vars.setWinColor(1, 'rgb(0,' + this.currnumber + ',' + (255 - this.currnumber) + ')');
-                        apps.settings.vars.setWinColor(1, 'rgb(' + ((this.currnumber > 200) * ((this.currnumber - 200) * 4.6)) + ', ' + (this.currnumber - ((this.currnumber > 220) * ((this.currnumber - 220) * 7.2))) + ',' + (255 - this.currnumber) + ')');
-                    }else{
-                        if(this.working){
-                            apps.settings.vars.setWinColor(1, this.beforeColor);
-                            this.working = 0;
-                        }
-                    }
-                }else{
-                    if(this.working){
-                        apps.settings.vars.setWinColor(1, this.beforeColor);
-                        this.working = 0;
-                    }
-                }
-            }
-        }, 0, 'musicVis', 'appicons/ds/MSC.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Apps Browser';
+    getId('aOSloadingInfo').innerHTML = 'Music Player';
 });
 c(function(){
     m('init MSC');
@@ -12600,7 +13401,7 @@ c(function(){
                     }
                     //getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';"><img style="height:128px;width:128px;" src="' + this.vars.currAppImg + '" onerror="this.src=\'appicons/ds/redx.png\'"><div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
                     getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';">' + buildSmartIcon(128, this.vars.currAppImg) + '<div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
-                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], \' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', \' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', \'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  \' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/' + app + '/\\\')})})\'' + function(appname, builtin){if(builtin === "User-Made APM App"){return ', \' Open Source File\', \'c(function(){openapp(apps.notepad2, \\\'open\\\');apps.notepad2.vars.openFile(\\\'aos_system/apm_apps/app_' + appname + '\\\')})\'';}else{return ''}}(app, this.vars.currAppBuiltIn) + '])})">v</button>';
+                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], \' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', \' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', \'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  \' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/\\\');apps.files2.vars.next(\\\'' + app + '/\\\')})})\'' + function(appname, builtin){if(builtin === "User-Made APM App"){return ', \' Open Source File\', \'c(function(){openapp(apps.notepad2, \\\'open\\\');apps.notepad2.vars.openFile(\\\'aos_system/apm_apps/app_' + appname + '\\\')})\'';}else{return ''}}(app, this.vars.currAppBuiltIn) + '])})">v</button>';
                     this.vars.appsListed++;
                 }
             }
@@ -12839,17 +13640,24 @@ c(function(){
 c(function(){
     apps.bootScript = new Application(
         'BtS',
-        'Boot Script',
+        'Boot Scripts',
         0,
         function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims("auto", "auto", 400, 400);
-                this.appWindow.setCaption('Boot Script');
-                this.appWindow.setContent('<textarea id="BtStextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:100%;height:90%;resize:none;"></textarea><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.bootScript.vars.saveBootScript()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.bootScript.vars.helpBootScript()">Help</button>');
-                if(ufload("aos_system/user_boot_script")){
-                    getId('BtStextarea').innerHTML = ufload("aos_system/user_boot_script");
-                }
+                this.appWindow.setDims("auto", "auto", 701, 400);
+                this.appWindow.setCaption('Boot Scripts');
+                this.appWindow.setContent(
+                    '<div id="BtS_scripts" style="width:40%;overflow-y:scroll;height:calc(100% - 2em + 8px)"></div>' +
+                    '<textarea id="BtStextarea" style="font-family:aosProFont, monospace;font-size:12px;position:absolute;right:0;padding:0;border:none;width:calc(60% - 3px);padding-left:3px;height:calc(100% - 2em);resize:none;"></textarea>' +
+                    '<div style="bottom:0;width:100%;">' +
+                    '<button style="position:relative;width:40%;height:calc(2em - 3px);" onclick="apps.bootScript.vars.newScript()">New Script</button>' +
+                    '<button style="float:right;width:30%;height:calc(2em - 3px);" onclick="apps.bootScript.vars.saveBootScript()">Save</button>' +
+                    '<button style="float:right;width:30%;height:calc(2em - 3px);" onclick="apps.bootScript.vars.helpBootScript()">Help</button>' +
+                    '</div>'
+                );
+                this.vars.listScripts();
+                this.vars.openScript('main');
             }
             this.appWindow.openWindow();
         },
@@ -12881,7 +13689,7 @@ c(function(){
                     if(!safeMode){
                         window.setTimeout(apps.bootScript.vars.doBootScript, 1);
                     }else{
-                        doLog('Refusing to run BootScript because SafeMode is on.', "#F00");
+                        doLog('Refusing to run BootScripts because SafeMode is on.', "#F00");
                     }
                     break;
                 case 'shutdown':
@@ -12893,27 +13701,115 @@ c(function(){
         },
         {
             appInfo: 'This app runs your own custom JavaScript code just after aOS boots, just before the loading screen disappears. Any JS code will work here - mod aOS to your heart\'s content!<br><br>If you created something you would wish to be featured in aOS, please tell the developer so he can take a look!',
-            theBootScript: '',
+            bootScriptsToEvaluate: {
+                repo: {
+
+                },
+                user: {
+
+                }
+            },
             doBootScript: function(){
-                if(ufload("aos_system/user_boot_script")){
-                    this.theBootScript = ufload("aos_system/user_boot_script");
-                    try{
-                        eval(this.theBootScript);
-                    }catch(err){
-                        apps.prompt.vars.notify('An error occoured in your bootscript.<br><br>' + err, ['Debug'], function(btn){
-                            doLog('----------<br>Bootscript error!', '#F00');
-                            doLog(err, '#F00');
-                            doLog('----------', '#F00');
-                            if(btn === 0){
-                                openapp(apps.jsConsole, 'dsktp');
-                                openapp(apps.bootScript, 'dsktp');
+                for(var i in installedPackages){
+                    for(var j in installedPackages[i]){
+                        if(installedPackages[i][j].appType === "bootscript"){
+                            try{
+                                apps.bootScript.vars.bootScriptsToEvaluate.repo[i + "_" + j] = {BOOT_SCRIPT_CODE: new Function(installedPackages[i][j].scriptContent)};
+                                apps.bootScript.vars.bootScriptsToEvaluate.repo[i + "_" + j].BOOT_SCRIPT_CODE();
+                            }catch(err){
+                                doLog("aOS Hub Boot Script Error<br>Script: " + i + "." + j + "<br>" + err, "#F00");
+                                apps.prompt.vars.notify(
+                                    "There was an error in one of your aOS Hub Boot Scripts (" + (i + "." + j) + "):<br><br>" + err,
+                                    ["Dismiss", "View in aOS Hub"],
+                                    function(btn){
+                                        if(btn === 1){
+                                            openapp(apps.appCenter, "dsktp");
+                                            apps.appCenter.vars.doSearch(i + "." + j);
+                                        }
+                                    },
+                                    "Boot Script Error",
+                                    "appicons/ds/BtS.png"
+                                );
                             }
-                        }, 'Boot Script', 'appicons/BgC.png');
+                        }
+                    }
+                }
+                if(ufload("aos_system/user_boot_script")){
+                    doLog("moving user bootscript to new folder");
+                    var theBootScript = ufload("aos_system/user_boot_script");
+                    ufsave("aos_system/apps/bootScript/main", theBootScript);
+                    ufdel("aos_system/user_boot_script");
+                }
+                var bootScripts = ufload("aos_system/apps/bootScript");
+                for(var i in bootScripts){
+                    try{
+                        apps.bootScript.vars.bootScriptsToEvaluate.user[i] = {BOOT_SCRIPT_CODE: new Function(bootScripts[i])};
+                        apps.bootScript.vars.bootScriptsToEvaluate.user[i].BOOT_SCRIPT_CODE();
+                    }catch(err){
+                        doLog("Boot Script Error<br>Script: " + i + "<br>" + err, "#F00");
+                        apps.prompt.vars.notify(
+                            "There was an error in one of your Boot Scripts (" + i + "):<br><br>" + err,
+                            ["Dismiss", "Debug"],
+                            function(btn){
+                                if(btn === 1){
+                                    openapp(apps.jsConsole, "dsktp");
+                                    openapp(apps.bootScript, "dsktp");
+                                    apps.bootScript.vars.openScript(i);
+                                }
+                            },
+                            "Boot Script Error",
+                            "appicons/ds/BtS.png"
+                        );
                     }
                 }
             },
+            currScript: 'main',
+            openScript: function(scriptName){
+                this.currScript = scriptName;
+                var allScripts = document.getElementsByClassName('BtS_script');
+                for(var i = 0; i < allScripts.length; i++){
+                    allScripts[i].style.color = '';
+                }
+                if(ufload("aos_system/apps/bootScript/" + scriptName)){
+                    getId("BtStextarea").value = ufload("aos_system/apps/bootScript/" + scriptName);
+                }
+                getId("BtS_script_" + scriptName).style.color = "#0AA";
+            },
+            newScript: function(){
+                apps.prompt.vars.prompt("Please enter a name for the new script.<br><br>Leave blank to cancel.", "Submit", function(str){
+                    if(str){
+                        if(!ufload("aos_system/apps/bootScript").hasOwnProperty(cleanStr(str))){
+                            apps.bootScript.vars.createScript(str);
+                        }else{
+                            apps.prompt.vars.alert("There is already a boot script with that name.", "Okay", function(){}, "Boot Script");
+                        }
+                    }
+                }, "Boot Script");
+            },
+            createScript: function(name){
+                ufsave("aos_system/apps/bootScript/" + cleanStr(name), "// AaronOS Boot Script");
+                this.listScripts();
+                this.openScript(cleanStr(name));
+            },
+            delScript: function(name){
+                ufdel("aos_system/apps/bootScript/" + name);
+                this.listScripts();
+                this.openScript("main");
+            },
+            listScripts: function(){
+                var allScripts = ufload("aos_system/apps/bootScript");
+                var finalHTML = "<br>";
+                finalHTML += "<span class='BtS_script' id='BtS_script_main'>main</span> <button onclick='apps.bootScript.vars.openScript(\"main\")'>Load</button>";
+                for(var i in allScripts){
+                    if(i !== "main"){
+                        finalHTML += "<br><br><span class='BtS_script' id='BtS_script_" + i + "'>" + i + "</span> <button onclick='apps.bootScript.vars.openScript(\"" + i + "\")'>Load</button> <button onclick='apps.bootScript.vars.delScript(\"" + i + "\")'>Delete</button>";
+                    }
+                }
+                console.log(finalHTML);
+                getId("BtS_scripts").innerHTML = finalHTML;
+            },
             saveBootScript: function(){
-                apps.savemaster.vars.save('aos_system/user_boot_script', getId('BtStextarea').value, 1);
+                ufsave('aos_system/apps/bootScript/' + this.currScript, getId('BtStextarea').value);
                 // apps.prompt.vars.alert('Saved.', 'Okay', function(){}, 'Boot Script');
             },
             helpBootScript: function(){
@@ -13003,60 +13899,6 @@ c(function(){
                 getId('CSEframe').contentDocument.getElementById('aosCustomStyle').innerHTML = getId('CSEtextarea').value;
             }
         }, 1, 'styleEditor', 'appicons/ds/CSE.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'GTK2aOS';
-});
-c(function(){
-    apps.gtk2aOS = new Application(
-        'GTK',
-        'GTK3 Style Converter',
-        0,
-        function(){
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setCaption('GTK2aOS');
-                this.appWindow.setDims("auto", "auto", 400, 400);
-                this.appWindow.setContent('<iframe data-parent-app="gtk2aOS" src="gtk/" style="border:none;width:100%;height:100%;display:block;"></iframe>');
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'This app turns GTK3 themes into themes compatible with AaronOS. It is still a work in progress and results may vary in quality. My favorite themes to convert are Mint-Y-Dark and Arc-Dark.'
-        }, 1, 'gtk2aOS', 'appicons/ds/GTK.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Function Grapher';
 });
@@ -13310,61 +14152,7 @@ c(function(){
             }
         }, 1, "magnifier", 'appicons/ds/Mag.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Cookie Clicker';
-});
-c(function(){
-    apps.cookieClicker = new Application(
-        'CCl',
-        'Cookie Clicker',
-        0,
-        function(){
-            if(!this.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setDims("auto", "auto", 800, 600);
-                this.appWindow.setCaption('Cookie Clicker');
-                this.appWindow.setContent('<iframe data-parent-app="cookieClicker" src="COOKIE" style="border:none; width:100%; height:100%; display:block;"></iframe>');
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'The Cookie Clicker clone written by Aaron, the aOS developer, and Joseph, the developer of JAOS. It\'s actually pretty addicting.'
-        }, 1, 'cookieClicker', 'appicons/ds/CCl.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'JS Paint';
+    getId('aOSloadingInfo').innerHTML = 'iFrame Browser';
 });
 c(function(){
     apps.iFrameBrowser = new Application(
@@ -13425,60 +14213,6 @@ c(function(){
         }, 2, 'iFrameBrowser', 'appicons/ds/systemApp.png'
     );
     getId('aOSloadingInfo').innerHTML = 'JS Paint';
-});
-c(function(){
-    apps.jsPaint = new Application(
-        'jsP',
-        'JS Paint',
-        0,
-        function(){
-            if(!this.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setDims("auto", "auto", 753, 507);
-                this.appWindow.setCaption('JS Paint');
-                this.appWindow.setContent('<iframe data-parent-app="jsPaint" src="https://jspaint.app/" style="border:none; width:100%; height:100%; display:block;background-color:#C0C0C0"></iframe>');
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'JS Paint was developed by Isaiah Odhner and embedded into an aOS app with his permission.<br><br>Full site at <a target="_blank" href="https://jspaint.app">jspaint.app</a>'
-        }, 0, 'jsPaint', 'appicons/ds/CSE.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Minesweeper';
 });
 c(function(){
     apps.minesweeper = new Application(
@@ -14649,6 +15383,367 @@ c(function(){
             }
         }, 0, 'petCursors', 'appicons/ds/GTK.png'
     );
+    getId('aOSloadingInfo').innerHTML = 'Init aOS Hub...';
+});
+c(function(){
+    apps.appCenter = new Application(
+        'AH',
+        'aOS Hub',
+        1,
+        function(launchtype){
+            if(!this.appWindow.appIcon){
+                this.appWindow.setCaption("aOS Hub");
+                this.appWindow.setDims("auto", "auto", 600, 400);
+                this.appWindow.setContent(
+                    "<div style='position:relative;padding-top:3px;' id='APPCENTER_maindiv'>" +
+                    "<span id='APPCENTER_updates'>Checking for</span> available updates.<br>" +
+                    "<button onclick='apps.appCenter.vars.showUpdates()'>Updates</button><br>" +
+                    "<b><span id='APPCENTER_NOTICE' style='color:#A00'></span></b><br>" +
+                    "<div style='position:absolute;right:3px;line-height:1.5em;top:0;text-align:right'>" +
+                    "<input placeholder='Search' onkeyup='apps.appCenter.vars.doSearch(this.value)' id='APPCENTER_SEARCH'><br>" +
+                    "<button onclick='apps.appCenter.vars.listRepos()'>Repositories</button><br>" +
+                    "<button onclick='apps.appCenter.vars.checkUpdates()'>Refresh</button>" +
+                    "</div>" +
+                    "<div style='position:relative;text-align:center;' id='APPCENTER_categories'></div>" +
+                    "<div style='position:relative;width:100%;min-height:20px;' id='APPCENTER_packages'></div>" +
+                    "</div>"
+                );
+                this.vars.listCategories();
+                this.vars.setCategory('All');
+                if(launchtype === "updates"){
+                    this.vars.checkUpdates(1);
+                }else{
+                    this.vars.checkUpdates();
+                }
+                getId("win_appCenter_html").style.overflowY = "scroll";
+            }
+            this.appWindow.openWindow();
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(safeMode){
+                        doLog("Failed initializing aOS Hub apps because Safe Mode is enabled.", "#F00");
+                    }else{
+                        repoLoad();
+                        for(var repository in installedPackages){
+                            for(var package in installedPackages[repository]){
+                                if(installedPackages[repository][package].appType === "webApp"){
+                                    try{
+                                        apps.appCenter.vars.compileWebApp(installedPackages[repository][package], repository + '__' + package);
+                                    }catch(err){
+                                        doLog("Failed initializing " + repository + '.' + package + ":", "#F00");
+                                        doLog(err, "#F00");
+                                    }
+                                }else if(installedPackages[repository][package].appType === "stylesheet"){
+                                    if(installedPackages[repository][package].hasOwnProperty("styleContent")){
+                                        var customCSS = document.createElement("style");
+                                        customCSS.classList.add("customstyle_appcenter");
+                                        customCSS.id = "customstyle_appcenter_" + repository + "_" + package;
+                                        customCSS.innerHTML = installedPackages[repository][package].styleContent;
+                                        document.head.appendChild(customCSS);
+                                    }else{
+                                        var customCSS = document.createElement("link");
+                                        customCSS.setAttribute("rel", "stylesheet");
+                                        customCSS.href = installedPackages[repository][package].styleLink;
+                                        customCSS.classList.add("customstyle_appcenter");
+                                        customCSS.id = "customstyle_appcenter_" + repository + "_" + package;
+                                        document.head.appendChild(customCSS);
+                                    }
+                                }
+                            }
+                        }
+                        repoUpdate(null, function(){
+                            var updates = repoGetUpgradeable();
+                            if(updates.length > 0){
+                                apps.prompt.vars.notify(updates.length + " app updates available.", ["Dismiss", "View Updates"], function(btn){
+                                    if(btn === 1){
+                                        openapp(apps.appCenter, "updates");
+                                    }
+                                }, "aOS Hub");
+                            }
+                        });
+                        // alphabetized array of apps
+                        appsSorted = [];
+                        for(var i in apps){
+                            appsSorted.push(apps[i].appDesc + "|AC_apps_sort|" + i);
+                        }
+                        appsSorted.sort();
+                        for(var i in appsSorted){
+                            var tempStr = appsSorted[i].split("|AC_apps_sort|");
+                            tempStr = tempStr[tempStr.length - 1];
+                            appsSorted[i] = tempStr;
+                        }
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        },
+        {
+            appInfo: 'aOS Hub is a GUI front-end for the aOS repository and package system.',
+            displayUpdates: function(updateScreen){
+                getId("APPCENTER_updates").innerHTML = repoGetUpgradeable().length;
+                if(!updateScreen){
+                    apps.appCenter.vars.listAll();
+                }
+                apps.appCenter.vars.doSearch(getId("APPCENTER_SEARCH").value);
+            },
+            listCategories: function(){
+                var currHTML = "";
+                for(var i in this.categories){
+                    currHTML += "<div class='cursorPointer' id='APPCENTER_CATEGORYSEARCH_" + i + "' style='position:relative;display:inline-block;padding:8px;padding-bottom:3px;padding-top:5px;margin-bottom:-4px;' onclick='apps.appCenter.vars.setCategory(\"" + i + "\")'>" + i + "</div>";
+                }
+                getId("APPCENTER_categories").innerHTML = currHTML;
+            },
+            setCategory: function(newCategory){
+                this.currCategorySearch = newCategory;
+                for(var i = 0; i < getId('APPCENTER_categories').childNodes.length; i++){
+                    try{
+                        getId("APPCENTER_categories").childNodes[i].style.background = '';
+                    }catch(err){
+
+                    }
+                }
+                getId("APPCENTER_CATEGORYSEARCH_" + newCategory).style.background = 'rgba(127, 127, 127, 0.5)';
+                this.listAll();
+                this.doSearch(getId("APPCENTER_SEARCH").value);
+            },
+            currCategorySearch: "All",
+            categories: {
+                "All": "",
+                "Apps": "App",
+                "Styles": "stylesheet",
+                "Scripts": "bootscript",
+                //"Widgets": "widget"
+            },
+            doSearch: function(searchQuery){
+                for(var i = 0; i < getId("APPCENTER_packages").childNodes.length; i++){
+                    if(getId("APPCENTER_packages").childNodes[i].id !== "APPCENTER_UPDATE_CONTROLS"){
+                        if(getId("APPCENTER_packages").childNodes[i].innerText.toLowerCase().indexOf(searchQuery.toLowerCase()) === -1){
+                            getId("APPCENTER_packages").childNodes[i].style.display = "none";
+                        }else{
+                            getId("APPCENTER_packages").childNodes[i].style.display = "block";
+                        }
+                    }
+                }
+            },
+            checkUpdates: function(updateScreen){
+                if(updateScreen){
+                    repoUpdate(null, this.showUpdates);
+                }else{
+                    repoUpdate(null, this.displayUpdates);
+                }
+            },
+            applyUpdates: function(){
+                repoUpgrade(null, this.showUpdates);
+            },
+            install: function(buttonElement){
+                repoAddPackage(buttonElement.getAttribute("data-appcenter-repo") + "." + buttonElement.getAttribute("data-appcenter-package"), null, apps.appCenter.vars.displayUpdates);
+                //getId("APPCENTER_NOTICE_" + buttonElement.getAttribute("data-appcenter-repo") + "_" + buttonElement.getAttribute("data-appcenter-package")).innerHTML = "Restart to apply changes.";
+                //getId("APPCENTER_NOTICE").innerHTML = "Restart to apply changes.";
+            },
+            uninstall: function(buttonElement){
+                repoRemovePackage(buttonElement.getAttribute("data-appcenter-repo") + "." + buttonElement.getAttribute("data-appcenter-package"), apps.appCenter.vars.displayUpdates);
+                //getId("APPCENTER_NOTICE_" + buttonElement.getAttribute("data-appcenter-repo") + "_" + buttonElement.getAttribute("data-appcenter-package")).innerHTML = "Restart to apply changes.";
+                //getId("APPCENTER_NOTICE").innerHTML = "Restart to apply changes.";
+            },
+            listAll: function(){
+                var packageList = [];
+                for(var repo in repositories){
+                    for(var package in repositories[repo].packages){
+                        packageList.push([repositories[repo].packages[package].packageName, repo, package]);
+                    }
+                }
+                packageList.sort(function(a, b){
+                    if(a[0] < b[0]){
+                        return -1;
+                    }
+                    if(a[0] > b[0]){
+                        return 1;
+                    }
+                    return 0;
+                });
+                var finalhtml = "";
+                for(var i in packageList){
+                    var selectedPackage = repositories[packageList[i][1]].packages[packageList[i][2]];
+                    if(selectedPackage.packageType.indexOf(apps.appCenter.vars.categories[apps.appCenter.vars.currCategorySearch]) !== -1){
+                        finalhtml += "<div style='position:relative;width:calc(100% - 35px);min-height:128px;padding:16px;border-top:2px solid #7F7F7F;'>";
+                        finalhtml += "<div style='position:relative;height:128px;width:128px;'>" + buildSmartIcon(128, selectedPackage.icon) + "</div><div style='position:relative;width:calc(100% - 144px);margin-left:160px;margin-top:-128px;'>"
+                        finalhtml += "<b>" + selectedPackage.packageName + " <span id='APPCENTER_NOTICE_" + repositories[packageList[i][1]].repoID + "_" + packageList[i][2] + "' style='color:#A00'></span></b><br>" +
+                            "<span style='font-family:aosProFont, monospace; font-size:12px'>" + repositories[packageList[i][1]].repoID + "." + selectedPackage.packageID + "</span><br>" +
+                            (selectedPackage.description || "No Description.").split("\n").join("<br>");
+                        finalhtml += "<br><br></div><div style='right:16px;text-align:right;bottom:16px;'>"
+                        if(installedPackages.hasOwnProperty(repositories[packageList[i][1]].repoID)){
+                            if(installedPackages[repositories[packageList[i][1]].repoID].hasOwnProperty(selectedPackage.packageID)){
+                                if(selectedPackage.packageType === "webApp"){
+                                    finalhtml += "<button onclick='c(function(){openapp(apps.webApp_" + repositories[packageList[i][1]].repoID + "__" + selectedPackage.packageID + ", \"dsktp\");});'>Launch</button> ";
+                                }
+                                finalhtml += "<button data-appcenter-repo='" + repositories[packageList[i][1]].repoID + "' data-appcenter-package='" + packageList[i][2] + "' onclick='apps.appCenter.vars.uninstall(this)'>Uninstall</button>";
+                            }else{
+                                finalhtml += "<button data-appcenter-repo='" + repositories[packageList[i][1]].repoID + "' data-appcenter-package='" + packageList[i][2] + "' onclick='apps.appCenter.vars.install(this)'>Install</button>";
+                            }
+                        }else{
+                            finalhtml += "<button data-appcenter-repo='" + repositories[packageList[i][1]].repoID + "' data-appcenter-package='" + packageList[i][2] + "' onclick='apps.appCenter.vars.install(this)'>Install</button>";
+                        }
+                        finalhtml += "</div></div>";
+                    }
+                }
+                getId("APPCENTER_packages").innerHTML = finalhtml;
+            },
+            listRepos: function(){
+                try{
+                    for(var i = 0; i < getId('APPCENTER_categories').childNodes.length; i++){
+                        try{
+                            getId("APPCENTER_categories").childNodes[i].style.background = '';
+                        }catch(err){
+
+                        }
+                    }
+                }catch(err){
+
+                }
+                var finalhtml = '';
+                for(var repo in repositories){
+                    finalhtml += "<div style='position:relative;width:calc(100% - 35px);padding:16px;border-top:2px solid #7F7F7F;'>" +
+                        "<b>" + repositories[repo].repoName + "</b><br>" +
+                        "<span style='font-family:aosProFont, monospace; font-size:12px'>" + repositories[repo].repoID + "</span><br><br>" +
+                        repo + "<br><br>" +
+                        "<div style='right:16px;text-align:right;bottom:16px;'>";
+                    finalhtml += '<button data-appcenter-repo="' + repo + '" onclick="apps.appCenter.vars.removeRepo(this)">Remove</button>' +
+                        '</div></div>';
+                }
+                finalhtml += "<div style='position:relative;width:calc(100% - 35px);padding:16px;border-top:2px solid #7F7F7F;'>" +
+                    "<input id='APPCENTER_ADD_REPO' placeholder='https://'> <button onclick='apps.appCenter.vars.addRepo()'>Add Repository</button>"
+                    "</div>";
+                try{
+                    getId("APPCENTER_packages").innerHTML = finalhtml;
+                }catch(err){
+
+                }
+            },
+            showUpdates: function(){
+                apps.appCenter.vars.displayUpdates(1);
+                for(var i = 0; i < getId('APPCENTER_categories').childNodes.length; i++){
+                    try{
+                        getId("APPCENTER_categories").childNodes[i].style.background = '';
+                    }catch(err){
+
+                    }
+                }
+                var currUpdates = repoGetUpgradeable();
+                var finalhtml = '<div id="APPCENTER_UPDATE_CONTROLS" style="width:calc(100% - 3px);padding-top:16px;padding-bottom:16px;border-top:2px solid #7F7F7F;text-align:center;position:relative;">' +
+                    '<button onclick="apps.appCenter.vars.checkUpdates(1)">Check for Updates</button> <button onclick="apps.appCenter.vars.applyUpdates()">Apply Updates</button>' +
+                    '</div>';
+                for(var i in currUpdates){
+                    currUpdates[i] = currUpdates[i].split('.');
+                    var selectedPackage = installedPackages[currUpdates[i][0]][currUpdates[i][1]];
+                    console.log(selectedPackage);
+                    finalhtml += "<div style='position:relative;width:calc(100% - 35px);padding:16px;border-top:2px solid #7F7F7F;'>";
+                    finalhtml += "<b>" + selectedPackage.name + "</b><br>" +
+                        "<span style='font-family:aosProFont, monospace; font-size:12px'>" + currUpdates[i][0] + "." + selectedPackage.id + "</span><br>";
+                    finalhtml += "</div>";
+                }
+                getId("APPCENTER_packages").innerHTML = finalhtml;
+            },
+            addRepo: function(){
+                if(getId("APPCENTER_ADD_REPO").value){
+                    repoAddRepository(getId("APPCENTER_ADD_REPO").value, function(){}, apps.appCenter.vars.listRepos);
+                }
+            },
+            removeRepo: function(elem){
+                repoRemoveRepository(elem.getAttribute("data-appcenter-repo"), function(){}, apps.appCenter.vars.listRepos);
+            },
+            compileWebApp: function(varSet, pkgName){
+                apps['webApp_' + pkgName] = new Application(
+                    varSet.abbreviation,
+                    varSet.name,
+                    0,
+                    function(){
+                        this.appWindow.setCaption(this.appDesc);
+                        if(!this.appWindow.appIcon){
+                            this.appWindow.paddingMode(0);
+                            this.appWindow.setContent('<iframe data-parent-app="' + this.objName + '" style="width:100%;height:100%;border:none;" src="' + this.vars.appURL + '"></iframe>');
+                            this.appWindow.setDims("auto", "auto", this.vars.sizeX, this.vars.sizeY);
+                        }
+                        this.appWindow.openWindow();
+                    },
+                    function(signal){
+                        switch(signal){
+                            case "forceclose":
+                                //this.vars = this.varsOriginal;
+                                this.appWindow.closeWindow();
+                                this.appWindow.closeIcon();
+                                break;
+                            case "close":
+                                this.appWindow.closeWindow();
+                                setTimeout(function(){
+                                    if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                                        this.appWindow.setContent("");
+                                    }
+                                }.bind(this), 300);
+                                break;
+                            case "checkrunning":
+                                if(this.appWindow.appIcon){
+                                    return 1;
+                                }else{
+                                    return 0;
+                                }
+                            case "shrink":
+                                this.appWindow.closeKeepTask();
+                                break;
+                            case "USERFILES_DONE":
+                                
+                                break;
+                            case 'shutdown':
+                                    
+                                break;
+                            default:
+                                doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+                        }
+                    },
+                    {
+                        appInfo: 'This app was installed via the aOS Hub.<br><br>Home URL:<br>' + varSet.homeURL + '<br><br>Package name:<br>' + pkgName.split('__').join('.') + '<br><br>App object name:<br>apps.webApp_' + pkgName,
+                        appURL: varSet.homeURL,
+                        sizeX: varSet.windowSize[0],
+                        sizeY: varSet.windowSize[1]
+                    }, 1, 'webApp_' + pkgName, varSet.icon
+                );
+            }
+        }, 0, 'appCenter', {
+            backgroundColor: "#303947",
+            foreground: "smarticons/appCenter/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
+    );
     getId('aOSloadingInfo').innerHTML = 'Finalizing...';
 });
 m('init finalizing');
@@ -14662,7 +15757,7 @@ function toTop(appToNudge, dsktpClick){
             if(getId("win_" + apps[appLication].objName + "_top").style.zIndex !== "100"){
                 getId("win_" + apps[appLication].objName + "_top").style.zIndex = parseInt(getId("win_" + apps[appLication].objName + "_top").style.zIndex, 10) - 1;
             }
-            getId("win_" + apps[appLication].objName + "_cap").style.opacity = ".5";
+            getId("win_" + apps[appLication].objName + "_cap").style.opacity = "1";
             getId("win_" + apps[appLication].objName + "_aero").style.opacity = "1";
             getId('icn_' + apps[appLication].objName).style.backgroundColor = '';
         }
@@ -15857,16 +16952,6 @@ c(function(){
     //corsPing(function(text){
     //    doLog('NORAA search service ping: ' + text[0] + ' &micro;s with status ' + text[1]);
     //});
-    if(window.location.href.indexOf("aaron-os-mineandcraft12.c9.io") > -1){
-        try{
-            if(localStorage.getItem('notifyaaronosdev') !== "1"){
-                localStorage.setItem('notifyaaronosdev', "1");
-                apps.prompt.vars.notify("AaronOS is moving to a new home! Visit https://aaronos.dev/ and make yourself at home in the new server. This old server will go offline in around a month or so. (4/13/2019)", ['Okay', 'Go to aaronos.dev'], function(btn){if(btn === 1){window.location = "https://aaronos.dev"}}, 'Important Notice', 'appicons/ds/aOS.png');
-            }
-        }catch(localStorageNotSupported){
-            apps.prompt.vars.notify("AaronOS is moving to a new home! Visit https://aaronos.dev/ and make yourself at home in the new server. This old server will go offline in around a month or so. (4/13/2019)", ['Okay', 'Go to aaronos.dev'], function(btn){if(btn === 1){window.location = "https://aaronos.dev"}}, 'Important Notice', 'appicons/ds/aOS.png');
-        }
-    }
     if(window.navigator.vendor !== "Google Inc."){
         doLog('Looks like you are not using Google Chrome. Make sure you use Google Chrome to access aOS. Otherwise, certain features will be missing or broken.', '#F00;text-decoration:underline');
         try{
