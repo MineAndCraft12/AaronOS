@@ -355,6 +355,7 @@ div{
                 color:#FFF;
                 /*cursor:url(cursors/move.png) 14 14, move;*/
                 transition: opacity .5s;
+                overflow:visible;
             }
                 .leftCaptionButtons .winCap{
                     padding-left:69px;
