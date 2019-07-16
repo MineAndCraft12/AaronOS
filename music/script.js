@@ -312,7 +312,7 @@ function selectSong(id){
         window.top.postMessage({
             messageType: "request",
             action: "appWindow:set_caption",
-            content: fileNames[id][0] + " | Music Player",
+            content: "Music Player | " + fileNames[id][0],
             conversation: "set_caption"
         });
     }

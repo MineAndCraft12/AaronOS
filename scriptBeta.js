@@ -6797,12 +6797,6 @@ c(function(){
                 folder: 1,
                 folderName: 'Settings',
                 folderPath: 'apps.settings.vars.menus',
-                oldMenu: {
-                    folder: 0,
-                    folderName: 'Old Menu',
-                    folderPath: '\'oldMenu\'',
-                    image: 'settingIcons/beta/OldMenu.png'
-                },
                 background: {
                     folder: 0,
                     folderName: 'Desktop Background',
@@ -7172,25 +7166,22 @@ c(function(){
                         buttons: function(){return apps.settings.vars.getVoicesForNORAA()}
                     }
                 },
-                language: {
+                smartIcons: {
                     folder: 0,
-                    folderName: 'Language',
-                    folderPath: 'apps.settings.vars.menus.language',
-                    currentLanguage: {
-                        option: 'Current Language',
-                        description: function(){return languagepacks[currentlanguage]},
-                        buttons: function(){return 'You must reboot aOS for language changes to take effect.'}
-                    },
-                    changeLanguage: {
-                        option: 'Change language',
-                        description: function(){return 'Click a button, then restart aOS to change the language.'},
-                        buttons: function(){return apps.settings.vars.getTextLanguages()}
-                    },
-                    credits: {
-                        option: 'Tranlsation Credits',
-                        description: function(){return 'I got a lot of help with translating aOS from volunteers. So far, here\'s the people who\'ve helped me out.'},
-                        buttons: function(){return 'US English: Me, of course. This is the native language of aOS.<br>Chinese: Noah McDermott (noahmcdaos@gmail.com).'}
+                    folderName: "Smart Icons",
+                    folderPath: "apps.settings.vars.menus.smartIcons",
+                    autoRedirectToApp: {
+                        option: "Smart Icon Settings",
+                        description: function(){return "Click below to open the Smart Icon Settings app."},
+                        buttons: function(){
+                            c(function(){
+                                openapp(apps.smartIconSettings, 'dsktp');
+                                apps.settings.vars.showMenu(apps.settings.vars.menus);
+                            });
+                            return '<button onclick="openapp(apps.smartIconSettings, \'dsktp\')">Smart Icon Settings</button>'
+                        }
                     }
+                    
                 },
                 clipboard: {
                     folder: 0,
@@ -7249,6 +7240,26 @@ c(function(){
                         }
                     }
                 },
+                language: {
+                    folder: 0,
+                    folderName: 'Language',
+                    folderPath: 'apps.settings.vars.menus.language',
+                    currentLanguage: {
+                        option: 'Current Language',
+                        description: function(){return languagepacks[currentlanguage]},
+                        buttons: function(){return 'You must reboot aOS for language changes to take effect.'}
+                    },
+                    changeLanguage: {
+                        option: 'Change language',
+                        description: function(){return 'Click a button, then restart aOS to change the language.'},
+                        buttons: function(){return apps.settings.vars.getTextLanguages()}
+                    },
+                    credits: {
+                        option: 'Tranlsation Credits',
+                        description: function(){return 'I got a lot of help with translating aOS from volunteers. So far, here\'s the people who\'ve helped me out.'},
+                        buttons: function(){return 'US English: Me, of course. This is the native language of aOS.<br>Chinese: Noah McDermott (noahmcdaos@gmail.com).'}
+                    }
+                },
                 advanced: {
                     folder: 0,
                     folderName: 'Advanced',
@@ -7263,7 +7274,13 @@ c(function(){
                         description: function(){return 'If you wish, you can completely reset aOS. This will give you a new OS ID, which will have the effect of removing all of your files. Your old files will still be preserved, so you can ask the developer for help if you mistakenly reset aOS. If you wish for your old files to be permanantly removed, please contact the developer.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.resetOS()">Reset aOS</button>'}
                     }
-                }
+                },
+                oldMenu: {
+                    folder: 0,
+                    folderName: 'Old Menu',
+                    folderPath: '\'oldMenu\'',
+                    image: 'settingIcons/beta/OldMenu.png'
+                },
             },
             showMenu: function(menu){
                 if(menu === 'oldMenu'){
@@ -9513,10 +9530,10 @@ c(function(){
             "05/18/2019: B0.16.2.2\n + Added buildMarquee(text), to create a custom marquee.\n : Changed all custom attributes to use data- names.\n\n" +
             "05/25/2019: B0.16.3.0\n + Yet another huge music player update. Too much content / fixes over several days to list everything.\n\n" +
             "07/13/2019: B1.0.0.0\n + Added the aOS Hub, where users can search for apps, scripts, etc.\n + Repository and package system added.\n : Apps moved to repository: Cookie Clicker, Calculator, GTK2aOS, JS Paint.\n : Fixed filenames and directories containing the / character breaking bash.\n - Removed old music visualizer.\n + Restored ability to delete files in USERFILES.\n + Boot Script editor now supports multiple boot scripts.\n : List of Custom Styles is moved to repository.\n + Custom Style system can now handle multiple 3rd-party stylesheets as well as the user's style.\n + Settings menu for Smart Icons.\n + Added Accumulative Spikes to Music Player.\n : Bash prompt uses first four characters of ID rather than the whole thing.\n + New default desktop background.\n + Lots of new icons.\n - Window titles no longer become transparent when defocused.\n + Apps can now tell aOS to prompt the user if a restart is required.\n : PostMessage system now uses JSON instead of strings.\n + Major upgrade to PostMessage.\n : Fixed file deletion.\n : Cropped cursor set to avoid deprecation of larger size.\n : Fixed error on displaying a notification with no preview image.\n : Fixed NORAA always listening if the setting was modified rather than if it was enabled.\n : Fixed Files 2 sometimes opening the old text editor instead of the new one.\n : Fixed bash cd not returning to current workdir on failure.\n\n" +
-            "07/16/2019: B1.0.1.0\n + Added Average Pitch visualizer to Music Player.",
+            "07/16/2019: B1.0.1.0\n + Added Smart Icon Settings to the Settings app.\n + Added Average Pitch visualizer to Music Player.\n : Moved Music Player title to front of caption rather than the end.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.0.1.0 (07/16/2019) r0';
+    window.aOSversion = 'B1.0.1.0 (07/16/2019) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
