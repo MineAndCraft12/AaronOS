@@ -1843,7 +1843,7 @@ var vis = {
         },
         sqrt255: Math.sqrt(255)
     },
-    'SEPARATOR_TESTS" disabled="': {
+    'SEPARATOR_PITCH" disabled="': {
         name: '---------------',
         start: function(){
 
@@ -1931,6 +1931,92 @@ var vis = {
         },
         stop: function(){
             
+        }
+    },
+    avgPitch: {
+        name: "Average Pitch",
+        start: function(){
+
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var mult = size[0] / 1024;
+            //var roundMult = Math.round(mult);
+            //var halfMult = Math.round(mult / 2);
+            for(var i = 1; i < 10; i++){
+                if(this.history[i].length === 0){
+                    continue;
+                }
+                canvas.globalAlpha = Math.sqrt(i - 1) * 3.16227766 / 10;
+                canvas.fillStyle = getColor(this.history[i][1]);
+                canvas.fillRect(this.history[i - 1][0], 0, this.history[i][0] - this.history[i - 1][0], size[1]);
+                if(smokeEnabled){
+                    smoke.globalAlpha = Math.sqrt(i - 1) * 3.16227766 / 10;
+                    smoke.fillStyle = getColor(this.history[i][1]);
+                    smoke.fillRect(this.history[i - 1][0], 0, this.history[i][0] - this.history[i - 1][0], size[1]);
+                }
+            }
+            var avgPitch = 0;
+            var avgPitchMult = 0;
+            var avgVolume = 0;
+            for(var i = 0; i < 1024; i++){
+                avgVolume += Math.sqrt(visData[i]) * this.sqrt255;
+                //avgVolume += visData[i];
+                avgPitch += i * visData[i];
+                avgPitchMult += visData[i];
+            }
+            avgVolume /= 1024;
+            avgPitch /= avgPitchMult;
+            canvas.globalAlpha = 1;
+            canvas.fillStyle = getColor(avgVolume);
+            canvas.fillRect(this.history[9][0], 0, Math.round(avgPitch * mult) - this.history[9][0], size[1]);
+            if(smokeEnabled){
+                smoke.globalAlpha = 1;
+                smoke.fillStyle = getColor(avgVolume);
+                smoke.fillRect(this.history[9][0], 0, Math.round(avgPitch * mult) - this.history[9][0], size[1]);
+            }
+            this.history.shift();
+            this.history[9] = [Math.round(avgPitch * mult), avgVolume];
+        },
+        stop: function(){
+            this.history = [
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                [],
+                []
+            ];
+        },
+        history: [
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            []
+        ],
+        sqrt255: Math.sqrt(255)
+    },
+    'SEPARATOR_TESTS" disabled="': {
+        name: '---------------',
+        start: function(){
+
+        },
+        frame: function(){
+
+        },
+        stop: function(){
+
         }
     },
     piano: {
