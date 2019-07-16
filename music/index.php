@@ -33,7 +33,7 @@
                 Delay: <input style="width: 50px" type="number" id="delayinput" min="0" max="1" value="0.25" step="0.01" onchange="setDelay(this.value)"> |
                 <button onclick="toggleFPS()">FPS</button>
             </div>
-            <div id="progressContainer" class="disabled"><div id="progress"></div></div>
+            <div id="progressContainer" class="disabled" onclick="setProgress(event)"><div id="progress"></div></div>
             <div id="songList" class="disabled"></div>
             <div id="visualizer" class="disabled">
                 <canvas id="smokeCanvas"></canvas>

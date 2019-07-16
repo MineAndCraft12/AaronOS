@@ -345,6 +345,18 @@ function firstPlay(){
 }
 audio.addEventListener("canplaythrough", firstPlay);
 
+function setProgress(e){
+    if(!microphoneActive && currentSong !== -1){
+        var timeToSet = e.pageX - 5;
+        if(timeToSet < 5){
+            timeToSet = 0;
+        }
+        timeToSet /= size[0];
+        timeToSet *= audio.duration;
+        audio.currentTime = timeToSet;
+    }
+}
+
 function back(){
     if(!microphoneActive){
         if(audio.currentTime < 3){
@@ -728,8 +740,8 @@ var colors = {
         }
     }
 }
-var currColor = "bluegreenred";
 
+var currColor = "bluegreenred";
 function setColor(newcolor){
     //getColor = (colors[newcolor] || colors.bgr).func;
     if(colors[newcolor]){
@@ -737,11 +749,12 @@ function setColor(newcolor){
     }else{
         currColor = "redgreenblue";
     }
+    progressBar.style.outline = "2px solid " + getColor(255);
 }
-
 function getColor(power){
     return colors[currColor].func(power);
 }
+progressBar.style.outline = "2px solid " + getColor(255);
 
 function setVis(newvis){
     if(currVis){
