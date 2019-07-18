@@ -652,6 +652,45 @@ var colors = {
                 (amount / 255) + ')';
         }
     },
+    queen: {
+        name: "Queen",
+        image: "colors/queen.png",
+        func: function(amount){
+            return 'rgba(' +
+                (amount * amount / 510 + 127) + ',' +
+                ((amount > 127) * ((amount - 127) * 1.6)) + ',' +
+                (255 - amount) + ',' +
+                (amount / 255) + ')';
+        }
+    },
+    queenSolid: {
+        name: "Queen Solid",
+        image: "colors/queenSolid.png",
+        func: function(amount){
+            return 'rgb(' +
+                (amount * amount / 510 + 127) + ',' +
+                ((amount > 127) * ((amount - 127) * 1.6)) + ',' +
+                (255 - amount) + ')';
+        }
+    },
+    queenStatic: {
+        name: "Queen Static",
+        image: "colors/queenStatic.png",
+        func: function(amount, position){
+            if(typeof position === "number"){
+                return 'rgb(' +
+                    (position * position / 510 + 127) + ',' +
+                    ((position > 127) * ((position - 127) * 1.6)) + ',' +
+                    (255 - position) + ')';
+            }else{
+                return 'rgb(' +
+                    (amount * amount / 510 + 127) + ',' +
+                    ((amount > 127) * ((amount - 127) * 1.6)) + ',' +
+                    (255 - amount) + ')';
+            }
+        },
+        sqrt127: Math.sqrt(127)
+    },
     prideGlow: {
         name: "Pride",
         image: "colors/pride.png",
