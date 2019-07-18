@@ -2391,6 +2391,7 @@ function openVisualizerMenu(){
             }
         }
         getId("selectContent").innerHTML = tempHTML;
+        getId("selectContent").scrollTop = 0;
     }else{
         closeMenu();
     }
@@ -2422,6 +2423,7 @@ function openColorMenu(){
             }
         }
         getId("selectContent").innerHTML = tempHTML;
+        getId("selectContent").scrollTop = 0;
     }else{
         closeMenu();
     }
