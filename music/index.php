@@ -27,9 +27,9 @@
                 <button onclick="shuffle()">Shuffle</button> |
                 <button onclick="refresh()">New Songs</button>
                 <br>
-                Visualizer: <select id="visfield" onchange="setVis(this.value)"></select>
+                Visuals: <select id="visfield" onchange="setVis(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openVisualizerMenu();"></select>
                 <button onclick="toggleSmoke()">Smoke</button> |
-                Color Scheme: <select id="colorfield" onchange="setColor(this.value)"></select> |
+                Colors: <select id="colorfield" onchange="setColor(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openColorMenu();"></select> |
                 Delay: <input style="width: 50px" type="number" id="delayinput" min="0" max="1" value="0.25" step="0.01" onchange="setDelay(this.value)"> |
                 <button onclick="toggleFPS()">FPS</button>
             </div>
@@ -38,6 +38,10 @@
             <div id="visualizer" class="disabled">
                 <canvas id="smokeCanvas"></canvas>
                 <canvas id="visCanvas" onclick="toggleFullscreen()"></canvas>
+            </div>
+            <div id="selectOverlay" class="disabled">
+                <div id="selectBackground" onclick="closeMenu()"></div>
+                <div id="selectContent"></div>
             </div>
         </div>
     </body>

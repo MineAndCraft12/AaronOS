@@ -113,6 +113,7 @@ function loadFolder(event){
     
     getId("introduction").classList.add('disabled');
     getId("visualizer").classList.add('disabled');
+    getId("selectOverlay").classList.add('disabled');
     setVis("none");
     
     winsize = [window.innerWidth, window.innerHeight];
@@ -505,6 +506,8 @@ var canvas = canvasElement.getContext("2d");
 var smokeElement = getId("smokeCanvas");
 var smoke = smokeElement.getContext("2d");
 
+var highFreqRange = 0;
+
 function globalFrame(){
     requestAnimationFrame(globalFrame);
     if(winsize[0] !== window.innerWidth || winsize[1] !== window.innerHeight){
@@ -527,6 +530,12 @@ function globalFrame(){
     }
     if(currVis !== "none"){
         analyser.getByteFrequencyData(visData);
+        if(highFreqRange){
+            var tempsize = size[0];
+            for(var i = 0; i < tempsize; i++){
+                visData[i] = Math.max(visData[i * 2], visData[i * 2 + 1]);
+            }
+        }
         if(smokeEnabled){
             smokeFrame();
         }
@@ -551,6 +560,7 @@ function globalFrame(){
 var colors = {
     bluegreenred: {
         name: "Default",
+        image: "colors/default.png",
         func: function(amount){
             return 'rgba(' +
                 ((amount > 200) * ((amount - 200) * 4.6)) + ',' +
@@ -560,7 +570,8 @@ var colors = {
         }
     },
     beta: {
-        name: "Beta",
+        name: "Default Solid",
+        image: "colors/defaultSolid.png",
         func: function(amount){
             return 'rgb(' +
                 ((amount > 200) * ((amount - 200) * 4.6)) + ',' +
@@ -568,14 +579,27 @@ var colors = {
                 (255 - amount) + ')';
         }
     },
+    defStatic: {
+        name: "Default Static",
+        image: "colors/defaultStatic.png",
+        func: function(amount, position){
+            if(typeof position === "number"){
+                return 'rgb(0,' + position + ',' + (255 - position) + ')';
+            }else{
+                return 'rgb(0,' + amount + ',' + (255 - amount) + ')';
+            }
+        }
+    },
     alpha: {
         name: "Alpha",
+        image: "colors/alpha.png",
         func: function(amount){
             return 'rgb(0,' + amount + ',' + (255 - amount) + ')';
         }
     },
     intensityGlow: {
         name: "Intensity",
+        image: "colors/intensity.png",
         func: function(amount){
             return 'rgba(' +
                 ((amount >= 127) * 255 + (amount < 127) * (amount * 2)) + ',' +
@@ -585,11 +609,29 @@ var colors = {
     },
     intensity: {
         name: "Intensity Solid",
+        image: "colors/intensitySolid.png",
         func: function(amount){
             return 'rgb(' +
                 ((amount >= 127) * 255 + (amount < 127) * (amount * 2)) + ',' +
                 ((amount < 127) * 255 + (amount >= 127) * ((254.5 - amount) * 2)) + ',' +
                 '0)';
+        }
+    },
+    intensityStatic: {
+        name: "Intensity Static",
+        image: "colors/intensityStatic.png",
+        func: function(amount, position){
+            if(typeof position === "number"){
+                return 'rgb(' +
+                    ((position >= 127) * 255 + (position < 127) * (position * 2)) + ',' +
+                    ((position < 127) * 255 + (position >= 127) * ((254.5 - position) * 2)) + ',' +
+                    '0)';
+            }else{
+                return 'rgb(' +
+                    ((amount >= 127) * 255 + (amount < 127) * (amount * 2)) + ',' +
+                    ((amount < 127) * 255 + (amount >= 127) * ((254.5 - amount) * 2)) + ',' +
+                    '0)';
+            }
         }
     },
     'SEPARATOR_THEMES" disabled="': {
@@ -600,6 +642,7 @@ var colors = {
     },
     fire: {
         name: "Fire",
+        image: "colors/fire.png",
         func: function(amount){
             //return 'rgba(' +
             //    amount + ',' +
@@ -611,6 +654,7 @@ var colors = {
     },
     prideGlow: {
         name: "Pride",
+        image: "colors/pride.png",
         func: function(amount){
             return 'rgb(' +
                 (
@@ -634,6 +678,7 @@ var colors = {
     },
     pride: {
         name: "Pride Solid",
+        image: "colors/prideSolid.png",
         func: function(amount){
             return 'rgb(' +
                 (
@@ -655,6 +700,48 @@ var colors = {
         divide255by64: 255 / 64,
         divide255by48: 255 / 48
     },
+    prideStatic: {
+        name: "Pride Static",
+        image: "colors/prideStatic.png",
+        func: function(amount, position){
+            if(typeof position === "number"){
+                return 'rgb(' +
+                    (
+                        (position < 95) * 255 +
+                        (position >= 95 && position < 159) * (159 - position) * this.divide255by64 +
+                        (position >= 207) * ((207 - position) * -1) * this.divide255by96
+                    ) + ',' +
+                    (
+                        (position < 95) * position * this.divide255by96 +
+                        (position >= 95 && position < 159) * 255 +
+                        (position >= 159 && position < 207) * (207 - position) * this.divide255by48
+                    ) + ',' +
+                    (
+                        (position >= 159 && position < 207) * ((159 - position) * -1) * this.divide255by48 +
+                        (position >= 207) * 255
+                    ) + ')';
+            }else{
+                return 'rgb(' +
+                    (
+                        (amount < 95) * 255 +
+                        (amount >= 95 && amount < 159) * (159 - amount) * this.divide255by64 +
+                        (amount >= 207) * ((207 - amount) * -1) * this.divide255by96
+                    ) + ',' +
+                    (
+                        (amount < 95) * amount * this.divide255by96 +
+                        (amount >= 95 && amount < 159) * 255 +
+                        (amount >= 159 && amount < 207) * (207 - amount) * this.divide255by48
+                    ) + ',' +
+                    (
+                        (amount >= 159 && amount < 207) * ((159 - amount) * -1) * this.divide255by48 +
+                        (amount >= 207) * 255
+                    ) + ')';
+            }
+        },
+        divide255by96: 255 / 96,
+        divide255by64: 255 / 64,
+        divide255by48: 255 / 48
+    },
     'SEPARATOR_GLOWS" disabled="': {
         name: "---------------",
         func: function(){
@@ -663,36 +750,42 @@ var colors = {
     },
     whiteglow: {
         name: "White Glow",
+        image: "colors/whiteGlow.png",
         func: function(amount){
             return 'rgba(255, 255, 255, ' + (amount / 255) + ')';
         }
     },
     redglow: {
         name: "Red Glow",
+        image: "colors/redGlow.png",
         func: function(amount){
             return 'rgba(255,0,0,' + (amount / 255) + ')';
         }
     },
     greenglow: {
         name: "Green Glow",
+        image: "colors/greenGlow.png",
         func: function(amount){
             return 'rgba(0,255,0,' + (amount / 255) + ')';
         }
     },
     blueglow: {
         name: "Blue Glow",
+        image: "colors/blueGlow.png",
         func: function(amount){
             return 'rgba(0,0,255,' + (amount / 255) + ')';
         }
     },
     electricglow: {
         name: "Electric Glow",
+        image: "colors/electricGlow.png",
         func: function(amount){
             return 'rgba(0,255,255,' + (amount / 255) + ')';
         }
     },
     indigoglow: {
         name: "Indigo Glow",
+        image: "colors/indigoGlow.png",
         func: function(amount){
             return 'rgba(75, 0, 130, ' + (amount / 255) + ')';
         }
@@ -705,36 +798,42 @@ var colors = {
     },
     white: {
         name: "Solid White",
+        image: "colors/solidWhite.png",
         func: function(amount){
             return '#FFF';
         }
     },
     red: {
         name: "Solid Red",
+        image: "colors/solidRed.png",
         func: function(amount){
             return '#A00';
         }
     },
     green: {
         name: "Solid Green",
+        image: "colors/solidGreen.png",
         func: function(amount){
             return '#0A0';
         }
     },
     blue: {
         name: "Solid Blue",
+        image: "colors/solidBlue.png",
         func: function(amount){
             return '#00A';
         }
     },
     electric: {
         name: "Solid Electric",
+        image: "colors/solidElectric.png",
         func: function(amount){
             return '#0FF';
         }
     },
     indigo: {
         name: "Solid Indigo",
+        image: "colors/solidIndigo.png",
         func: function(amount){
             return '#4B0082';
         }
@@ -751,8 +850,8 @@ function setColor(newcolor){
     }
     progressBar.style.outline = "2px solid " + getColor(255);
 }
-function getColor(power){
-    return colors[currColor].func(power);
+function getColor(power, position){
+    return colors[currColor].func(power, position);
 }
 progressBar.style.outline = "2px solid " + getColor(255);
 
@@ -807,6 +906,7 @@ var vis = {
     },
     monstercat: {
         name: "Monstercat",
+        image: "visualizers/monstercat.png",
         start: function(){
             
         },
@@ -837,7 +937,7 @@ var vis = {
                 }
                 strength = Math.round(strength / 16);
                 
-                var fillColor = getColor(strength);
+                var fillColor = getColor(strength, i * 4);
                 canvas.fillStyle = fillColor;
                 canvas.fillRect(
                     Math.round(left + i * barSpacing),
@@ -865,7 +965,7 @@ var vis = {
             //updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
             canvas.fillStyle = '#FFF';
             canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
-            canvas.fillText((fileNames[currentSong] || ["No Song"])[0].toUpperCase(), Math.round(left) + 0.5, size[1] * 0.75, Math.floor(maxWidth));
+            canvas.fillText((fileNames[currentSong] || ["Song Name"])[0].toUpperCase(), Math.round(left) + 0.5, size[1] * 0.75, Math.floor(maxWidth));
         },
         stop: function(){
             
@@ -874,6 +974,7 @@ var vis = {
     },
     obelisks: {
         name: "Obelisks",
+        image: "visualizers/obelisks.png",
         start: function(){
             
         },
@@ -902,7 +1003,7 @@ var vis = {
                 }
                 strength = Math.round(strength / 16);
                 
-                smoke.fillStyle = getColor(strength);
+                smoke.fillStyle = getColor(strength, i * 4);
                 smoke.fillRect(
                     Math.round(left + i * barSpacing),
                     Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight),
@@ -947,6 +1048,7 @@ var vis = {
     },
     spikes1to1: {
         name: "Spikes Classic",
+        image: "visualizers/spikesClassic.png",
         start: function(){
             
         },
@@ -966,7 +1068,7 @@ var vis = {
             
         },
         drawLine: function(x, h, l, t){
-            var fillColor = getColor(h);
+            var fillColor = getColor(h, x / 4);
             canvas.fillStyle = fillColor;
             canvas.fillRect(l + x, t + (255 - h), 1, h);
             if(smokeEnabled){
@@ -977,6 +1079,7 @@ var vis = {
     },
     spikes: {
         name: "Spikes Stretch",
+        image: "visualizers/spikesStretch.png",
         start: function(){
             
         },
@@ -986,6 +1089,7 @@ var vis = {
             var step = size[0] / 1024;
             var last = -1;
             var heightFactor = size[1] / 255;
+            var widthFactor = 255 / size[0];
             for(var i = 0; i < 1024; i++){
                 var strength = 0;
                 if(i === 0){
@@ -1000,20 +1104,20 @@ var vis = {
                         for(var j = 0; j < curr - last - 1; j++){
                             //strength = ((j + 1) / (curr - last + 1) * visData[i - 1] + (curr - last - j + 1) / (curr - last + 1) * visData[i]);
                             strength = (visData[i] + visData[i - 1]) / 2;
-                            this.drawLine(curr - j - 1, strength, heightFactor);
+                            this.drawLine(curr - j - 1, strength, heightFactor, widthFactor);
                         }
                         strength = visData[i];
-                        this.drawLine(curr, strength, heightFactor);
+                        this.drawLine(curr, strength, heightFactor, widthFactor);
                     }else if(curr === last && next > curr){
                         // compressed
                         for(var j = 0; j < (1 / step); j++){
                             strength += visData[i - j];
                         }
                         strength /= Math.floor(1 / step) + 1;
-                        this.drawLine(curr, strength, heightFactor);
+                        this.drawLine(curr, strength, heightFactor, widthFactor);
                     }else if(last === curr - 1){
                         strength = visData[i];
-                        this.drawLine(curr, strength, heightFactor);
+                        this.drawLine(curr, strength, heightFactor, widthFactor);
                     }
                 }
             }
@@ -1022,8 +1126,8 @@ var vis = {
         stop: function(){
             
         },
-        drawLine: function(x, h, fact){
-            var fillColor = getColor(h);
+        drawLine: function(x, h, fact, widthFact){
+            var fillColor = getColor(h, x * widthFact);
             canvas.fillStyle = fillColor;
             canvas.fillRect(x, (255 - h)  * fact, 1, size[1] - (255 - h) * fact);
             if(smokeEnabled){
@@ -1034,6 +1138,7 @@ var vis = {
     },
     spikesAccumulate: {
         name: "Spikes Accumulate",
+        image: "visualizers/spikesAccumulate.png",
         start: function(){
             this.totals = new Array(1024).fill(0);
             this.max = 0;
@@ -1061,7 +1166,7 @@ var vis = {
             this.max = 0;
         },
         drawLine: function(x, h, l, t, c){
-            var fillColor = getColor(c);
+            var fillColor = getColor(c, x / 4);
             canvas.fillStyle = fillColor;
             canvas.fillRect(l + x, t + (size[1] - h), 1, h);
             if(smokeEnabled){
@@ -1086,6 +1191,7 @@ var vis = {
     },
     rings: {
         name: "Rings",
+        image: "visualizers/rings.png",
         start: function(){
             this.ringPositions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         },
@@ -1114,7 +1220,7 @@ var vis = {
             //}
             for(var i = 0; i < 10; i++){
                 var strength = Math.pow(ringPools[i], 2) / 65025;
-                var ringColor = getColor(strength * 255);
+                var ringColor = getColor(strength * 255, (9 - i) * 28);
                 this.ringPositions[i] += strength * 5;
                 if(this.ringPositions[i] >= 360){
                     this.ringPositions[i] -= 360;
@@ -1149,6 +1255,7 @@ var vis = {
     },
     ghostRings: {
         name: "Ghost Rings",
+        image: "visualizers/ghostRings.png",
         start: function(){
             this.ringPositions = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         },
@@ -1174,7 +1281,7 @@ var vis = {
             //}
             for(var i = 0; i < 10; i++){
                 var strength = Math.pow(ringPools[i], 2) / 65025;
-                var ringColor = getColor(strength * 255);
+                var ringColor = getColor(strength * 255, (9 - i) * 28);
                 this.ringPositions[i] += strength * 5;
                 if(this.ringPositions[i] >= 360){
                     this.ringPositions[i] -= 360;
@@ -1221,6 +1328,7 @@ var vis = {
     },
     circle: {
         name: "Treble Circle",
+        image: "visualizers/trebleCircle.png",
         start: function(){
             
         },
@@ -1245,7 +1353,7 @@ var vis = {
 
             for(var i = 0; i < 844; i += 4){
                 var strength = (visData[i + 180] + visData[i + 181] + visData[i + 182] + visData[i + 183]) / 4;
-                canvas.fillStyle = getColor(strength);
+                canvas.fillStyle = getColor(strength, i * 0.3);
                 this.degArc(
                     size[0] / 2 + randomOffset[0],
                     size[1] / 2 + randomOffset[1],
@@ -1261,7 +1369,7 @@ var vis = {
                     90 - i / 844 * 180
                 );
                 if(smokeEnabled){
-                    smoke.fillStyle = getColor(strength);
+                    smoke.fillStyle = getColor(strength, i * 0.3);
                     this.degArcSmoke(
                         size[0] / 2 + randomOffset[0],
                         size[1] / 2 + randomOffset[1],
@@ -1328,6 +1436,7 @@ var vis = {
     },
     bassCircle: {
         name: "Bass Circle",
+        image: "visualizers/bassCircle.png",
         start: function(){
             
         },
@@ -1351,7 +1460,7 @@ var vis = {
             var randomOffset = [(Math.random() - 0.5) * drumStrength / 255 * randomShake, (Math.random() - 0.5) * drumStrength / 255 * randomShake];
 
             for(var i = 0; i < 180; i++){
-                canvas.fillStyle = getColor(visData[i]);
+                canvas.fillStyle = getColor(visData[i], i * 1.4);
                 this.degArc(
                     size[0] / 2 + randomOffset[0],
                     size[1] / 2 + randomOffset[1],
@@ -1367,7 +1476,7 @@ var vis = {
                     90 - i
                 );
                 if(smokeEnabled){
-                    smoke.fillStyle = getColor(visData[i]);
+                    smoke.fillStyle = getColor(visData[i], i * 1.4);
                     this.degArcSmoke(
                         size[0] / 2 + randomOffset[0],
                         size[1] / 2 + randomOffset[1],
@@ -1434,6 +1543,7 @@ var vis = {
     },
     layerCircle: {
         name: "Layered Circle",
+        image: "visualizers/layeredCircle.png",
         start: function(){
             
         },
@@ -1603,6 +1713,7 @@ var vis = {
     },
     eclipse: {
         name: "Eclipse",
+        image: "visualizers/eclipse.png",
         start: function(){
             
         },
@@ -1679,6 +1790,7 @@ var vis = {
     },
     spectrum: {
         name: "Spectrum",
+        image: "visualizers/spectrum.png",
         start: function(){
             
         },
@@ -1734,6 +1846,7 @@ var vis = {
     },
     solidColor: {
         name: "Solid Color",
+        image: "visualizers/solidColor.png",
         start: function(){
             
         },
@@ -1763,6 +1876,7 @@ var vis = {
     },
     bassSolidColor: {
         name: "Bass Solid Color",
+        image: "visualizers/bassSolidColor.png",
         start: function(){
             
         },
@@ -1792,6 +1906,7 @@ var vis = {
     },
     windowRecolor: {
         name: "Window Color",
+        image: "visualizers/windowColor.png",
         start: function(){
             
         },
@@ -1825,6 +1940,7 @@ var vis = {
     },
     bassWindowRecolor: {
         name: "Bass Window Color",
+        image: "visualizers/bassWindowColor.png",
         start: function(){
             
         },
@@ -1870,6 +1986,7 @@ var vis = {
     },
     spectrogramClassic: {
         name: "Spectrogram Classic",
+        image: "visualizers/spectrogramClassic.png",
         start: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
             smoke.clearRect(0, 0, size[0], size[1]);
@@ -1893,6 +2010,7 @@ var vis = {
     },
     spectrogram: {
         name: "Spectrogram Stretch",
+        image: "visualizers/spectrogramStretch.png",
         start: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
             smoke.clearRect(0, 0, size[0], size[1]);
@@ -1948,6 +2066,7 @@ var vis = {
     },
     avgPitch: {
         name: "Average Pitch",
+        image: "visualizers/averagePitch.png",
         start: function(){
 
         },
@@ -1962,11 +2081,11 @@ var vis = {
                     continue;
                 }
                 canvas.globalAlpha = Math.sqrt(i - 1) * 3.16227766 / 10;
-                canvas.fillStyle = getColor(this.history[i][1]);
+                canvas.fillStyle = getColor(this.history[i][1], this.history[i][2] / 4);
                 canvas.fillRect(this.history[i - 1][0], 0, this.history[i][0] - this.history[i - 1][0], size[1]);
                 if(smokeEnabled){
                     smoke.globalAlpha = Math.sqrt(i - 1) * 3.16227766 / 10;
-                    smoke.fillStyle = getColor(this.history[i][1]);
+                    smoke.fillStyle = getColor(this.history[i][1], this.history[i][2] / 4);
                     smoke.fillRect(this.history[i - 1][0], 0, this.history[i][0] - this.history[i - 1][0], size[1]);
                 }
             }
@@ -1982,15 +2101,15 @@ var vis = {
             avgVolume /= 1024;
             avgPitch /= avgPitchMult;
             canvas.globalAlpha = 1;
-            canvas.fillStyle = getColor(avgVolume);
+            canvas.fillStyle = getColor(avgVolume, avgPitch / 4);
             canvas.fillRect(this.history[9][0], 0, Math.round(avgPitch * mult) - this.history[9][0], size[1]);
             if(smokeEnabled){
                 smoke.globalAlpha = 1;
-                smoke.fillStyle = getColor(avgVolume);
+                smoke.fillStyle = getColor(avgVolume, avgPitch / 4);
                 smoke.fillRect(this.history[9][0], 0, Math.round(avgPitch * mult) - this.history[9][0], size[1]);
             }
             this.history.shift();
-            this.history[9] = [Math.round(avgPitch * mult), avgVolume];
+            this.history[9] = [Math.round(avgPitch * mult), avgVolume, avgPitch];
         },
         stop: function(){
             this.history = [
@@ -2034,6 +2153,7 @@ var vis = {
     },
     piano: {
         name: "Piano Test",
+        image: "visualizers/pianoTest.png",
         start: function(){
             /*
 
@@ -2141,6 +2261,7 @@ var vis = {
     },
     bassSplit: {
         name: "Bass Split (&lt;180)",
+        image: "visualizers/bassSplit.png",
         start: function(){
             
         },
@@ -2160,7 +2281,7 @@ var vis = {
             
         },
         drawLine: function(x, h, l, t){
-            var fillColor = getColor(h);
+            var fillColor = getColor(h, x / 4);
             canvas.fillStyle = fillColor;
             canvas.fillRect(l + x, t + (255 - h), 1, h);
             if(smokeEnabled){
@@ -2171,6 +2292,7 @@ var vis = {
     },
     colorTest: {
         name: "Color Test",
+        image: "visualizers/colorTest.png",
         start: function(){
 
         },
@@ -2248,3 +2370,70 @@ function smokeFrame(){
 }
 
 resizeSmoke();
+
+function openVisualizerMenu(){
+    if(getId("selectOverlay").classList.contains("disabled")){
+        getId("selectOverlay").classList.remove("disabled");
+        var tempHTML = '';
+        for(var i in vis){
+            if(i.indexOf("SEPARATOR") === -1){
+                var namecolor = "";
+                if(i === getId("visfield").value){
+                    namecolor = ' style="outline:2px solid ' + getColor(255) + ';"';
+                }
+                if(vis[i].image){
+                    tempHTML += '<div' + namecolor + ' class="visOption" onclick="overrideVis(\'' + i + '\')"><img src="' + vis[i].image + '">' + vis[i].name + '</div>';
+                }else{
+                    tempHTML += '<div' + namecolor + ' class="visOption" onclick="overrideVis(\'' + i + '\')"><span></span>' + vis[i].name + '</div>';
+                }
+            }else{
+                tempHTML += '<div style="height:auto;background:none;"><hr></div>';
+            }
+        }
+        getId("selectContent").innerHTML = tempHTML;
+    }else{
+        closeMenu();
+    }
+}
+
+function overrideVis(selectedVisualizer){
+    getId("visfield").value = selectedVisualizer;
+    closeMenu();
+    getId("visfield").onchange();
+}
+
+function openColorMenu(){
+    if(getId("selectOverlay").classList.contains("disabled")){
+        getId("selectOverlay").classList.remove("disabled");
+        var tempHTML = '';
+        for(var i in colors){
+            if(i.indexOf("SEPARATOR") === -1){
+                var namecolor = "";
+                if(i === getId("colorfield").value){
+                    namecolor = ' style="outline:2px solid ' + getColor(255) + ';"';
+                }
+                if(colors[i].image){
+                    tempHTML += '<div' + namecolor + ' class="colorOption" onclick="overrideColor(\'' + i + '\')">' + colors[i].name + '<br><img src="' + colors[i].image + '"></div>';
+                }else{
+                    tempHTML += '<div' + namecolor + ' class="colorOption" onclick="overrideColor(\'' + i + '\')"></span>' + colors[i].name + '</div>';
+                }
+            }else{
+                tempHTML += '<div style="height:auto;background:none;"><hr></div>';
+            }
+        }
+        getId("selectContent").innerHTML = tempHTML;
+    }else{
+        closeMenu();
+    }
+}
+
+function overrideColor(selectedColor){
+    getId("colorfield").value = selectedColor;
+    closeMenu();
+    getId("colorfield").onchange();
+}
+
+function closeMenu(){
+    getId("selectContent").innerHTML = "";
+    getId("selectOverlay").classList.add("disabled");
+}

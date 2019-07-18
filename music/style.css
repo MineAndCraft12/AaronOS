@@ -93,3 +93,69 @@ div{
 .winHTML{
     border-radius:0 !important;
 }
+
+#selectOverlay{
+    position:absolute;
+    z-index: 1100;
+    background: rgba(0, 0, 0, 0.75);
+    width: calc(100% - 8px);
+    height: calc(100% - 81px);
+    left: 4px;
+    bottom: 4px;
+    text-align:center;
+}
+#selectContent{
+    height:100%;
+    overflow-y:auto;
+    position:relative;
+    text-align:left;
+    display:inline-block;
+    color:#FFF;
+    font-family:aosProFont, monospace;
+    font-size:24px;
+    background:#000;
+}
+#selectContent div{
+    width:100%;
+    /*padding-right:16px;*/
+    cursor:default;
+}
+#selectContent .visOption{
+    margin-top:2px;
+    line-height:128px;
+    height:128px;
+}
+#selectContent div:hover{
+    background: rgba(255, 255, 255, 0.1);
+}
+#selectContent div:active{
+    background: rgba(255, 255, 255, 0.25);
+}
+#selectContent .visOption img{
+    height:128px;
+    margin-right:16px;
+    margin-bottom:-52px;
+}
+#selectContent .visOption span{
+    height:128px;
+    margin-right:246px;
+}
+#selectContent div:hover img{
+    filter:contrast(0.9) brightness(2);
+}
+#selectContent div:active img{
+    filter:contrast(0.9) brightness(5);
+}
+#selectContent .colorOption{
+    text-align:center;
+    padding-top:32px;
+}
+#selectContent .colorOption img{
+    width:100%;
+    margin-bottom:-6px;
+}
+#selectBackground{
+    position:absolute;
+    width:100%;
+    height:100%;
+}
