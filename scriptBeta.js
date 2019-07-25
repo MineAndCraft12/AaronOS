@@ -7468,14 +7468,14 @@ c(function(){
                     passxhr.onreadystatechange = () => {
                         if(passxhr.readyState === 4){
                             if(passxhr.status === 200){
-                                if(passxhr.responseText == parseFloat(passxhr.responseText)){
+                                if(passxhr.responseText !== "REJECT"){
                                     document.cookie = 'logintoken=' + passxhr.responseText;
                                     apps.prompt.vars.notify("Password set successfully.", ["Okay"], function(){}, "Settings", apps.settings.appWindow.appImg);
                                 }else{
-                                    apps.prompt.vars.alert("There was an issue setting your password. (error?) Try again.\n" + passxhr.responseText, "Okay", function(){}, "Settings");
+                                    apps.prompt.vars.alert("There was an issue setting your password. Try again.<br>" + passxhr.responseText, "Okay", function(){}, "Settings");
                                 }
                             }else{
-                                apps.prompt.vars.alert("There was an issue setting your password. (net error " + passxhr.status + ") Try again.\n" + passxhr.status, "Okay", function(){}, "Settings");
+                                apps.prompt.vars.alert("There was an issue setting your password. (net error " + passxhr.status + ") Try again.<br>" + passxhr.status, "Okay", function(){}, "Settings");
                             }
                         }
                     }
@@ -7484,7 +7484,7 @@ c(function(){
                     passfd.append('pass', tmpPasswordSet);
                     passxhr.send(passfd);
                     //apps.settings.vars.tmpPasswordSet = "";
-                }, 5000);
+                }, 2000);
                 getId("STNosPass").value = "";
             },
             calcFLOPS: function(){
