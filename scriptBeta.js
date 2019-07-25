@@ -7470,7 +7470,7 @@ c(function(){
                             if(passxhr.status === 200){
                                 if(passxhr.responseText !== "REJECT"){
                                     document.cookie = 'logintoken=' + passxhr.responseText;
-                                    apps.prompt.vars.notify("Password set successfully.", ["Okay"], function(){}, "Settings", apps.settings.appWindow.appImg);
+                                    apps.prompt.vars.notify("Password set successfully.", ["Okay"], function(){}, "Settings", "appicons/ds/STN.png");
                                 }else{
                                     apps.prompt.vars.alert("There was an issue setting your password. Try again.<br>" + passxhr.responseText, "Okay", function(){}, "Settings");
                                 }
@@ -7484,7 +7484,7 @@ c(function(){
                     passfd.append('pass', tmpPasswordSet);
                     passxhr.send(passfd);
                     //apps.settings.vars.tmpPasswordSet = "";
-                }, 2000);
+                }, 1000);
                 getId("STNosPass").value = "";
             },
             calcFLOPS: function(){
@@ -9532,10 +9532,11 @@ c(function(){
             "05/25/2019: B0.16.3.0\n + Yet another huge music player update. Too much content / fixes over several days to list everything.\n\n" +
             "07/13/2019: B1.0.0.0\n + Added the aOS Hub, where users can search for apps, scripts, etc.\n + Repository and package system added.\n : Apps moved to repository: Cookie Clicker, Calculator, GTK2aOS, JS Paint.\n : Fixed filenames and directories containing the / character breaking bash.\n - Removed old music visualizer.\n + Restored ability to delete files in USERFILES.\n + Boot Script editor now supports multiple boot scripts.\n : List of Custom Styles is moved to repository.\n + Custom Style system can now handle multiple 3rd-party stylesheets as well as the user's style.\n + Settings menu for Smart Icons.\n + Added Accumulative Spikes to Music Player.\n : Bash prompt uses first four characters of ID rather than the whole thing.\n + New default desktop background.\n + Lots of new icons.\n - Window titles no longer become transparent when defocused.\n + Apps can now tell aOS to prompt the user if a restart is required.\n : PostMessage system now uses JSON instead of strings.\n + Major upgrade to PostMessage.\n : Fixed file deletion.\n : Cropped cursor set to avoid deprecation of larger size.\n : Fixed error on displaying a notification with no preview image.\n : Fixed NORAA always listening if the setting was modified rather than if it was enabled.\n : Fixed Files 2 sometimes opening the old text editor instead of the new one.\n : Fixed bash cd not returning to current workdir on failure.\n\n" +
             "07/16/2019: B1.0.1.0\n + Added Smart Icon Settings to the Settings app.\n + Clicking on the progress bar in the Music Player lets you skip to a point in the song.\n + Added Average Pitch visualizer to Music Player.\n + Added marker on progress bar in Music Player to help with transparent color themes.\n : Moved Music Player title to front of caption rather than the end.\n\n" +
-            "07/18/2019: B1.0.2.0\n + New custom menu with graphics for selecting visualizers and colors in Music Player.\n + Added static gradient color themes to Music Player.\n + Added Queen color theme to Music Player.\n + Added High Frequency Range to Music Player; requires devconsole to activate the flag (highFreqRange).",
+            "07/18/2019: B1.0.2.0\n + New custom menu with graphics for selecting visualizers and colors in Music Player.\n + Added static gradient color themes to Music Player.\n + Added Queen color theme to Music Player.\n + Added High Frequency Range to Music Player; requires devconsole to activate the flag (highFreqRange).\n\n" +
+            "07/24/2019: B1.0.2.1\n : Fixed issue where aOS would incorrectly state that there was a failure setting a new password.\n : Fixed aOS ignoring correct passwords if their internet is too fast for itself.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.0.2.0 (07/18/2019) r1';
+    window.aOSversion = 'B1.0.2.1 (07/24/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
