@@ -12,7 +12,13 @@
             }
             function acceptPassword(token){
                 document.cookie = "logintoken=" + token + ';secure;';
-                window.location = 'aosBeta.php' + googlePlay;
+                getId("checkBtn").style.opacity = "0.5";
+                getId("checkBtn").style.pointerEvents = "none";
+                getId("password").style.opacity = "0.5";
+                getId("password").style.pointerEvents = "none";
+                setTimeout(function(){
+                    window.location = 'aosBeta.php' + googlePlay;
+                }, 500);
             }
             function rejectPassword(message){
                 getId("error").innerHTML = message;
@@ -252,7 +258,7 @@
             OS ID: <?php echo $_COOKIE['keyword'] ?><br>
             &nbsp;<br>
             <span id="error"></span><br>
-            <input type="password" placeholder="Password" onkeypress="if(event.keyCode === 13){checkPassword();}" id="password"> <button onclick="checkPassword()">Log In</button><br><br>
+            <input type="password" placeholder="Password" onkeypress="if(event.keyCode === 13){checkPassword();}" id="password"> <button id="checkBtn" onclick="checkPassword()">Log In</button><br><br>
             Or, if this isn't your account, <button onclick="skipPassword()">Create a New One</button>.<br><br>
         </div>
     </body>
