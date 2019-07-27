@@ -652,6 +652,41 @@ var colors = {
                 (amount / 255) + ')';
         }
     },
+    rainbowStatic: {
+        name: "Rainbow",
+        image: "colors/rainbowStatic.png",
+        func: function(amount, position){
+            if(typeof position === "number"){
+                return 'hsl(' +
+                    (position * this.multiplier) +
+                    ',100%,50%)';
+            }else{
+                return 'hsl(' +
+                    (amount * this.multiplier) +
+                    ',100%,50%)';
+            }
+        },
+        multiplier: 360 / 255
+    },
+    rainbowActive: {
+        name: "Rainbow Active",
+        image: "colors/rainbowActive.png",
+        func: function(amount, position){
+            if(typeof position === "number"){
+                return 'hsla(' +
+                    (position * this.multiplier) +
+                    ',100%,50%,' +
+                    (amount / this.alphaDivisor + 0.25) + ')';
+            }else{
+                return 'hsla(' +
+                    (amount * this.multiplier) +
+                    ',100%,50%,' +
+                    (amount / this.alphaDivisor + 0.25) + ')';
+            }
+        },
+        multiplier: 360 / 255,
+        alphaDivisor: 255 * (4/3)
+    },
     queen: {
         name: "Queen",
         image: "colors/queen.png",
@@ -695,7 +730,7 @@ var colors = {
         name: "Pride",
         image: "colors/pride.png",
         func: function(amount){
-            return 'rgb(' +
+            /*return 'rgba(' +
                 (
                     (amount < 95) * 255 +
                     (amount >= 95 && amount < 159) * (159 - amount) * this.divide255by64 +
@@ -710,6 +745,8 @@ var colors = {
                     (amount >= 159 && amount < 207) * ((159 - amount) * -1) * this.divide255by48 +
                     (amount >= 207) * 255
                 ) + ',' + (amount / 255) + ')';
+            */
+        return 'hsla(' + amount + ',100%,50%,' + (amount / 255) + ')';
         },
         divide255by96: 255 / 96,
         divide255by64: 255 / 64,
@@ -719,7 +756,7 @@ var colors = {
         name: "Pride Solid",
         image: "colors/prideSolid.png",
         func: function(amount){
-            return 'rgb(' +
+            /*return 'rgb(' +
                 (
                     (amount < 95) * 255 +
                     (amount >= 95 && amount < 159) * (159 - amount) * this.divide255by64 +
@@ -733,7 +770,8 @@ var colors = {
                 (
                     (amount >= 159 && amount < 207) * ((159 - amount) * -1) * this.divide255by48 +
                     (amount >= 207) * 255
-                ) + ')';
+                ) + ')';*/
+            return 'hsl(' + amount + ',100%,50%)';
         },
         divide255by96: 255 / 96,
         divide255by64: 255 / 64,
@@ -744,42 +782,31 @@ var colors = {
         image: "colors/prideStatic.png",
         func: function(amount, position){
             if(typeof position === "number"){
-                return 'rgb(' +
-                    (
-                        (position < 95) * 255 +
-                        (position >= 95 && position < 159) * (159 - position) * this.divide255by64 +
-                        (position >= 207) * ((207 - position) * -1) * this.divide255by96
-                    ) + ',' +
-                    (
-                        (position < 95) * position * this.divide255by96 +
-                        (position >= 95 && position < 159) * 255 +
-                        (position >= 159 && position < 207) * (207 - position) * this.divide255by48
-                    ) + ',' +
-                    (
-                        (position >= 159 && position < 207) * ((159 - position) * -1) * this.divide255by48 +
-                        (position >= 207) * 255
-                    ) + ')';
+                return 'hsl(' + position + ',100%,50%)';
             }else{
-                return 'rgb(' +
-                    (
-                        (amount < 95) * 255 +
-                        (amount >= 95 && amount < 159) * (159 - amount) * this.divide255by64 +
-                        (amount >= 207) * ((207 - amount) * -1) * this.divide255by96
-                    ) + ',' +
-                    (
-                        (amount < 95) * amount * this.divide255by96 +
-                        (amount >= 95 && amount < 159) * 255 +
-                        (amount >= 159 && amount < 207) * (207 - amount) * this.divide255by48
-                    ) + ',' +
-                    (
-                        (amount >= 159 && amount < 207) * ((159 - amount) * -1) * this.divide255by48 +
-                        (amount >= 207) * 255
-                    ) + ')';
+                return 'hsl(' + amount + ',100%,50%)';
+            }
+        }
+    },
+    prideBlocky: {
+        name: "Pride Blocky",
+        image: "colors/prideBlocky.png",
+        func: function(amount, position){
+            if(typeof position === "number"){
+                var numOfCols = this.prideColors.length;
+                var selCol = Math.floor(position / 255 * numOfCols);
+                if(selCol < 0){ selCol = 0; }
+                if(selCol > numOfCols - 1){ selCol = numOfCols; }
+                return 'hsl(' + this.prideColors[selCol] + ',100%,50%)';
+            }else{
+                var numOfCols = this.prideColors.length;
+                var selCol = Math.floor(amount/ 255 * numOfCols);
+                if(selCol < 0){ selCol = 0; }
+                if(selCol > numOfCols - 1){ selCol = numOfCols; }
+                return 'hsl(' + this.prideColors[selCol] + ',100%,50%)';
             }
         },
-        divide255by96: 255 / 96,
-        divide255by64: 255 / 64,
-        divide255by48: 255 / 48
+        prideColors: [0, 33, 55, 110, 175, 235, 265]
     },
     'SEPARATOR_GLOWS" disabled="': {
         name: "---------------",
@@ -987,7 +1014,7 @@ var vis = {
                 canvas.fillStyle = "#000";
                 canvas.fillRect(
                     Math.round(left + i * barSpacing),
-                    Math.floor(size[1] / 2) + 5,
+                    Math.floor(size[1] / 2) + 4,
                     Math.round(barWidth),
                     Math.round(strength / 255 * maxHeight + 5)
                 );
@@ -1083,6 +1110,315 @@ var vis = {
         stop: function(){
             
         },
+        sqrt255: Math.sqrt(255)
+    },
+    curvedAudioVision: {
+        name: "Curved Lines",
+        image: "visualizers/curvedlines_av.png",
+        start: function(){
+            canvas.lineCap = "round";
+            canvas.lineWidth = this.lineWidth;
+            smoke.lineCap = "round";
+            smoke.lineWidth = this.lineWidth * 2;
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var xdist = size[0] / (this.lineCount + 2) / 2;
+            var ydist = size[1] / (this.lineCount + 2) / 2;
+            xdist = Math.min(xdist, ydist);
+            var datastep = 1024 / this.lineCount;
+            var colorstep = 255 / this.lineCount;
+            var center = size[1] / 2;
+            for(var i = 0; i < this.lineCount; i++){
+                var pos = Math.floor((i + 1) * xdist);
+                var enddata = (i + 1) * datastep;
+                var strength = 0;
+                var samples = 0;
+                for(var j = Math.round(i * datastep); j < enddata; j++){
+                    //if(visData[j] > 127){
+                        strength += Math.sqrt(visData[j]) * this.sqrt255;
+                        //strength += Math.pow(visData[j], 2) / 255;
+                        //strength += visData[j];
+                        //strength += Math.pow(visData[j] * 1.5, 2) / 255;
+                        //strength = Math.max(strength, visData[j]);
+                        samples++;
+                    //}else{
+                    //    strength += Math.sqrt(visData[j]) * this.sqrt255;
+                        //strength += Math.pow(visData[j], 2) / 255;
+                        //strength += visData[j];
+                        //strength = Math.max(strength, visData[j]);
+                    //    samples++;
+                    //}
+                }
+                strength /= samples;
+                //if(strength > 255){
+                //    strength = 255;
+                //}
+                canvas.strokeStyle = getColor(strength, i * colorstep);
+                smoke.strokeStyle = getColor(strength, i * colorstep);
+
+                var circlePoints = [
+                    {x: xdist * this.lineCount, y: 0},
+                    {x: xdist * this.lineCount, y: 2 * xdist * this.lineCount},
+                    {x: xdist * this.lineCount + (xdist * (i + 1)), y: xdist * this.lineCount}
+                ]
+                var currCircle = this.circleFromThreePoints(...circlePoints);
+                var tri = [
+                    Math.sqrt(
+                        Math.pow(
+                            circlePoints[2].x -
+                            circlePoints[0].x
+                        , 2) + 
+                        Math.pow(
+                            circlePoints[2].y - 
+                            circlePoints[0].y
+                        , 2)
+                    ),
+                    currCircle.r,
+                    currCircle.r
+                ];
+                // (b2 + c2 − a2) / 2bc
+                var angle = Math.acos(this.deg2rad((tri[1]*tri[1] + tri[2]*tri[2] - tri[0]*tri[0]) / (2 * tri[1] * tri[2])));
+                canvas.beginPath();
+                canvas.arc(
+                    currCircle.x + (size[0] - xdist * this.lineCount * 2) / 2,
+                    currCircle.y + (size[1] / 2 - xdist * this.lineCount),
+                    currCircle.r,
+                    ((angle - this.deg2rad(Math.pow((this.lineCount - i - 1) * 1.83, 1.61))) * -1) * (strength / 255),
+                    ((angle - this.deg2rad(Math.pow((this.lineCount - i - 1) * 1.83, 1.61)))) * (strength / 255)
+                );
+                canvas.stroke();
+                if(smokeEnabled){
+                    smoke.beginPath();
+                    smoke.arc(
+                        currCircle.x + (size[0] - xdist * this.lineCount * 2) / 2,
+                        currCircle.y + (size[1] / 2 - xdist * this.lineCount),
+                        currCircle.r,
+                        ((angle - this.deg2rad(Math.pow((this.lineCount - i - 1) * 1.83, 1.61))) * -1) * (strength / 255),
+                        ((angle - this.deg2rad(Math.pow((this.lineCount - i - 1) * 1.83, 1.61)))) * (strength / 255)
+                    );
+                    smoke.stroke();
+                }
+
+                circlePoints[0].x *= -1;
+                circlePoints[1].x *= -1;
+                circlePoints[2].x *= -1;
+                currCircle = this.circleFromThreePoints(...circlePoints);
+                canvas.beginPath();
+                canvas.arc(
+                    currCircle.x + (size[0] / 2 + xdist * this.lineCount),
+                    currCircle.y + (size[1] / 2 - xdist * this.lineCount),
+                    currCircle.r,
+                    ((angle - this.deg2rad(Math.pow((this.lineCount - i - 1) * 1.83, 1.61))) * -1) * (strength / 255) + this.deg2rad(180),
+                    ((angle - this.deg2rad(Math.pow((this.lineCount - i - 1) * 1.83, 1.61)))) * (strength / 255) + this.deg2rad(180)
+                );
+                canvas.stroke();
+                if(smokeEnabled){
+                    smoke.beginPath();
+                    smoke.arc(
+                        currCircle.x + (size[0] / 2 + xdist * this.lineCount),
+                        currCircle.y + (size[1] / 2 - xdist * this.lineCount),
+                        currCircle.r,
+                        ((angle - this.deg2rad(Math.pow((this.lineCount - i - 1) * 1.83, 1.61))) * -1) * (strength / 255) + this.deg2rad(180),
+                        ((angle - this.deg2rad(Math.pow((this.lineCount - i - 1) * 1.83, 1.61)))) * (strength / 255) + this.deg2rad(180)
+                    );
+                    smoke.stroke();
+                }
+            }
+        },
+        stop: function(){
+            canvas.lineCap = "square";
+            canvas.lineWidth = 1;
+            smoke.lineCap = "square";
+            smoke.lineWidth = 1;
+        },
+        sizechange: function(){
+            canvas.lineCap = "round";
+            canvas.lineWidth = this.lineWidth;
+            smoke.lineCap = "round";
+            smoke.lineWidth = this.lineWidth * 2;
+        },
+        lineWidth: 6,
+        lineCount: 9,
+        sqrt255: Math.sqrt(255),
+        deg2rad: function(degrees){
+            return degrees * this.piBy180;
+        },
+        piBy180: Math.PI / 180,
+        circleFromThreePoints: function(p1, p2, p3) { // from Circle.js
+
+            var x1 = p1.x;
+            var y1 = p1.y;
+            var x2 = p2.x;
+            var y2 = p2.y;
+            var x3 = p3.x;
+            var y3 = p3.y;
+            
+            var a = x1 * (y2 - y3) - y1 * (x2 - x3) + x2 * y3 - x3 * y2;
+            
+            var b = (x1 * x1 + y1 * y1) * (y3 - y2) 
+                    + (x2 * x2 + y2 * y2) * (y1 - y3)
+                    + (x3 * x3 + y3 * y3) * (y2 - y1);
+            
+            var c = (x1 * x1 + y1 * y1) * (x2 - x3) 
+                    + (x2 * x2 + y2 * y2) * (x3 - x1) 
+                    + (x3 * x3 + y3 * y3) * (x1 - x2);
+            
+            var x = -b / (2 * a);
+            var y = -c / (2 * a);
+            
+            return {
+                x: x,
+                y: y,
+                r: Math.hypot(x - x1, y - y1)
+            };
+        }
+    },
+    centeredAudioVision: {
+        name: "Centered Lines",
+        image: "visualizers/centeredlines_av.png",
+        start: function(){
+            canvas.lineCap = "round";
+            canvas.lineWidth = this.lineWidth;
+            smoke.lineCap = "round";
+            smoke.lineWidth = this.lineWidth * 2;
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var xdist = size[0] / (this.lineCount + 2);
+            var datastep = 1024 / this.lineCount;
+            var colorstep = 255 / this.lineCount;
+            var center = size[1] / 2;
+            for(var i = 0; i < this.lineCount; i++){
+                var pos = Math.floor((i + 1) * xdist);
+                var enddata = (i + 1) * datastep;
+                var strength = 0;
+                var samples = 0;
+                for(var j = Math.round(i * datastep); j < enddata; j++){
+                    //if(visData[j] > 127){
+                        strength += Math.sqrt(visData[j]) * this.sqrt255;
+                        //strength += Math.pow(visData[j], 2) / 255;
+                        //strength += visData[j];
+                        //strength += Math.pow(visData[j] * 1.5, 2) / 255;
+                        //strength = Math.max(strength, visData[j]);
+                        samples++;
+                    //}else{
+                    //    strength += Math.sqrt(visData[j]) * this.sqrt255;
+                        //strength += Math.pow(visData[j], 2) / 255;
+                        //strength += visData[j];
+                        //strength = Math.max(strength, visData[j]);
+                    //    samples++;
+                    //}
+                }
+                strength /= samples;
+                //if(strength > 255){
+                //    strength = 255;
+                //}
+                canvas.strokeStyle = getColor(strength, i * colorstep);
+                smoke.strokeStyle = getColor(strength, i * colorstep);
+                
+                canvas.beginPath();
+                canvas.moveTo(pos, center - (center * (strength / 383)) - 1);
+                canvas.lineTo(pos, center + (center * (strength / 383)) + 1);
+                canvas.stroke();
+                if(smokeEnabled){
+                    smoke.beginPath();
+                    smoke.moveTo(pos, center - (center * (strength / 383)) - 8);
+                    smoke.lineTo(pos, center + (center * (strength / 383)) + 8);
+                    smoke.stroke();
+                }
+            }
+        },
+        stop: function(){
+            canvas.lineCap = "square";
+            canvas.lineWidth = 1;
+            smoke.lineCap = "square";
+            smoke.lineWidth = 1;
+        },
+        sizechange: function(){
+            canvas.lineCap = "round";
+            canvas.lineWidth = this.lineWidth;
+            smoke.lineCap = "round";
+            smoke.lineWidth = this.lineWidth * 2;
+        },
+        lineWidth: 6,
+        lineCount: 18,
+        sqrt255: Math.sqrt(255)
+    },
+    caveAudioVision: {
+        name: "Cave Lines",
+        image: "visualizers/cavelines_av.png",
+        start: function(){
+            canvas.lineWidth = this.lineWidth;
+            smoke.lineWidth = this.lineWidth * 2;
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var xdist = size[0] / (this.lineCount + 2);
+            var datastep = 1024 / this.lineCount;
+            var colorstep = 255 / this.lineCount;
+            var caveCieling = Math.round(size[1] / 18);
+            var center = size[1] / 2;
+            for(var i = 0; i < this.lineCount; i++){
+                var pos = Math.floor((i + 1) * xdist);
+                var enddata = (i + 1) * datastep;
+                var strength = 0;
+                var samples = 0;
+                for(var j = Math.round(i * datastep); j < enddata; j++){
+                    //if(visData[j] > 127){
+                        strength += Math.sqrt(visData[j]) * this.sqrt255;
+                        //strength += Math.pow(visData[j], 2) / 255;
+                        //strength += visData[j];
+                        //strength += Math.pow(visData[j] * 1.5, 2) / 255;
+                        //strength = Math.max(strength, visData[j]);
+                        samples++;
+                    //}else{
+                    //    strength += Math.sqrt(visData[j]) * this.sqrt255;
+                        //strength += Math.pow(visData[j], 2) / 255;
+                        //strength += visData[j];
+                        //strength = Math.max(strength, visData[j]);
+                    //    samples++;
+                    //}
+                }
+                strength /= samples;
+                //if(strength > 255){
+                //    strength = 255;
+                //}
+                canvas.strokeStyle = getColor(strength, i * colorstep);
+                smoke.strokeStyle = getColor(strength, i * colorstep);
+                
+                canvas.beginPath();
+                canvas.moveTo(pos, caveCieling);
+                canvas.lineTo(pos, (center * (strength / 383)) + caveCieling + 4);
+                canvas.moveTo(pos, size[1] - caveCieling);
+                canvas.lineTo(pos, size[1] - (center * (strength / 383)) - caveCieling - 4);
+                canvas.stroke();
+                if(smokeEnabled){
+                    smoke.beginPath();
+                    smoke.moveTo(pos, 0);
+                    smoke.lineTo(pos, (center * (strength / 383)) + caveCieling + 12);
+                    smoke.moveTo(pos, size[1]);
+                    smoke.lineTo(pos, size[1] - (center * (strength / 383)) - caveCieling - 12);
+                    smoke.stroke();
+                    canvas.fillStyle = "#000";
+                    canvas.fillRect(0, 0, size[0], caveCieling);
+                    canvas.fillRect(0, size[1] - caveCieling, size[0], size[1]);
+                }
+            }
+        },
+        stop: function(){
+            canvas.lineWidth = 1;
+            smoke.lineWidth = 1;
+        },
+        sizechange: function(){
+            canvas.lineWidth = this.lineWidth;
+            smoke.lineWidth = this.lineWidth * 2;
+        },
+        lineWidth: 6,
+        lineCount: 18,
         sqrt255: Math.sqrt(255)
     },
     spikes1to1: {
@@ -1363,6 +1699,112 @@ var vis = {
             smoke.beginPath();
             smoke.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
             smoke.stroke();
+        }
+    },
+    circleLines: {
+        name: "Circle Lines",
+        image: "visualizers/circleLines.png",
+        start: function(){
+            canvas.lineCap = "round";
+            canvas.lineWidth = this.lineWidth;
+            smoke.lineCap = "round";
+            smoke.lineWidth = this.lineWidth * 2;
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+            }
+            var ringHeight = Math.round(Math.min(size[0], size[1]) * 0.6);
+            var ringMaxRadius = ringHeight * 0.5;
+            var ringMinRadius = ringHeight * 0.25;
+            var ringMaxExpand = Math.round(Math.min(size[0], size[1]) * 0.2);
+            var drumStrength = 0;
+            var center = [Math.round(size[0] / 2), Math.round(size[1] / 2)];
+            for(var i = 0; i < 180; i++){
+                drumStrength += Math.pow(visData[i], 2) / 255;
+            }
+            drumStrength /= 180;
+
+            var randomOffset = [0, 0];
+
+            var lineDist = 360 / this.lineCount;
+            var colorDist = 255 / this.lineCount;
+            var dataDist = Math.round(1024 / this.lineCount);
+            for(var i = 0; i < this.lineCount; i++){
+                var strength = 0;
+                var dataStop = (i + 1) * dataDist;
+                var samples = 0;
+                for(var j = i * dataDist; j < dataStop; j++){
+                    strength += Math.sqrt(visData[j]) * this.sqrt255;
+                    samples++;
+                }
+                strength /= samples;
+                
+                var firstPoint = this.findNewPoint(
+                    size[0] / 2,
+                    size[1] / 2,
+                    i * lineDist + 90,
+                    ringMinRadius + drumStrength / 255 * ringMaxExpand - 5
+                );
+                var secondPoint = this.findNewPoint(
+                    size[0] / 2,
+                    size[1] / 2,
+                    i * lineDist + 90,
+                    ringMinRadius + strength / 255 * ringMinRadius + drumStrength / 255 * ringMaxExpand
+                )
+                canvas.strokeStyle = getColor(strength, i * colorDist);
+                canvas.beginPath();
+                canvas.moveTo(firstPoint.x, firstPoint.y);
+                canvas.lineTo(secondPoint.x, secondPoint.y);
+                canvas.stroke();
+                if(smokeEnabled){
+                    smoke.strokeStyle = getColor(strength, i * colorDist);
+                    smoke.beginPath();
+                    smoke.moveTo(firstPoint.x, firstPoint.y);
+                    smoke.lineTo(secondPoint.x, secondPoint.y);
+                    smoke.stroke();
+                }
+            }
+
+            
+            canvas.fillStyle = '#212121';
+            this.degArc2(
+                size[0] / 2 + randomOffset[0],
+                size[1] / 2 + randomOffset[1],
+                ringMinRadius * 0.7 + drumStrength / 255 * ringMaxExpand - 5,
+                0,
+                360
+            );
+        },
+        stop: function(){
+            canvas.lineCap = "butt";
+            canvas.lineWidth = 1;
+            smoke.lineCap = "butt";
+            smoke.lineWidth = 1;
+        },
+        sizechange: function(){
+            canvas.lineCap = "round";
+            canvas.lineWidth = this.lineWidth;
+            smoke.lineCap = "round";
+            smoke.lineWidth = this.lineWidth * 2;
+        },
+        lineCount: 36,
+        lineWidth: 6,
+        TAU: Math.PI * 2,
+        sqrt255: Math.sqrt(255),
+        degArc2: function(x, y, r, a, b){
+            canvas.beginPath();
+            canvas.arc(x, y, r, (a / 360) * this.TAU, (b / 360) * this.TAU);
+            canvas.fill();
+        },
+        findNewPoint: function(x, y, angle, distance) { // from codershop on Stack Overflow
+            var result = {};
+        
+            result.x = /*Math.round*/(Math.cos(angle * Math.PI / 180) * distance + x);
+            result.y = /*Math.round*/(Math.sin(angle * Math.PI / 180) * distance + y);
+        
+            return result;
         }
     },
     circle: {
@@ -2381,6 +2823,9 @@ function toggleSmoke(){
         canvasElement.style.backgroundImage = "url(smoke_transparent.png)";
         smokeEnabled = 1;
         resizeSmoke();
+        if(vis[currVis].sizechange){
+            vis[currVis].sizechange();
+        }
     }
 }
 function resizeSmoke(){
