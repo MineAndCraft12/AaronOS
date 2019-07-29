@@ -29,6 +29,9 @@
                     file_put_contents('logins/.htaccess', 'Deny from all');
                 }
                 file_put_contents('logins/'.$_COOKIE['keyword'].'.txt', password_hash($newtoken, PASSWORD_BCRYPT));
+                if(isset($_POST['loggingInViaUI'])){
+                    setcookie('logintoken', $newtoken);
+                }
                 echo $newtoken;
             }else{
                 echo 'REJECT';

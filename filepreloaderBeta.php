@@ -33,6 +33,7 @@
     
     // if the page needs to be refreshed
     $needtorefresh = false;
+    $refreshMessage = '';
     // if a user change was requested
     if(isset($changeKey) && isset($changePass)){
         // if the user exists
@@ -40,11 +41,11 @@
             // if the user has a password
             if(file_exists('USERFILES/'.$changeKey.'/aOSpassword.txt')){
                 // tell the browser the new user name
-                setcookie('keyword', $changeKey, time() + 321408000);// time() + 321408000);
-                setcookie('logintoken', '', time() - 3600);
-                header('Location: askPassword.php');
-                die();
-                /*
+                //setcookie('keyword', $changeKey, time() + 321408000);// time() + 321408000);
+                //setcookie('logintoken', '', time() - 3600);
+                //header('Location: askPassword.php');
+                //die();
+                
                 // grab the users password
                 $passfile = fopen('USERFILES/'.$changeKey.'/aOSpassword.txt', 'r');
                 $targetPass = fread($passfile, filesize('USERFILES/'.$changeKey.'/aOSpassword.txt'));
@@ -68,10 +69,15 @@
                         // tell the browser the new user name
                         setcookie('keyword', $changeKey, time() + 321408000);// time() + 321408000);
                         $_COOKIE['keyword'] = $changeKey;
+                    }else{
+                        $refreshMessage = 'Failed to swap, incorrect password.';
                     }
                 }
-                */
+            }else{
+                $refreshMessage = 'Failed to swap, no password on target. Get help from the developer.';
             }
+        }else{
+            $refreshMessage = 'Failed to swap, target does not exist.';
         }
         // page needs to be refreshed on clientside
         $needtorefresh = true;
@@ -113,6 +119,8 @@
         if(isset($_COOKIE['logintoken'])){
             if((require 'checkToken.php') === 0){
                 header('Location: askPassword.php');
+            }else{
+                echo 'localStorage.removeItem("login_failmessage");';
             }
         }else{
             header('Location: askPassword.php');
@@ -160,7 +168,7 @@
     }
     // if it needs to be refreshed, tell the client via js
     if($needtorefresh){
-        echo 'window.location = "aosBeta.php?refreshed="+Math.round(Math.random()*1000);doLog("Moving");';
+        echo 'localStorage.setItem("login_failmessage", "' + $refreshMessage + '");window.location = "aosBeta.php?refreshed="+Math.round(Math.random()*1000);doLog("Moving");';
     }
     // if user folder not exist, create it
     if(!(is_dir('USERFILES/'.$_COOKIE['keyword']))){

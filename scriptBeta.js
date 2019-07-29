@@ -8158,19 +8158,19 @@ c(function(){
             tempchPass: '',
             changeKey: function(){
                 //this.tempchKey = prompt('What is the key of your target aOS system? Keep in mind that you need a password file (aOSpassword) set on the current OS to get back to it later. Press Cancel if you need to.');
-                apps.prompt.vars.prompt('What is the key of your target aOS system?<br>Leave blank to cancel.<br>Keep in mind, if the target system has no password, this will fail.<br>If this works, you should be sent to a password screen.', 'Submit', function(tmpChKey){
+                apps.prompt.vars.prompt('What is the key of your target aOS system?<br>Leave blank to cancel.<br>Make sure to leave a password on your current system or you may not be able to get back to it.', 'Submit', function(tmpChKey){
                     apps.settings.vars.tempchKey = tmpChKey;
                     if(apps.settings.vars.tempchKey !== ''){
                         //this.tempchPass = prompt('What is the password of your target aOS system? You still have a chance to press Cancel.');
-                        //apps.prompt.vars.prompt('What is the password of your target aOS system? You still have a chance to cancel, by leaving the field blank.', 'Submit', function(tmpChPass){
-                        //    apps.settings.vars.tempchPass = tmpChPass;
-                        //    if(apps.settings.vars.tempchPass !== ''){
+                        apps.prompt.vars.prompt('What is the password of your target aOS system? You still have a chance to cancel, by leaving the field blank.<br>You may be asked to log in again afterwards.', 'Submit', function(tmpChPass){
+                            apps.settings.vars.tempchPass = tmpChPass;
+                            if(apps.settings.vars.tempchPass !== ''){
                                 //document.cookie = 'password=' + tmpChPass + ';expires=2147483647';
-                                window.location = '?changeKey=' + apps.settings.vars.tempchKey// + '&changePass=' + apps.settings.vars.tempchPass;
-                        //    }else{
-                        //        apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
-                        //    }
-                        //}, 'Settings');
+                                window.location = '?changeKey=' + apps.settings.vars.tempchKey + '&changePass=' + apps.settings.vars.tempchPass;
+                            }else{
+                                apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
+                            }
+                        }, 'Settings');
                     }else{
                         apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
                     }
@@ -9534,10 +9534,11 @@ c(function(){
             "07/16/2019: B1.0.1.0\n + Added Smart Icon Settings to the Settings app.\n + Clicking on the progress bar in the Music Player lets you skip to a point in the song.\n + Added Average Pitch visualizer to Music Player.\n + Added marker on progress bar in Music Player to help with transparent color themes.\n : Moved Music Player title to front of caption rather than the end.\n\n" +
             "07/18/2019: B1.0.2.0\n + New custom menu with graphics for selecting visualizers and colors in Music Player.\n + Added static gradient color themes to Music Player.\n + Added Queen color theme to Music Player.\n + Added High Frequency Range to Music Player; requires devconsole to activate the flag (highFreqRange).\n\n" +
             "07/24/2019: B1.0.2.1\n : Fixed issue where aOS would incorrectly state that there was a failure setting a new password.\n : Fixed aOS ignoring correct passwords if their internet is too fast for itself.\n\n" +
-            "07/27/2019: B1.0.3.0\n + Music Player has four new visualizers; Curved Lines, Centered Lines, Cave Lines, and Circle Lines. Thanks &Scaron;tefan Schindler for the designs.\n + Music Player has three new color schemes; Rainbow, Rainbow Active, and Pride Blocky.\n : Music Player's Pride color schemes now use HSL instead of RGB, and look much better.\n : In Music Player, fixed Monstercat's bars stretching half a pixel through its floor.\n : Music Player now alerts visualizers when smoke is toggled to prevent canvases forgetting their settings.",
+            "07/27/2019: B1.0.3.0\n + Music Player has four new visualizers; Curved Lines, Centered Lines, Cave Lines, and Circle Lines. Thanks &Scaron;tefan Schindler for the designs.\n + Music Player has three new color schemes; Rainbow, Rainbow Active, and Pride Blocky.\n : Music Player's Pride color schemes now use HSL instead of RGB, and look much better.\n : In Music Player, fixed Monstercat's bars stretching half a pixel through its floor.\n : Music Player now alerts visualizers when smoke is toggled to prevent canvases forgetting their settings.\n\n" +
+            "07/29/2019: B1.0.3.1\n : Fixed login issues.\n : Fixed swapping between aOS instances.\n : Fixed missing images in music player.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.0.3.0 (07/27/2019) r0';
+    window.aOSversion = 'B1.0.3.1 (07/29/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

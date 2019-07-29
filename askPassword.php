@@ -11,7 +11,7 @@
                 googlePlay = '?GooglePlay=true';
             }
             function acceptPassword(token){
-                document.cookie = "logintoken=" + token + ';secure;';
+                document.cookie = "logintoken=" + token + ';';
                 getId("checkBtn").style.opacity = "0.5";
                 getId("checkBtn").style.pointerEvents = "none";
                 getId("password").style.opacity = "0.5";
@@ -23,6 +23,10 @@
             function rejectPassword(message){
                 getId("error").innerHTML = message;
                 getId('password').value = '';
+            }
+            if(localStorage.getItem("login_failmessage")){
+                rejectPassword(localStorage.getItem("login_failmessage"));
+                localStorage.removeItem("login_failmessage");
             }
             var running = 0;
             function checkPassword(){
@@ -48,6 +52,7 @@
                     };
                     var fd = new FormData();
                     fd.append("pass", document.getElementById('password').value);
+                    fd.append("loggingInViaUI", "true");
                     xhttp.open('POST', 'checkPassword.php');
                     xhttp.send(fd);
                     running = 1;

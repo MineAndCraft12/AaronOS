@@ -1114,7 +1114,7 @@ var vis = {
     },
     curvedAudioVision: {
         name: "Curved Lines",
-        image: "visualizers/curvedlines_av.png",
+        image: "visualizers/curvedLines_av.png",
         start: function(){
             canvas.lineCap = "round";
             canvas.lineWidth = this.lineWidth;
@@ -1277,7 +1277,7 @@ var vis = {
     },
     centeredAudioVision: {
         name: "Centered Lines",
-        image: "visualizers/centeredlines_av.png",
+        image: "visualizers/centeredLines_av.png",
         start: function(){
             canvas.lineCap = "round";
             canvas.lineWidth = this.lineWidth;
@@ -1349,7 +1349,7 @@ var vis = {
     },
     caveAudioVision: {
         name: "Cave Lines",
-        image: "visualizers/cavelines_av.png",
+        image: "visualizers/caveLines_av.png",
         start: function(){
             canvas.lineWidth = this.lineWidth;
             smoke.lineWidth = this.lineWidth * 2;
