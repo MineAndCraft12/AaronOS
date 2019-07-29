@@ -462,8 +462,10 @@ function togglePerformance(){
             size[1] *= 2;
             getId("visCanvas").width = size[0];
             getId("visCanvas").height = size[1];
+            getId("visCanvas").style.imageRendering = "";
             getId("smokeCanvas").width = size[0];
             getId("smokeCanvas").height = size[1];
+            getId("smokeCanvas").style.imageRendering = "";
         }
     }else{
         if(currVis !== "none"){
@@ -471,8 +473,10 @@ function togglePerformance(){
             size[1] /= 2;
             getId("visCanvas").width = size[0];
             getId("visCanvas").height = size[1];
+            getId("visCanvas").style.imageRendering = "pixelated";
             getId("smokeCanvas").width = size[0];
             getId("smokeCanvas").height = size[1];
+            getId("smokeCanvas").style.imageRendering = "pixelated";
         }
     }
     performanceMode = Math.abs(performanceMode - 1);
