@@ -29,13 +29,14 @@
                 <button onclick="back()">Back</button>
                 <button onclick="next()">Next</button> |
                 <button onclick="shuffle()">Shuffle</button> |
-                <button onclick="refresh()">New Songs</button>
+                <button onclick="refresh()">New Songs</button> |
+                Delay: <input style="width: 50px" type="number" id="delayinput" min="0" max="1" value="0.25" step="0.01" onchange="setDelay(this.value)">
                 <br>
                 Visuals: <select id="visfield" onchange="setVis(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openVisualizerMenu();"></select>
                 <button onclick="toggleSmoke()">Smoke</button> |
                 Colors: <select id="colorfield" onchange="setColor(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openColorMenu();"></select> |
-                Delay: <input style="width: 50px" type="number" id="delayinput" min="0" max="1" value="0.25" step="0.01" onchange="setDelay(this.value)"> |
-                <button onclick="toggleFPS()">FPS</button>
+                <button onclick="toggleFPS()">FPS</button> |
+                <button onclick="togglePerformance()">Fast Mode</button>
             </div>
             <div id="progressContainer" class="disabled" onclick="setProgress(event)"><div id="progress"></div></div>
             <div id="songList" class="disabled"></div>

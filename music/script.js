@@ -179,6 +179,7 @@ function loadFiles(event){
     
     getId("introduction").classList.add('disabled');
     getId("visualizer").classList.add('disabled');
+    getId("selectOverlay").classList.add('disabled');
     setVis("none");
     
     winsize = [window.innerWidth, window.innerHeight];
@@ -240,6 +241,7 @@ function loadWeirdFiles(event){
     
     getId("introduction").classList.add('disabled');
     getId("visualizer").classList.add('disabled');
+    getId("selectOverlay").classList.add('disabled');
     setVis("none");
     
     winsize = [window.innerWidth, window.innerHeight];
@@ -279,6 +281,7 @@ function loadMicrophone(event){
     
     getId("introduction").classList.add('disabled');
     getId("visualizer").classList.add('disabled');
+    getId("selectOverlay").classList.add('disabled');
     setVis("none");
     
     winsize = [window.innerWidth, window.innerHeight];
@@ -451,12 +454,43 @@ if(window.self !== window.top){
     });
 }
 
+var performanceMode = 0;
+function togglePerformance(){
+    if(performanceMode){
+        if(currVis !== "none"){
+            size[0] *= 2;
+            size[1] *= 2;
+            getId("visCanvas").width = size[0];
+            getId("visCanvas").height = size[1];
+            getId("smokeCanvas").width = size[0];
+            getId("smokeCanvas").height = size[1];
+        }
+    }else{
+        if(currVis !== "none"){
+            size[0] /= 2;
+            size[1] /= 2;
+            getId("visCanvas").width = size[0];
+            getId("visCanvas").height = size[1];
+            getId("smokeCanvas").width = size[0];
+            getId("smokeCanvas").height = size[1];
+        }
+    }
+    performanceMode = Math.abs(performanceMode - 1);
+    if(vis[currVis].sizechange){
+        vis[currVis].sizechange();
+    }
+}
+
 var winsize = [window.innerWidth, window.innerHeight];
 var size = [window.innerWidth - 8, window.innerHeight - 81];
 var fullscreen = 0;
 function toggleFullscreen(){
     if(fullscreen){
         size = [window.innerWidth - 8, window.innerHeight - 81];
+        if(performanceMode){
+            size[0] /= 2;
+            size[1] /= 2;
+        }
         getId("visualizer").style.border = "";
         getId("visualizer").style.bottom = "";
         getId("visualizer").style.left = "";
@@ -474,6 +508,10 @@ function toggleFullscreen(){
         }
     }else{
         size = [window.innerWidth, window.innerHeight];
+        if(performanceMode){
+            size[0] /= 2;
+            size[1] /= 2;
+        }
         getId("visualizer").style.border = "none";
         getId("visualizer").style.bottom = "0";
         getId("visualizer").style.left = "0";
@@ -516,6 +554,10 @@ function globalFrame(){
             size = [window.innerWidth, window.innerHeight];
         }else{
             size = [window.innerWidth - 8, window.innerHeight - 81];
+        }
+        if(performanceMode){
+            size[0] /= 2;
+            size[1] /= 2;
         }
         getId("visCanvas").width = size[0];
         getId("visCanvas").height = size[1];
@@ -1117,9 +1159,9 @@ var vis = {
         image: "visualizers/curvedLines_av.png",
         start: function(){
             canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth;
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth;
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
@@ -1235,9 +1277,9 @@ var vis = {
         },
         sizechange: function(){
             canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth;
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth;
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
         },
         lineWidth: 6,
         lineCount: 9,
@@ -1280,9 +1322,9 @@ var vis = {
         image: "visualizers/centeredLines_av.png",
         start: function(){
             canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth;
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth;
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
@@ -1339,9 +1381,9 @@ var vis = {
         },
         sizechange: function(){
             canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth;
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth;
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
         },
         lineWidth: 6,
         lineCount: 18,
@@ -1351,8 +1393,8 @@ var vis = {
         name: "Cave Lines",
         image: "visualizers/caveLines_av.png",
         start: function(){
-            canvas.lineWidth = this.lineWidth;
-            smoke.lineWidth = this.lineWidth;
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
@@ -1414,8 +1456,8 @@ var vis = {
             smoke.lineWidth = 1;
         },
         sizechange: function(){
-            canvas.lineWidth = this.lineWidth;
-            smoke.lineWidth = this.lineWidth;
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
         },
         lineWidth: 6,
         lineCount: 18,
@@ -1706,9 +1748,9 @@ var vis = {
         image: "visualizers/circleLines.png",
         start: function(){
             canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth;
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth;
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
@@ -1785,9 +1827,9 @@ var vis = {
         },
         sizechange: function(){
             canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth;
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth;
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
         },
         lineCount: 36,
         lineWidth: 6,
@@ -2832,7 +2874,11 @@ function resizeSmoke(){
     smokeElement.width = size[0];
     smokeElement.height = size[1];
     if(smokeEnabled){
-        smokeElement.style.filter = "blur(" + Math.round((size[0] + size[1]) / 50) + "px) brightness(3)";
+        if(performanceMode){
+            smokeElement.style.filter = "blur(" + Math.round((size[0] * 2 + size[1] * 2) / 50) + "px) brightness(3)";
+        }else{
+            smokeElement.style.filter = "blur(" + Math.round((size[0] + size[1]) / 50) + "px) brightness(3)";
+        }
     }
 }
 function updateSmoke(leftpos, toppos, shortwidth, shortheight){
