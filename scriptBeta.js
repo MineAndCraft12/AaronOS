@@ -9535,10 +9535,10 @@ c(function(){
             "07/18/2019: B1.0.2.0\n + New custom menu with graphics for selecting visualizers and colors in Music Player.\n + Added static gradient color themes to Music Player.\n + Added Queen color theme to Music Player.\n + Added High Frequency Range to Music Player; requires devconsole to activate the flag (highFreqRange).\n\n" +
             "07/24/2019: B1.0.2.1\n : Fixed issue where aOS would incorrectly state that there was a failure setting a new password.\n : Fixed aOS ignoring correct passwords if their internet is too fast for itself.\n\n" +
             "07/27/2019: B1.0.3.0\n + Music Player has four new visualizers; Curved Lines, Centered Lines, Cave Lines, and Circle Lines. Thanks &Scaron;tefan Schindler for the designs.\n + Music Player has three new color schemes; Rainbow, Rainbow Active, and Pride Blocky.\n : Music Player's Pride color schemes now use HSL instead of RGB, and look much better.\n : In Music Player, fixed Monstercat's bars stretching half a pixel through its floor.\n : Music Player now alerts visualizers when smoke is toggled to prevent canvases forgetting their settings.\n\n" +
-            "07/29/2019: B1.0.3.1\n : Fixed login issues related to login tokens.\n : Fixed swapping between aOS instances.\n : Fixed missing images in music player.",
+            "07/29/2019: B1.0.3.1\n : Fixed login issues related to login tokens.\n : Fixed swapping between aOS instances.\n : Fixed smoke being too intense in Lines-derived visualizers in Music Player.\n : Fixed missing images in music player.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.0.3.1 (07/29/2019) r1';
+    window.aOSversion = 'B1.0.3.1 (07/29/2019) r2';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

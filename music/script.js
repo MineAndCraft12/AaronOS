@@ -1119,7 +1119,7 @@ var vis = {
             canvas.lineCap = "round";
             canvas.lineWidth = this.lineWidth;
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth * 2;
+            smoke.lineWidth = this.lineWidth;
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
@@ -1237,7 +1237,7 @@ var vis = {
             canvas.lineCap = "round";
             canvas.lineWidth = this.lineWidth;
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth * 2;
+            smoke.lineWidth = this.lineWidth;
         },
         lineWidth: 6,
         lineCount: 9,
@@ -1282,7 +1282,7 @@ var vis = {
             canvas.lineCap = "round";
             canvas.lineWidth = this.lineWidth;
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth * 2;
+            smoke.lineWidth = this.lineWidth;
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
@@ -1341,7 +1341,7 @@ var vis = {
             canvas.lineCap = "round";
             canvas.lineWidth = this.lineWidth;
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth * 2;
+            smoke.lineWidth = this.lineWidth;
         },
         lineWidth: 6,
         lineCount: 18,
@@ -1352,7 +1352,7 @@ var vis = {
         image: "visualizers/caveLines_av.png",
         start: function(){
             canvas.lineWidth = this.lineWidth;
-            smoke.lineWidth = this.lineWidth * 2;
+            smoke.lineWidth = this.lineWidth;
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
@@ -1415,7 +1415,7 @@ var vis = {
         },
         sizechange: function(){
             canvas.lineWidth = this.lineWidth;
-            smoke.lineWidth = this.lineWidth * 2;
+            smoke.lineWidth = this.lineWidth;
         },
         lineWidth: 6,
         lineCount: 18,
@@ -1708,7 +1708,7 @@ var vis = {
             canvas.lineCap = "round";
             canvas.lineWidth = this.lineWidth;
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth * 2;
+            smoke.lineWidth = this.lineWidth;
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
@@ -1787,7 +1787,7 @@ var vis = {
             canvas.lineCap = "round";
             canvas.lineWidth = this.lineWidth;
             smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth * 2;
+            smoke.lineWidth = this.lineWidth;
         },
         lineCount: 36,
         lineWidth: 6,
