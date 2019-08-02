@@ -38,27 +38,27 @@
 }
     .darkMode ::-webkit-scrollbar{
         width:16px;
-        background-color:#222;
-        box-shadow:inset 0 0 10px #333;
+        background-color:#272727;
+        box-shadow:inset 0 0 10px #383838;
     }
     .darkMode ::-webkit-scrollbar-corner{
-        background-color:#222;
-        box-shadow:inset 0 0 10px #333;
+        background-color:#272727;
+        box-shadow:inset 0 0 10px #383838;
     }
     .darkMode ::-webkit-resizer{
         border-radius:8px;
         background-color:#555;
-        box-shadow:inset 0 0 10px #222;
+        box-shadow:inset 0 0 10px #272727;
     }
     .darkMode ::-webkit-scrollbar-thumb{
         border-radius:8px;
         background-color:#555;
-        box-shadow:inset 0 0 10px #222;
+        box-shadow:inset 0 0 10px #272727;
     }
     .darkMode ::-webkit-scrollbar-button{
         border-radius:8px;
         background-color:#555;
-        box-shadow:inset 0 0 10px #222;
+        box-shadow:inset 0 0 10px #272727;
     }
 
 .marquee{
@@ -117,20 +117,54 @@ button:active{
     box-shadow:inset 0 0 10px #999;
 }
     .darkMode button{
-        background-color:#000;
+        background-color:#272727;
         box-shadow:inset 0 0 5px #333;
         color:#CCC;
         border:1px solid #CCC;
     }
     .darkMode button:hover{
-        box-shadow:inset 0 0 5px #555;
+        box-shadow:inset 0 0 5px #777;
     }
     .darkMode button:focus{
-        box-shadow:inset 0 0 5px #666;
+        box-shadow:inset 0 0 5px #777;
     }
     .darkMode button:active{
-        box-shadow:inset 0 0 10px #666;
+        box-shadow:inset 0 0 10px #777;
     }
+select{
+    background-color:#FFF;
+    box-shadow:inset 0 0 5px #CCC;
+    border-radius:5px;
+    color:#333;
+    border:1px solid #333;
+    outline:none;
+    transition:0.2s;
+    cursor:inherit;
+}
+    select:hover{
+        box-shadow:inset 0 0 5px #AAA;
+    }
+    select:focus{
+        box-shadow:inset 0 0 5px #999;
+    }
+    select:active{
+        box-shadow:inset 0 0 10px #999;
+    }
+        .darkMode select{
+            background-color:#272727;
+            box-shadow:inset 0 0 5px #333;
+            color:#CCC;
+            border:1px solid #CCC;
+        }
+        .darkMode select:hover{
+            box-shadow:inset 0 0 5px #777;
+        }
+        .darkMode select:focus{
+            box-shadow:inset 0 0 5px #777;
+        }
+        .darkMode select:active{
+            box-shadow:inset 0 0 10px #777;
+        }
 input, textarea{
     background-color:#FFF;
     border:1px solid #333;
@@ -150,19 +184,19 @@ input:active, textarea:active{
     box-shadow:inset 0 0 10px #999;
 }
     .darkMode input, .darkMode textarea{
-        background-color:#000;
+        background-color:#272727;
         border:1px solid #CCC;
         color:#CCC;
         box-shadow:inset 0 0 5px #333;
     }
     .darkMode input:hover, .darkMode textarea:hover{
-        box-shadow:inset 0 0 5px #555;
+        box-shadow:inset 0 0 5px #777;
     }
     .darkMode input:focus, .darkMode textarea:focus{
-        box-shadow:inset 0 0 5px #666;
+        box-shadow:inset 0 0 5px #777;
     }
     .darkMode input:active, .darkMode textarea:active{
-        box-shadow:inset 0 0 10px #666;
+        box-shadow:inset 0 0 10px #777;
     }
 hr{
     width:100%;
@@ -401,8 +435,21 @@ div{
                         width:100% !important;
                     }
                 .darkMode .winHTML{
-                    background-color:#000;
-                    color:#FFF;
+                    background-color:#272727;
+                    color:#DDD;
+                }
+                .darkResponsive{
+                    background-color:#FFF;
+                    color:#000;
+                    border-color:#000;
+                }
+                .darkMode .darkResponsive{
+                    background-color:#272727;
+                    color:#DDD;
+                    border-color:#DDD;
+                }
+                .darkMode .darkInvert{
+                    filter: invert(1);
                 }
                 .STNtableTR{
                     height:100px;
@@ -410,7 +457,7 @@ div{
                 }
                 .STNtableTD{
                     width:33%;
-                    transition:1s;
+                    transition:0.3s;
                     /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
                 }
                 .STNtableTD:hover{
@@ -563,10 +610,6 @@ div{
                     font-size:12px;
                     overflow:scroll;
                 }
-                    .darkMode #NORAout{
-                        background-color:#000;
-                        color:#FFF;
-                    }
                     #NORAout a{
                         color: #0F0;
                     }
@@ -719,7 +762,7 @@ div{
             }
         .app{
             width:100px;
-            height:75px;
+            height:90px; /*75px*/
             border-radius:5px;
             text-align:center;
             /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
@@ -760,7 +803,11 @@ div{
                 font-size:12px;
                 text-align:center;
                 width:100px;
+                height:2em;
             }
+                .app:hover .appDesc{
+                    overflow:visible;
+                }
     #winmove{
         left:0;
         top:0;
@@ -906,7 +953,7 @@ div{
     border-radius:2px;
 }
     .darkMode #ctxMenu{
-        background-color:#000;
+        background-color:#272727;
         color:#CCC;
     }
     .darkMode #ctxMenu img{
@@ -914,7 +961,7 @@ div{
     }
     #ctxMenu p{
         height:1em;
-        box-shadow:inset 0 0 5px 3px #FFF;
+        box-shadow:inset 0 0 5px 5px #FFF;
         width:calc(100% - 4px);
         display:block;
         margin:0;
@@ -926,8 +973,8 @@ div{
         
     }
         .darkMode #ctxMenu p{
-            box-shadow:inset 0 0 5px 3px #000;
-            background-color:#000;
+            box-shadow:inset 0 0 5px 5px #272727;
+            background-color:#272727;
         }
     #ctxMenu p:hover{
         background-color:rgba(127, 127, 127, 0.3);
@@ -1178,21 +1225,21 @@ div{
     border-top-right-radius:5px;
     */
     border-radius:5px;
-    background-color:#FFF;
-    border:2px solid #000;
+    /*background-color:#FFF;*/
+    border:2px solid;
     /*border-bottom:none;*/
-    color:#000;
+    /*color:#000;*/
     font-family:aosProFont, monospace;
     font-size:12px;
     box-shadow:0 0 20px #000;
     transition:0.3s;
     z-index:100;
 }
-    .darkMode #widgetMenu{
+    /*.darkMode #widgetMenu{
         background-color:#000;
         border: 2px solid #FFF;
         color:#FFF;
-    }
+    }*/
 #widgetTitle{
     font-size:24px;
     left:2px;
@@ -1214,9 +1261,9 @@ div{
     min-height:100px;
     min-width:300px;
     border-radius:5px;
-    background-color:#FFF;
-    border:2px solid #000;
-    color:#000;
+    /*background-color:#FFF;*/
+    border:2px solid;
+    /*color:#000;*/
     font-family:aosProFont, monospace;
     font-size:12px;
     box-shadow:0 0 20px #000;
@@ -1224,11 +1271,11 @@ div{
     transition:0.3s;
     z-index:110;
 }
-    .darkMode #notifWindow{
+    /*.darkMode #notifWindow{
         background-color:#000;
         border:2px solid #FFF;
         color:#FFF;
-    }
+    }*/
 #notifWindow:hover{
     opacity:1;
 }

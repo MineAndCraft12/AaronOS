@@ -35,12 +35,12 @@
             <div id="hideall" onClick="toTop({dsktpIcon: 'DESKTOP'}, 1)"></div>
             <!--<div id="dsktpWidgets"></div>-->
             <p id="timesUpdated">Oops!</p>
-            <div id="widgetMenu" style="opacity:0;pointer-events:none;bottom:-350px">
+            <div id="widgetMenu" class="darkResponsive" style="opacity:0;pointer-events:none;bottom:-350px">
                 <div id="widgetTitle"></div>
                 <div id="widgetContent"></div>
                 <div class="winExit cursorPointer" onClick="closeWidgetMenu()">x</div>
             </div>
-            <div id="notifWindow" style="opacity:0;pointer-events:none;right:-350px">
+            <div id="notifWindow" class="darkResponsive" style="opacity:0;pointer-events:none;right:-350px">
                 <div id="notifTitle">Notification</div>
                 <div id="notifContent">Content</div>
                 <div id="notifButtons"><button>Button 1</button> <button>Button 2</button></div>

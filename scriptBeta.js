@@ -1804,7 +1804,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             */
             getId("app_" + appPath).style.left = appPosX + "px";
             getId("app_" + appPath).style.top = appPosY + "px";
-            appPosY += 83;
+            appPosY += 98;
             if(appPosY > window.innerHeight - 105){
                 appPosY = 8;
                 appPosX += 108;
@@ -2435,7 +2435,7 @@ function arrangeDesktopIcons(){
                     appTotal++;
                     getId("app_" + app).style.left = appPosX + "px";
                     getId("app_" + app).style.top = appPosY + "px";
-                    appPosY += 83;
+                    appPosY += 98;
                     if(appPosY > parseInt(getId('monitor').style.height) - 105){
                         appPosY = 8;
                         appPosX += 108;
@@ -3117,55 +3117,56 @@ c(function(){
                     }
                     this.appWindow.openWindow();
                     //getId('win_startMenu_top').style.transform = '';
+                    this.vars.listOfApps = '';
                     switch(ufload("aos_system/apps/startMenu/dashboard")){
                         case 'whisker':
-                            this.appWindow.setContent('<span style="color:#FFF;font-family:aosProFont,monospace;font-size:12px">User: ' + apps.messaging.vars.parseBB(apps.messaging.vars.name) + '</span><div style="left:0;bottom:0;height:calc(100% - 3em);overflow-y:scroll;width:calc(70% - 2px);background:' + darkSwitch('#FFF', '#000') + ';color:' + darkSwitch('#000', '#FFF') + ';"><table style="position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table></div><div style="right:0;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);text-align:right"><img class="cursorPointer" style="width:10px;height:10px;" src="ctxMenu/beta/gear.png" onclick="openapp(apps.settings,\'dsktp\')"> <img class="cursorPointer" style="width:10px;height:10px;" src="ctxMenu/beta/power.png" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})"><br><br><br><button style="width:100%" onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button><br><button style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button><br><button style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button><br><button style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button><br><button style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br><button style="width:100%" onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button></div><input style="position:absolute;left:0;top:1.5em;width:calc(100% - 2px);" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>');
+                            this.appWindow.setContent('<span style="color:#FFF;font-family:aosProFont,monospace;font-size:12px">User: ' + apps.messaging.vars.parseBB(apps.messaging.vars.name) + '</span><div class="darkResponsive" style="left:0;bottom:0;height:calc(100% - 3em);overflow-y:scroll;width:calc(70% - 2px);"><table style="position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table></div><div style="right:0;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);text-align:right"><img class="cursorPointer" style="width:10px;height:10px;filter:invert(1)" src="ctxMenu/beta/gear.png" onclick="openapp(apps.settings,\'dsktp\')"> <img class="cursorPointer" style="width:10px;height:10px;filter:invert(1)" src="ctxMenu/beta/power.png" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})"><br><br><br><button style="width:100%" onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button><br><button style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button><br><button style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button><br><button style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button><br><button style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br><button style="width:100%" onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button></div><input style="position:absolute;left:0;top:1.5em;width:calc(100% - 2px);" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>');
                             if(this.vars.listOfApps.length === 0){
                                 getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
                                 for(var appHandle in appsSorted){
-                                    c(function(app){
-                                        if(apps[app].keepOffDesktop < 2){
+                                    //c(function(app){
+                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
                                             //apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:64px;height:64px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
-                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th>' + buildSmartIcon(64, apps[app].appWindow.appImg) + '</th><td>' + apps[app].appDesc + '</td></tr>';
+                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')"><th>' + buildSmartIcon(64, apps[appsSorted[appHandle]].appWindow.appImg) + '</th><td>' + apps[appsSorted[appHandle]].appDesc + '</td></tr>';
                                         }
-                                    }, appsSorted[appHandle]);
+                                    //}, appsSorted[appHandle]);
                                 }
-                                c(function(){
+                                //c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
                                     // getId('appDsBtable').style.cursor = '';
                                     getId('appDsBtable').classList.remove('cursorLoadLight');
                                     apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
-                                });
+                                //});
                             }else{
                                 getId('appDsBtable').innerHTML = this.vars.listOfApps;
-                                this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
+                                this.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
                             }
-                            if(sessionStorage.getItem('GooglePlay') !== "true"){
+                            if(!mobileMode){
                                 getId('appDsBsearch').focus();
                             }
                             break;
                         case 'win7':
-                            this.appWindow.setContent('<button style="position:absolute;right:0;bottom:8px;width:30%" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">Power</button><div style="left:0;top:0;height:calc(100% - 2.5em);overflow-y:scroll;width:calc(70% - 2px);border-top-left-radius:5px;border-top-right-radius:5px;background:#FFF;color:#000"><table style="border-top-left-radius:5px;border-top-right-radius:5px;position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table></div><div style="right:0;color:#FFF;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);"><img style="width:50px;margin-left:15px;" src="appicons/ds/aOS.png"><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</span><br><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</span><hr><span class="cursorPointer" style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</span><br><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</span><hr><span class="cursorPointer" style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</span><br><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</span></div><input style="position:absolute;left:0;bottom:0;background-color:#DDD;width:calc(70% - 2px);height:3em;border:none;border-bottom-right-radius:5px;border-bottom-left-radius:5px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>');
+                            this.appWindow.setContent('<button style="position:absolute;right:0;bottom:8px;width:30%" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">Power</button><div class="darkResponsive" style="left:0;top:0;height:calc(100% - 2.5em);overflow-y:scroll;width:calc(70% - 2px);border-top-left-radius:5px;border-top-right-radius:5px;"><table style="border-top-left-radius:5px;border-top-right-radius:5px;position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table></div><div style="right:0;color:#FFF;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);"><img style="width:50px;margin-left:15px;" src="appicons/ds/aOS.png"><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</span><br><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</span><hr><span class="cursorPointer" style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</span><br><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</span><hr><span class="cursorPointer" style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</span><br><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</span></div><input style="position:absolute;left:0;bottom:0;background-color:#DDD;width:calc(70% - 2px);height:3em;border:none;border-bottom-right-radius:5px;border-bottom-left-radius:5px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>');
                             if(this.vars.listOfApps.length === 0){
                                 getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
                                 for(var appHandle in appsSorted){
-                                    c(function(app){
-                                        if(apps[app].keepOffDesktop < 2){
+                                    //c(function(app){
+                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
                                             //apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:32px;height:32px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
-                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th>' + buildSmartIcon(32, apps[app].appWindow.appImg) + '</th><td>' + apps[app].appDesc + '</td></tr>';
+                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')"><th>' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '</th><td>' + apps[appsSorted[appHandle]].appDesc + '</td></tr>';
                                         }
-                                    }, appsSorted[appHandle]);
+                                    //}, appsSorted[appHandle]);
                                 }
-                                c(function(){
+                                //c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
                                     // getId('appDsBtable').style.cursor = '';
                                     getId('appDsBtable').classList.remove('cursorLoadLight');
-                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
-                                });
+                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsClassName('dashboardSearchItem');
+                                //});
                             }else{
                                 getId('appDsBtable').innerHTML = this.vars.listOfApps;
                                 this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
@@ -3175,25 +3176,25 @@ c(function(){
                             }
                             break;
                         case 'android':
-                            this.appWindow.setContent('<div style="width:100%;height:100%;overflow-y:scroll"><span style="padding-bottom:4px;">&nbsp;<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  <button onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button> <button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> <button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> <button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> <button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button> <button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br><input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch"></span><hr style="margin:0;margin-top:2px"><div id="appDsBtable" style="background-color:' + darkSwitch('#FFF', '#000') + ';color:' + darkSwitch('#000', '#FFF') + ';font-family:aosProFont, monospace; font-size:12px; width:calc(100% - 2px);"></div></div>');
+                            this.appWindow.setContent('<div style="width:100%;height:100%;overflow-y:scroll"><span style="padding-bottom:4px;">&nbsp;<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  <button onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button> <button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> <button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> <button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> <button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button> <button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br><input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch"></span><hr style="margin:0;margin-top:2px"><div id="appDsBtable" class="darkResponsive" style="font-family:aosProFont, monospace; font-size:12px; width:calc(100% - 2px);"></div></div>');
                             if(this.vars.listOfApps.length === 0){
                                 getId('appDsBtable').innerHTML = '<img src="loadLight.gif" style="width:100%;">';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
                                 for(var appHandle in appsSorted){
-                                    c(function(app){
-                                        if(apps[app].keepOffDesktop < 2){
+                                    //c(function(app){
+                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
                                             //apps.startMenu.vars.listOfApps += '<div class="cursorPointer" style="min-height:96px;max-height:96px;display:inline-block;position:static;text-align:center;min-width:25%;max-width:25%" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><img style="width:32px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"><br>' + apps[app].appDesc + '</div>';
-                                            apps.startMenu.vars.listOfApps += '<div class="cursorPointer" style="min-height:96px;max-height:96px;display:inline-block;position:static;text-align:center;min-width:25%;max-width:25%" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')">' + buildSmartIcon(32, apps[app].appWindow.appImg) + '<br>' + apps[app].appDesc + '</div>';
+                                            apps.startMenu.vars.listOfApps += '<div class="cursorPointer dashboardSearchItem" style="min-height:96px;max-height:96px;display:inline-block;position:static;text-align:center;min-width:25%;max-width:25%" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')">' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '<br>' + apps[appsSorted[appHandle]].appDesc + '</div>';
                                         }
-                                    }, appsSorted[appHandle]);
+                                    //}, appsSorted[appHandle]);
                                 }
-                                c(function(){
+                                //c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
                                     // getId('appDsBtable').style.cursor = '';
                                     getId('appDsBtable').classList.remove('cursorLoadLight');
-                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByTagName('div');
-                                });
+                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
+                                //});
                             }else{
                                 getId('appDsBtable').innerHTML = this.vars.listOfApps;
                                 this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
@@ -3209,18 +3210,18 @@ c(function(){
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
                                 for(var appHandle in appsSorted){
-                                    c(function(app){
-                                        if(apps[app].keepOffDesktop < 2){
-                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" style="background-color:rgba(' + darkSwitch('255, 255, 255', '0, 0, 0') + ', 0.5);color:' + darkSwitch('#000', '#FFF') + ';" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th>' + apps[app].dsktpIcon + '</th><td>' + apps[app].appDesc + '</td></tr>';
+                                    //c(function(app){
+                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
+                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" style="background-color:rgba(' + darkSwitch('255, 255, 255', '39, 39, 39') + ', 0.5);color:' + darkSwitch('#000', '#FFF') + ';" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')"><th>' + apps[appsSorted[appHandle]].dsktpIcon + '</th><td>' + apps[appsSorted[appHandle]].appDesc + '</td></tr>';
                                         }
-                                    }, appsSorted[appHandle]);
+                                    //}, appsSorted[appHandle]);
                                 }
-                                c(function(){
+                                //c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
                                     // getId('appDsBtable').style.cursor = '';
                                     getId('appDsBtable').classList.remove('cursorLoadLight');
-                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
-                                });
+                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
+                                //});
                             }else{
                                 getId('appDsBtable').innerHTML = this.vars.listOfApps;
                                 this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
@@ -3443,7 +3444,7 @@ c(function(){
                 getId('win_nora_cap').setAttribute('onmousedown','');
                 getId('win_nora_size').style.pointerEvents = "none";
                 this.appWindow.setDims(45, parseInt(getId('desktop').style.height, 10) - 500, 600, 500);
-                this.appWindow.setContent('<div id="NORAout">-- aOS Ready --</div><button id="NORAspeech" onclick="apps.nora.vars.speakIn()">Speak</button><input id="NORAin" onKeydown="if(event.keyCode === 13){apps.nora.vars.input()}"><button id="NORAbtn" onClick="apps.nora.vars.input()">Say</button>');
+                this.appWindow.setContent('<div id="NORAout" class="darkResponsive">-- aOS Ready --</div><button id="NORAspeech" onclick="apps.nora.vars.speakIn()">Speak</button><input id="NORAin" onKeydown="if(event.keyCode === 13){apps.nora.vars.input()}"><button id="NORAbtn" onClick="apps.nora.vars.input()">Say</button>');
                 this.appWindow.openWindow();
                 requestAnimationFrame(function(){
                     apps.nora.signalHandler('close');
@@ -6324,7 +6325,11 @@ c(function(){
                                 }else{
                                     apps.prompt.appWindow.setCaption('Enter some info for an anonymous app:');
                                 }
-                                getId('PMTbuttons').innerHTML = '<input id="PMTtextIn"> <button id="PMTalertButton" onClick="apps.prompt.signalHandler(\'close\');apps.prompt.vars.currprompt[3](getId(\'PMTtextIn\').value)">' + this.currprompt[2] + '</button>';
+                                var isPassword = '';
+                                if(this.currprompt[5]){
+                                    isPassword = ' type="password"';
+                                }
+                                getId('PMTbuttons').innerHTML = '<input id="PMTtextIn"' + isPassword + '> <button id="PMTalertButton" onClick="apps.prompt.signalHandler(\'close\');apps.prompt.vars.currprompt[3](getId(\'PMTtextIn\').value)">' + this.currprompt[2] + '</button>';
                                 c(function(){
                                     getId('PMTtextIn').focus();
                                     getId('PMTtextIn').addEventListener('keydown', function(event){
@@ -6380,8 +6385,8 @@ c(function(){
                 this.prompts.push([2, cText, cButtons, cCallback, cCaption]);
                 this.checkPrompts();
             },
-            prompt: function(pText, pButton, pCallback, pCaption){    //test script: apps.prompt.vars.prompt('test caption', 'test button', function(text){doLog(text)})
-                this.prompts.push([3, pText, pButton, pCallback, pCaption]);
+            prompt: function(pText, pButton, pCallback, pCaption, isPassword){    //test script: apps.prompt.vars.prompt('test caption', 'test button', function(text){doLog(text)})
+                this.prompts.push([3, pText, pButton, pCallback, pCaption, isPassword]);
                 this.checkPrompts();
             },
             notify: function(nText, nButtons, nCallback ,nCaption, nImage){
@@ -8170,7 +8175,7 @@ c(function(){
                             }else{
                                 apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
                             }
-                        }, 'Settings');
+                        }, 'Settings', true);
                     }else{
                         apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
                     }
@@ -8587,7 +8592,7 @@ c(function(){
                 this.appWindow.setContent(
                     '<h1>Desktop Icon Maker</h1><hr>' +
                     'Position X: <input id="IcMleft" value="' + (Math.round(this.newlaunch[1] / 108) + 1) + '"><br>' +
-                    'Position Y: <input id="IcMtop" value="' + (Math.round(this.newlaunch[2] / 83) + 1) + '"><br><br>' +
+                    'Position Y: <input id="IcMtop" value="' + (Math.round(this.newlaunch[2] / 98) + 1) + '"><br><br>' +
                     'Type of shortcut: <button onclick="apps.iconMaker.vars.setType(0)" id="IcMapp">Application</button> <button onclick="apps.iconMaker.vars.setType(1)" id="IcMfile">JavaScript</button><br><br>' +
                     'Name of shortcut: <input id="IcMname"><br><br>' +
                     'Enter the shortcut item path exactly as it appears in the Apps Browser, or if selected, enter JavaScript code.<br>' +
@@ -8690,7 +8695,7 @@ c(function(){
                                 var tempIconObj = [
                                     currMS,
                                     (parseInt(getId('IcMleft').value) - 1) * 108 + 8,
-                                    (parseInt(getId('IcMtop').value) - 1) * 83 + 8,
+                                    (parseInt(getId('IcMtop').value) - 1) * 98 + 8,
                                     this.type,
                                     getId('IcMname').value,
                                     getId('IcMpath').value
@@ -8705,7 +8710,7 @@ c(function(){
                             var tempIconObj = [
                                 currMS,
                                 (parseInt(getId('IcMleft').value) - 1) * 108 + 8,
-                                (parseInt(getId('IcMtop').value) - 1) * 83 + 8,
+                                (parseInt(getId('IcMtop').value) - 1) * 98 + 8,
                                 this.type,
                                 getId('IcMname').value,
                                 getId('IcMpath').value
@@ -9005,11 +9010,11 @@ c(function(){
                 }
                 this.appWindow.setContent(
                     '<textarea id="np2Screen" style="white-space:no-wrap; width:calc(100% - 6px); height:calc(100% - 23px); position:absolute; padding:3px; border:none; bottom: 0px; left: 0px; font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000; overflow:auto"></textarea>' +
-                    '<div style="width:100%; border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + '; height:16px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#000', '#FFF') + ';">' +
-                    '<input id="np2Load" placeholder="file name" style="padding-left:3px; font-family: aosProFont, monospace; font-size:12px; left: 16px; border:none; height:16px; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + '; position:absolute; top:0; width:calc(100% - 115px);"></input>' +
+                    '<div class="darkResponsive" style="width:100%; border-bottom:1px solid; height:16px;">' +
+                    '<input class="darkResponsive" id="np2Load" placeholder="file name" style="padding-left:3px; font-family: aosProFont, monospace; font-size:12px; left: 16px; border:none; height:16px; border-left:1px solid; border-right:1px solid; position:absolute; top:0; width:calc(100% - 115px);"></input>' +
                     '<div id="np2Mode" onclick="apps.notepad2.vars.toggleFileMode()" class="cursorPointer" style="color:#7F7F7F; font-family:aosProFont, monospace; font-size:12px; height:16px;line-height:16px; padding-right:3px; padding-left: 3px; right:95px">Text Mode</div>' +
-                    '<div onclick="apps.notepad2.vars.openFile(getId(\'np2Load\').value)" class="cursorPointer" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:55px; text-align:center;width:38px; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + ';">Load</div> ' +
-                    '<div onclick="apps.notepad2.vars.saveFile(getId(\'np2Load\').value)" class="cursorPointer" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:16px; text-align:center;width:38px; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + ';">Save</div> ' +
+                    '<div class="darkResponsive" onclick="apps.notepad2.vars.openFile(getId(\'np2Load\').value)" class="cursorPointer" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:55px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Load</div> ' +
+                    '<div class="darkResponsive" onclick="apps.notepad2.vars.saveFile(getId(\'np2Load\').value)" class="cursorPointer" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:16px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Save</div> ' +
                     '</div>'
                 );
                 getId("np2Screen").wrap = "off";
@@ -9535,10 +9540,11 @@ c(function(){
             "07/18/2019: B1.0.2.0\n + New custom menu with graphics for selecting visualizers and colors in Music Player.\n + Added static gradient color themes to Music Player.\n + Added Queen color theme to Music Player.\n + Added High Frequency Range to Music Player; requires devconsole to activate the flag (highFreqRange).\n\n" +
             "07/24/2019: B1.0.2.1\n : Fixed issue where aOS would incorrectly state that there was a failure setting a new password.\n : Fixed aOS ignoring correct passwords if their internet is too fast for itself.\n\n" +
             "07/27/2019: B1.0.3.0\n + Music Player has four new visualizers; Curved Lines, Centered Lines, Cave Lines, and Circle Lines. Thanks &Scaron;tefan Schindler for the designs.\n + Music Player has three new color schemes; Rainbow, Rainbow Active, and Pride Blocky.\n : Music Player's Pride color schemes now use HSL instead of RGB, and look much better.\n : In Music Player, fixed Monstercat's bars stretching half a pixel through its floor.\n : Music Player now alerts visualizers when smoke is toggled to prevent canvases forgetting their settings.\n\n" +
-            "07/29/2019: B1.0.3.1\n + Added Fast Mode to Music Player, reduces resolution to increase FPS.\n : Fixed login issues related to login tokens.\n : Fixed swapping between aOS instances.\n : Fixed smoke being too intense in Lines-derived visualizers in Music Player.\n : Fixed missing images in music player.\n : Fixed Music Player visualizer menu being open when using non-standard loading methods.",
+            "07/29/2019: B1.0.3.1\n + Added Fast Mode to Music Player, reduces resolution to increase FPS.\n : Fixed login issues related to login tokens.\n : Fixed swapping between aOS instances.\n : Fixed smoke being too intense in Lines-derived visualizers in Music Player.\n : Fixed missing images in music player.\n : Fixed Music Player visualizer menu being open when using non-standard loading methods.\n\n" +
+            "08/01/2019: B1.0.4.0\n : Total dark theme revamp; changed dark theme from full-black to dark gray.\n + Style Editor now tells you the ID and class of any element that you hover over in the preview.\n : File Manager, Text Editor now respond to Dark Mode when switched while the app is open.\n + Function Grapher and Dashboard now respond to Dark Mode.\n : Dashboard loads much faster.\n + Dashboard refreshes itself each time it's opened.\n + Added a new class, .darkResponsive, which makes an element automatically set its background-color, color, and border-color for dark or light mode.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.0.3.1 (07/29/2019) r2';
+    window.aOSversion = 'B1.0.4.0 (08/01/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -9923,23 +9929,23 @@ c(function(){
                 getId('win_files2_html').style.background = "none";
                 this.appWindow.setContent(
                     '<div id="FIL2topdiv" style="width:calc(100% - 96px); min-width:calc(70% + 48px); right:0; height:50px;">' +
-                    '<div title="Back" class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.back()">&lArr; &nbsp;</div>' +
-                    '<div title="Home" class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.home()">H</div>' +
-                    '<div title="View Mode" class="cursorPointer" style="width:34px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">&nbsp; &#x21BB;</div>' +
-                    '<div title="Refresh" class="cursorPointer" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.setViewMode()">&#8801;</div>' +
-                    '<div id="FIL2path" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:25px; line-height:25px; vertical-align:middle; width:calc(100% - 110px); border-top-left-radius:5px; border-top-right-radius:5px;"><div id="FIL2green" style="width:0;height:100%;"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="/"></div></div>' +
+                    '<div title="Back" class="cursorPointer darkResponsive" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.back()">&lArr; &nbsp;</div>' +
+                    '<div title="Home" class="cursorPointer darkResponsive" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.home()">H</div>' +
+                    '<div title="View Mode" class="cursorPointer darkResponsive" style="width:34px; height:18px; padding-top:2px; right:6px; top:4px; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">&nbsp; &#x21BB;</div>' +
+                    '<div title="Refresh" class="cursorPointer darkResponsive" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:4px; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.setViewMode()">&#8801;</div>' +
+                    '<div id="FIL2path" class="darkResponsive" style="left:55px; font-family:monospace; height:25px; line-height:25px; vertical-align:middle; width:calc(100% - 110px); border-top-left-radius:5px; border-top-right-radius:5px;"><div id="FIL2green" style="width:0;height:100%;"></div><div style="width:100%;height:25px;"><input id="FIL2input" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:25px;padding:0;padding-left:8px;border-top-left-radius:5px;border-top-right-radius:5px;" onkeypress="if(event.keyCode===13){apps.files2.vars.navigate(this.value)}" value="/"></div></div>' +
                     '<div id="FIL2viewModeIcon" style="pointer-events:none; color:#7F7F7F; text-align:right; left:55px; font-family:monospace; height:25px; line-height:25px; vertical-align:middle; width:calc(100% - 110px);"></div>' +
-                    '<div id="FIL2search" style="left:55px; top:26px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:24px; line-height:24px; vertical-align:middle; width:calc(100% - 110px);"><input id="FIL2searchInput" placeholder="Search" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:20px;padding:0;padding-left:8px;" onkeyup="apps.files2.vars.updateSearch(this.value)"></div>' +
-                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center; display:none" onClick=""></div>' +
-                    '<div title="Toggle Favorite" class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.toggleFavorite(apps.files2.vars.currLoc)"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:8px;top:5px;" src="ctxMenu/beta/happy.png"></div>' +
-                    '<div title="New Folder" class="cursorPointer" style="width:34px; height:18px; padding-top:2px; right:6px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.mkdir()"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:16px;top:5px;" src="files2/small/folder.png"></div>' +
-                    '<div title="New File" class="cursorPointer" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:27px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.mkfile()"><img style="' + darkSwitch('', 'filter:invert(1);') + 'position:absolute;display:block;left:8px;top:5px;" src="ctxMenu/beta/new.png"></div>' +
+                    '<div id="FIL2search" class="darkResponsive" style="left:55px; top:26px; font-family:monospace; height:24px; line-height:24px; vertical-align:middle; width:calc(100% - 110px);"><input id="FIL2searchInput" placeholder="Search" style="background:transparent;box-shadow:none;color:inherit;font-family:monospace;border:none;width:calc(100% - 8px);height:20px;padding:0;padding-left:8px;" onkeyup="apps.files2.vars.updateSearch(this.value)"></div>' +
+                    '<div class="cursorPointer darkResponsive" style="width:34px; height:18px; padding-top:2px; left:5px; top:27px; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center; display:none" onClick=""></div>' +
+                    '<div title="Toggle Favorite" class="cursorPointer darkResponsive" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:27px; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.toggleFavorite(apps.files2.vars.currLoc)"><img class="darkInvert" style="position:absolute;display:block;left:8px;top:5px;" src="ctxMenu/beta/happy.png"></div>' +
+                    '<div title="New Folder" class="cursorPointer darkResponsive" style="width:34px; height:18px; padding-top:2px; right:6px; top:27px; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.mkdir()"><img class="darkInvert" style="position:absolute;display:block;left:16px;top:5px;" src="files2/small/folder.png"></div>' +
+                    '<div title="New File" class="cursorPointer darkResponsive" style="width:24px; border-right:1px solid #333; height:18px; padding-top:2px; right:31px; top:27px; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.mkfile()"><img class="darkInvert" style="position:absolute;display:block;left:8px;top:5px;" src="ctxMenu/beta/new.png"></div>' +
                     '</div>' +
-                    '<div id="FIL2sidebar" style="overflow-y:scroll; border-top-left-radius:5px; font-family:aosProFont, Courier, monospace; font-size:12px; width:144px; max-width:30%; padding:3px; height:calc(100% - 56px); top:50px; background-color:' + darkSwitch('#FFF', '#000') + ';">' +
+                    '<div id="FIL2sidebar" class="darkResponsive" style="overflow-y:scroll; border-top-left-radius:5px; font-family:aosProFont, Courier, monospace; font-size:12px; width:144px; max-width:30%; padding:3px; height:calc(100% - 56px); top:50px;">' +
                     'Home<br><div id="FIL2home" class="FIL2sidetbl FIL2viewMedium"></div><br>' +
                     'Favorites<br><div id="FIL2favorites" class="FIL2sidetbl FIL2viewMedium"></div><br>' +
                     'Navigation<br><div id="FIL2nav" class="FIL2sidetbl FIL2viewMedium"></div></div>' +
-                    '<div style="width:calc(100% - 151px); border-top-right-radius:5px; min-width:calc(70% - 7px); right:0; height:calc(100% - 50px); top:50px; background-color:' + darkSwitch('#FFF', '#000') + '; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>'
+                    '<div class="darkResponsive" style="width:calc(100% - 151px); border-top-right-radius:5px; min-width:calc(70% - 7px); right:0; height:calc(100% - 50px); top:50px; background-repeat:no-repeat; background-position:center" id="FIL2cntn"></div>'
                 );
                 getId("FIL2home").innerHTML =
                     '<div class="cursorPointer" onClick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.next(\'apps/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/apps/\\\');toTop(apps.properties)\'])">' +
@@ -11162,7 +11168,7 @@ c(function(){
         {
             appInfo: 'This app attempts to document many aOS API features. However, a better API Documentation can be found in the Help App.',
             newdoc: function(code, example, description){
-                getId('appAPIdiv').innerHTML += '<hr><span style="font-size:24px;font-family:aosProFont, monospace">' + code + '</span><p style="margin-left:8px; border-radius:5px; padding:3px; border-left:1px solid #000; font-family:aosProFont, monospace;font-size:12px;">' + example + '</p>' + description;
+                getId('appAPIdiv').innerHTML += '<hr><span style="font-size:24px;font-family:aosProFont, monospace">' + code + '</span><p class="darkResponsive" style="margin-left:8px; border-radius:5px; padding:3px; border-left:1px solid;background:none; font-family:aosProFont, monospace;font-size:12px;">' + example + '</p>' + description;
             },
             showDocumentation: function(){
                 /*
@@ -13388,7 +13394,7 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 400, 500);
                 this.appWindow.setCaption('Apps Browser');
-                this.appWindow.setContent('<div id="APBdiv" style="width:100%;height:100%;overflow-y:auto;font-family:aosProFont;"><div style="overflow-y:auto;font-size:12px;width:100%;height:128px;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';">This is a list of EVERY SINGLE APP installed on your copy of aOS, including those that are hidden from your desktop and dashboard.<br><br>WARNING - If an app is not available in the Dashboard, it\'s probably for a reason. Some apps not available in the Dashboard may break if you launch them.<br><br>Note - if nothing happens when you try to open a certain app, do not worry. A window is <b>not</b> a requirement for an app to work. It probably is not designed for you to access.</div></div>');
+                this.appWindow.setContent('<div id="APBdiv" class="darkResponsive" style="width:100%;height:100%;overflow-y:auto;font-family:aosProFont;"><div style="overflow-y:auto;font-size:12px;width:100%;height:128px;border-bottom:1px solid;">This is a list of EVERY SINGLE APP installed on your copy of aOS, including those that are hidden from your desktop and dashboard.<br><br>WARNING - If an app is not available in the Dashboard, it\'s probably for a reason. Some apps not available in the Dashboard may break if you launch them.<br><br>Note - if nothing happens when you try to open a certain app, do not worry. A window is <b>not</b> a requirement for an app to work. It probably is not designed for you to access.</div></div>');
                 this.vars.appsListed = 1;
                 for(var appHandle in appsSorted){
                     var app = appsSorted[appHandle];
@@ -13423,8 +13429,26 @@ c(function(){
                         this.vars.currAppBuiltIn = 'Built-In aOS App';
                     }
                     //getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';"><img style="height:128px;width:128px;" src="' + this.vars.currAppImg + '" onerror="this.src=\'appicons/ds/redx.png\'"><div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
-                    getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';">' + buildSmartIcon(128, this.vars.currAppImg) + '<div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
-                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], \' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', \' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', \'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  \' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/\\\');apps.files2.vars.next(\\\'' + app + '/\\\')})})\'' + function(appname, builtin){if(builtin === "User-Made APM App"){return ', \' Open Source File\', \'c(function(){openapp(apps.notepad2, \\\'open\\\');apps.notepad2.vars.openFile(\\\'aos_system/apm_apps/app_' + appname + '\\\')})\'';}else{return ''}}(app, this.vars.currAppBuiltIn) + '])})">v</button>';
+                    
+                    getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer darkResponsive" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid;">' + buildSmartIcon(128, this.vars.currAppImg) +
+                        '<div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div>' +
+                        '<div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div>' +
+                        '<div class="darkResponsive" style="opacity:0.75;background:none;left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div>' +
+                        '<div class="darkResponsive" style="opacity:0.75;background:none;font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div>' +
+                        '<div class="darkResponsive"style="opacity:0.75;background:none;font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
+
+                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" ' +
+                        'onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], ' +
+                        '\' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', ' +
+                        '\' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', ' +
+                        '\'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  ' +
+                        '\' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/\\\');apps.files2.vars.next(\\\'' + app + '/\\\')})})\'' +
+                        function(appname, builtin){
+                            if(builtin === "User-Made APM App"){
+                                return ', \' Open Source File\', \'c(function(){openapp(apps.notepad2, \\\'open\\\');apps.notepad2.vars.openFile(\\\'aos_system/apm_apps/app_' + appname + '\\\')})\'';
+                            }else{return ''}
+                        }(app, this.vars.currAppBuiltIn) + '])})">v</button>';
+                    
                     this.vars.appsListed++;
                 }
             }
@@ -13852,7 +13876,9 @@ c(function(){
                 if(styleEditorTemplateMode){
                     this.appWindow.setDims("auto", "auto", 400, 500);
                     this.appWindow.setCaption("CSE Preview");
-                    this.appWindow.setContent('<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>');
+                    this.appWindow.setContent('<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>Currently Highlighted Element:<br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateType">none</span><br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateID">none</span><br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateClass">none</span>');
+                    apps.prompt.vars.notify("Test Notification", ["Dismiss"], function(){}, "Style Editor", "appicons/ds/CSE.png");
+                    window.addEventListener("mousemove", apps.styleEditor.vars.templateCheck);
                 }else{
                     this.appWindow.paddingMode(0);
                     this.appWindow.setDims("auto", "auto", 400, 400);
@@ -13895,10 +13921,11 @@ c(function(){
                     if(styleEditorTemplateMode){
                         this.appWindow.setDims("auto", "auto", 400, 500);
                         this.appWindow.setCaption("CSE Preview");
-                        this.appWindow.setContent('<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>');
+                        this.appWindow.setContent('<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea><br><br>Currently Highlighted Element:<br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateType">none</span><br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateID">none</span><br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateClass">none</span>');
                         this.appWindow.openWindow();
-                        apps.prompt.vars.notify('Test Notification', ['Button 1', 'Button 2'], function(){}, 'Custom Style Editor', 'appicons/ds/CSE.png');
+                        apps.prompt.vars.notify("Test Notification", ["Dismiss"], function(){}, "Style Editor", "appicons/ds/CSE.png");
                         setTimeout(function(){toTop(apps.styleEditor);}, 1000);
+                        window.addEventListener("mousemove", apps.styleEditor.vars.templateCheck);
                     }
                     break;
                 case 'shutdown':
@@ -13920,7 +13947,32 @@ c(function(){
             updateFrame: function(){
                 // iframe is called CSEframe
                 getId('CSEframe').contentDocument.getElementById('aosCustomStyle').innerHTML = getId('CSEtextarea').value;
-            }
+            },
+            templateCheck: function(event){
+                var elem = document.elementFromPoint(event.pageX, event.pageY);
+                if(elem.tagName){
+                    apps.styleEditor.vars.templateType = '&lt;' + elem.tagName.toLowerCase() + '&gt;';
+                }else{
+                    apps.styleEditor.vars.templateType = 'no element';
+                }
+                if(elem.id){
+                    apps.styleEditor.vars.templateID = '#' + elem.id;
+                }else{
+                    apps.styleEditor.vars.templateID = 'no ID';
+                }
+                if(elem.classList.length > 0){
+                    var allClasses = elem.classList;
+                    apps.styleEditor.vars.templateClass = '';
+                    for(var i = 0; i < allClasses.length; i++){
+                        apps.styleEditor.vars.templateClass += '.' + allClasses[i] + '<br>';
+                    }
+                }else{
+                    apps.styleEditor.vars.templateClass = 'no class';
+                }
+            },
+            templateType: 'no element',
+            templateID: 'no ID',
+            templateClass: 'no Class'
         }, 1, 'styleEditor', 'appicons/ds/CSE.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Function Grapher';
@@ -13936,10 +13988,10 @@ c(function(){
                 this.appWindow.setDims("auto", "auto", 406, 524);
                 this.appWindow.setCaption('Function Grapher');
                 this.appWindow.setContent('<canvas width="400" height="400" style="width:400px;height:400px;position:absolute;border:none;" id="GphGraph"></canvas><div id="GphControls" style="white-space:nowrap;width:400px;height:99px;border-top:1px solid #000;bottom:0;font-family:monospace;overflow:auto;"></div>');
-                getId('GphControls').innerHTML = '&nbsp;f(x) = <input id="GphInput"><br>xStep = <input id="GphStep" value="0.05" size="6"> (must be &gt; 0.005)<br>Color = <input id="GphColor" value="#000"><br><button onclick="apps.graph.vars.graph()">Graph</button><br>Calculate at X: <input id="GphCalc" size="5"> <button onclick="apps.graph.vars.calculate()">Calculate</button><hr><span id="GphStatus"></span>';
+                getId('GphControls').innerHTML = '&nbsp;f(x) = <input id="GphInput"><br>xStep = <input id="GphStep" value="0.05" size="6"> (must be &gt; 0.005)<br>Color = <input id="GphColor" value="' + darkSwitch('#000', '#FFF') + '"><br><button onclick="apps.graph.vars.graph()">Graph</button><br>Calculate at X: <input id="GphCalc" size="5"> <button onclick="apps.graph.vars.calculate()">Calculate</button><hr><span id="GphStatus"></span>';
                 this.vars.cnv = getId('GphGraph');
                 this.vars.ctx = this.vars.cnv.getContext('2d');
-                this.vars.ctx.strokeStyle = '#CCC';
+                this.vars.ctx.strokeStyle = darkSwitch('#CCC', '#333');
                 for(var i = 0; i < 400; i += 20){
                     if(i !== 200){
                         this.vars.ctx.beginPath();
@@ -13962,7 +14014,7 @@ c(function(){
                 this.vars.ctx.lineTo(200.5, 400);
                 this.vars.ctx.stroke();
                 this.vars.ctx.beginPath();
-                this.vars.ctx.strokeStyle = '#000';
+                this.vars.ctx.strokeStyle = darkSwitch('#000', '#FFF');
                 this.vars.ctx.strokeWidth = '1';
             }
             this.appWindow.openWindow();
@@ -15940,7 +15992,7 @@ function icomove(e, elem){
         var newXCoord = icomoveOrX + (e.pageX - icomovex) * (1 / screenScale);
         var newYCoord = icomoveOrY + (e.pageY - icomovey) * (1 / screenScale);
         newXCoord = Math.round(newXCoord / 108) * 108 + 8;
-        newYCoord = Math.round(newYCoord / 83) * 83 + 8;
+        newYCoord = Math.round(newYCoord / 98) * 98 + 8;
         ufsave('aos_system/desktop/ico_' + icomoveSelect, '[' + newXCoord + ',' + newYCoord + ']');
         getId(icomoveSelect).style.left = newXCoord + "px";
         getId(icomoveSelect).style.top = newYCoord + "px";
@@ -15966,7 +16018,7 @@ function icnmove(e, elem){
         var newXCoord = icomoveOrX + (e.pageX - icomovex) * (1 / screenScale);
         var newYCoord = icomoveOrY + (e.pageY - icomovey) * (1 / screenScale);
         newXCoord = Math.round(newXCoord / 108) * 108 + 8;
-        newYCoord = Math.round(newYCoord / 83) * 83 + 8;
+        newYCoord = Math.round(newYCoord / 98) * 98 + 8;
         apps.iconMaker.vars.moveIcon(icomoveSelect, '[' + newXCoord + ',' + newYCoord + ']');
         getId(icomoveSelect).style.left = newXCoord + "px";
         getId(icomoveSelect).style.top = newYCoord + "px";
@@ -16850,14 +16902,18 @@ fadeResizeText();
 window.LOCALFILES = {};
 // set up LOCALFILES
 if(localStorageSupported){
-    if(localStorage.hasOwnProperty("LOCALFILES")){
-        LOCALFILES = JSON.parse(localStorage.getItem("LOCALFILES"));
+    if(!noUserFiles){
+        if(localStorage.hasOwnProperty("LOCALFILES")){
+            LOCALFILES = JSON.parse(localStorage.getItem("LOCALFILES"));
+        }
     }
 }
 window.lfsave = function(file, content){
     sh("mkdir /LOCALFILES/" + file);
     eval(apps.bash.vars.translateDir('/LOCALFILES/' + file) + ' = content');
-    localStorage.setItem("LOCALFILES", JSON.stringify(LOCALFILES));
+    if(!noUserFiles){
+        localStorage.setItem("LOCALFILES", JSON.stringify(LOCALFILES));
+    }
 };
 window.lfload = function(file, debug){
     try{
@@ -16875,11 +16931,15 @@ window.lfload = function(file, debug){
 };
 window.lfmkdir = function(dirname){
     sh("mkdir /LOCALFILES/" + dirname);
-    localStorage.setItem("LOCALFILES", JSON.stringify(LOCALFILES));
+    if(!noUserFiles){
+        localStorage.setItem("LOCALFILES", JSON.stringify(LOCALFILES));
+    }
 };
 window.lfdel = function(filename){
     eval("delete " + apps.bash.vars.translateDir("/LOCALFILES/" + filename));
-    localStorage.setItem("LOCALFILES", JSON.stringify(LOCALFILES));
+    if(!noUserFiles){
+        localStorage.setItem("LOCALFILES", JSON.stringify(LOCALFILES));
+    }
 };
 
 //auto-resize display on window change
