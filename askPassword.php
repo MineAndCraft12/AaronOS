@@ -237,8 +237,8 @@
     <body>
         <?php
             if(isset($_COOKIE['keyword'])){
-                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_BACKGROUND.txt')){
-                    echo '<div id="background" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_BACKGROUND.txt').');"></div>';
+                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt')){
+                    echo '<div id="background" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt').');"></div>';
                 }else{
                     echo '<div id="background"></div>';
                 }
