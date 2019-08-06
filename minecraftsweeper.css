@@ -32,3 +32,12 @@
 .mcstone{
     background:url(mc/stone.png) !important;
 }
+#MSwShadow{
+    line-height:16px;
+    padding-left:1px;
+    padding-top:7px;
+}
+#MSwShadow div{
+    width:16px !important;
+    height:16px !important;
+}

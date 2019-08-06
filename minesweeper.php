@@ -20,10 +20,23 @@
             button:focus{
                 outline:0;
             }
+            #MSwShadow{
+                pointer-events:none;
+                white-space:nowrap;
+            }
+            #MSwShadow div{
+                position:relative;
+                display:inline-block;
+                width:20px;
+                height:20px;
+                margin-bottom:-4px;
+                background-size: contain;
+            }
         </style>
     </head>
     <body style="background-color:#BDBDBD">
         <div id="MSwField" style="margin-bottom:3px;"></div>
+        <div id="MSwShadow" style="margin-bottom:3px;"></div>
         <div id="MSwControls">
             <button onclick="apps.minesweeper.vars.firstTurn = 1;apps.minesweeper.vars.newGame()">New Game</button>
             <button onclick="apps.minesweeper.vars.difficulty()">Difficulty</button>
@@ -94,17 +107,28 @@
                         }
                         if(this.firstTurn){
                             var tempHTML = "<br><br><br>";
+                            var tempGraphics = "";
+                            if(this.xtrGraphics){
+                                tempGraphics = "<br><br><br>";
+                            }
                             for(var i in this.minefield){
                                 tempHTML += "<div style='font-size:0;position:relative;white-space:nowrap;'>";
                                 for(var j in this.minefield[i]){
                                     tempHTML += "<button id='MSwB" + j + "x" + i + "' onclick='apps.minesweeper.vars.checkBlock(" + j + "," + i + ")' oncontextmenu='apps.minesweeper.vars.flagBlock(" + j + "," + i + ");event.stopPropagation();return false;' style='width:20px;height:20px;'></button>";
-                                    tempHTML += "<div id='MSwF" + j + "x" + i + "' style='position:relative;background:none !important;display:inline-block;width:20px;margin-left:-13px;margin-right:-7px;margin-bottom:1px;font-family:aosProFont;font-size:12px;pointer-events:none;'></div>"
+                                    tempHTML += "<div id='MSwF" + j + "x" + i + "' style='position:relative;background:none !important;display:inline-block;width:20px;margin-left:-13px;margin-right:-7px;margin-bottom:1px;font-family:aosProFont;font-size:12px;pointer-events:none;'></div>";
+                                    if(this.xtrGraphics){
+                                        tempGraphics += "<div id='MSwS" + j + "x" + i + "'></div>";
+                                    }
+                                }
+                                if(this.xtrGraphics){
+                                    tempGraphics += "<br>";
                                 }
                                 tempHTML += "<div style='position:relative;background:none !important;display:inline-block;width:3px;margin:0px;height:3px;pointer-events:none;'></div></div>";
                             }
                             getId("MSwField").innerHTML = tempHTML;
                             getId("MSwMines").innerHTML = this.mines;
                             getId("MSwFlags").innerHTML = this.flags;
+                            getId("MSwShadow").innerHTML = tempGraphics;
                         }
                     },
                     dark: 0,
@@ -144,8 +168,8 @@
                                     break;
                                 case 4:
                                     apps.minesweeper.vars.dims = [
-                                        (tempScreenWidth - 16) / 20 - 1,
-                                        (tempScreenHeight - 70) / 20 - 1
+                                        Math.floor((tempScreenWidth - 16) / 20 - 1),
+                                        Math.floor((tempScreenHeight - 70) / 20 - 1)
                                     ];
                                     apps.minesweeper.vars.mines = Math.round(apps.minesweeper.vars.dims[0] * apps.minesweeper.vars.dims[1] * 0.17);
                                     apps.minesweeper.vars.firstTurn = 1;
@@ -173,8 +197,9 @@
                     clear: 1,
                     safe: 1,
                     easyClear: 1,
+                    xtrGraphics: 1,
                     settings: function(){
-                        var btn = parseInt(prompt("Please choose a setting to toggle:\n1: Omnipresent Grid (" + this.grid + ")\n2: Automatic Clearing (" + this.clear + ")\n3: Safe Mode (" + this.safe + ")\n4: Easy Clear (" + this.easyClear + ")\n5: DEBUG"));
+                        var btn = parseInt(prompt("Please choose a setting to toggle:\n1: Omnipresent Grid (" + this.grid + ")\n2: Automatic Clearing (" + this.clear + ")\n3: Safe Mode (" + this.safe + ")\n4: Easy Clear (" + this.easyClear + ")\n5: Extreme Graphics (" + this.xtrGraphics + ") (will regenerate field)\n6: DEBUG"));
                         if(btn){
                             switch(btn){
                                 case 1:
@@ -190,6 +215,11 @@
                                     this.easyClear = Math.abs(this.easyClear - 1);
                                     break;
                                 case 5:
+                                    this.xtrGraphics = Math.abs(this.xtrGraphics - 1);
+                                    apps.minesweeper.vars.firstTurn = 1;
+                                    apps.minesweeper.vars.newGame();
+                                    break;
+                                case 6:
                                     this.cheat();
                                     break;
                                 default:
@@ -329,6 +359,9 @@
                                             this.checkBlock(x + 1, y + 1);
                                         }
                                     }
+                                    if(this.xtrGraphics){
+                                        this.drawShadows(x, y, nearby);
+                                    }
                                 /*
                                 }
                                 */
@@ -419,6 +452,22 @@
                         }
                         return true;
                     },
+                    blockExists: function(x, y){
+                        if(x > this.dims[0] - 1 || y > this.dims[1] - 1){
+                            return false;
+                        }
+                        if(x < 0 || y < 0){
+                            return false;
+                        }
+                        if(
+                            getId("MSwB" + x + "x" + y).style.opacity === "0.1" ||
+                            getId("MSwB" + x + "x" + y).style.opacity === "0" ||
+                            getId("MSwB" + x + "x" + y).classList.contains("mcdirt")
+                        ){
+                            return false;
+                        }
+                        return true;
+                    },
                     showMines: function(){
                         for(var i in this.minefield){
                             for(var j in this.minefield[i]){
@@ -448,6 +497,44 @@
                             for(var j in this.minefield[i]){
                                 if(this.minefield[i][j]){
                                     getId("MSwB" + j + "x" + i).style.filter = "contrast(0.5) sepia(1) hue-rotate(-40deg) saturate(3)";
+                                }
+                            }
+                        }
+                    },
+                    drawShadows: function(x, y, nearby, recursing){
+                        var shadowStr = "";
+                        for(var j = -1; j < 2; j++){
+                            for(var i = -1; i < 2; i++){
+                                if(this.blockExists(x + i, y + j)){
+                                    shadowStr += "1";
+                                }else{
+                                    shadowStr += "0";
+                                }
+                            }
+                        }
+                        if(shadowStr[4] === "0"){
+                            console.log(x + "x" + y + ": " + shadowStr);
+                            try{
+                                getId("MSwS" + x + "x" + y).style.backgroundImage = "url(ms_shadows/s" + shadowStr + ".png)";
+                            }catch(err){
+                                console.log("could not make shadow");
+                            }
+                        }
+                        if(!recursing){
+                            for(var k = -1; k < 2; k++){
+                                for(var l = -1; l < 2; l++){
+                                    //if(i !== 0 && j !== 0){
+                                        var canShadow = 0;
+                                        try{
+                                            var testVariable = this.minefield[k + i][l + j];
+                                            canShadow = 1;
+                                        }catch(err){
+                                            
+                                        }
+                                        if(canShadow){
+                                            this.drawShadows(x + k, y + l, 1, 1);
+                                        }
+                                    //}
                                 }
                             }
                         }
