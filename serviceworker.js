@@ -22,7 +22,6 @@ self.addEventListener('fetch', function(event){
           (response) => {
             // Cache hit - return response
             if (response) {
-              console.log("cached response");
               return response;
             }
             return fetch(event.request).then((netResponse) => {
