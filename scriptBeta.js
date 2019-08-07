@@ -9545,7 +9545,7 @@ c(function(){
             "08/04/2019: B1.0.4.1\n : Fixed login screen not using the correct background image.\n\n" +
             "08/05/2019: B1.0.4.2\n : Fixed Minecraft Mode in minesweeper.\n\n" +
             "08/06/2019: B1.0.5.0\n + Added enchanced graphics to minesweeper.\n\n" +
-            "08/07/2019: B1.0.5.1\n : Fixed caching issues on minesweeper.",
+            "08/07/2019: B1.0.5.1\n + Minesweeper now pre-caches shadow images.\n : Fixed caching issues on minesweeper.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
     window.aOSversion = 'B1.0.5.1 (08/07/2019) r0';
