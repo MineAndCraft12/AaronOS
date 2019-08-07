@@ -9544,10 +9544,11 @@ c(function(){
             "08/01/2019: B1.0.4.0\n : Total dark theme revamp; changed dark theme from full-black to dark gray.\n + Style Editor now tells you the ID and class of any element that you hover over in the preview.\n : File Manager, Text Editor now respond to Dark Mode when switched while the app is open.\n + Function Grapher and Dashboard now respond to Dark Mode.\n : Dashboard loads much faster.\n + Dashboard refreshes itself each time it's opened.\n + Added a new class, .darkResponsive, which makes an element automatically set its background-color, color, and border-color for dark or light mode.\n\n" +
             "08/04/2019: B1.0.4.1\n : Fixed login screen not using the correct background image.\n\n" +
             "08/05/2019: B1.0.4.2\n : Fixed Minecraft Mode in minesweeper.\n\n" +
-            "08/06/2019: B1.0.5.0\n + Added enchanced graphics to minesweeper.",
+            "08/06/2019: B1.0.5.0\n + Added enchanced graphics to minesweeper.\n\n" +
+            "08/07/2019: B1.0.5.1\n : Fixed caching issues on minesweeper.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.0.5.0 (08/06/2019) r0';
+    window.aOSversion = 'B1.0.5.1 (08/07/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
