@@ -69,7 +69,9 @@ window.aosTools = {
                     aosTools.callbacks[event.data.conversation](event.data);
                     aosTools.callbacks[event.data.conversation] = null;
                 }else{
-                    aosTools.fallbackMessageListener(event);
+                    if(aosTools.fallbackMessageListener){
+                        aosTools.fallbackMessageListener(event);
+                    }
                 }
             }else if(aosTools.fallbackMessageListener){
                 aosTools.fallbackMessageListener(event);

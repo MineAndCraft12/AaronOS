@@ -5,17 +5,19 @@ window.onerror = function(errorMsg, url, lineNumber){
 function getId(target){
     return document.getElementById(target);
 }
-
+var iframeMode = 0;
 window.aosTools_connectFailListener = function(){
     var aosStylesheet = document.createElement("link");
     aosStylesheet.rel = "stylesheet";
     aosStylesheet.href = "../styleBeta.css";
     document.head.prepend(aosStylesheet);
+    iframeMode = 0;
 }
 window.aosTools_connectListener = function(){
     aosTools.sendRequest({
         action: "appwindow:open_window"
     }, console.log);
+    iframeMode = 1;
 }
 if(window.aosTools){
     aosTools.testConnection();
