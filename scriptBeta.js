@@ -13401,11 +13401,17 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setContent('<iframe data-parent-app="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
                 requestAnimationFrame(this.vars.colorWindows);
+                getId("icn_musicPlayer").style.display = "inline-block";
+                requestAnimationFrame(() => {
+                    this.appWindow.appIcon = 1;
+                });
             }
             this.appWindow.setCaption('Music Player');
             this.appWindow.setDims("auto", "auto", 1038, 626);
             blockScreensaver("apps.musicVis");
-            this.appWindow.openWindow();
+            if(this.appWindow.appIcon){
+                this.appWindow.openWindow();
+            }
         },
         function(signal){
             switch(signal){
