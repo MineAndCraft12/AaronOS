@@ -2179,7 +2179,11 @@ function repoUpdate(callback, finishFunc){
         repoStagedUpdates = 0;
         for(var repo in repositories){
             repoUpdateXHR[repo] = new XMLHttpRequest();
-            repoUpdateXHR[repo].open('GET', repo);
+            if(repo.indexOf("?") > -1){ // this URL parameter is added to beat the Chrome cache system
+                repoUpdateXHR[repo].open('GET', repo + "&ms=" + performance.now());
+            }else{
+                repoUpdateXHR[repo].open('GET', repo + "?ms=" + performance.now());
+            }
             repoUpdateXHR[repo].onreadystatechange = repoUpdateIntermediate;
             repoUpdateXHR[repo].repositoryName = repo;
             repoUpdateXHR[repo].send();
@@ -2295,7 +2299,11 @@ function repoUpgrade(callback, finishedFunc){
         }
         for(var i in upgradeablePackages){
             repoUpgradeXHR[upgradeablePackages[i][0]] = new XMLHttpRequest();
-            repoUpgradeXHR[upgradeablePackages[i][0]].open("GET", repositories[repositoryIDs[upgradeablePackages[i][0]]].packages[upgradeablePackages[i][1]].installURL);
+            if(repositories[repositoryIDs[upgradeablePackages[i][0]]].packages[upgradeablePackages[i][1]].installURL.indexOf("?") > -1){
+                repoUpgradeXHR[upgradeablePackages[i][0]].open("GET", repositories[repositoryIDs[upgradeablePackages[i][0]]].packages[upgradeablePackages[i][1]].installURL + "&ms=" + performance.now());
+            }else{
+                repoUpgradeXHR[upgradeablePackages[i][0]].open("GET", repositories[repositoryIDs[upgradeablePackages[i][0]]].packages[upgradeablePackages[i][1]].installURL + "?ms=" + performance.now());
+            }
             repoUpgradeXHR[upgradeablePackages[i][0]].onreadystatechange = repoUpgradeIntermediate;
             repoUpgradeXHR[upgradeablePackages[i][0]].repository = upgradeablePackages[i];
             repoUpgradeXHR[upgradeablePackages[i][0]].send();
@@ -9545,10 +9553,11 @@ c(function(){
             "08/04/2019: B1.0.4.1\n : Fixed login screen not using the correct background image.\n\n" +
             "08/05/2019: B1.0.4.2\n : Fixed Minecraft Mode in minesweeper.\n\n" +
             "08/06/2019: B1.0.5.0\n + Added enchanced graphics to minesweeper.\n\n" +
-            "08/07/2019: B1.0.5.1\n + Added aosTools.js - embed the script file into your page for easy aOS app tools.\n - Minesweeper was removed.\n + Standalone version of Minesweeper added to the repository.\n + Minesweeper now themes itself to AaronOS.\n + Minesweeper now saves its settings.\n + Minesweeper now pre-caches shadow images.\n : Fixed caching issues on minesweeper.\n - Removed Dark Mode button from Minesweeper, as this is now controlled by aOS.\n : Music Player now uses aosTools.js, like Minesweeper does.\n localhost added to auto-trusted domains.",
+            "08/07/2019: B1.0.5.1\n + Added aosTools.js - embed the script file into your page for easy aOS app tools.\n - Minesweeper was removed.\n + Standalone version of Minesweeper added to the repository.\n + Minesweeper now themes itself to AaronOS.\n + Minesweeper now saves its settings.\n + Minesweeper now pre-caches shadow images.\n : Fixed caching issues on minesweeper.\n - Removed Dark Mode button from Minesweeper, as this is now controlled by aOS.\n : Music Player now uses aosTools.js, like Minesweeper does.\n localhost added to auto-trusted domains.\n\n" +
+            "08/08/2019: B1.0.6.0\n + Extra logic added to prevent app updates from getting delayed by web browser caching.\n : Changed 'appWindow' permission to 'appwindow'\n + Added to appwindow permission: open_window, close_window, maximize, unmaximize, minimize, get_maximized, set_dims\n + Added manualOpen flag to web app json files to make app loading less ugly.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.0.5.1 (08/07/2019) r1';
+    window.aOSversion = 'B1.0.6.0 (08/08/2019) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11631,7 +11640,7 @@ c(function(){
         },
         {
             appInfo: 'Use this tool to convert any compatible webpage into an app for aOS!<br><br>If you need to delete an app made with this tool, then open its window, right click its title bar, and click "About App". There will be a file name in that info window. You can delete that file in File Manager -> USERFILES, and the app will be uninstalled.',
-            actions: {
+            actions: { // PERMISSIONS
                 context: {
                     menu: function(input){
                         return "";
@@ -11710,7 +11719,7 @@ c(function(){
                         }
                     }
                 },
-                appWindow: {
+                appwindow: {
                     set_caption: function(input, frame){
                         if(frame.frameElement.getAttribute("data-parent-app")){
                             if(apps[frame.frameElement.getAttribute("data-parent-app")]){
@@ -11731,6 +11740,65 @@ c(function(){
                                 apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.paddingMode(1);
                             }
                         }
+                    },
+                    open_window: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.openWindow();
+                                toTop(apps[frame.frameElement.getAttribute("data-parent-app")]);
+                            }
+                        }
+                    },
+                    close_window: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                apps[frame.frameElement.getAttribute("data-parent-app")].signalHandler("close");
+                            }
+                        }
+                    },
+                    minimize: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                apps[frame.frameElement.getAttribute("data-parent-app")].signalHandler("shrink");
+                            }
+                        }
+                    },
+                    maximize: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                if(!apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen){
+                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
+                                }
+                            }
+                        }
+                    },
+                    unmaximize: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen){
+                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
+                                }
+                            }
+                        }
+                    },
+                    get_maximized: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                return numtf(apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen);
+                            }
+                        }
+                    },
+                    set_dims: function(input, frame){
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.setDims(
+                                    input.x || "auto",
+                                    input.y || "auto",
+                                    input.width || apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.sizeH,
+                                    input.height || apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.sizeV
+                                );
+                            }
+                        }
                     }
                 }
             },
@@ -11741,7 +11809,8 @@ c(function(){
                 writesetting: "change your settings on aOS",
                 js: "execute JavaScript code on aOS (DANGEROUS!)",
                 getstyle: "theme itself to aOS",
-                context: "use various context menus"
+                context: "use various context menus",
+                appwindow: "manipulate its window"
             },
             commandExamples: {
                 fs: {
@@ -11786,10 +11855,17 @@ c(function(){
                 js: {
                     exec: "Execute JS code on aOS"
                 },
-                appWindow: {
+                appwindow: {
                     set_caption: "Set the caption of the app window",
                     disable_padding: "Disable default 3px of padding",
-                    enabled_padding: "Enable default 3px of padding"
+                    enabled_padding: "Enable default 3px of padding",
+                    open_window: "Open the app window.",
+                    minimize: "Minimize the app window.",
+                    maximize: "Maximize the app window.",
+                    unmaximize: "Unmaximize the app window.",
+                    get_maximized: "Ask if the window is maximized; returns true/false",
+                    close_window: "Close the app window.",
+                    set_dims: "Set the x, y, width, and height of the window."
                 }
             },
             alertAPI: function(){
@@ -11869,7 +11945,7 @@ c(function(){
             },
             globalPermissions: {
                 "getstyle": "true",
-                "appWindow": "true",
+                "appwindow": "true",
                 "prompt": "true"
             },
             updatePermissions: function(){
@@ -15337,8 +15413,17 @@ c(function(){
                             this.appWindow.paddingMode(0);
                             this.appWindow.setContent('<iframe data-parent-app="' + this.objName + '" style="width:100%;height:100%;border:none;" src="' + this.vars.appURL + '"></iframe>');
                             this.appWindow.setDims("auto", "auto", this.vars.sizeX, this.vars.sizeY);
+                            if(!this.vars.manualOpen){
+                                this.appWindow.openWindow();
+                            }
+                            requestAnimationFrame(() => {
+                                getId("icn_" + this.objName).style.display = "inline-block";
+                                this.appWindow.appIcon = 1;
+                            });
+                        }else{
+                            this.appWindow.openWindow();
                         }
-                        this.appWindow.openWindow();
+                        
                     },
                     function(signal){
                         switch(signal){
@@ -15378,7 +15463,8 @@ c(function(){
                         appInfo: 'This app was installed via the aOS Hub.<br><br>Home URL:<br>' + varSet.homeURL + '<br><br>Package name:<br>' + pkgName.split('__').join('.') + '<br><br>App object name:<br>apps.webApp_' + pkgName,
                         appURL: varSet.homeURL,
                         sizeX: varSet.windowSize[0],
-                        sizeY: varSet.windowSize[1]
+                        sizeY: varSet.windowSize[1],
+                        manualOpen: varSet.manualOpen || 0
                     }, 1, 'webApp_' + pkgName, varSet.icon
                 );
             }

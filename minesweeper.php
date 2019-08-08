@@ -73,10 +73,21 @@
             }
 
             requestAnimationFrame(function(){
-                apps.minesweeper.vars.firstTurn = 1;
-                apps.minesweeper.vars.newGame();
                 console.log("RECIEVED SETTINGS INFORMATION");
                 console.log(data.content);
+                aosTools.sendRequest({
+                    action: "appwindow:open_window"
+                }, console.log);
+                
+                requestAnimationFrame(function(){
+                    apps.minesweeper.vars.dims = [
+                        Math.floor((window.innerWidth - 16) / 20 - 1),
+                        Math.floor((window.innerHeight - 70) / 20 - 1)
+                    ];
+                    apps.minesweeper.vars.mines = Math.round(apps.minesweeper.vars.dims[0] * apps.minesweeper.vars.dims[1] * 0.17);
+                    apps.minesweeper.vars.firstTurn = 1;
+                    apps.minesweeper.vars.newGame();
+                });
             });
         }
         function saveSettings(){

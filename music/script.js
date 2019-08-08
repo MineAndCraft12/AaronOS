@@ -12,6 +12,11 @@ window.aosTools_connectFailListener = function(){
     aosStylesheet.href = "../styleBeta.css";
     document.head.prepend(aosStylesheet);
 }
+window.aosTools_connectListener = function(){
+    aosTools.sendRequest({
+        action: "appwindow:open_window"
+    }, console.log);
+}
 if(window.aosTools){
     aosTools.testConnection();
 }
