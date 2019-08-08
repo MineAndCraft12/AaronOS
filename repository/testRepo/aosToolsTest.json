@@ -1,0 +1,12 @@
+{
+    "name": "aosTools Test",
+    "id": "aosToolsTest",
+    "version": "1.0",
+    "abbreviation": "aTT",
+    "appType": "webApp",
+    "homeURL": "aosToolsTest.php",
+    "icon": {
+        "foreground": "appicons/ds/aOS.png"
+    },
+    "windowSize": [500, 400]
+}

@@ -16,6 +16,18 @@
             },
             "description": "Guitar Tabulature editor."
         },
+        "minesweeper": {
+            "packageName": "Minesweeper",
+            "packageID": "minesweeper",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/minesweeper.json",
+            "icon": {
+                "foreground": "repository/webApps/minesweeper.png"
+            },
+            "description": "Minesweeper, inspired by the Windows 98 Minesweeper game."
+        },
         "cookieclicker": {
             "packageName": "Cookie Clicker",
             "packageID": "cookieclicker",

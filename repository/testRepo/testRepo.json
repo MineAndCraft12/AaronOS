@@ -29,6 +29,18 @@
             },
             "description": "This version of Guitar Tab will always need to update, for testing repo features."
         },
+        "aosToolsTest": {
+            "packageName": "aosTools Test App",
+            "packageID": "aosToolsTest",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/testRepo/aosToolsTest.json",
+            "icon": {
+                "foreground": "appicons/ds/aOS.png"
+            },
+            "description": "Test app for the aosToolsTest.js utility."
+        },
         "testbootscript": {
             "packageName": "Test Boot Script",
             "packageID": "testbootscript",

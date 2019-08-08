@@ -2,9 +2,8 @@
 <html style="width:100%;height:100%;margin:0;padding:0;overflow:hidden">
     <head>
         <title>AaronOS Music Player</title>
-        <link rel="stylesheet" href="../styleBeta.css">
         <link rel="stylesheet" href="style.css">
-        <style id="aosCustomStyle"></style>
+        <script defer src="../aosTools.js"></script>
     </head>
     <body style="margin:0;padding:0;width:100%;height:100%;overflow:hidden;">
         <div class="winHTML" style="width:calc(100% - 8px);height:calc(100% - 6px);margin:0;padding:3px;padding-right:5px;overflow-y:auto;overflow-x:hidden">

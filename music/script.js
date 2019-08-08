@@ -6,6 +6,16 @@ function getId(target){
     return document.getElementById(target);
 }
 
+window.aosTools_connectFailListener = function(){
+    var aosStylesheet = document.createElement("link");
+    aosStylesheet.rel = "stylesheet";
+    aosStylesheet.href = "../styleBeta.css";
+    document.head.prepend(aosStylesheet);
+}
+if(window.aosTools){
+    aosTools.testConnection();
+}
+
 var audio = new Audio();
 var audioDuration = 1;
 function updateProgress(){
@@ -408,50 +418,6 @@ function shuffle(){
 
 function refresh(){
     window.location = "?refresh=" + (new Date()).getTime();
-}
-
-function getStyleInfo(event){
-    try{
-        console.log(event.data);
-        if(event.data.conversation === "darkmode"){
-            if(event.data.content === true){
-                document.body.classList.add("darkMode");
-            }
-        }else if(event.data.conversation === "customstyle"){
-            getId("aosCustomStyle").innerHTML = event.data.content.customStyle;
-            for(var i in event.data.content.styleLinks){
-                if(event.data.content.styleLinks[i][1] === "link"){
-                    var customElement = document.createElement("link");
-                    customElement.setAttribute("rel", "stylesheet");
-                    customElement.href = event.data.content.styleLinks[i][0];
-                    document.head.appendChild(customElement);
-                }else if(event.data.content.styleLinks[i][1] === "literal"){
-                    var customElement = document.createElement("style");
-                    customElement.innerHTML = event.data.content.styleLinks[i][0];
-                    document.head.appendChild(customElement);
-                }
-            }
-        }
-    }catch(err){
-        console.log("something done did the big oof when i tried to do the style thingy or whatever...");
-        console.log(err);
-    }
-}
-window.addEventListener("message", getStyleInfo);
-
-var iframeMode = false;
-if(window.self !== window.top){
-    iframeMode = true;
-    window.top.postMessage({
-        messageType: "request",
-        action: "getstyle:darkmode",
-        conversation: "darkmode"
-    });
-    window.top.postMessage({
-        messageType: "request",
-        action: "getstyle:customstyle",
-        conversation: "customstyle"
-    });
 }
 
 var performanceMode = 0;
