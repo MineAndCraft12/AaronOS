@@ -330,9 +330,8 @@ function selectSong(id){
     getId("currentlyPlaying").innerHTML = fileNames[id][1] + ": " + fileNames[id][0];
     document.title = fileNames[id][0] + " | aOS Music Player";
     if(iframeMode){
-        window.top.postMessage({
-            messageType: "request",
-            action: "appWindow:set_caption",
+        aosTools.sendRequest({
+            action: "appwindow:set_caption",
             content: "Music Player | " + fileNames[id][0],
             conversation: "set_caption"
         });

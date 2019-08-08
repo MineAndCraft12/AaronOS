@@ -13404,6 +13404,7 @@ c(function(){
                 getId("icn_musicPlayer").style.display = "inline-block";
                 requestAnimationFrame(() => {
                     this.appWindow.appIcon = 1;
+                    this.vars.colorWindows();
                 });
             }
             this.appWindow.setCaption('Music Player');
