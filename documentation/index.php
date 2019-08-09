@@ -7,8 +7,8 @@
     <body>
         <div class="winHTML">
             <h1>Documentation</h1>
-            <div id="navigate">
-                <ul id="mainList" onclick="selectDocument(event)">
+            <div id="navigate" class="noselect">
+                <ul id="mainList" onmousedown="selectDocument(event)" onclick="selectDocument(event)">
                     <!--
                     <li>List Item</li>
                     <li>List Item Folder</li>
