@@ -15545,6 +15545,74 @@ c(function(){
             }
         }
     );
+    getId('aOSloadingInfo').innerHTML = 'Developer Documentation';
+});
+c(function(){
+    m('init DD');
+    apps.devDocumentation = new Application(
+        'DD',
+        'Developer Documentation',
+        0,
+        function(){
+            if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
+                this.appWindow.setContent('<iframe data-parent-app="devDocumentation" id="DDframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="documentation/"></iframe>');
+                getId("icn_devDocumentation").style.display = "inline-block";
+                requestAnimationFrame(() => {
+                    this.appWindow.appIcon = 1;
+                });
+            }
+            this.appWindow.setCaption('Developer Documentation');
+            this.appWindow.setDims("auto", "auto", 1000, 600);
+            if(this.appWindow.appIcon){
+                this.appWindow.openWindow();
+            }
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        },
+        {
+            appInfo: 'This is the official AaronOS developer documentation. This is mostly useful to those writing Web Apps.',
+        }, 0, 'devDocumentation', {
+            backgroundColor: "#303947",
+            foreground: "smarticons/aOS/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
+    );
     getId('aOSloadingInfo').innerHTML = 'Finalizing...';
 });
 m('init finalizing');
