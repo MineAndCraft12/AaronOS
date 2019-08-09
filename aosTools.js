@@ -53,7 +53,7 @@ window.aosTools = {
                 this.totalRequests++;
                 requestData.conversation = "" + this.totalRequests;
             }
-            this.callbacks[this.totalRequests] = callback;
+            this.callbacks[this.totalRequests] = callback || function(){};
             window.top.postMessage(requestData);
         }else{
             console.log("Warning - request will not reach aOS; aOS is not connected.");
@@ -82,6 +82,52 @@ window.aosTools = {
     },
     callbacks: {},
 
+    requestPermission: function(permission, callback){
+        aosTools.sendRequest({
+            action: "permission:" + permission
+        }, callback);
+    },
+
+    exec: function(codeStr, callback){
+        aosTools.sendRequest({
+            action: "js:exec",
+            content: codeStr
+        }, callback);
+    },
+
+    openWindow: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:open_window"
+        }, callback);
+    },
+    closeWindow: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:close_window"
+        }, callback);
+    },
+    setCaption: function(newCaption, callback){
+        aosTools.sendRequest({
+            action: "appwindow:set_caption",
+            content: newCaption
+        }, callback);
+    },
+    enablePadding: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:enable_padding"
+        }, callback);
+    },
+    disablePadding: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:disable_padding"
+        }, callback)
+    },
+
+    getDarkMode: function(callback){
+        aosTools.sendRequest({
+            action: "getstyle:darkmode"
+        }, callback);
+    },
+
     updateStyle: function(){
         this.sendRequest({
             action: "getstyle:darkmode"
@@ -101,7 +147,7 @@ window.aosTools = {
         if(document.getElementById("aosTools_helpingStyle") === null){
             var helpingStyleElement = document.createElement("style");
             helpingStyleElement.id = "aosTools_helpingStyle";
-            helpingStyleElement.innerHTML = "body{width:100%;height:100%;overflow:hidden;}.winHTML{overflow:auto;width:100%;height:100%;left:0;top:0;bottom:0;right:0;border:none;background:none;box-shadow:none;padding:none;}";
+            helpingStyleElement.innerHTML = "body{width:100%;height:100%;overflow:hidden;}.winHTML{overflow:auto;width:100%;height:100%;left:0;top:0;bottom:0;right:0;border:none;background:none;box-shadow:none;padding:0;}";
             document.head.prepend(helpingStyleElement);
         }
         

@@ -7280,7 +7280,7 @@ c(function(){
                     trustedApps: {
                         option: 'Trusted Apps',
                         description: function(){return 'This is a list of all external apps that you have allowed to use permissions on aOS. The list is JSON-encoded.';},
-                        buttons: function(){return '<textarea id="STN_trusted_apps" style="white-space:nowrap;width:75%;height:8em">' + (ufload("aos_system/apps/webAppMaker/trusted_apps") || "") + '</textarea><button onclick="ufsave(\'aos_system/apps/webAppMaker/trusted_apps\', getId(\'STN_trusted_apps\').value);apps.webAppMaker.vars.reflectPermissions();">Set</button>'}
+                        buttons: function(){return '<textarea id="STN_trusted_apps" style="white-space:nowrap;width:75%;height:8em">' + (ufload("aos_system/apps/webAppMaker/trusted_apps") || JSON.stringify(apps.webAppMaker.vars.trustedApps, null, 2)) + '</textarea><button onclick="ufsave(\'aos_system/apps/webAppMaker/trusted_apps\', getId(\'STN_trusted_apps\').value);apps.webAppMaker.vars.reflectPermissions();">Set</button>'}
                     },
                     reset: {
                         option: 'Reset aOS',
@@ -9554,10 +9554,10 @@ c(function(){
             "08/05/2019: B1.0.4.2\n : Fixed Minecraft Mode in minesweeper.\n\n" +
             "08/06/2019: B1.0.5.0\n + Added enchanced graphics to minesweeper.\n\n" +
             "08/07/2019: B1.0.5.1\n + Added aosTools.js - embed the script file into your page for easy aOS app tools.\n - Minesweeper was removed.\n + Standalone version of Minesweeper added to the repository.\n + Minesweeper now themes itself to AaronOS.\n + Minesweeper now saves its settings.\n + Minesweeper now pre-caches shadow images.\n : Fixed caching issues on minesweeper.\n - Removed Dark Mode button from Minesweeper, as this is now controlled by aOS.\n : Music Player now uses aosTools.js, like Minesweeper does.\n localhost added to auto-trusted domains.\n\n" +
-            "08/08/2019: B1.0.6.0\n + Extra logic added to prevent app updates from getting delayed by web browser caching.\n : Changed 'appWindow' permission to 'appwindow'\n + Added to appwindow permission: open_window, close_window, maximize, unmaximize, minimize, get_maximized, set_dims\n + Added manualOpen flag to web app json files to make app loading less ugly.\n : Fixed error message in Music Player each time a song is started.\n : Fixed error in aosTools whenever an unrecognized conversation is recieved.",
+            "08/08/2019: B1.0.6.0\n + Extra logic added to prevent app updates from getting delayed by web browser caching.\n : Changed 'appWindow' permission to 'appwindow'\n + Added to appwindow permission: open_window, close_window, maximize, unmaximize, minimize, get_maximized, set_dims\n + Added manualOpen flag to web app json files to make app loading less ugly.\n : Fixed error message in Music Player each time a song is started.\n : Fixed error in aosTools whenever an unrecognized conversation is recieved.\n : Updated Web App Maker's documentation.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.0.6.0 (08/08/2019) r2';
+    window.aOSversion = 'B1.0.6.0 (08/08/2019) r3';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11813,9 +11813,37 @@ c(function(){
                 appwindow: "manipulate its window"
             },
             commandExamples: {
+                getstyle: {
+                    darkmode: 'aosTools.getDarkMode(function(){<br>' +
+                        '&nbsp; data.content // => "true" or "false"<br>' +
+                        '});',
+                    customstyle: 'aosTools.updateStyle();'
+                },
                 fs: {
-                    read: "aos:fs:read:file_name",
-                    write: "aos:fs:write:file_name:content"
+                    read_uf: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "fs:read_uf",<br>' +
+                        '&nbsp; targetFile: "file/name/here"<br>' +
+                        '}, function(data){<br>' +
+                        '&nbsp; data.content // => file contents<br>' +
+                        '});',
+                    write_uf: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "fs:write_uf",<br>' +
+                        '&nbsp; targetFile: "file/name/here",<br>' +
+                        '}, function(data){<br>' +
+                        '&nbsp; data.content // => "success" or "error"<br>' +
+                        '});',
+                    read_lf: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "fs:read_lf",<br>' +
+                        '&nbsp; targetFile: "file/name/here"<br>' +
+                        '}, function(data){<br>' +
+                        '&nbsp; data.content // => file contents<br>' +
+                        '});',
+                    write_lf: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "fs:write_lf",<br>' +
+                        '&nbsp; targetFile: "file/name/here",<br>' +
+                        '}, function(data){<br>' +
+                        '&nbsp; data.content // => "success" or "error"<br>' +
+                        '});'
                 },
                 prompt: {
                     alert: "",
@@ -11823,21 +11851,56 @@ c(function(){
                     confirm: "",
                     notify: ""
                 },
-                readsetting: {
-                    darkmode: "aos:readsetting:darkmode",
-                    customstyle: "aos:readsetting:customstyle"
-                },
-                writesetting: {
-                    darkmode: "aos:writesetting:darkmode:[0|1]"
-                },
                 js: {
-                    exec: "aos:js:eval:runnableCodeHere()"
+                    exec: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "js:exec",<br>' +
+                        '&nbsp; content: "enter your javaScript code here"<br>' +
+                        '}, function(data){<br>' +
+                        '&nbsp; data.content // => the result of your JS code (functions do not get carried over)<br>' +
+                        '});'
+                },
+                appwindow: {
+                    set_caption: 'aosTools.setCaption("Window\'s new caption here");',
+                    open_window: 'aosTools.openWindow();',
+                    close_window: 'aosTools.closeWindow();',
+                    maximize: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "appwindow:maximize"<br>' +
+                        '});',
+                    unmaximize: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "appwindow:unmaximize"<br>' +
+                        '});',
+                    get_maximized: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "appwindow:get_maximized"<br>' +
+                        '}, function(data){<br>' +
+                        '&nbsp; data.content // => "true" or "false"<br>' +
+                        '});',
+                    minimize: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "appwindow:minimize"<br>' +
+                        '});',
+                    enable_padding: 'aosTools.enablePadding();',
+                    disable_padding: 'aosTools.disablePadding();',
+                    set_dims: 'aosTools.sendRequest({<br>' +
+                        '&nbsp; action: "appwindow:set_dims"<br>' +
+                        '&nbsp; left: 100, // any number<br>' +
+                        '&nbsp; top: 100, // any number<br>' +
+                        '&nbsp; width: 100, // any number<br>' +
+                        '&nbsp; height: 100 // any number<br>' +
+                        '});'
                 }
             },
             commandDescriptions: {
+                context: {
+                    menu: "unimplemented"
+                },
+                customstyle: {
+                    darkmode: "Get the state of dark mode.",
+                    customstyle: "Get the user's stylesheets. Trust me, just let aosTools handle this one:"
+                },
                 fs: {
-                    read: "Read a file from USERFILES",
-                    write: "Write a file to USERFILES"
+                    read_uf: "Read a file from USERFILES",
+                    write_uf: "Write a file to USERFILES",
+                    read_lf: "Read a file from LOCALFILES",
+                    write_lf: "Write a file to LOCALFILES"
                 },
                 prompt: {
                     alert: "unimplemented",
@@ -11845,20 +11908,13 @@ c(function(){
                     confirm: "unimplemented",
                     notify: "unimplemented"
                 },
-                readsetting: {
-                    darkmode: "Read the Dark Mode setting",
-                    customstyle: "Read the user's custom stylesheet"
-                },
-                writesetting: {
-                    darkMode: "Change the Dark Mode setting to 1 or 0"
-                },
                 js: {
                     exec: "Execute JS code on aOS"
                 },
                 appwindow: {
                     set_caption: "Set the caption of the app window",
                     disable_padding: "Disable default 3px of padding",
-                    enabled_padding: "Enable default 3px of padding",
+                    enable_padding: "Enable default 3px of padding",
                     open_window: "Open the app window.",
                     minimize: "Minimize the app window.",
                     maximize: "Maximize the app window.",
@@ -11870,36 +11926,29 @@ c(function(){
             },
             alertAPI: function(){
                 apps.prompt.vars.alert('<div style="display:inline-block;position:relative;text-align:left"><h1>Web App API</h1>' +
-                'Using JavaScript\'s postMessage function, you can build functionality into your web app that lets you interface with aOS.<br><br>' +
+                'Using the aosTools.js utility, you can communicate with aOS from within your app.<br><br>' +
+                'Add aosTools.js to your site with the following line in your HTML head:<br>' +
+                '<div style="background:#7F7F7F;position:relative;display:inline-block;font-family:aosProFont, monospace;font-size:12px;">&lt;sc' + 'ript defer src="https://aaronos.dev/AaronOS/aosTools.js"&gt;&l' + 't;/' + 'script&gt;</div><br><br>' +
                 'In order to send a request to aOS, you can use the following code:<br>' +
-                '<span style="background:#CCC;font-family:aosProFont, monospace">window.parent.postMessage("aos:command:goes:here", "https://aaronos.dev");</span><br><br>' +
-                'In order to recieve a reply from aOS, you can use the following code:<br>' +
-                '<div style="background:#CCC;position:relative;display:inline-block;font-family:aosProFont, monospace;text-align:left">window.addEventListener("message", function(msg){<br>' +
-                '&nbsp; if(String(msg.data).indexOf("aosreply:") === 0){<br>' +
-                '&nbsp; &nbsp; yourCustomReplyHandlerFunction(msg);<br>' +
-                '&nbsp; }<br>' +
-                '});</div><br><br>' +
+                '<div style="background:#7F7F7F;position:relative;display:inline-block;font-family:aosProFont, monospace;font-size:12px;">aosTools.sendRequest({<br>&nbsp; &nbsp; action: "action:here",<br>&nbsp; &nbsp; content: "request content here"<br>}, callbackFunction);</div><br><br>' +
+                'In order to recieve a reply from aOS, you need a callback function like this:<br>' +
+                '<div style="background:#7F7F7F;position:relative;display:inline-block;font-family:aosProFont, monospace;text-align:left;font-size:12px;">function callbackFunction(data){<br>&nbsp; &nbsp; console.log(data.content);<br>&nbsp; &nbsp;// in most cases the response will be in data.content<br>}</div><br><br>' +
                 'The API relies on permissions, to ensure that the user can control whether your app has permission to access certain groups of commands.<br>' +
-                'To request permission to a certain command type, send a message like this:<br>' +
-                '<span style="background:#CCC;font-family:aosProFont, monospace">aos:permission:_____</span><br>' +
-                'In the blank, enter the type of permission you wish to request. At the moment, these are the supported permissions:<br>' +
-                '<span style="font-family:aosProFont, monospace">' + this.buildAPI(1) + '</span><br>' +
-                'aOS will respond in one of three ways:<br>' +
-                'No Response = aOS is prompting the user for permission. (if you get no reply, wait for the user to allow permission and then have them request again)<br>' +
-                '<span style="background:#CCC;font-family:aosProFont, monospace">aosreply:permission:_____:true</span> = your permission to use the feature is granted.<br>' +
-                '<span style="background:#CCC;font-family:aosProFont, monospace">aosreply:permission:_____:false</span> = your permission to use the feature is denied.<br><br>' +
-                'To send a command to aOS, send a message like this:<br>' +
-                '<span style="background:#CCC;font-family:aosProFont, monospace">aos:__<u>1</u>__:__<u>2</u>__:__<u>3</u>__:...</span><br>' +
-                'Blank 1: Permission group you need to access<br>' +
-                'Blank 2: Command you need to issue<br>' +
-                'Blank 3+: If needed, parameter(s) for the command<br>' +
-                'For example, to check if the user has dark mode enabled, issue this command, which aOS will reply to with the current state of darkMode.<br>' +
-                '<span style="background:#CCC;font-family:aosProFont, monospace">aos:readsetting:darkmode</span><br>' +
-                'aOS will reply with this:<br>' +
-                '<span style="background:#CCC;font-family:aosProFont, monospace">aosreply:readsetting:darkmode:[true/false]</span><br>' +
-                'If aOS ever hits an error in processing your command, it will give you a message like this:<br>' +
-                '<span style="background:#CCC;font-family:aosProFont, monospace">aosreply:error:_____</span><br>' +
-                '<h2>Commands:</h2><hr><span style="font-family:aosProFont, monospace">' + this.buildAPI() + '</span></div>', "Okay", function(){}, "Web App Maker");
+                'To request permission to a certain command type, do this:<br>' +
+                '<span style="background:#7F7F7F;font-family:aosProFont, monospace; font-size:12px;">aosTools.requestPermission("fs", callback)</span><br>' +
+                'In place of "fs", use whichever permission you want to request. At the moment, these are the supported permissions:<br>' +
+                '<span style="font-family:aosProFont, monospace;font-size:12px;">' + this.buildAPI(1) + '</span><br>' +
+                'aOS will respond in one of several ways:<br>' +
+                'No Response = aOS is prompting the user for permission. aOS will reply once the user decides.<br>' +
+                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px;">granted: permissionName</span> = your permission to use the feature is granted.<br>' +
+                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px;">unknown: permissionName</span> = the permission you requested does not exist.<br>' +
+                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px;">denied: permissionName</span> = the user denied your permission to use the feature.<br><br>' +
+                'For certain actions, aosTools provides an easy function that takes care of the request for you.<br>' +
+                'As an example, this command will open your app\'s window on aOS, then call your callback function.<br>' +
+                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px;">aosTools.openWindow(callbackFunction);</span><br>' +
+                'If aOS ever hits an error in processing your command, the reply\'s content will typically start with "error":<br>' +
+                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px">Error - no action provided.</span><br>' +
+                '<h2>Commands:</h2><hr><span style="font-family:aosProFont, monospace;font-size:12px;">' + this.buildAPI() + '</span></div>', "Okay", function(){}, "Web App Maker");
             },
             buildAPI: function(permissions){
                 var str = '';
@@ -11912,12 +11961,24 @@ c(function(){
                             str += ', ';
                         }
                     }
-                    str += i;
+                    str += '<span style="font-size:24px">' + i + '</span>';
                     if(!permissions){
                         str += '<br>';
-                        for(var j in this.actions[i]){
-                            str += '<br>';
-                            str += j + ': ' + this.commandDescriptions[i][j];
+                        if(typeof this.commandDescriptions[i] === "object"){
+                            for(var j in this.commandDescriptions[i]){
+                                str += '<br>';
+                                if(typeof this.commandDescriptions[i][j] === "string"){
+                                    str += j + ': ' + this.commandDescriptions[i][j] + "<br>";
+                                    if(typeof this.commandExamples[i] === "object"){
+                                        if(typeof this.commandExamples[i][j] === "string"){
+                                            str += '<div style="position:relative;margin-left:16px;">' + this.commandExamples[i][j] + '</div>';
+                                        }
+                                    }
+                                    str += "<br><br>"
+                                }
+                            }
+                        }else{
+                            str += "no documented commands in this permission set.<br>";
                         }
                     }
                 }
@@ -12030,9 +12091,9 @@ c(function(){
                                         }else if(apps.webAppMaker.vars.actions.hasOwnProperty(msg.data.action.split(":")[1])){
                                             apps.webAppMaker.vars.askPermission(msg.data.action.split(":")[1], msg.origin, msg.source, (msg.data.conversation || null));
                                         }
+                                    }else{
+                                        apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
                                     }
-
-                                    apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
                                     return;
                                 }
 
