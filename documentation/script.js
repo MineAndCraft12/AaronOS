@@ -1,4 +1,7 @@
 window.aosTools_connectListener = function(){
+    document.getElementById("devdoc_title").style.display = "none";
+    document.getElementById("navigate").style.height = "calc(100% - 18px)";
+    document.getElementById("content").style.height = "calc(100% - 18px)";
     aosTools.openWindow();
 }
 if(typeof aosTools === "object"){
