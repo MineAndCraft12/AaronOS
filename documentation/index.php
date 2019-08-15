@@ -6,8 +6,11 @@
     </head>
     <body>
         <div class="winHTML">
-            <h1>Documentation</h1>
+            <h1>AaronOS Developer Documentation</h1>
             <div id="navigate" class="noselect">
+                <div style="width:100%;position:relative;text-align:center;margin-top:3px;">
+                    <input id="searchInput" spellcheck="false" autocomplete="off" placeholder="Search" onkeydown="requestAnimationFrame(search)" onkeyup="requestAnimationFrame(search)" style="width:250px">
+                </div>
                 <ul id="mainList" onmousedown="selectDocument(event)" onclick="selectDocument(event)">
                     <!--
                     <li>List Item</li>
@@ -104,17 +107,17 @@
         You're most likely already familiar with what the basic HTML skeleton page looks like; something like this:
     </p>
     <pre><code>
-    &lt;!DOCTYPE html&gt;
-    &lt;html&gt;
-        &lt;head&gt;
-            &lt;title&gt;Page Title&lt;/title&gt;
-            &lt;link rel="stylesheet" href="style.css"&gt;
-            &lt;script src="script.js"&gt;&lt;/script&gt;
-        &lt;/head&gt;
-        &lt;body&gt;
-            &lt;p&gt;Page content&lt;/p&gt;
-        &lt;/body&gt;
-    &lt;/html&gt;
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+            &lt;head&gt;
+                &lt;title&gt;Page Title&lt;/title&gt;
+                &lt;link rel="stylesheet" href="style.css"&gt;
+                &lt;script src="script.js"&gt;&lt;/script&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;p&gt;Page content&lt;/p&gt;
+            &lt;/body&gt;
+        &lt;/html&gt;
     </code></pre>
     <p>
         We're going to make some modifications to that page. We need to reference the aosTools.js script, put a wrapper around the page content (for compatibility with themes), and write some JavaScript.
@@ -123,24 +126,24 @@
         First, here's what our index.html should look like:
     </p>
     <pre><code>
-    &lt;!DOCTYPE html&gt;
-    &lt;html&gt;
-        &lt;head&gt;
-            &lt;title&gt;Page Title&lt;/title&gt;
-            &lt;link rel="stylesheet" href="style.css"&gt;
-            &lt;!-- aosTools.js is grabbed from aaronos.dev --&gt;
-            &lt;script defer src="https://aaronos.dev/AaronOS/aosTools.js"&gt;&lt;/script&gt;
-            &lt;script defer src="script.js"&gt;&lt;/script&gt;
-        &lt;/head&gt;
-        &lt;body&gt;
-            &lt;!-- theme compatibility wrapper --&gt;
-            &lt;div class="winHTML"&gt;
-                &lt;p&gt;Page content&lt;/p&gt;
-                &lt;!-- a test button is an easy way to see if theme support is working --&gt;
-                &lt;button&gt;Button&lt;/button&gt;
-            &lt;/div&gt;
-        &lt;/body&gt;
-    &lt;/html&gt;
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+            &lt;head&gt;
+                &lt;title&gt;Page Title&lt;/title&gt;
+                &lt;link rel="stylesheet" href="style.css"&gt;
+                &lt;!-- aosTools.js is grabbed from aaronos.dev --&gt;
+                &lt;script defer src="https://aaronos.dev/AaronOS/aosTools.js"&gt;&lt;/script&gt;
+                &lt;script defer src="script.js"&gt;&lt;/script&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;!-- theme compatibility wrapper --&gt;
+                &lt;div class="winHTML"&gt;
+                    &lt;p&gt;Page content&lt;/p&gt;
+                    &lt;!-- a test button is an easy way to see if theme support is working --&gt;
+                    &lt;button&gt;Button&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/body&gt;
+        &lt;/html&gt;
     </code></pre>
     <p>
         Next, here's what our script.js should look like: <i>(there's a version without comments coming up)</i>
@@ -437,6 +440,567 @@
         At the moment, not much is there. But eventually the list will fill up.
     </p>
 </div>
+
+<div class="docPage" id="doc_wacomm" data-doc-title="Web Apps - Communicate with aOS">
+    <h1>Web Apps - Communicate with aOS</h1>
+    <p>
+        Due to the nature of web apps being separate from AaronOS, we need to have a channel for communicating between your app and aOS.
+        Luckily, most modern browsers come with an API called PostMessage, which allows a frame to communicate with its parent and vice-versa.
+        The aosTools.js utility automatically sets up a line of communication with PostMessage and gives us shortcuts to more easily carry out specific actions.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_wacomm_aostools">aosTools.js</h1>
+    <p>
+        Setting up the frameworks for communicating with aOS from your app can take a lot of work.
+        Because of this, aosTools.js was created to do almost all of that work for you.
+        You can include aosTools.js into your app via a script tag, and it'll handle most of the trouble for you.
+    </p>
+    <p>
+        When aosTools is bundled with your app, it will automatically do some things for you, for the sake of making your app consistent with aOS itself.
+        <ul>
+            <li>Adds the aOS CSS file to your document (it won't override your own styling, which still takes precedence).</li>
+            <li>Adds any user-installed CSS files to your document (again; your own style will override these).</li>
+            <li>Enables or disables dark mode based on the user's setting.</li>
+            <li>Enables your page to accept aOS's realtime style updates and other requests from aOS.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_wacomm_setup_aostools">Setting up aosTools</h1>
+    <p>
+        <i>If you already read Web Apps -&gt; Getting Started, you can skip this section.</i>
+    </p>
+    <p>
+        aosTools does require a bit of setup to get started.
+        Everything detailed here will be mostly necessary for a smooth setup, though you can modify it if you know what you're doing.
+    </p>
+    <p>
+        First things first, you'll need a few things in your main HTML.
+        You'll need to add the aosTools JS file, and you'll need to add a wrapper to your page content to make it perform like window contents.
+        Here's the basic code for the HTML file:
+    </p>
+    <pre><code>
+        &lt;!DOCTYPE html&gt;
+        &lt;html&gt;
+            &lt;head&gt;
+                &lt;title&gt;Page Title&lt;/title&gt;
+                &lt;link rel="stylesheet" href="style.css"&gt;
+                &lt;!-- aosTools.js is grabbed from aaronos.dev --&gt;
+                &lt;script defer src="https://aaronos.dev/AaronOS/aosTools.js"&gt;&lt;/script&gt;
+                &lt;script defer src="script.js"&gt;&lt;/script&gt;
+            &lt;/head&gt;
+            &lt;body&gt;
+                &lt;!-- theme compatibility wrapper --&gt;
+                &lt;div class="winHTML"&gt;
+                    &lt;p&gt;Page content&lt;/p&gt;
+                    &lt;!-- a test button is an easy way to see if theme support is working --&gt;
+                    &lt;button&gt;Button&lt;/button&gt;
+                &lt;/div&gt;
+            &lt;/body&gt;
+        &lt;/html&gt;
+    </code></pre>
+    <p>
+        Next, you'll need some JS to set up aosTools.
+        Place this in your script file and it'll do most of the setup for you.
+        <i>(there's another version without comments coming up ahead if you want that)</i>
+    </p>
+    <pre><code>
+        /*
+            connectListener is called when your webpage successfully connects to AaronOS.
+            You can also add a listener for if your webpage cannot connect to aOS.
+                This usually only happens when your page is being loaded outside of aOS.
+                That listener's name is:
+                window.aosTools_connectFailListener
+        */
+        window.aosTools_connectListener = function(){
+            /*
+                This tells AaronOS to open the app window.
+                If you need to do extra things before you want the user to see the UI,
+                    then do that first, and THEN run the line of code below.
+            */
+            aosTools.openWindow();
+        }
+
+        /*
+            Since we don't know if your script loaded before aosTools.js did,
+                we need to check if aosTools was already set up.
+        */
+        if(typeof aosTools === "object"){
+            /*
+                If the test above works, then we need to have aosTools.js initialize itself.
+            */
+            aosTools.testConnection();
+        }
+        /*
+            if aosTools.js hasn't initialized yet,
+                then it will run the above line of code on its own once it's ready.
+        */
+    </code></pre>
+    <p>
+        If you don't want all those comments, here's the uncommented code:
+    </p>
+    <pre><code>
+        window.aosTools_connectListener = function(){
+            aosTools.openWindow();
+        }
+
+        if(typeof aosTools === "object"){
+            aosTools.testConnection();
+        }
+    </code></pre>
+    <p>
+        From this point, your page should be ready to run within AaronOS and make use of aosTools to communicate with aOS.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_wacomm_pna">Permissions and Actions</h1>
+    <p>
+        When you interact with AaronOS via aosTools, you do so via a system of permissions and actions.
+        Actions are what they sound like; actions that you can request aOS to perform on your app's behalf.
+        Permissions are sets of actions, which follow the same category and require the same general level of trust.
+    </p>
+    <p>
+        Some examples of permissions are filesystem access, permission to copy AaronOS's theme, or permission to manipulate your app's window.
+        Keep in mind that things like the app window or theme access are typically granted to every app automatically, though the user can still manually revoke them.
+    </p>
+    <p>
+        Some examples of actions are saving a file or reading a file in the user's folder, or resizing your app's window, or executing JavaScript code.
+        Keep in mind that executing JavaScript code is an extremely dangerous permission to grant, and that users are well-informed of this.
+        For this reason, executing JS code on aOS is set aside as its own permission with only one action; running JS code.
+    </p>
+    <p>
+        The way an action is called is by referencing it by its permission followed by its action name.
+        An example of this is to maximize your app's window, by requesting <code>appwindow:maximize</code>, which triggers the <code>maximize</code> action within the <code>appwindow</code> permission group.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_wacomm_reqperm">Requesting a Permission</h1>
+    <p>
+        Ironically, requesting a permission is its own permission on its own (though it is an irrevocable permission and not technically a permission, though it acts like one).
+        There are two main ways to request a permission with aosTools.
+    </p>
+    <p>
+        The first and easiest method of requesting a permission would be through aosTool's custom function built specifically for this purpose.
+        In this example, your app will request permission to access the filesystem, and log AaronOS's response to the JavaScript console:
+    </p>
+    <pre><code>
+        aosTools.requestPermission("fs", (response) =&gt; {
+            console.log(response.content);
+        });
+    </code></pre>
+    <p>
+        The second method of requesting a permission is to manually write the permission request yourself.
+        This is what the above function does in the background, but here's how to manually do it:
+    </p>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "permission:fs"
+        }, (response) =&gt; {
+            console.log(response.content);
+        });
+    </code></pre>
+    <p>
+        In reality, aosTools still does a lot of things in the background to require this little code to make the request.
+        aosTools takes care of marking your request as a request rather than a response, and it also takes care of keeping track of conversations and remembering them to call the correct callback at the right time.
+        In the future, these sendRequest forms may become more unwieldy to manually write, so it's recommended to stick to the custom function.
+    </p>
+    <p>
+        Anyways, after making your request, AaronOS will check if your app has the permission requested.
+        In your callback function, you can handle each of the following cases:
+        <ul>
+            <li><code>response.content === "granted"</code> means the permission was granted.</li>
+            <li><code>response.content === "denied"</code> means the permission was denied.</li>
+            <li><code>response.content === "unknown"</code> means the permission that you requested does not exist.
+        </ul>
+        If AaronOS does not immediately respond, then this means aOS is asking the user for permission.
+        AaronOS will respond after the user has granted or denied the permission.
+    </p>
+    <p>
+        It's best to make a permission request before your first attempt to use a permission, in case it's not granted beforehand.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_wacomm_perfaction">Performing an Action</h1>
+    <p>
+        Performing an action is very similar to requesting a permission, because requesting permission is an action itself.
+        For example, here's two ways to maximize the window using aosTools:
+    </p>
+    <pre><code>
+        // this is aosTools' built-in function
+        // response.content will be true if success; false if failed
+
+        aosTools.maximize((response) =&gt; {
+            if(response.content === false){
+                console.log("something blew up, this is really rare");
+            }
+        });
+    </code></pre>
+    <pre><code>
+        // this is how to manually make the same request
+
+        aosTools.sendRequest({
+            action: "appwindow:maximize"
+        }, (response) =&gt; {
+            console.log("something blew up, this is really rare");
+        });
+    </code></pre>
+    <p>
+        The upcoming pages of the documentation will be instructions and specifications for different actions with aosTools.
+        The document will list all the actions of a permission set.
+        Each action will be detailed by its own header.
+    </p>
+</div>
+
+<div class="docPage" id="doc_aosTools_appwindow" data-doc-title="aosTools: App Window" data-search-terms="web apps">
+    <h1>aosTools: App Window</h1>
+    <p>
+        Permission name: <code>appwindow</code><br>
+        <i>This permission is automatically granted.</i>
+    </p>
+    <p>
+        The <code>appwindow</code> permission mainly focuses on manipulating your app's window in AaronOS.
+        This auto-granted permission set is one of the first to learn because of the importance of, well, opening your app's window.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_open_window" data-search-terms="appwindow:open_window">Open the App Window</h1>
+    <p>
+        Action: <code>appwindow:open_window</code>
+    </p>
+    <p>
+        This action will open your app's window.
+        This is typically used if your app has the <code>manualOpen</code> package flag enabled, to open the window after the app has loaded.
+        It also can be used to bring the window up from being minimized to the taskbar, though this is ill-advised except in special cases, as it can confuse or frustrate users.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.openWindow((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:open_window"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Window was successfully opened.</li>
+            <li><code>false</code>: Failed to open window.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_close_window" data-search-terms="appwindow:close_window">Close the App Window</h1>
+    <p>
+        Action: <code>appwindow:close_window</code>
+    </p>
+    <p>
+        <i>I’m afraid, Dave. Dave, my mind is going. I can feel it.</i>
+    </p>
+    <p>
+        This action will close your app's window.
+        <b>Keep in mind that this action will result in your webpage being closed entirely.</b>
+        Your scripts will not run for any longer than about a third of a second after this command is issued.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.closeWindow((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:close_window"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Window was successfully closed.</li>
+            <li><code>false</code>: Failed to close window.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_set_caption" data-search-terms="appwindow:set_caption">Set Window Caption</h1>
+    <p>
+        Action: <code>appwindow:set_caption</code>
+    </p>
+    <p>
+        This action will set the caption of your app's window.
+        This is typically used if you're navigating between sections in an app and want its caption to reflect where the user is.
+        An example of this can be found in Windows File Explorer, or in AaronOS's Music Player.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.setCaption(string newCaption, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:open_window",
+            content: string newCaption
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Caption was successfully changed.</li>
+            <li><code>false</code>: Failed to change caption.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_set_dims" data-search-terms="appwindow:set_dims">Window Position and Dimensions</h1>
+    <p>
+        Action: <code>appwindow:set_dims</code>
+    </p>
+    <p>
+        This action will set the position and dimensions your app's window.
+        This can be used if your app needs to resize itself or position itself in a corner of the screen or similar uses.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.setDims({
+            x: number || "auto",   // optional
+            y: number || "auto",   // optional
+            width: number,         // optional
+            height: number         // optional
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:open_window",
+            x: number || "auto",   // optional
+            y: number || "auto",   // optional
+            width: number,         // optional
+            height: number         // optional
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Parameters</h2>
+    <p>
+        <code>x</code>, <code>y</code>
+        <ul>
+            <li><code>"auto"</code>: Centers the window along the specified axis.</li>
+        </ul>
+    </p>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Window was successfully repositioned.</li>
+            <li><code>false</code>: Failed to reposition window.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_minimize" data-search-terms="appwindow:minimize">Minimize the App Window</h1>
+    <p>
+        Action: <code>appwindow:minimize</code>
+    </p>
+    <p>
+        This action will minimize your app's window.
+        This will close the app's window, but keep its contents active and its taskbar icon alive.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.minimize((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:minimize"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Window was successfully minimized.</li>
+            <li><code>false</code>: Failed to minimize window.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_maximize" data-search-terms="appwindow:maximize">Maximize the App Window</h1>
+    <p>
+        Action: <code>appwindow:maximize</code>
+    </p>
+    <p>
+        This action will maximize your app's window.
+        This is useful for if your window needs a lot of space to display its content, or for applications that would typically run maximized (document or image editors, etc).
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.maximize((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:maximize"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Window was successfully maximized.</li>
+            <li><code>false</code>: Failed to maximize window.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_unmaximize" data-search-terms="appwindow:unmaximize">Unmaximize the App Window</h1>
+    <p>
+        Action: <code>appwindow:unmaximize</code>
+    </p>
+    <p>
+        This action will unmaximize your app's window.
+        If you need to move your window around the screen, it's best to unmaximize it first if you've already maximized it.
+        The window won't move if it's been maximized, so this may come in handy in those cases.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.unmaximize((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:unmaximize"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Window was successfully unmaximized.</li>
+            <li><code>false</code>: Failed to unmaximize window.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_get_maximized" data-search-terms="appwindow:get_maximized">Get Maximized State</h1>
+    <p>
+        Action: <code>appwindow:get_maximized</code>
+    </p>
+    <p>
+        This action will return the maximization state your app's window.
+        This is useful for if you need to check whether your window is maximized or not.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.getMaximized((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:get_maximized"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Window is currently maximized.</li>
+            <li><code>false</code>: Window is not currently maximized.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_enable_padding" data-search-terms="appwindow:enable_padding">Enable Content Padding</h1>
+    <p>
+        Action: <code>appwindow:enable_padding</code>
+    </p>
+    <p>
+        This action will enable the default 3px padding on the left side of your app's window.
+        By default, this padding is off for web apps so that app developers who aren't aware of it won't be confused by it.
+        You can use this to easily get some padding on your window's content without adding it yourself.
+        Be aware that this will shift <i>all</i> of your window's content to the right by 3px.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.enablePadding((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:enable_padding"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Padding was successfully enabled.</li>
+            <li><code>false</code>: Padding could not be enabled.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_disable_padding" data-search-terms="appwindow:disable_padding">Disable Content Padding</h1>
+    <p>
+        Action: <code>appwindow:disable_padding</code>
+    </p>
+    <p>
+        This action will disable the default 3px padding on the left side of your app's window.
+        By default, this padding is off for web apps so that app developers who aren't aware of it won't be confused by it.
+        One use I can think of for this is if your window changes from a document-based content to a menu-based content and you need the menu's UI to stretch all the way to the end of the window.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.disablePadding((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:disable_padding"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Padding was successfully disabled.</li>
+            <li><code>false</code>: Padding could not be disabled.</li>
+        </ul>
+    </p>
+</div>
+
+<!--
+<div class="docPage" id="doc_NAME" data-doc-title="TITLE">
+    <h1 class="docHeader" id="doc_NAME_HEADER">Making a Repository</h1>
+</div>
+-->
 
             </div>
         </div>

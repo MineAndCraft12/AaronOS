@@ -105,3 +105,6 @@ body, html{
 .docPage.visible{
     display:block !important;
 }
+.docPage li{
+    margin-top:6px;
+}

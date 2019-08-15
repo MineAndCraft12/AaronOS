@@ -7392,8 +7392,26 @@ c(function(){
                     darkMode = 1;
                     document.body.classList.add('darkMode');
                 }
+                apps.settings.vars.updateFrameStyles();
                 if(!nosave){
                     ufsave('aos_system/windows/dark_mode', darkMode);
+                }
+            },
+            updateFrameStyles: function(){
+                var allFrames = document.getElementsByTagName("iframe");
+                for(var i = 0; i < allFrames.length; i++){
+                    try{
+                        if(allFrames[i].getAttribute("data-parent-app")){
+                            allFrames[i].contentWindow.postMessage({
+                                type: "response",
+                                content: "Update style information",
+                                conversation: "aosTools_Subscribed_Style_Update"
+                            });
+                        }
+                    }catch(err){
+                        doLog("Error updating frame for " + allFrames[i].getAttribute("data-parent-app"), "#F00");
+                        doLog(err, "#F00");
+                    }
                 }
             },
             setMobileMode: function(type, nosave){
@@ -9554,10 +9572,11 @@ c(function(){
             "08/05/2019: B1.0.4.2\n : Fixed Minecraft Mode in minesweeper.\n\n" +
             "08/06/2019: B1.0.5.0\n + Added enchanced graphics to minesweeper.\n\n" +
             "08/07/2019: B1.0.5.1\n + Added aosTools.js - embed the script file into your page for easy aOS app tools.\n - Minesweeper was removed.\n + Standalone version of Minesweeper added to the repository.\n + Minesweeper now themes itself to AaronOS.\n + Minesweeper now saves its settings.\n + Minesweeper now pre-caches shadow images.\n : Fixed caching issues on minesweeper.\n - Removed Dark Mode button from Minesweeper, as this is now controlled by aOS.\n : Music Player now uses aosTools.js, like Minesweeper does.\n localhost added to auto-trusted domains.\n\n" +
-            "08/08/2019: B1.1.0.0\n + Added Developer Documentation app.\n + Extra logic added to prevent app updates from getting delayed by web browser caching.\n : Changed 'appWindow' permission to 'appwindow'\n + Added to appwindow permission: open_window, close_window, maximize, unmaximize, minimize, get_maximized, set_dims\n + Added manualOpen flag to web app json files to make app loading less ugly.\n : Fixed error message in Music Player each time a song is started.\n : Fixed error in aosTools whenever an unrecognized conversation is recieved.\n : Updated Web App Maker's documentation.",
+            "08/08/2019: B1.1.0.0\n + Added Developer Documentation app.\n + Extra logic added to prevent app updates from getting delayed by web browser caching.\n : Changed 'appWindow' permission to 'appwindow'\n + Added to appwindow permission: open_window, close_window, maximize, unmaximize, minimize, get_maximized, set_dims\n + Added manualOpen flag to web app json files to make app loading less ugly.\n : Fixed error message in Music Player each time a song is started.\n : Fixed error in aosTools whenever an unrecognized conversation is recieved.\n : Updated Web App Maker's documentation.\n\n" +
+            "08/14/2019: B1.1.1.0\n + Style changes are now updated in realtime on web apps via aosTools.\n + Added search box to Developer Documentation.\n + Added prompt actions to aosTools.\n + aosTools can now recieve style updates as they occur on aOS.\n + Added shortcuts for window events to aosTools.\n + Added new documentation.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.1.0.0 (08/08/2019) r3';
+    window.aOSversion = 'B1.1.1.0 (08/14/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11671,17 +11690,61 @@ c(function(){
                     }
                 },
                 prompt: {
-                    alert: function(input){
-                        
+                    alert: function(input, srcFrame, frameOrigin){
+                        try{
+                            apps.prompt.vars.alert(input.content || "", input.button || "Okay", () => {
+                                apps.webAppMaker.vars.postReply({
+                                    messageType: "response",
+                                    content: true,
+                                    conversation: input.conversation
+                                }, frameOrigin, srcFrame);
+                            }, (apps[srcFrame.frameElement.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc);
+                        }catch(err){
+                            return false;
+                        }
+                        return "APPMAKER_DO_NOT_REPLY";
                     },
-                    prompt: function(input){
-                        
+                    prompt: function(input, srcFrame, frameOrigin){
+                        try{
+                            apps.prompt.vars.prompt(input.content || "", input.button || "Okay", (userText) => {
+                                apps.webAppMaker.vars.postReply({
+                                    messageType: "response",
+                                    content: userText,
+                                    conversation: input.conversation
+                                }, frameOrigin, srcFrame);
+                            }, (apps[srcFrame.frameElement.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc);
+                        }catch(err){
+                            return false;
+                        }
+                        return "APPMAKER_DO_NOT_REPLY";
                     },
-                    confirm: function(input){
-                        
+                    confirm: function(input, srcFrame, frameOrigin){
+                        try{
+                            apps.prompt.vars.prompt(input.content || "", input.buttons || ["Cancel", "Okay"], (userBtn) => {
+                                apps.webAppMaker.vars.postReply({
+                                    messageType: "response",
+                                    content: userBtn,
+                                    conversation: input.conversation
+                                }, frameOrigin, srcFrame);
+                            }, (apps[srcFrame.frameElement.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc);
+                        }catch(err){
+                            return false;
+                        }
+                        return "APPMAKER_DO_NOT_REPLY";
                     },
-                    notify: function(input){
-                        
+                    notify: function(input, srcFrame, frameOrigin){
+                        try{
+                            apps.prompt.vars.notify(input.content || "", input.buttons || ["Cancel", "Okay"], (userBtn) => {
+                                apps.webAppMaker.vars.postReply({
+                                    messageType: "response",
+                                    content: userBtn,
+                                    conversation: input.conversation
+                                }, frameOrigin, srcFrame);
+                            }, (apps[srcFrame.frameElement.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc, input.image || "");
+                        }catch(err){
+                            return err;
+                        }
+                        return "APPMAKER_DO_NOT_REPLY";
                     }
                 },
                 getstyle: {
@@ -11721,64 +11784,120 @@ c(function(){
                 },
                 appwindow: {
                     set_caption: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.setCaption(input.content);
+                        try{
+                            if(frame.frameElement.getAttribute("data-parent-app")){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.setCaption(input.content);
+                                    return true;
+                                }
+                                return false;
                             }
+                            return false;
+                        }catch(err){
+                            return false;
                         }
                     },
                     disable_padding: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.paddingMode(0);
+                        try{
+                            if(frame.frameElement.getAttribute("data-parent-app")){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.paddingMode(0);
+                                    return true;
+                                }
+                                return false;
                             }
+                            return false;
+                        }catch(err){
+                            return false;
                         }
                     },
                     enable_padding: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.paddingMode(1);
+                        try{
+                            if(frame.frameElement.getAttribute("data-parent-app")){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.paddingMode(1);
+                                    return true;
+                                }
+                                return false;
                             }
+                            return false;
+                        }catch(err){
+                            return false;
                         }
                     },
                     open_window: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.openWindow();
-                                toTop(apps[frame.frameElement.getAttribute("data-parent-app")]);
+                        try{
+                            if(frame.frameElement.getAttribute("data-parent-app")){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.openWindow();
+                                    toTop(apps[frame.frameElement.getAttribute("data-parent-app")]);
+                                    return true;
+                                }
+                                return false;
                             }
+                            return false;
+                        }catch(err){
+                            return false;
                         }
                     },
                     close_window: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                apps[frame.frameElement.getAttribute("data-parent-app")].signalHandler("close");
+                        try{
+                            if(frame.frameElement.getAttribute("data-parent-app")){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                    apps[frame.frameElement.getAttribute("data-parent-app")].signalHandler("close");
+                                    return true;
+                                }
+                                return false;
                             }
+                            return false;
+                        }catch(err){
+                            return false;
                         }
                     },
                     minimize: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                apps[frame.frameElement.getAttribute("data-parent-app")].signalHandler("shrink");
+                        try{
+                            if(frame.frameElement.getAttribute("data-parent-app")){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                    apps[frame.frameElement.getAttribute("data-parent-app")].signalHandler("shrink");
+                                    return true;
+                                }
+                                return false;
                             }
+                            return false;
+                        }catch(err){
+                            return false;
                         }
                     },
                     maximize: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                if(!apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen){
-                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
+                        try{
+                            if(frame.frameElement.getAttribute("data-parent-app")){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                    if(!apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen){
+                                        apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
+                                    }
+                                    return true;
                                 }
+                                return false;
                             }
+                            return false;
+                        }catch(err){
+                            return false;
                         }
                     },
                     unmaximize: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen){
-                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
+                        try{
+                            if(frame.frameElement.getAttribute("data-parent-app")){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                    if(apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen){
+                                        apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
+                                    }
+                                    return true;
                                 }
+                                return false;
                             }
+                            return false;
+                        }catch(err){
+                            return false;
                         }
                     },
                     get_maximized: function(input, frame){
@@ -11789,15 +11908,22 @@ c(function(){
                         }
                     },
                     set_dims: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.setDims(
-                                    input.x || "auto",
-                                    input.y || "auto",
-                                    input.width || apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.sizeH,
-                                    input.height || apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.sizeV
-                                );
+                        try{
+                            if(frame.frameElement.getAttribute("data-parent-app")){
+                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.setDims(
+                                        input.x || "auto",
+                                        input.y || "auto",
+                                        input.width || apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.sizeH,
+                                        input.height || apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.sizeV
+                                    );
+                                    return true;
+                                }
+                                return false;
                             }
+                            return false;
+                        }catch(err){
+                            return false;
                         }
                     }
                 }
@@ -12081,7 +12207,7 @@ c(function(){
                                                 }
                                             }
                                         }else{
-                                            returnMessage.content = "unknown: " + msg.data.action.split(":")[1];
+                                            returnMessage.content = "unknown"
                                         }
                                     }
 
@@ -12168,7 +12294,9 @@ c(function(){
                                     returnMessage.conversation = msg.data.conversation;
                                 }
                                 returnMessage.content = apps.webAppMaker.vars.actions[msg.data.action.split(":")[0]][msg.data.action.split(":")[1]](msg.data, msg.source, msg.origin);
-                                apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                if(returnMessage.content !== "APPMAKER_DO_NOT_REPLY"){
+                                    apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                }
                             }else{
                                 doLog("postMessage from " + msg.origin + ": ", "#ACE");
                                 console.log(msg.data);
@@ -12199,13 +12327,13 @@ c(function(){
                             apps.webAppMaker.vars.postReply({
                                 messageType: "response",
                                 conversation: (conv || ""),
-                                content: "granted: " + permission
+                                content: "granted"
                             }, origin, source);
                         }else{
                             apps.webAppMaker.vars.postReply({
                                 messageType: "response",
                                 conversation: (conv || ""),
-                                content: "denied: " + permission
+                                content: "denied"
                             }, origin, source);
                         }
                     }, 'AaronOS');
@@ -15732,6 +15860,19 @@ function winmove(e){
             getId('windowFrameOverlay').style.width = apps[winmovecurrapp].appWindow.windowH + 'px';
             getId('windowFrameOverlay').style.height = apps[winmovecurrapp].appWindow.windowV + 'px';
         }
+        if(document.activeElement.tagName === "IFRAME"){
+            if(document.activeElement.getAttribute("data-parent-app")){
+                if(e.currentTarget.id){
+                    if("win_" + document.activeElement.getAttribute("data-parent-app") + "_cap" !== e.currentTarget.id){
+                        document.activeElement.blur();
+                    }
+                }else{
+                    if("win_" + document.activeElement.getAttribute("data-parent-app") + "_cap" !== e.currentTarget.parentNode.id){
+                        document.activeElement.blur();
+                    }
+                }
+            }
+        }
     }else{
         getId("winmove").style.display = "none";
         if(!mobileMode){
@@ -15865,6 +16006,15 @@ function winres(e){
             winresOrY = apps[winmovecurrapp].appWindow.windowY;
         }else if(winmovey - apps[winmovecurrapp].appWindow.windowY - apps[winmovecurrapp].appWindow.windowV > apps.settings.vars.winBorder * -5){
             tempwinresmode[1] = 2;
+        }
+        if(document.activeElement.tagName === "IFRAME"){
+            if(document.activeElement.getAttribute("data-parent-app")){
+                if(e.currentTarget.id){
+                    if("win_" + document.activeElement.getAttribute("data-parent-app") + "_size" !== e.currentTarget.id){
+                        document.activeElement.blur();
+                    }
+                }
+            }
         }
     }else{
         getId("winres").style.display = "none";
@@ -16927,7 +17077,7 @@ c(function(){
         }
     };
     setInterval(iframeblurcheck, 500);
-    addEventListener("blur", iframeblurcheck)
+    addEventListener("blur", iframeblurcheck);
 });
 totalWaitingCodes = codeToRun.length;
 // 2000 lines of code! 9/18/2015

@@ -65,12 +65,16 @@ window.aosTools = {
     recieveRequest: function(event){
         if(typeof event.data === "object"){
             if(event.data.conversation){
-                if(typeof aosTools.callbacks[event.data.conversation] === "function"){
-                    aosTools.callbacks[event.data.conversation](event.data);
-                    aosTools.callbacks[event.data.conversation] = null;
+                if(event.data.conversation === "aosTools_Subscribed_Style_Update"){
+                    aosTools.updateStyle();
                 }else{
-                    if(aosTools.fallbackMessageListener){
-                        aosTools.fallbackMessageListener(event);
+                    if(typeof aosTools.callbacks[event.data.conversation] === "function"){
+                        aosTools.callbacks[event.data.conversation](event.data);
+                        aosTools.callbacks[event.data.conversation] = null;
+                    }else{
+                        if(aosTools.fallbackMessageListener){
+                            aosTools.fallbackMessageListener(event);
+                        }
                     }
                 }
             }else if(aosTools.fallbackMessageListener){
@@ -120,6 +124,77 @@ window.aosTools = {
         aosTools.sendRequest({
             action: "appwindow:disable_padding"
         }, callback)
+    },
+    maximize: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:maximize"
+        }, callback);
+    },
+    unmaximize: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:unmaximize"
+        }, callback);
+    },
+    getMaximized: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:get_maximized"
+        }, callback);
+    },
+    setDims: function(newDims, callback){
+        aosTools.sendRequest({
+            action: "appwindow:set_dims",
+            x: newDims.x || null,
+            y: newDims.y || null,
+            width: newDims.width || null,
+            height: newDims.height || null
+        }, callback);
+    },
+
+    alert: function(paramObj, callback){
+        aosTools.sendRequest({
+            action: "prompt:alert",
+            content: paramObj.content,
+            button: paramObj.button
+        }, callback);
+    },
+    prompt: function(paramObj, callback){
+        aosTools.sendRequest({
+            action: "prompt:prompt",
+            content: paramObj.content,
+            button: paramObj.button
+        }, callback);
+    },
+    confirm: function(paramObj, callback){
+        if(!paramObj.buttons && paramObj.button){
+            aosTools.sendRequest({
+                action: "prompt:confirm",
+                content: paramObj.content,
+                buttons: [paramObj.button]
+            }, callback);
+        }else{
+            aosTools.sendRequest({
+                action: "prompt:confirm",
+                content: paramObj.content,
+                buttons: paramObj.buttons
+            }, callback);
+        }
+    },
+    notify: function(paramObj, callback){
+        if(!paramObj.buttons && paramObj.button){
+            aosTools.sendRequest({
+                action: "prompt:notify",
+                content: paramObj.content,
+                buttons: [paramObj.button],
+                image: paramObj.image
+            }, callback);
+        }else{
+            aosTools.sendRequest({
+                action: "prompt:notify",
+                content: paramObj.content,
+                buttons: paramObj.buttons,
+                image: paramObj.image
+            }, callback);
+        }
     },
 
     getDarkMode: function(callback){
