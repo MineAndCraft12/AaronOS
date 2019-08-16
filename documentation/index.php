@@ -662,6 +662,7 @@
     <p>
         Action: <code>appwindow:open_window</code>
     </p>
+    <button class="aosTools_try" onclick="setTimeout(function(){aosTools.openWindow()}, 5000)">Try It</button> <i>(click, then minimize the window and wait 5 seconds)</i>
     <p>
         This action will open your app's window.
         This is typically used if your app has the <code>manualOpen</code> package flag enabled, to open the window after the app has loaded.
@@ -694,6 +695,7 @@
     <p>
         Action: <code>appwindow:close_window</code>
     </p>
+    <button class="aosTools_try" onclick="aosTools.closeWindow()">Try It</button> <i>(this will close the documentation)</i>
     <p>
         <i>I’m afraid, Dave. Dave, my mind is going. I can feel it.</i>
     </p>
@@ -729,6 +731,7 @@
     <p>
         Action: <code>appwindow:set_caption</code>
     </p>
+    <button class="aosTools_try" onclick="aosTools.setCaption('You pressed the Try It button');setTimeout(function(){aosTools.setCaption('Developer Documentation');}, 5000);">Try It</button>
     <p>
         This action will set the caption of your app's window.
         This is typically used if you're navigating between sections in an app and want its caption to reflect where the user is.
@@ -762,6 +765,7 @@
     <p>
         Action: <code>appwindow:set_dims</code>
     </p>
+    <button class="aosTools_try" onclick="aosTools.setDims({x:20,y:20,width:800,height:300})">Try It</button> <i>(this will move and shrink the documentation window)</i>
     <p>
         This action will set the position and dimensions your app's window.
         This can be used if your app needs to resize itself or position itself in a corner of the screen or similar uses.
@@ -809,6 +813,7 @@
     <p>
         Action: <code>appwindow:minimize</code>
     </p>
+    <button class="aosTools_try" onclick="aosTools.minimize()">Try It</button>
     <p>
         This action will minimize your app's window.
         This will close the app's window, but keep its contents active and its taskbar icon alive.
@@ -840,6 +845,7 @@
     <p>
         Action: <code>appwindow:maximize</code>
     </p>
+    <button class="aosTools_try" onclick="aosTools.maximize()">Try It</button> <i>(make sure window is small first)</i>
     <p>
         This action will maximize your app's window.
         This is useful for if your window needs a lot of space to display its content, or for applications that would typically run maximized (document or image editors, etc).
@@ -871,6 +877,7 @@
     <p>
         Action: <code>appwindow:unmaximize</code>
     </p>
+    <button class="aosTools_try" onclick="aosTools.unmaximize()">Try It</button> <i>(make sure window is maximized first)</i>
     <p>
         This action will unmaximize your app's window.
         If you need to move your window around the screen, it's best to unmaximize it first if you've already maximized it.
@@ -903,6 +910,8 @@
     <p>
         Action: <code>appwindow:get_maximized</code>
     </p>
+    <button class="aosTools_try" onclick="aosTools.getMaximized(function(res){document.getElementById('try_appwindow_get_maximized').innerHTML = res.content})">Try It</button>:
+    <code class="aosTools_try" id="try_appwindow_get_maximized">&nbsp;</code>
     <p>
         This action will return the maximization state your app's window.
         This is useful for if you need to check whether your window is maximized or not.
@@ -934,6 +943,7 @@
     <p>
         Action: <code>appwindow:enable_padding</code>
     </p>
+    <button class="aosTools_try" onclick="aosTools.enablePadding()">Try It</button>
     <p>
         This action will enable the default 3px padding on the left side of your app's window.
         By default, this padding is off for web apps so that app developers who aren't aware of it won't be confused by it.
@@ -967,6 +977,7 @@
     <p>
         Action: <code>appwindow:disable_padding</code>
     </p>
+    <button class="aosTools_try" onclick="aosTools.disablePadding()">Try It</button>
     <p>
         This action will disable the default 3px padding on the left side of your app's window.
         By default, this padding is off for web apps so that app developers who aren't aware of it won't be confused by it.
@@ -992,6 +1003,278 @@
         <ul>
             <li><code>true</code>: Padding was successfully disabled.</li>
             <li><code>false</code>: Padding could not be disabled.</li>
+        </ul>
+    </p>
+</div>
+
+<div class="docPage" id="doc_at_js" data-doc-title="aosTools: JavaScript on AaronOS" data-search-terms="web apps">
+    <h1>aosTools: Remote JavaScript</h1>
+    <p>
+        Permission name: <code>js</code><br>
+        <i>This permission is dangerous to grant; it's unlikely that users will allow it.</i>
+    </p>
+    <p>
+        The <code>js</code> permission is a special permission set aside specifically for executing JavaScript code on AaronOS.
+        Code that you run via this permission will be executed on AaronOS rather than on your web app.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_js_exec" data-search-terms="js:exec">Execute (eval)</h1>
+    <p>
+        Action: <code>js:exec</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.exec('var countNumber = 0;for(var app in apps){countNumber++;}return countNumber;', function(res){document.getElementById('try_js_exec').innerHTML = 'You have ' + res.content + ' apps installed.';})">Try It</button>:
+    <code class="aosTools_try" id="try_js_exec">&nbsp;</code>
+    <p>
+        This action will execute any JavaScript code you provide on AaronOS.
+        The code is executed via <code>Function</code>.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.exec(string code, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "js:exec",
+            content: string
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Parameters</h2>
+    <p>
+        <code>content</code>:
+        <ul>
+            <li>JavaScript code formatted as a string.</li>
+        </ul>
+    </p>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li>If successful, this will be the return value of your code.</li>
+            <li>If failed, the response will be a string starting with <code>Error:</code>.</li>
+        </ul>
+    </p>
+</div>
+
+<div class="docPage" id="doc_at_prompt" data-doc-title="aosTools: Prompting" data-search-terms="web apps">
+    <h1>aosTools: Prompting</h1>
+    <p>
+        Permission name: <code>prompt</code><br>
+        <i>This permission is automatically granted.</i>
+    </p>
+    <p>
+        The <code>prompt</code> permission provides tools for prompting using AaronOS's native UI rather than the browser's system UI, which halts AaronOS and your app.
+        These custom prompt actions also grant you more flexibility than the browser's built-in prompting functions.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_prompt_alert" data-search-terms="prompt:alert">Alert</h1>
+    <p>
+        Action: <code>prompt:alert</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.alert({content:'This is an alert from aosTools.', button: 'Nice'})">Try It</button>
+    <p>
+        This action will issue the user an alert box with one button to dismiss it.
+        Note that the only useful information you can get from this is whether or not the user has read and acknowledged your alert.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.alert({
+            content: string,
+            button: string     // optional
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "prompt:alert",
+            content: string,
+            button: string     // optional
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Parameters</h2>
+    <p>
+        <code>content</code>:
+        <ul>
+            <li>This is the content of the alert box presented to the user.</li>
+        </ul>
+        <code>button</code>: <i>(optional)</i>
+        <ul>
+            <li>This is the text of the button the user must click on.</li>
+        </ul>
+    </p>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: The user was successfully prompted and the user dismissed the prompt.</li>
+            <li><code>false</code>: Failed to prompt the user.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_prompt_prompt" data-search-terms="prompt:prompt">Prompt for Text</h1>
+    <p>
+        Action: <code>prompt:prompt</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.prompt({content:'This is a prompt from aosTools.<br>Feel free to enter some text', button: 'boop'},function(res){document.getElementById('try_prompt_prompt').innerHTML = res.content.split('<').join('&lt;').split('>').join('&gt;')})">Try It</button>:
+    <code class="aosTools_try" id="try_prompt_prompt">&nbsp;</code>
+    <p>
+        This action will prompt the user to enter text to return to your app.
+        Note that if the user replies with a number, it will still be formatted as a string.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.prompt({
+            content: string,
+            button: string     // optional
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "prompt:prompt",
+            content: string,
+            button: string     // optional
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Parameters</h2>
+    <p>
+        <code>content</code>:
+        <ul>
+            <li>This is the content of the prompt box presented to the user. This is what tells the user what to type.</li>
+        </ul>
+        <code>button</code>: <i>(optional)</i>
+        <ul>
+            <li>This is the text of the button the user must click on.</li>
+        </ul>
+    </p>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li>This is the text that the user entered into the text box for your prompt.</li>
+            <li><code>false</code>: Failed to prompt the user.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_prompt_confirm" data-search-terms="prompt:confirm">Confirm (Select)</h1>
+    <p>
+        Action: <code>prompt:confirm</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.confirm({content:'This is a confirm from aosTools.<br>Select an action', buttons: ['Button 0', 'Button 1', 'Button 2', 'Button 3']},function(res){document.getElementById('try_prompt_confirm').innerHTML = res.content})">Try It</button>:
+    <code class="aosTools_try" id="try_prompt_confirm">&nbsp;</code>
+    <p>
+        This action will issue the user a selection of options to choose from.
+        Each option you provide will be listed in a row of buttons.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.confirm({
+            content: string,
+            buttons: [string...]
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "prompt:confirm",
+            content: string,
+            buttons: [string...]
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Parameters</h2>
+    <p>
+        <code>content</code>:
+        <ul>
+            <li>This is the content of the confirm box presented to the user. This tells the user what they are selecting for.</li>
+        </ul>
+        <code>buttons</code>:
+        <ul>
+            <li>Array of strings, defining the options available for the user to click on.</li>
+        </ul>
+    </p>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li>number: This is the array index of the item in the <code>buttons</code> parameter that the user selected.</li>
+            <li><code>false</code>: Failed to prompt the user.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_prompt_notify" data-search-terms="prompt:notify,notifications">Notification</h1>
+    <p>
+        Action: <code>prompt:notify</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.notify({content:'This is a notification from aosTools.<br>Select an action', buttons: ['Button 0', 'Button 1', 'Button 2', 'Button 3'], image:'appicons/ds/aOS.png'},function(res){document.getElementById('try_prompt_notify').innerHTML = res.content})">Try It</button>:
+    <code class="aosTools_try" id="try_prompt_notify">&nbsp;</code>
+    <p>
+        This action will issue the user a notification, along with buttons to select an action from.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.notify({
+            content: string,
+            buttons: [string...],   // optional
+            image: string           // optional
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "prompt:confirm",
+            content: string,
+            buttons: [string...],   // optional
+            image: string           // optional
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Parameters</h2>
+    <p>
+        <code>content</code>:
+        <ul>
+            <li>This is the content of the notification presented to the user. Make this short and simple, as there isn't much room.</li>
+        </ul>
+        <code>buttons</code>: <i>(optional)</i>
+        <ul>
+            <li>Array of strings, defining the options available for the user to click on.</li>
+        </ul>
+        <code>image</code>: <i>(optional)</i>
+        <ul>
+            <li>
+                This is the URL to an image resource to be displayed on the right side of the notification.
+                Make sure AaronOS is allowed to access the image specified. HTTPS is usually enough for this.
+            </li>
+        </ul>
+    </p>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li>number (<code>>= 0</code>): This is the array index of the item in the <code>buttons</code> parameter that the user selected.</li>
+            <li>
+                <code>-1</code>: The user dismissed your notification without selecting one of your specified buttons.
+                This is usually caused by the user pressing the X button on the corner of the notification.
+            </li>
+            <li><code>false</code>: Failed to notify the user.</li>
         </ul>
     </p>
 </div>

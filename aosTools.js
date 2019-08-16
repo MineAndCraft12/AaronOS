@@ -135,6 +135,11 @@ window.aosTools = {
             action: "appwindow:unmaximize"
         }, callback);
     },
+    minimize: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:minimize"
+        }, callback);
+    },
     getMaximized: function(callback){
         aosTools.sendRequest({
             action: "appwindow:get_maximized"
@@ -200,6 +205,11 @@ window.aosTools = {
     getDarkMode: function(callback){
         aosTools.sendRequest({
             action: "getstyle:darkmode"
+        }, callback);
+    },
+    getCustomStyle: function(callback){
+        aosTools.sendRequest({
+            action: "getstyle:customstyle"
         }, callback);
     },
 

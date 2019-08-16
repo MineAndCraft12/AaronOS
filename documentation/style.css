@@ -108,3 +108,7 @@ body, html{
 .docPage li{
     margin-top:6px;
 }
+
+.aosTools_try{
+    display:none;
+}
