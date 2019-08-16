@@ -9,7 +9,7 @@
             <h1 id="devdoc_title">AaronOS Developer Documentation</h1>
             <div id="navigate" class="noselect">
                 <div style="width:100%;position:relative;text-align:center;margin-top:3px;">
-                    <input id="searchInput" spellcheck="false" autocomplete="off" placeholder="Search" onkeydown="requestAnimationFrame(search)" onkeyup="requestAnimationFrame(search)" style="width:250px">
+                    <input id="searchInput" spellcheck="false" autocomplete="off" placeholder="Search" onkeydown="requestAnimationFrame(search)" onkeyup="requestAnimationFrame(search)" style="width:90%">
                 </div>
                 <ul id="mainList" onmousedown="selectDocument(event)" onclick="selectDocument(event)">
                     <!--

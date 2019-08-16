@@ -34,22 +34,31 @@ body, html{
 #navigate{
     height:calc(100% - 6em);
     width: 280px;
+    max-width:calc(50% - 12px);
     left:8px;
     bottom:8px;
     border:1px solid #7F7F7F;
     position:absolute;
-    overflow:auto;
+    overflow-x:auto;
+    overflow-y:scroll;
 }
 #navigate ul{
     font-family:monospace;
     list-style-type:none;
     padding-left:20px;
 }
+#mainList ul{
+    margin-bottom:8px;
+}
+#mainList li:first-child:not(.nav_header_li){
+    margin-bottom:8px;
+}
 #navigate #mainList{
     padding-left:3px;
 }
 #navigate li{
     cursor:pointer;
+    white-space:nowrap;
 }
 #navigate li:hover{
     background:rgba(127, 127, 127, 0.1);
@@ -63,6 +72,7 @@ body, html{
 #content{
     height:calc(100% - 6em);
     width:calc(100% - 310px);
+    min-width:calc(50% - 18px);
     right:8px;
     bottom:8px;
     border:1px solid #7F7F7F;
