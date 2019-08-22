@@ -30,6 +30,12 @@
     <p>The documentation is mostly meant for those writing web apps for use in AaronOS.</p>
     <p>Select a topic on the left to get started.</p>
     <p><i>This document assumes a basic level of web development experience. Please contact Aaron to let him know if something needs more detail.</i></p>
+    <div class="img">
+        <img src="../smarticons/aOS/rasterized_final.png">
+        <div><div>
+            The AaronOS logo.
+        </div></div>
+    </div>
 </div>
 
 <div class="docPage" id="doc_webapps" data-doc-title="Web Apps">
@@ -79,6 +85,12 @@
         If not, then your website or your browser are blocking AaronOS from loading your site. It's more likely to be the website.
         If this is the case, then you need to figure out with your host (or, if you personally run the server, your server configuration) a way to allow AaronOS to load your site.
     </p>
+    <div class="img">
+        <img src="img/webapps/iFrameBrowser.png">
+        <div><div>
+            Make sure your website won't do something like this.
+        </div></div>
+    </div>
     <p>
         One more prerequisite is some basic knowledge of HTML, CSS, and JavaScript. If something needs explaining, don't hesitate to ask for more explanation. I might have missed something.
     </p>
@@ -120,7 +132,8 @@
         &lt;/html&gt;
     </code></pre>
     <p>
-        We're going to make some modifications to that page. We need to reference the aosTools.js script, put a wrapper around the page content (for compatibility with themes), and write some JavaScript.
+        We're going to make some modifications to that page.
+        We need to reference the aosTools.js script, put a wrapper around the page content (for compatibility with themes), and write some JavaScript.
     </p>
     <p>
         First, here's what our index.html should look like:
@@ -417,6 +430,12 @@
         Open the "aOS Hub" app, and in the top-right corner there should be a button that says "Repositories".
         Click that button, and the Hub should bring you to a list of your installed repositories.
     </p>
+    <div class="img">
+        <img src="img/repos/hubRepos.png">
+        <div><div>
+            You should get to a page like this.
+        </div></div>
+    </div>
     <p>
         Scroll to the bottom and there should be a text box.
         Enter the URL to your <code>repository.json</code> file into that text box, then click "Add Repository".
@@ -428,11 +447,23 @@
         If it isn't there, then something probably went wrong when you added the app to your repository's JSON file.
         If it's there, go ahead and click "Install" on your app, and then restart AaronOS.
     </p>
+    <div class="img">
+        <img src="img/webapps/hubListing.png">
+        <div><div>
+            If your app appears, it should look something like this.
+        </div></div>
+    </div>
     <p>
         Once AaronOS reboots, your app should be available in the Dashboard on the lower-left corner of the screen.
         Search for your app in the Dashboard and launch it to make sure that it works.
         If it doesn't work, something probably went wrong when you made the app's JSON package.
     </p>
+    <div class="img">
+        <img src="img/webapps/installedApp.png">
+        <div><div>
+            Your app should appear in the Dashboard list if it was installed correctly.
+        </div></div>
+    </div>
     <p>
         Once you get it working, congrats! You've made your first AaronOS web app.
         Your web app can do anything that any other website can do, along with interacting with AaronOS.
@@ -1008,7 +1039,7 @@
 </div>
 
 <div class="docPage" id="doc_at_js" data-doc-title="aosTools: JavaScript on AaronOS" data-search-terms="web apps">
-    <h1>aosTools: Remote JavaScript</h1>
+    <h1>aosTools: JavaScript on AaronOS</h1>
     <p>
         Permission name: <code>js</code><br>
         <i>This permission is dangerous to grant; it's unlikely that users will allow it.</i>
