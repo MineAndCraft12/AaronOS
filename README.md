@@ -45,7 +45,7 @@ sudo chmod -R 755 /var/www/html
 
 Start Apache
 
-```sudo systectl start apache2```
+```sudo systemctl start apache2```
 
 # Privacy
 
