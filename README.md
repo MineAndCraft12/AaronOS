@@ -20,6 +20,8 @@ Make sure you have PHP and a webserver like Apache or Nginx (The official aOS us
 ## Actually doing it
 What we are gonna do is open the ports aOS uses, grab aOS from github, move it into the correct folder, than change the folder permissions to that the userfiles php code works
 
+Note that this guide is for Ubuntu only, if you are using something else then only use this guide as a general outline
+
 First open the ports
 
 ```sudo ufw allow "Apache Full"```
