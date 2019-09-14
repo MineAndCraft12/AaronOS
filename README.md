@@ -13,12 +13,14 @@ Upon hosting AaronOS, the first connection to the project (which performs first-
 # **Setup**
 
 ## Prerequisites
-Make sure you have PHP and a webserver like Apache or Nginx (The official aOS uses Apache) You can isntall them by running the following in yout terminal:
+Make sure you have PHP and a webserver like Apache or Nginx (The official aOS uses Apache) You can install them by running the following in your terminal:
 
 ```sudo apt install -y Apache2 php```
 
 ## Actually doing it
-What we are gonna do is open the ports aOS uses, grab aOS from github, move it into the correct folder, than change the folder permissions to that the userfiles php code works
+What we are gonna do is open the ports aOS uses, grab aOS from github, move it into the correct folder, than change the folder permissions so that the userfiles php code works
+
+Note that this guide is for Ubuntu only, if you are using something else then only use this guide as a general outline
 
 First open the ports
 
@@ -26,7 +28,8 @@ First open the ports
 
 Make sure you are in the right directory, than download the aOS files
 
-```cd
+```
+cd
 git clone https://github.com/MineAndCraft12/AaronOS
 ```
 Copy into the correct folder
@@ -35,13 +38,14 @@ Copy into the correct folder
 
 Give ownership of directory to Apache and let Apache write to it
 
-``` chown -R www-data /var/www/
-chmod -P 755 /var/www/html
+``` 
+sudo chown -R www-data /var/www/
+sudo chmod -R 755 /var/www/html
 ```
 
 Start Apache
 
-```sudo systectl start apache2```
+```sudo systemctl start apache2```
 
 # Privacy
 
