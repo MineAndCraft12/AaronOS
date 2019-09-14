@@ -40,7 +40,7 @@ Give ownership of directory to Apache and let Apache write to it
 
 ``` 
 sudo chown -R www-data /var/www/
-sudo chmod -P 755 /var/www/html
+sudo chmod -R 755 /var/www/html
 ```
 
 Start Apache
