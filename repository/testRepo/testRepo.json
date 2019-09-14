@@ -41,6 +41,18 @@
             },
             "description": "Test app for the aosToolsTest.js utility."
         },
+        "mapjs": {
+            "packageName": "MapJS",
+            "packageID": "mapjs",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/testRepo/mapjs.json",
+            "icon": {
+                "foreground": "appicons/ds/aOS.png"
+            },
+            "description": "Maps JS objects graphically"
+        },
         "testbootscript": {
             "packageName": "Test Boot Script",
             "packageID": "testbootscript",
