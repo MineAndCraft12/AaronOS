@@ -4,6 +4,7 @@
         <script defer src="../aosTools.js"></script>
         <script defer>
             window.aosTools_connectListener = function(){
+                aosTools.enablePadding();
                 aosTools.openWindow();
             }
             if(typeof aosTools === "object"){

@@ -100,7 +100,8 @@ function recieveForecast(){
                 if(forecastType === "hourly"){
                     var numPeriods = tempjson.properties.periods.length;
                     for(var i = 0; i < numPeriods; i++){
-                        str += '<div style="position:relative;display:inline-block;text-align:center;border:1px solid rgba(0, 0, 0, 0.25);margin:3px;padding:3px">';
+                        str += '<div style="position:relative;width:150px;display:inline-block;text-align:center;border:1px solid rgba(0, 0, 0, 0.25);margin:3px;padding:3px"' +
+                            ' title="' + tempjson.properties.periods[i].shortForecast + '">';
                         var tempPcnt = getPercentage(tempjson.properties.periods[i].temperature);
                         str += '<div style="left:-3px;top:-3px;width:calc(100% + 3px);height:calc(100% + 3px);opacity:0.5;z-index:-1;">';
                         str += '<div style="left:-3px;top:-3px;background:#007FFF;width:calc(100% + 3px);height:calc(100% + 3px);z-index:-2;"></div>';
@@ -108,10 +109,10 @@ function recieveForecast(){
                         str += '</div>';
                         var theDate = new Date(tempjson.properties.periods[i].startTime)
                         var hour = theDate.getHours();
-                        var week = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+                        var week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
                         var day = week[theDate.getDay()];
                         var ampm = "";
-                        if(hour < 13){
+                        if(hour < 12){
                             ampm = "a";
                         }else{
                             ampm = "p";
@@ -130,13 +131,18 @@ function recieveForecast(){
                         str += day + "<br>";
                         str += hour + ampm + "<br>";
                         str += tempjson.properties.periods[i].temperature + "&deg; F<br>";
-                        str += tempjson.properties.periods[i].shortForecast;
+                        str += '<div style="width:100%;position:relative;text-overflow:ellipsis;white-space:nowrap">' + tempjson.properties.periods[i].shortForecast + '</div>';
                         str += "</div>";
                     }
                 }else{
                     var numPeriods = tempjson.properties.periods.length;
                     for(var i = 0; i < numPeriods; i++){
-                        str += "<hr>";
+                        str += '<div style="position:relative;border:1px solid rgba(0, 0, 0, 0.25);width:calc(100% - 11px);padding:3px;margin-top:6px;">';
+                        var tempPcnt = getPercentage(tempjson.properties.periods[i].temperature);
+                        str += '<div style="left:-3px;top:-3px;width:calc(100% + 3px);height:calc(100% + 3px);opacity:0.5;z-index:-1;">';
+                        str += '<div style="left:-3px;top:-3px;background:#007FFF;width:calc(100% + 3px);height:calc(100% + 3px);z-index:-2;"></div>';
+                        str += '<div style="left:-3px;top:-3px;background:#FF7F00;width:calc(100% + 3px);height:calc(100% + 3px);opacity:' + tempPcnt + ';z-index:-1;"></div>';
+                        str += '</div>';
                         str += "<h3>" + tempjson.properties.periods[i].name + ", " +
                             tempjson.properties.periods[i].shortForecast + "</h3>";
                         if(tempjson.properties.periods[i].temperatureTrend === null){
@@ -146,6 +152,7 @@ function recieveForecast(){
                                 tempjson.properties.periods[i].temperatureTrend + "</p>";
                         }
                         str += "<p>" + tempjson.properties.periods[i].detailedForecast + "</p>";
+                        str += "</div>";
                     }
                 }
                 getId("output").innerHTML = str;

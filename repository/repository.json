@@ -32,7 +32,7 @@
             "packageName": "Weather",
             "packageID": "weather",
             "packageAliases": ["wind", "rain", "thunder", "lightning"],
-            "version": "1.0",
+            "version": "1.1",
             "packageType": "webApp",
             "installURL": "repository/webApps/weather.json",
             "icon": {
