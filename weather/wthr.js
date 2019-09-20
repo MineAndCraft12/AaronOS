@@ -17,20 +17,46 @@ var weatherURLs = {
 var city = "";
 var state = "";
 
-function setup(type){
-    if(type === 'automatic'){
+var readyStarted = 0;
 
+function setup(type, coords){
+    var canContinue = 1;
+    if(type === 'automatic'){
+        if(coords){
+            lat = coords[0];
+            long = coords[1];
+        }else{
+            navigator.geolocation.getCurrentPosition(recieveGeoCoords);
+            canContinue = 0;
+        }
     }else if(type === 'manual'){
         lat = getId("inputLat").value;
         long = getId("inputLong").value;
+    }else if(type === "ready"){
+        readyStarted = 1;
+        lat = coords.lat;
+        long = coords.long;
+        weatherURLs = coords.weatherURLs;
+        city = coords.city;
+        state = coords.state;
+        getId("intro").style.display = "none";
+        getId("main").style.display = "";
+        getId("locationTitle").innerHTML = city + ", " + state;
+        canContinue = 0;
     }else{
         alert('wat');
-        throw new Error("everything exploded");
+        canContinue = 0;
     }
-    urlhttp = new XMLHttpRequest();
-    urlhttp.open("GET", "getURLs.php?dom=" + location.origin + "&lat=" + lat + "&lon=" + long);
-    urlhttp.onreadystatechange = recieveURLs;
-    urlhttp.send();
+    if(canContinue){
+        urlhttp = new XMLHttpRequest();
+        urlhttp.open("GET", "getURLs.php?dom=" + location.origin + "&lat=" + lat + "&lon=" + long);
+        urlhttp.onreadystatechange = recieveURLs;
+        urlhttp.send();
+    }
+}
+
+function recieveGeoCoords(geoResponse){
+    setup("automatic", [geoResponse.coords.latitude, geoResponse.coords.longitude]);
 }
 
 function recieveURLs(){
@@ -46,6 +72,22 @@ function recieveURLs(){
                     getId("intro").style.display = "none";
                     getId("main").style.display = "";
                     getId("locationTitle").innerHTML = city + ", " + state;
+                    aosTools.sendRequest({
+                        action: "fs:write_lf",
+                        targetFile: "aos_system/apps/weather/settings",
+                        content: JSON.stringify({
+                            city: city,
+                            state: state,
+                            lat: lat,
+                            long: long,
+                            weatherURLs: {
+                                forecast: weatherURLs.forecast,
+                                forecastHourly: weatherURLs.forecastHourly
+                            }
+                        })
+                    }, (response) => {
+                        console.log(response.content);
+                    });
                 }else{
                     alert("Weather didn't send a proper response");
                 }
@@ -163,4 +205,22 @@ function recieveForecast(){
             alert("Weather API responded with error " + forecasthttp.status);
         }
     }
+}
+
+function newLocation(){
+    if(aosTools.connected === 1){
+        aosTools.sendRequest({
+            action: "fs:write_lf",
+            targetFile: "aos_system/apps/weather/settings",
+            content: "reset"
+        }, (response) => {
+            location.reload();
+        });
+    }else{
+        location.reload();
+    }
+}
+
+if(typeof needToAutoSetup === "object"){
+    setup("ready", needToAutoSetup);
 }
