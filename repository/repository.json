@@ -28,6 +28,18 @@
             },
             "description": "Minesweeper, inspired by the Windows 98 Minesweeper game."
         },
+        "weather": {
+            "packageName": "Weather",
+            "packageID": "weather",
+            "packageAliases": ["wind", "rain", "thunder", "lightning"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/weather.json",
+            "icon": {
+                "foreground": "appicons/ds/systemApp.png"
+            },
+            "description": "Weather app, using the US Weather Service API"
+        },
         "cookieclicker": {
             "packageName": "Cookie Clicker",
             "packageID": "cookieclicker",
