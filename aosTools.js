@@ -1,10 +1,16 @@
 window.aosTools = {
+    light: 0,
     connected: -1,
     fallbackMessageListener: window.aosTools_fallbackMessageListener || null,
     connectListener: window.aosTools_connectListener || null,
     connectFailListener: window.aosTools_connectFailListener || null,
 
     testConnection: function(){
+        if(document.currentScript){
+            if(document.currentScript.getAttribute("data-light") === "true"){
+                aosTools.light = 1;
+            }
+        }
         if(window.aosTools_fallbackMessageListener){
             aosTools.fallbackMessageListener = aosTools_fallbackMessageListener;
         }
@@ -29,7 +35,11 @@ window.aosTools = {
     testConnected: function(data){
         if(typeof data.content === "boolean"){
             aosTools.connected = 1;
-            console.log("AaronOS is connected. Updating stylesheet.");
+            if(aosTools.light){
+                console.log("AaronOS is connected. Light mode, not updating stylesheet.");
+            }else{
+                console.log("AaronOS is connected. Updating stylesheet.");
+            }
             aosTools.updateStyle();
             if(aosTools.connectListener){
                 aosTools.connectListener();
@@ -202,6 +212,25 @@ window.aosTools = {
         }
     },
 
+    bgService: {
+        set: function(newURL, callback){
+            aosTools.sendRequest({
+                action: "bgservice:set_service",
+                serviceURL: newURL
+            }, callback);
+        },
+        exit: function(callback){
+            aosTools.sendRequest({
+                action: "bgservice:exit_service"
+            }, callback);
+        },
+        check: function(callback){
+            aosTools.sendRequest({
+                action: "bgservice:check_service"
+            }, callback);
+        }
+    },
+
     getDarkMode: function(callback){
         aosTools.sendRequest({
             action: "getstyle:darkmode"
@@ -214,12 +243,14 @@ window.aosTools = {
     },
 
     updateStyle: function(){
-        this.sendRequest({
-            action: "getstyle:darkmode"
-        }, this.recieveDarkMode);
-        this.sendRequest({
-            action: "getstyle:customstyle"
-        }, this.recieveStylesheets);
+        if(!aosTools.light){
+            this.sendRequest({
+                action: "getstyle:darkmode"
+            }, this.recieveDarkMode);
+            this.sendRequest({
+                action: "getstyle:customstyle"
+            }, this.recieveStylesheets);
+        }
     },
     recieveDarkMode: function(data){
         if(data.content === true){

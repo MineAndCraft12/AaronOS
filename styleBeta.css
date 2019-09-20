@@ -405,6 +405,12 @@ div{
                     height:32px;
                     line-height:32px;
                 }
+            .winBgService{
+                display:none;
+                width:0;
+                height:0;
+                border:none;
+            }
             .winHTML{
                 width:calc(100% - 9px); /* fallback */
                 height:calc(100% - 35px); /* fallback */

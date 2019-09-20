@@ -88,6 +88,15 @@ function recieveURLs(){
                     }, (response) => {
                         console.log(response.content);
                     });
+                    aosTools.bgService.check((response) => {
+                        if(response !== false){
+                            aosTools.bgService.exit((response) => {
+                                aosTools.bgService.set("weather/bgsvc.php");
+                            });
+                        }else{
+                            aosTools.bgService.set("weather/bgsvc.php");
+                        }
+                    });
                 }else{
                     alert("Weather didn't send a proper response");
                 }
@@ -209,6 +218,7 @@ function recieveForecast(){
 
 function newLocation(){
     if(aosTools.connected === 1){
+        aosTools.bgService.exit();
         aosTools.sendRequest({
             action: "fs:write_lf",
             targetFile: "aos_system/apps/weather/settings",

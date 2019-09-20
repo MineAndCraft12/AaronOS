@@ -9576,10 +9576,11 @@ c(function(){
             "08/14/2019: B1.1.1.0\n + Style changes are now updated in realtime on web apps via aosTools.\n + Added search box to Developer Documentation.\n + Added prompt actions to aosTools.\n + aosTools can now recieve style updates as they occur on aOS.\n + Added shortcuts for window events to aosTools.\n + Added new documentation.\n\n" +
             "08/15/2019: B1.1.2.0\n + Added buttons to try certain actions to Developer Documentation.\n + Added new documentation.\n : Adjusted formatting in documentation.\n\n" +
             "08/21/2019: B1.1.3.0\n : Changed the default screensaver to Bouncy Ball because it's less intrusive, should it activate when unwanted.\n + Added images to Documentation.\n : Fixed incorrect title on a page in Documentation.\n\n" +
-            "09/19/2019: B1.1.4.0\n + Added WIP Weather app to the Hub.\n : Fixed aosTools being unable to make requests cross-domain (basically not working at all)",
+            "09/19/2019: B1.1.4.0\n + Added WIP Weather app to the Hub.\n : Fixed aosTools being unable to make requests cross-domain (basically not working at all)\n\n" +
+            "09/20/2019: B1.1.5.0\n + Web Apps can now have services running in the background. Example is weather app will check for alerts for you.\n + Weather app now checks for weather alerts for your area in the background.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.1.4.0 (09/19/2019) r0';
+    window.aOSversion = 'B1.1.5.0 (09/20/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11930,6 +11931,52 @@ c(function(){
                             return false;
                         }
                     }
+                },
+                bgservice: {
+                    set_service: function(input, frame){
+                        if(!input.serviceURL){
+                            return false;
+                        }
+                        if(frame.frameElement.getAttribute("data-parent-app")){
+                            if(getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice")){
+                                getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice").src = input.serviceURL;
+                                return true;
+                            }else{
+                                var tempElement = document.createElement("iframe");
+                                tempElement.classList.add("winBgService");
+                                tempElement.id = "win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice";
+                                tempElement.setAttribute("data-parent-app", frame.frameElement.getAttribute("data-parent-app"));
+                                getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_top").appendChild(tempElement);
+                                tempElement.src = input.serviceURL;
+                                return true;
+                            }
+                        }
+                        return false;
+                    },
+                    exit_service: function(input, frame){
+                        try{
+                            if(getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice")){
+                                getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_top").removeChild(
+                                    getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice")
+                                );
+                                return true;
+                            }
+                            return true;
+                        }catch(err){
+                            return false;
+                        }
+                    },
+                    check_service: function(input, frame){
+                        if(getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice")){
+                            if(getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice").src){
+                                return getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice").src;
+                            }else{
+                                return false;
+                            }
+                        }else{
+                            return false;
+                        }
+                    }
                 }
             },
             actionDesc: {
@@ -11940,7 +11987,8 @@ c(function(){
                 js: "execute JavaScript code on aOS (DANGEROUS!)",
                 getstyle: "theme itself to aOS",
                 context: "use various context menus",
-                appwindow: "manipulate its window"
+                appwindow: "manipulate its window",
+                bgservice: "run in the background"
             },
             commandExamples: {
                 getstyle: {
@@ -12052,6 +12100,11 @@ c(function(){
                     get_maximized: "Ask if the window is maximized; returns true/false",
                     close_window: "Close the app window.",
                     set_dims: "Set the x, y, width, and height of the window."
+                },
+                bgservice: {
+                    set_service: "Set the URL of your background service and initialize it if necessary.",
+                    exit_service: "Close your service, if it is running.",
+                    check_service: "Get the URL of the currently-running service, or false if none."
                 }
             },
             alertAPI: function(){
@@ -12119,19 +12172,22 @@ c(function(){
                     "fs": "true",
                     "readsetting": "true",
                     "writesetting": "true",
-                    "js": "true"
+                    "js": "true",
+                    "bgservice": "true"
                 },
                 "http://localhost": {
                     "fs": "true",
                     "readsetting": "true",
                     "writesetting": "true",
-                    "js": "true"
+                    "js": "true",
+                    "bgservice": "true"
                 },
                 "https://localhost": {
                     "fs": "true",
                     "readsetting": "true",
                     "writesetting": "true",
-                    "js": "true"
+                    "js": "true",
+                    "bgservice": "true"
                 }
             },
             globalPermissions: {
