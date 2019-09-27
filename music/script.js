@@ -2343,6 +2343,63 @@ var vis = {
             }
         }
     },
+    spectrumBass: {
+        name: "Bass Spectrum",
+        image: "visualizers/spectrumBass.png",
+        start: function(){
+            
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var step = size[0] / 180;
+            var last = -1;
+            for(var i = 0; i < 180; i++){
+                var strength = 0;
+                if(i === 0){
+                    strength = visData[i];
+                    this.drawLine(0, strength);
+                }else{
+                    var last = Math.floor(step * (i - 1));
+                    var curr = Math.floor(step * i);
+                    var next = Math.floor(step * (i + 1));
+                    if(last < curr - 1){
+                        // stretched
+                        for(var j = 0; j < curr - last - 1; j++){
+                            //strength = ((j + 1) / (curr - last + 1) * visData[i - 1] + (curr - last - j + 1) / (curr - last + 1) * visData[i]);
+                            var pcntBetween = j / (curr - last - 1);
+                            strength = visData[i] * pcntBetween + visData[i - 1] * (1 - pcntBetween);
+                            this.drawLine(curr - (curr - last - 1 - j), strength);
+                        }
+                        strength = visData[i];
+                        this.drawLine(curr, strength);
+                    }else if(curr === last && next > curr){
+                        // compressed
+                        for(var j = 0; j < (1 / step); j++){
+                            strength += visData[i - j];
+                        }
+                        strength /= Math.floor(1 / step) + 1;
+                        this.drawLine(curr, strength);
+                    }else if(last === curr - 1){
+                        strength = visData[i];
+                        this.drawLine(curr, strength);
+                    }
+                }
+            }
+        },
+        stop: function(){
+            
+        },
+        drawLine: function(x, colorAmount){
+            if(smokeEnabled){
+                smoke.fillStyle = getColor(colorAmount);
+                smoke.fillRect(x, 0, 1, size[1]);
+            }else{
+                canvas.fillStyle = getColor(colorAmount);
+                canvas.fillRect(x, 0, 1, size[1]);
+            }
+        }
+    },
     solidColor: {
         name: "Solid Color",
         image: "visualizers/solidColor.png",
