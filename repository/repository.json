@@ -52,6 +52,18 @@
             },
             "description": "Cookie Clicker made by Aaron and JD."
         },
+        "blast": {
+            "packageName": "aOS Blast",
+            "packageID": "blast",
+            "packageAliases": ["game", "lasers"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/blast.json",
+            "icon": {
+                "foreground": "repository/webApps/blast.png"
+            },
+            "description": "AaronOS Blast, with AI ships and a player ship shooting lasers at each other. The game is yet unfinished and more is coming soon."
+        },
         "calculator": {
             "packageName": "Calculator",
             "packageID": "calculator",

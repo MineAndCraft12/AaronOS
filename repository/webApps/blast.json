@@ -1,0 +1,12 @@
+{
+    "name": "aOS Blast",
+    "id": "blast",
+    "version": "1.0",
+    "abbreviation": "Bls",
+    "appType": "webApp",
+    "homeURL": "blast/",
+    "icon": {
+        "foreground": "repository/webApps/blast.png"
+    },
+    "windowSize": [800, 600]
+}
