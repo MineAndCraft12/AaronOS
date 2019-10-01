@@ -25,7 +25,7 @@ var blast = {
             shipColor = this.randomColor(); 
         }
         if(!shipSize){
-            shipSize = 32;
+            shipSize = this.settings.shipSize;
         }
         if(!shipName){
             shipName = "Ship " + (this.totalShips + 1);
@@ -254,7 +254,7 @@ var blast = {
                         case "fight":
                             this.ships[ship].dodging = null;
                             var moveAngle = targetAngle;
-                            if(targetDist < this.settings.shipBattleRange - 40){ // target is too close for comfort
+                            if(targetDist < this.settings.shipBattleRange - this.settings.shipBattleComfort){ // target is too close for comfort
                                 moveAngle += 180;
                                 moveAngle += Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
                                 var moveCoords = this.pointFromAngle(
@@ -265,7 +265,7 @@ var blast = {
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
-                            }else if(targetDist < this.settings.shipBattleRange + 40){ // target is good distance away
+                            }else if(targetDist < this.settings.shipBattleRange + this.settings.shipBattleComfort){ // target is good distance away
                                 if(typeof this.ships[ship].prevActionSide !== "number"){
                                     this.ships[ship].prevActionSide = Math.round(Math.random());
                                 }
@@ -476,7 +476,7 @@ var blast = {
                         canvas.arc(
                             targetCoord[0],
                             targetCoord[1],
-                            this.settings.shipBattleRange - 40,
+                            this.settings.shipBattleRange - this.settings.shipBattleComfort,
                             this.deg2rad(this.ships[ship].targetAngle + 165),
                             this.deg2rad(this.ships[ship].targetAngle + 195)
                         );
@@ -485,7 +485,7 @@ var blast = {
                         canvas.arc(
                             targetCoord[0],
                             targetCoord[1],
-                            this.settings.shipBattleRange + 40,
+                            this.settings.shipBattleRange + this.settings.shipBattleComfort,
                             this.deg2rad(this.ships[ship].targetAngle + 165),
                             this.deg2rad(this.ships[ship].targetAngle + 195)
                         );
@@ -515,13 +515,15 @@ var blast = {
                     }
                 }
                 // health and ammo
-                canvas.fillStyle = "#FFF";
-                canvas.font = "24px Sans-Serif";
-                canvas.fillText(
-                    this.ships[ship].health + ", " + (this.settings.gunAmmo - this.ships[ship].shotsFired) + "/" + this.settings.gunAmmo,
-                    this.ships[ship].pos[0] - this.ships[ship].size,
-                    this.ships[ship].pos[1] - this.ships[ship].size
-                );
+                if(this.settings.shipLabels){
+                    canvas.fillStyle = "#FFF";
+                    canvas.font = "24px Sans-Serif";
+                    canvas.fillText(
+                        this.ships[ship].health + ", " + (this.settings.gunAmmo - this.ships[ship].shotsFired) + "/" + this.settings.gunAmmo,
+                        this.ships[ship].pos[0] - this.ships[ship].size,
+                        this.ships[ship].pos[1] - this.ships[ship].size
+                    );
+                }
             }else{
                 if(Date.now() - this.ships[ship].lastDeath > this.settings.shipRespawn){
                     this.ships[ship].alive = 1;
@@ -537,17 +539,19 @@ var blast = {
         }
             
         // scoreboard
-        canvas.fillStyle = "#FFF";
-        canvas.fillText("Score", 10, 40);
-        var textPos = 40;
-        for(var i in this.ships){
+        if(this.settings.scoreboard){
             canvas.fillStyle = "#FFF";
-            textPos += 30;
-            canvas.fillText(this.ships[i].name + ": " + this.ships[i].score, 10, textPos);
-            canvas.fillStyle = this.ships[i].color;
-            canvas.fillRect(0, textPos - 24, 5, 30);
+            canvas.fillText("Score", 10, 40);
+            var textPos = 40;
+            for(var i in this.ships){
+                canvas.fillStyle = "#FFF";
+                textPos += 30;
+                canvas.fillText(this.ships[i].name + ": " + this.ships[i].score, 10, textPos);
+                canvas.fillStyle = this.ships[i].color;
+                canvas.fillRect(0, textPos - 24, 5, 30);
+            }
+            canvas.font = "24px Sans-Serif";
         }
-        canvas.font = "24px Sans-Serif";
     },
     angleFromPoints: function(x1, y1, x2, y2){
         return this.rad2deg(Math.atan2(y2 - y1, x2 - x1));
@@ -620,6 +624,20 @@ var blast = {
         x: 0,
         y: 0
     },
+    zoomableSettings: [
+        "gunInaccuracy",
+        "laserLength",
+        "laserSpeed",
+        "laserSize",
+        "shipSightRange",
+        "shipFireRange",
+        "shipBattleRange",
+        "shipBattleComfort",
+        "shipIdle",
+        "shipChase",
+        "shipDodgeRange",
+        "shipSize"
+    ],
     settings: {
         // all time-related figures are in ms
 
@@ -632,6 +650,7 @@ var blast = {
         // false = black background
         // true = transparent background
         noBackground: false,
+        zoom: 1,
 
         // shots before reloading
         gunAmmo: 5,
@@ -659,8 +678,12 @@ var blast = {
         shipFireRange: 500,
         // ships will try to maintain this distance during combat
         shipBattleRange: 300,
+        // the shipBattleRange area is this size
+        shipBattleComfort: 40,
         // how much damage a ship can withstand
         shipHealth: 10,
+        // size of ships
+        shipSize: 32,
         // random "wiggle" in different AI actions - idle wandering, dodging, battling
         shipWander: 10,
         // speed the AI travels while idle wandering
@@ -672,7 +695,11 @@ var blast = {
         // it takes this long to come back after being killed
         shipRespawn: 5000,
         // the AI will change directions if it's been dodging the same direction for this long
-        dodgeTime: 1000
+        dodgeTime: 1000,
+
+        // label health and ammo above ships
+        shipLabels: true,
+        scoreboard: true
 
     },
     ships: {},
@@ -714,6 +741,12 @@ if(params.indexOf("?") !== -1){
             }
             blast.settings[params[i][0]] = setValue;
         }
+    }
+}
+
+if(blast.settings.zoom !== 1){
+    for(var i in blast.zoomableSettings){
+        blast.settings[blast.zoomableSettings[i]] *= blast.settings.zoom;
     }
 }
 

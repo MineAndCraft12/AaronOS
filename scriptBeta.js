@@ -7786,7 +7786,7 @@ c(function(){
                         apps.prompt.vars.alert("Screensaver applied.<br>Configuration options are coming soon for this screensaver.", "Okay.", function(){}, "AaronOS Blast Screensaver");
                     },
                     start: function(){
-                        getId('screensaverLayer').innerHTML = '<iframe src="blast/?noBackground=true&player=false&shipCount=4" style="pointer-events:none;border:none;width:100%;height:100%;display:block;position:absolute;left:0;top:0;"></iframe>';
+                        getId('screensaverLayer').innerHTML = '<iframe src="blast/?noBackground=true&player=false&shipCount=10&zoom=0.5&shipLabels=false&scoreboard=false" style="pointer-events:none;border:none;width:100%;height:100%;display:block;position:absolute;left:0;top:0;"></iframe>';
                     },
                     end: function(){
                         getId('screensaverLayer').innerHTML = '';
@@ -9591,10 +9591,11 @@ c(function(){
             "09/19/2019: B1.1.4.0\n + Added WIP Weather app to the Hub.\n : Fixed aosTools being unable to make requests cross-domain (basically not working at all)\n\n" +
             "09/20/2019: B1.1.5.0\n + Web Apps can now have services running in the background. Example is weather app will check for alerts for you.\n + Weather app now checks for weather alerts for your area in the background.\n\n" +
             "09/27/2019: B1.1.6.0\n + Added Bass Spectrum to Music Player.\n\n" +
-            "09/29/2019: B1.1.7.0\n + Added aOS Blast to the Hub app! It's a simple game where you can watch some AI duke it out with lasers or play it yourself.\n : Changed default screensaver to aOS Blast.",
+            "09/29/2019: B1.1.7.0\n + Added aOS Blast to the Hub app! It's a simple game where you can watch some AI duke it out with lasers or play it yourself.\n : Changed default screensaver to aOS Blast.\n\n" +
+            "09/30/2019: B1.1.7.1\n : Adjusted Blast screensaver.\n + Added configuration in Blast for zoom, AI battle comfort, ship size, ammo labels, and scoreboard.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.1.7.0 (09/29/2019) r0';
+    window.aOSversion = 'B1.1.7.1 (09/30/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
