@@ -582,6 +582,18 @@ var blast = {
             case 68: // d
                 blast.inputs.right = 1;
                 break;
+            case 38: // up arrow
+                blast.inputs.up = 1;
+                break;
+            case 40: // <--
+                blast.inputs.left = 1;
+                break;
+            case 83: // down arrow
+                blast.inputs.down = 1;
+                break;
+            case 39: // -->
+                blast.inputs.right = 1;
+                break;
             default:
 
         }
@@ -598,6 +610,18 @@ var blast = {
                 blast.inputs.down = 0;
                 break;
             case 68: // d
+                blast.inputs.right = 0;
+                break;
+            case 38: // up arrow
+                blast.inputs.up = 0;
+                break;
+            case 40: // <--
+                blast.inputs.left = 0;
+                break;
+            case 83: // down arrow
+                blast.inputs.down = 0;
+                break;
+            case 39: // -->
                 blast.inputs.right = 0;
                 break;
             default:
