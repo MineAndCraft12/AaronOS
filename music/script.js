@@ -1439,6 +1439,84 @@ var vis = {
         lineCount: 18,
         sqrt255: Math.sqrt(255)
     },
+    seismograph: {
+        name: "Seismograph",
+        image: "visualizers/seismograph.png",
+        start: function(){
+            this.graph = [];
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var avg = 0;
+            for(var i = 0; i < 180; i++){
+                avg += visData[i];
+            }
+            avg /= 180;
+            this.graph.push(avg);
+            while(this.graph.length > size[0]){
+                this.graph.shift();
+            }
+            var graphLength = this.graph.length;
+            var multiplier = size[1] / 255;
+            canvas.lineWidth = 2;
+            smoke.lineWidth = 2;
+            for(var i = 0; i < graphLength; i++){
+                canvas.strokeStyle = getColor(this.graph[i], 255 - i / size[0] * 255);
+                canvas.beginPath();
+                canvas.moveTo(size[0] - i - 1.5, size[1] - (this.graph[i] * multiplier));
+                canvas.lineTo(size[0] - i - 0.5, size[1] - ((this.graph[i - 1] || this.graph[i]) * multiplier));
+                canvas.stroke();
+                //canvas.fillRect(graphLength - i - 1, size[1] - (this.graph[i] * multiplier), 1, 1);
+                if(smokeEnabled){
+                    smoke.strokeStyle = getColor(this.graph[i], 255 - i / size[0] * 255);
+                    smoke.beginPath();
+                    smoke.moveTo(size[0] - i - 1.5, size[1] - (this.graph[i] * multiplier));
+                    smoke.lineTo(size[0] - i - 1.5, size[1] - ((this.graph[i - 1] || this.graph[i]) * multiplier));
+                    smoke.stroke();
+                    //smoke.fillRect(graphLength - i - 1, size[1] - (this.graph[i] * multiplier), 1, 1);
+                }
+            }
+        },
+        stop: function(){
+            this.graph = [];
+        },
+        graph: []
+    },
+    barsmograph: {
+        name: "Barsmograph",
+        image: "visualizers/barsmograph.png",
+        start: function(){
+            this.graph = [];
+        },
+        frame: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var avg = 0;
+            for(var i = 0; i < 180; i++){
+                avg += visData[i];
+            }
+            avg /= 180;
+            this.graph.push(avg);
+            while(this.graph.length > size[0]){
+                this.graph.shift();
+            }
+            var graphLength = this.graph.length;
+            var multiplier = size[1] / 255;
+            for(var i = 0; i < graphLength; i++){
+                canvas.fillStyle = getColor(this.graph[i], 255 - i / size[0] * 255);
+                canvas.fillRect(size[0] - i - 1, size[1] - (this.graph[i] * multiplier), 1, this.graph[i] * multiplier);
+                if(smokeEnabled){
+                    smoke.fillStyle = getColor(this.graph[i], 255 - i / size[0] * 255);
+                    smoke.fillRect(size[0] - i - 1, size[1] - (this.graph[i] * multiplier), 1, this.graph[i] * multiplier);
+                }
+            }
+        },
+        stop: function(){
+            this.graph = [];
+        },
+        graph: []
+    },
     spikes1to1: {
         name: "Spikes Classic",
         image: "visualizers/spikesClassic.png",
@@ -2773,25 +2851,46 @@ var vis = {
 
 
             // debug drawing
-            /*
-            canvas.fillStyle = "#0F0";
-            if(this.soundShoot){
-                canvas.fillRect(10, size[1] - 285, 10, 10);
+            if(window.location.href.indexOf("debug") !== -1){
+                canvas.fillStyle = "#0F0";
+                if(this.soundShoot){
+                    canvas.fillRect(10, size[1] - 285, 10, 10);
+                }
+                canvas.fillRect(10, size[1] - 10 - this.visBassAvg, 10, this.visBassAvg);
+                canvas.fillRect(30, size[1] - 10 - this.visBassAvgVolume, 10, this.visBassAvgVolume);
+
+                canvas.fillStyle = "#F00";
+                //canvas.fillRect(10, size[1] - 10 - (255 * this.settings.soundSensitivity), 10, 1);
+                canvas.fillRect(10, size[1] - 10 - (this.visBassAvgVolume + this.settings.soundMemoryAdd), 20, 1);
+                canvas.fillRect(30, size[1] - 10 - (this.visBassAvgVolume + this.settings.soundMemoryAdd), 5, this.settings.soundMemoryAdd);
+
+                canvas.strokeStyle = "#FFF";
+                canvas.lineWidth = 1;
+                canvas.strokeRect(10.5, size[1] - 285.5, 10, 10);
+                canvas.strokeRect(10.5, size[1] - 265.5, 10, 255);
+                canvas.strokeRect(30.5, size[1] - 265.5 - this.settings.soundMemoryAdd, 10, 255 + this.settings.soundMemoryAdd);
+
+                if(!this.visPastAvgs){
+                    this.visPastAvgs = [];
+                }
+                this.visPastAvgs.push(this.visBassAvgVolume + this.settings.soundMemoryAdd);
+                if(this.visPastAvgs.length > this.settings.soundMemory){
+                    this.visPastAvgs.shift();
+                }
+
+                for(var i = 0; i < this.visBassAvgElements.length; i++){
+                    canvas.fillStyle = "#0F0";
+                    if(this.visBassAvgElements[i] > this.visPastAvgs[i]){
+                        canvas.fillRect(50 + (this.settings.soundMemory - i), size[1] - 285 - this.settings.soundMemoryAdd, 1, 10);
+                    }
+                    canvas.fillRect(50 + (this.settings.soundMemory - i), size[1] - 10 - this.visBassAvgElements[i], 1, this.visBassAvgElements[i]);
+                    canvas.fillStyle = "#F00";
+                    canvas.fillRect(50 + (this.settings.soundMemory - i), size[1] - 10 - this.visPastAvgs[i], 1, 1);
+                }
+                
+                canvas.strokeRect(50.5, size[1] - 265.5 - this.settings.soundMemoryAdd, this.settings.soundMemory + 1, 255 + this.settings.soundMemoryAdd);
+                canvas.strokeRect(50.5, size[1] - 285.5 - this.settings.soundMemoryAdd, this.settings.soundMemory + 1, 10);
             }
-            canvas.fillRect(10, size[1] - 10 - this.visBassAvg, 10, this.visBassAvg);
-            canvas.fillRect(30, size[1] - 10 - this.visBassAvgVolume, 10, this.visBassAvgVolume);
-
-            canvas.fillStyle = "#F00";
-            //canvas.fillRect(10, size[1] - 10 - (255 * this.settings.soundSensitivity), 10, 1);
-            canvas.fillRect(10, size[1] - 10 - (this.visBassAvgVolume + this.settings.soundMemoryAdd), 20, 1);
-            canvas.fillRect(30, size[1] - 10 - (this.visBassAvgVolume + this.settings.soundMemoryAdd), 5, this.settings.soundMemoryAdd);
-
-            canvas.strokeStyle = "#FFF";
-            canvas.lineWidth = 1;
-            canvas.strokeRect(10.5, size[1] - 285.5, 10, 10);
-            canvas.strokeRect(10.5, size[1] - 265.5, 10, 255);
-            canvas.strokeRect(30.5, size[1] - 265.5, 10, 255);
-            */
 
 
             // do bullet simulation first
@@ -2810,8 +2909,8 @@ var vis = {
                             if(this.ships[j].health <= 0){
                                 this.ships[j].alive = 0;
                                 this.ships[j].lastDeath = Date.now();
-                                this.ships[this.lasers[i].owner].score++;
                             }
+                            this.ships[this.lasers[i].owner].score++;
                             destroyLaser = 1;
                         }else if(
                             this.lasers[i].pos[0] < 0 || this.lasers[i].pos[0] > size[0] ||
@@ -3460,7 +3559,7 @@ var vis = {
 
             // label health and ammo above ships
             shipLabels: false,
-            scoreboard: false,
+            scoreboard: true,
 
 
             // plain avg formula will trigger if louder than x * 255

@@ -9593,10 +9593,11 @@ c(function(){
             "09/27/2019: B1.1.6.0\n + Added Bass Spectrum to Music Player.\n\n" +
             "09/29/2019: B1.1.7.0\n + Added aOS Blast to the Hub app! It's a simple game where you can watch some AI duke it out with lasers or play it yourself.\n : Changed default screensaver to aOS Blast.\n\n" +
             "09/30/2019: B1.1.7.1\n : Adjusted Blast screensaver.\n + Added configuration in Blast for zoom, AI battle comfort, ship size, ammo labels, and scoreboard.\n\n" +
-            "10/08/2019: B1.1.8.0\n + Added Blast visualizer to Music Player\n + Added Featured list to Music Player visualizers for easy access to main visualizers.\n : Replaced inaccurate images for solid colors in Music Player.",
+            "10/08/2019: B1.1.8.0\n + Added Blast visualizer to Music Player\n + Added Featured list to Music Player visualizers for easy access to main visualizers.\n : Replaced inaccurate images for solid colors in Music Player.\n\n" +
+            "10/09/2019: B1.1.9.0\n + Added Seismograph and Barsmograph to music player.\n + Added #debug flag to Music Player.\n + Blast in Music Player now shows its debug screen when #bebug is specified.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.1.8.0 (10/08/2019) r0';
+    window.aOSversion = 'B1.1.7.0 (10/09/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
