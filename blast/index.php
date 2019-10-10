@@ -2,7 +2,9 @@
 <html>
     <head>
         <link rel="stylesheet" href="style.css">
-        <script defer src="script.js"></script>
+        <?php
+            echo '<script defer src="script.js?ms='.round(microtime(true) * 1000).'"></script>';
+        ?>
     </head>
     <body>
         <canvas
