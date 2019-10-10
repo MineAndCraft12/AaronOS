@@ -585,10 +585,10 @@ var blast = {
             case 38: // up arrow
                 blast.inputs.up = 1;
                 break;
-            case 40: // <--
+            case 37: // <--
                 blast.inputs.left = 1;
                 break;
-            case 83: // down arrow
+            case 40: // down arrow
                 blast.inputs.down = 1;
                 break;
             case 39: // -->
@@ -615,10 +615,10 @@ var blast = {
             case 38: // up arrow
                 blast.inputs.up = 0;
                 break;
-            case 40: // <--
+            case 37: // <--
                 blast.inputs.left = 0;
                 break;
-            case 83: // down arrow
+            case 40: // down arrow
                 blast.inputs.down = 0;
                 break;
             case 39: // -->
