@@ -130,7 +130,17 @@ var blast = {
                 this.lasers[i].angle,
                 this.lasers[i].vel
             );
-            canvas.lineTo(newLaserPos[0], newLaserPos[1]);
+            if(this.settings.lowFpsLasers){
+                var newLaserPosFake = this.pointFromAngle(
+                    this.lasers[i].pos[0],
+                    this.lasers[i].pos[1],
+                    this.lasers[i].angle,
+                    this.lasers[i].vel * 2
+                );
+                canvas.lineTo(newLaserPosFake[0], newLaserPosFake[1]);
+            }else{
+                canvas.lineTo(newLaserPos[0], newLaserPos[1]);
+            }
             canvas.stroke();
             if(destroyLaser){
                 delete this.lasers[i];
@@ -221,7 +231,33 @@ var blast = {
                                             this.ships[otherShip].pos[0],
                                             this.ships[otherShip].pos[1]
                                         );
-                                        moveMode = "fight";
+                                        if(this.ships[ship].pressuring){
+                                            if(this.ships[ship].health > this.settings.shipHealth * 0.5){
+                                                if(this.settings.shipPressureChance < Math.random()){
+                                                    moveMode = "pressure";
+                                                }else{
+                                                    moveMode = "fight";
+                                                    this.ships[ship].pressuring = 0;
+                                                }
+                                            }else{
+                                                moveMode = "fight";
+                                                this.ships[ship].pressuring = 0;
+                                            }
+                                        }else{
+                                            if(this.ships[ship].health > this.settings.shipHealth * 0.5){
+                                                if(this.settings.shipPressureChance >= Math.random()){
+                                                    moveMode = "pressure";
+                                                    this.ships[ship].pressuring = 1;
+                                                }else{
+                                                    moveMode = "fight";
+                                                }
+                                            }else{
+                                                moveMode = "fight";
+                                            }
+                                        }
+                                    }
+                                    if(this.ships[ship].health <= this.settings.shipHealth * 0.2){
+                                        moveMode = "flee";
                                     }
                                 }
                             }
@@ -230,13 +266,18 @@ var blast = {
                     var dodging = null;
                     var closestLaser = null;
                     var dodgeAngle = null;
+                    var dodgeExtraAttention = 0;
+                    if(this.ships[ship].health <= this.settings.shipHealth * 0.2){
+                        dodgeExtraAttention = this.settings.shipDodgeRange * 0.25;
+                    }
                     for(var j in this.lasers){
                         if(this.lasers[j].owner !== ship){
                             var laserDistance = Math.sqrt(
                                 Math.pow(this.lasers[j].pos[0] - this.ships[ship].pos[0], 2) +
                                 Math.pow(this.lasers[j].pos[1] - this.ships[ship].pos[1], 2)
                             );
-                            if(laserDistance < this.settings.shipDodgeRange){
+                            
+                            if(laserDistance < this.settings.shipDodgeRange + dodgeExtraAttention){
                                 if(laserDistance < closestLaser || closestLaser === null){
                                     dodging = j;
                                     closestLaser = laserDistance;
@@ -298,6 +339,100 @@ var blast = {
                                 this.ships[ship].pos[1] = moveCoords[1];
                             }
                             break;
+                        case "pressure":
+                            this.ships[ship].dodging = null;
+                            var moveAngle = targetAngle;
+                            if(targetDist < this.settings.shipPressureRange - this.settings.shipBattleComfort){ // target is way too close
+                                moveAngle += 180;
+                                moveAngle += Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
+                                var moveCoords = this.pointFromAngle(
+                                    this.ships[ship].pos[0],
+                                    this.ships[ship].pos[1],
+                                    moveAngle,
+                                    this.settings.shipChase * (Math.random() * 0.65 + 0.35)
+                                );
+                                this.ships[ship].pos[0] = moveCoords[0];
+                                this.ships[ship].pos[1] = moveCoords[1];
+                            }else if(targetDist < this.settings.shipPressureRange + this.settings.shipBattleComfort){ // target is good pressuring distance away
+                                if(typeof this.ships[ship].prevActionSide !== "number"){
+                                    this.ships[ship].prevActionSide = Math.round(Math.random());
+                                }
+                                if(Math.random() < 0.05){
+                                    this.ships[ship].prevActionSide = Math.abs(this.ships[ship].prevActionSide - 1);
+                                }
+                                if(this.ships[ship].prevActionSide){
+                                    moveAngle += 90;
+                                }else{
+                                    moveAngle -= 90;
+                                }
+                                moveAngle += Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
+                                var moveCoords = this.pointFromAngle(
+                                    this.ships[ship].pos[0],
+                                    this.ships[ship].pos[1],
+                                    moveAngle,
+                                    this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                );
+                                this.ships[ship].pos[0] = moveCoords[0];
+                                this.ships[ship].pos[1] = moveCoords[1];
+                            }else{ // target is too far away for pressuring
+                                moveAngle += Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
+                                var moveCoords = this.pointFromAngle(
+                                    this.ships[ship].pos[0],
+                                    this.ships[ship].pos[1],
+                                    moveAngle,
+                                    this.settings.shipChase * (Math.random() * 0.65 + 0.35)
+                                );
+                                this.ships[ship].pos[0] = moveCoords[0];
+                                this.ships[ship].pos[1] = moveCoords[1];
+                            }
+                            break;
+                        case "flee":
+                            this.ships[ship].dodging = null;
+                            var moveAngle = targetAngle;
+                            if(targetDist < this.settings.shipFleeRange - this.settings.shipBattleComfort){ // target is close, run away
+                                moveAngle += 180;
+                                moveAngle += Math.random() * this.settings.shipWander * 10 - this.settings.shipWander * 5;
+                                var moveCoords = this.pointFromAngle(
+                                    this.ships[ship].pos[0],
+                                    this.ships[ship].pos[1],
+                                    moveAngle,
+                                    this.settings.shipChase * (Math.random() * 0.65 + 0.35)
+                                );
+                                this.ships[ship].pos[0] = moveCoords[0];
+                                this.ships[ship].pos[1] = moveCoords[1];
+                            }else if(targetDist < this.settings.shipFleeRange + this.settings.shipBattleComfort){ // target is far, stay here
+                                if(typeof this.ships[ship].prevActionSide !== "number"){
+                                    this.ships[ship].prevActionSide = Math.round(Math.random());
+                                }
+                                if(Math.random() < 0.05){
+                                    this.ships[ship].prevActionSide = Math.abs(this.ships[ship].prevActionSide - 1);
+                                }
+                                if(this.ships[ship].prevActionSide){
+                                    moveAngle += 90;
+                                }else{
+                                    moveAngle -= 90;
+                                }
+                                moveAngle += Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
+                                var moveCoords = this.pointFromAngle(
+                                    this.ships[ship].pos[0],
+                                    this.ships[ship].pos[1],
+                                    moveAngle,
+                                    this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                );
+                                this.ships[ship].pos[0] = moveCoords[0];
+                                this.ships[ship].pos[1] = moveCoords[1];
+                            }else{ // target is too far away to get shots off
+                                moveAngle += Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
+                                var moveCoords = this.pointFromAngle(
+                                    this.ships[ship].pos[0],
+                                    this.ships[ship].pos[1],
+                                    moveAngle,
+                                    this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                );
+                                this.ships[ship].pos[0] = moveCoords[0];
+                                this.ships[ship].pos[1] = moveCoords[1];
+                            }
+                            break;
                         case "dodge":
                             var ms = Date.now();
                             if(this.ships[ship].dodging === dodging && ms - this.ships[ship].lastDodge < this.settings.dodgeTime){
@@ -335,7 +470,7 @@ var blast = {
                     }
                 }
                 // do ship firing fourth
-                if(moveMode === "fight"){
+                if(moveMode === "fight" || moveMode === "pressure" || moveMode === "flee"){
                     var shouldShoot = 0;
                     if(targetDist < this.settings.shipFireRange){
                         var ms = Date.now();
@@ -462,8 +597,7 @@ var blast = {
                             canvas.stroke();
                         }
                     }
-                    // yellow line points at target
-                    // blue arc is comfortable fighting range
+                    // if the ship has a target
                     if(this.ships[ship].targetShip){
                         var targetCoord = this.pointFromAngle(
                             this.ships[ship].pos[0],
@@ -471,36 +605,7 @@ var blast = {
                             this.ships[ship].targetAngle,
                             this.ships[ship].targetDist
                         );
-                        canvas.strokeStyle = '#0000FF';
-                        canvas.beginPath();
-                        canvas.arc(
-                            targetCoord[0],
-                            targetCoord[1],
-                            this.settings.shipBattleRange - this.settings.shipBattleComfort,
-                            this.deg2rad(this.ships[ship].targetAngle + 165),
-                            this.deg2rad(this.ships[ship].targetAngle + 195)
-                        );
-                        canvas.stroke();
-                        canvas.beginPath();
-                        canvas.arc(
-                            targetCoord[0],
-                            targetCoord[1],
-                            this.settings.shipBattleRange + this.settings.shipBattleComfort,
-                            this.deg2rad(this.ships[ship].targetAngle + 165),
-                            this.deg2rad(this.ships[ship].targetAngle + 195)
-                        );
-                        canvas.stroke();
-                        canvas.beginPath();
-                        canvas.moveTo(this.ships[ship].pos[0], this.ships[ship].pos[1]);
-                        canvas.arc(
-                            targetCoord[0],
-                            targetCoord[1],
-                            this.settings.shipBattleRange,
-                            this.deg2rad(this.ships[ship].targetAngle + 180),
-                            this.deg2rad(this.ships[ship].targetAngle + 180)
-                        );
-                        canvas.stroke();
-
+                        // yellow line points at ship target
                         canvas.strokeStyle = '#FFFF00';
                         canvas.beginPath();
                         canvas.moveTo(this.ships[ship].pos[0], this.ships[ship].pos[1]);
@@ -512,6 +617,109 @@ var blast = {
                         );
                         canvas.lineTo(drawTarget[0], drawTarget[1]);
                         canvas.stroke();
+                        if(this.ships[ship].pressuring){
+                            // blue arc is pressuring fighting range
+                            // ship shows '):<' inside
+                            canvas.strokeStyle = '#0000FF';
+                            canvas.beginPath();
+                            canvas.arc(
+                                targetCoord[0],
+                                targetCoord[1],
+                                this.settings.shipPressureRange - this.settings.shipBattleComfort,
+                                this.deg2rad(this.ships[ship].targetAngle + 165),
+                                this.deg2rad(this.ships[ship].targetAngle + 195)
+                            );
+                            canvas.stroke();
+                            canvas.beginPath();
+                            canvas.arc(
+                                targetCoord[0],
+                                targetCoord[1],
+                                this.settings.shipPressureRange + this.settings.shipBattleComfort,
+                                this.deg2rad(this.ships[ship].targetAngle + 165),
+                                this.deg2rad(this.ships[ship].targetAngle + 195)
+                            );
+                            canvas.stroke();
+                            canvas.beginPath();
+                            canvas.moveTo(this.ships[ship].pos[0], this.ships[ship].pos[1]);
+                            canvas.arc(
+                                targetCoord[0],
+                                targetCoord[1],
+                                this.settings.shipPressureRange,
+                                this.deg2rad(this.ships[ship].targetAngle + 180),
+                                this.deg2rad(this.ships[ship].targetAngle + 180)
+                            );
+                            canvas.stroke();
+                            canvas.fillStyle = "#000";
+                            canvas.font = "bold 12px monospace";
+                            canvas.fillText("):<", this.ships[ship].pos[0] - 10, this.ships[ship].pos[1] + 4);
+                        }else if(this.ships[ship].health <= this.settings.shipHealth * 0.2){
+                            // blue arc is fleeing range
+                            // ship shows 'D:' inside
+                            canvas.strokeStyle = '#0000FF';
+                            canvas.beginPath();
+                            canvas.arc(
+                                targetCoord[0],
+                                targetCoord[1],
+                                this.settings.shipFleeRange - this.settings.shipBattleComfort,
+                                this.deg2rad(this.ships[ship].targetAngle + 165),
+                                this.deg2rad(this.ships[ship].targetAngle + 195)
+                            );
+                            canvas.stroke();
+                            canvas.beginPath();
+                            canvas.arc(
+                                targetCoord[0],
+                                targetCoord[1],
+                                this.settings.shipFleeRange + this.settings.shipBattleComfort,
+                                this.deg2rad(this.ships[ship].targetAngle + 165),
+                                this.deg2rad(this.ships[ship].targetAngle + 195)
+                            );
+                            canvas.stroke();
+                            canvas.beginPath();
+                            canvas.moveTo(this.ships[ship].pos[0], this.ships[ship].pos[1]);
+                            canvas.arc(
+                                targetCoord[0],
+                                targetCoord[1],
+                                this.settings.shipFleeRange,
+                                this.deg2rad(this.ships[ship].targetAngle + 180),
+                                this.deg2rad(this.ships[ship].targetAngle + 180)
+                            );
+                            canvas.stroke();
+                            canvas.fillStyle = "#000";
+                            canvas.font = "bold 12px monospace";
+                            canvas.fillText("D:", this.ships[ship].pos[0] - 6, this.ships[ship].pos[1] + 4);
+                        }else{
+                            // blue arc is comfortable fighting range
+                            // no face inside ship
+                            canvas.strokeStyle = '#0000FF';
+                            canvas.beginPath();
+                            canvas.arc(
+                                targetCoord[0],
+                                targetCoord[1],
+                                this.settings.shipBattleRange - this.settings.shipBattleComfort,
+                                this.deg2rad(this.ships[ship].targetAngle + 165),
+                                this.deg2rad(this.ships[ship].targetAngle + 195)
+                            );
+                            canvas.stroke();
+                            canvas.beginPath();
+                            canvas.arc(
+                                targetCoord[0],
+                                targetCoord[1],
+                                this.settings.shipBattleRange + this.settings.shipBattleComfort,
+                                this.deg2rad(this.ships[ship].targetAngle + 165),
+                                this.deg2rad(this.ships[ship].targetAngle + 195)
+                            );
+                            canvas.stroke();
+                            canvas.beginPath();
+                            canvas.moveTo(this.ships[ship].pos[0], this.ships[ship].pos[1]);
+                            canvas.arc(
+                                targetCoord[0],
+                                targetCoord[1],
+                                this.settings.shipBattleRange,
+                                this.deg2rad(this.ships[ship].targetAngle + 180),
+                                this.deg2rad(this.ships[ship].targetAngle + 180)
+                            );
+                            canvas.stroke();
+                        }
                     }
                 }
                 // health and ammo
@@ -650,11 +858,12 @@ var blast = {
     },
     zoomableSettings: [
         "gunInaccuracy",
-        "laserLength",
         "laserSpeed",
         "laserSize",
         "shipSightRange",
         "shipFireRange",
+        "shipPressureRange",
+        "shipFleeRange",
         "shipBattleRange",
         "shipBattleComfort",
         "shipIdle",
@@ -685,25 +894,32 @@ var blast = {
         // the higher this number, the more inaccurate the AI is
         gunInaccuracy: 16,
 
-        // length of the laser (cosmetic)
-        laserLength: 10,
         // speed of the laser
         laserSpeed: 10,
         // width of the laser (cosmetic)
         laserSize: 3,
         // color of the laser
         laserColor: "#F00",
+        // lasers will connect at twice their length to look better
+        // when 60fps gameplay is recorded at 30fps
+        lowFpsLasers: false,
 
         // number of AI ships
         shipCount: 2,
         // how far ships can spot enemies
         shipSightRange: 700,
         // how far ships can fire at enemies
-        shipFireRange: 500,
+        shipFireRange: 600,
         // ships will try to maintain this distance during combat
         shipBattleRange: 300,
         // the shipBattleRange area is this size
         shipBattleComfort: 40,
+        // a ship with high health can pressure enemies by closing to this range
+        shipPressureRange: 150,
+        // this is the chance per frame that a ship with high health will pressure enemies
+        shipPressureChance: 0.0005,
+        // a ship with very low health will flee to this distance from target
+        shipFleeRange: 550,
         // how much damage a ship can withstand
         shipHealth: 10,
         // size of ships
