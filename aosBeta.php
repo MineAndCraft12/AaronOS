@@ -60,7 +60,7 @@
             <div id="icons">Loading, please wait.</div>
         </div>
         <canvas id="aDE"></canvas>
-        <div id="ctxMenu" onclick="getId('ctxMenu').style.display='none'"></div>
+        <div id="ctxMenu" onclick="getId('ctxMenu').style.display='none'" class="backdropFilterCtxMenu"></div>
         <div id="screensaverLayer"></div>
         <div id="petCursors"></div>
         <!--<div id="aOSloadingBg"></div>-->

@@ -57,6 +57,27 @@ if(typeof console === "undefined"){
     };
 }
 
+// check if backdrop filter blur and others are supported by the browser
+var backdropFilterSupport = false;
+var backgroundBlendSupport = false;
+var cssFilterSupport = false;
+if(typeof CSS !== "undefined"){
+    if(typeof CSS.supports !== "undefined"){
+        
+        if(CSS.supports("(backdrop-filter: blur(5px))")){
+            backdropFilterSupport = true;
+        }
+
+        if(CSS.supports("(background-blend-mode: screen)")){
+            backgroundBlendSupport = true;
+        }
+
+        if(CSS.supports("(filter: blur(5px))")){
+            cssFilterSupport = true;
+        }
+    }
+}
+
 // substitute performance.now if not intact
 var windowperformancenowIntact = 1;
 if(window.performance === undefined){
@@ -139,7 +160,7 @@ function darkSwitch(light, dark){
         return light;
     }
 }
-var autoMobile = 0;
+var autoMobile = 1;
 function checkMobileSize(){
     if(autoMobile){
         if(!mobileMode && (screen.width < 768 || parseInt(getId('monitor').style.width) < 768)){
@@ -1589,6 +1610,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 getId("win_" + this.objName + "_top").classList.remove('closedWindow');
                 getId("win_" + this.objName + "_top").style.display = "block";
                 getId("icn_" + this.objName).style.display = "inline-block";
+                getId("icn_" + this.objName).classList.add("openAppIcon");
                 getId("win_" + this.objName + "_top").style.pointerEvents = "";
                 
                 // experimental
@@ -1636,6 +1658,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 if(pinnedApps.indexOf(this.objName) === -1){
                     getId("icn_" + this.objName).style.display = "none";
                 }
+                getId("icn_" + this.objName).classList.remove("openAppIcon");
                 this.fullscreen = 0;
                 if(this.folded){
                     this.foldWindow();
@@ -1743,7 +1766,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 //getId("win" + this.dsktpIcon).style.display = "none";
                 //getId("win" + this.dsktpIcon).style.opacity = "0";
                 
-                setTimeout("getId('icn_" + this.objName + "').style.backgroundColor = ''", 0);
+                setTimeout("getId('icn_" + this.objName + "').classList.remove('activeAppIcon')", 0);
             },
             setCaption: function(newCap){
                 d(1, 'Changing caption.');
@@ -1832,11 +1855,13 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
         if(this.appWindow.appImg){
             getId("icons").innerHTML +=
                 '<div class="icon cursorPointer" id="icn_' + appPath + '">' +
+                '<div class="iconOpenIndicator"></div>' +
                 //'<img class="imageIco" src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>';
                 buildSmartIcon(32, this.appWindow.appImg, "margin-left:6px") + '</div>';
         }else{
             getId("icons").innerHTML +=
                 '<div class="icon cursorPointer" id="icn_' + appPath + '">' +
+                '<div class="iconOpenIndicator"></div>' +
                 '<div class="iconImg">' + appIcon +
                 '</div></div>';
         }
@@ -3366,6 +3391,7 @@ c(function(){
             listOfApps: "",
             minimize: function(){
                 apps.startMenu.appWindow.closeKeepTask();
+                getId("icn_startMenu").classList.remove("openAppIcon");
             },
             captionCtx: [
                 [' ' + lang('ctxMenu', 'hideApp'), function(){
@@ -3551,6 +3577,7 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeKeepTask();
+                    getId("icn_nora").classList.remove("openAppIcon");
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -3560,6 +3587,7 @@ c(function(){
                     }
                 case "shrink":
                     this.appWindow.closeKeepTask();
+                    getId("icn_nora").classList.remove("openAppIcon");
                     break;
                 case "USERFILES_DONE":
                     this.vars.ddg = new XMLHttpRequest();
@@ -6475,7 +6503,7 @@ c(function(){
                     'Set Custom Resolution:<br><input id="STNscnresX">px by <input id="STNscnresY">px <button onclick="fitWindowRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Set aOS Screen Res</button><br>' +
                     '<button onclick="apps.settings.vars.reqFullscreen()">Enter Fullscreen</button> <button onclick="apps.settings.vars.endFullscreen()">Exit Fullscreen</button><hr>' +
                     '<b>Windows</b><br>' +
-                    'Window color: <input id="STNwinColorInput" placeholder="rgba(190, 190, 255, .3)" value="' + this.vars.currWinColor + '"> <button onClick="apps.settings.vars.setWinColor()">Set</button><br><br>' +
+                    'Window color: <input id="STNwinColorInput" placeholder="rgba(150, 150, 200, 0.5)" value="' + this.vars.currWinColor + '"> <button onClick="apps.settings.vars.setWinColor()">Set</button><br><br>' +
                     '<button onClick="apps.settings.vars.togAero()">Toggle Window Blur Effect</button><br>' +
                     '<i>Windowblur strength is how much windows blur the background. The default is 2, and large values may produce unintended results as well as lower the framerate.</i><br>' +
                     'Windowblur Strength: <input id="STNwinblurRadius" placeholder="5" value="' + this.vars.currWinblurRad + '"> <button onclick="apps.settings.vars.setAeroRad()">Set</button><br>' +
@@ -6563,25 +6591,25 @@ c(function(){
                                 getId("bckGrndImg").value = ufload("aos_system/desktop/background_image");
                                 apps.settings.vars.sB(1);
                             }
+                            if(ufload("aos_system/windows/backdropfilter_blur")){
+                                if(ufload("aos_system/windows/backdropfilter_blur") === "0"){
+                                    apps.settings.vars.togBackdropFilter(1);
+                                }
+                            }else if(!backdropFilterSupport){
+                                apps.settings.vars.togBackdropFilter(1);
+                            }
                             if(ufload("aos_system/windows/blur_enabled")){
-                                if(ufload("aos_system/windows/blur_enabled") === "0"){
+                                if(ufload("aos_system/windows/blur_enabled") === "1"){
                                     apps.settings.vars.togAero(1);
                                 }
-                            }else{
-                                if((navigator.userAgent.indexOf("Trident") > -1 && navigator.userAgent.indexOf("rv:") > -1) || navigator.userAgent.indexOf("MSIE") > -1){
-                                    // browser is IE and does not support blurring
+                            }else if(!backdropFilterSupport){
+                                if(cssFilterSupport){
                                     apps.settings.vars.togAero(1);
                                 }
                             }
                             if(ufload("aos_system/windows/border_color")){
                                 getId("STNwinColorInput").value = ufload("aos_system/windows/border_color");
                                 apps.settings.vars.setWinColor(1);
-                            }else{
-                                if((navigator.userAgent.indexOf("Trident") > -1 && navigator.userAgent.indexOf("rv:") > -1) || navigator.userAgent.indexOf("MSIE") > -1){
-                                    // browser is IE and does not support blurring; pick a better window background color
-                                    getId("STNwinColorInput").value = 'rgb(70, 80, 110)';
-                                    apps.settings.vars.setWinColor(1);
-                                }
                             }
                             if(ufload("aos_system/windows/blur_blendmode")){
                                 getId("STNwinBlendInput").value = ufload("aos_system/windows/blur_blendmode");
@@ -6677,11 +6705,6 @@ c(function(){
                             if(ufload("aos_system/desktop/background_parallax_enabled")){
                                 if(ufload("aos_system/desktop/background_parallax_enabled") === "1"){
                                     apps.settings.vars.togPrlxBg(1);
-                                }
-                            }
-                            if(ufload("aos_system/windows/backdropfilter_blur")){
-                                if(ufload("aos_system/windows/backdropfilter_blur") === "1"){
-                                    apps.settings.vars.togBackdropFilter(1);
                                 }
                             }
                             if(ufload("aos_system/screensaver/enabled")){
@@ -7019,6 +7042,11 @@ c(function(){
                         description: function(){return 'Puts aOS into fullscreen, so it does not look like it has been loaded into a browser. You <i>may</i> need to Fit aOS to Window after toggling.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.reqFullscreen()">Enter Fullscreen</button> <button onclick="apps.settings.vars.endFullscreen()">Exit Fullscreen</button>'}
                     },
+                    mobileMode: {
+                        option: 'Mobile Mode',
+                        description: function(){return 'Changes various bits of AaronOS to be better suited for phones and small screens. EXPERIMENTAL'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.setMobileMode(0)">Turn Off</button> <button onclick="apps.settings.vars.setMobileMode(1)">Turn On</button> <button onclick="apps.settings.vars.setMobileMode(2)">Automatic</button>'}
+                    },
                     scaling: {
                         option: 'Content Scaling',
                         description: function(){return 'If you have a hi-dpi screen or text and buttons on aOS are too small, you can use this option to make aOS bigger. Regular size is 1. Double size is 2. Triple size is 3. It is not recommended, but you can also shrink aOS with a decimal value less than 1. For instance, half size is 0.5'},
@@ -7065,45 +7093,40 @@ c(function(){
                         description: function(){return 'Set the width of the borders of windows.'},
                         buttons: function(){return '<input id="STNwinBorderInput" placeholder="3" value="' + apps.settings.vars.winBorder + '"> <button onclick="apps.settings.vars.setWinBorder(getId(\'STNwinBorderInput\').value)">Set</button>'}
                     },
-                    mobileMode: {
-                        option: 'Mobile Mode',
-                        description: function(){return 'Changes various bits of AaronOS to be better suited for phones and small screens. EXPERIMENTAL'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.setMobileMode(0)">Turn Off</button> <button onclick="apps.settings.vars.setMobileMode(1)">Turn On</button> <button onclick="apps.settings.vars.setMobileMode(2)">Automatic</button>'}
-                    },
                     windowColor: {
                         option: 'Window Color',
                         description: function(){return 'Set the color of your window borders, as any CSS-compatible color.'},
-                        buttons: function(){return '<input id="STNwinColorInput" placeholder="rgba(190, 190, 255, .3)" value="' + apps.settings.vars.currWinColor + '"> <button onClick="apps.settings.vars.setWinColor()">Set</button>'}
-                    },
-                    winImg: {
-                        option: 'Window Background Image',
-                        description: function(){return 'An image on the background of the window that adds some texture to the background. Also useful for if you want to disable Windowblur but want your windows to have a cool texture on them. Enabled: ' + numtf(apps.settings.vars.enabWinImg)},
-                        buttons: function(){return '<button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="winimg.png" value="' + apps.settings.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button>'}
-                    },
-                    windowBlur: {
-                        option: 'Windowblur',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(parseInt(ufload(\'aos_system/windows/blur_enabled\') || \'0\'))">true</span>. Toggle Windowblur off to save on performance, but does not look as good.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.togAero()">Toggle Windowblur Effect</button>'}
-                    },
-                    blurStrength: {
-                        option: 'Windowblur Strength',
-                        description: function(){return 'Strength of the windowblur effect. Large numbers may produce framerate drops and unintended effects on appearance.'},
-                        buttons: function(){return '<input id="STNwinblurRadius" placeholder="5" value="' + apps.settings.vars.currWinblurRad + '"> <button onclick="apps.settings.vars.setAeroRad()">Set</button>'}
-                    },
-                    blurBlend: {
-                        option: 'Windowblur Blend Mode',
-                        description: function(){return 'Window Blur uses a Blend Mode to determine how its color affects the background. Since people will have conflicting ideas on what is best, I give you the choice.'},
-                        buttons: function(){return '<input id="STNwinBlendInput" placeholder="screen" value="' + apps.settings.vars.currWinBlend + '"> <button onClick="apps.settings.vars.setWinBlend()">Set</button>'}
+                        buttons: function(){return '<input id="STNwinColorInput" placeholder="rgba(150, 150, 200, 0.5)" value="' + apps.settings.vars.currWinColor + '"> <button onClick="apps.settings.vars.setWinColor()">Set</button>'}
                     },
                     backdropFilter: {
-                        option: 'CSS Backdrop Blur',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(parseInt(ufload(\'aos_system/windows/backdropfilter_blur\') || \'0\'))">true</span>. Toggle experimental CSS backdrop filter for windowblur. So far, the API is only available for Safari on Mac, but the API is under development for Google Chrome.'},
-                        buttons: function(){return '<button onClick="apps.settings.vars.togBackdropFilter()">Toggle Backdrop Filter Blur</button>'}
+                        option: 'Window Glass Effect',
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(apps.settings.vars.isBackdrop)">true</span>. Toggle the glass effect that blurs everything behind a window.'},
+                        buttons: function(){return '<button onClick="apps.settings.vars.togBackdropFilter()">Toggle Glass Effect</button>'}
+                    },
+                    blurStrength: {
+                        option: 'Window Glass Blur Strength',
+                        description: function(){return 'Strength of the blur effect on window glass. Large numbers may produce framerate drops and unintended effects on appearance.'},
+                        buttons: function(){return '<input id="STNwinblurRadius" placeholder="5" value="' + apps.settings.vars.currWinblurRad + '"> <button onclick="apps.settings.vars.setAeroRad()">Set</button>'}
+                    },
+                    winImg: {
+                        option: 'Window Border Texture',
+                        description: function(){return 'An image on the border of the window that adds some texture. Also useful for if you want to disable Windowblur but want your windows to have a cool texture on them. Enabled: ' + numtf(apps.settings.vars.enabWinImg)},
+                        buttons: function(){return '<button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="winimg.png" value="' + apps.settings.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button>'}
                     },
                     fadeDist: {
                         option: 'Window Fade Distance',
                         description: function(){return 'The distance from the screen that windows will fade from view when closed. If set to 1, windows will not change size when closed. If between 0 and 1, the window will get smaller, or further away when closed. If larger than 1, the window will get bigger when closed.'},
                         buttons: function(){return '<input id="STNwinFadeInput" placeholder="0.8" value="' + apps.settings.vars.winFadeDistance + '"> <button onClick="apps.settings.vars.setFadeDistance(getId(\'STNwinFadeInput\').value)">Set</button>'}
+                    },
+                    windowBlur: {
+                        option: 'Legacy Windowblur (OLD!)',
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(parseInt(ufload(\'aos_system/windows/blur_enabled\') || \'0\'))">true</span>. This is the old version of the glass effect that aOS used before it was supported. This effect only shows a blurred version of the desktop background and you can\'t see other windows through it. This can be helpful if the glass effect doesn\'t work on your browser.'},
+                        buttons: function(){return '<button onClick="apps.settings.vars.togAero()">Toggle Legacy Windowblur Effect</button>'}
+                    },
+                    blurBlend: {
+                        option: 'Legacy Windowblur Blend Mode',
+                        description: function(){return 'Legacy Windowblur uses a Blend Mode to determine how its color affects the background. Since people will have conflicting ideas on what is best, I give you the choice.'},
+                        buttons: function(){return '<input id="STNwinBlendInput" placeholder="screen" value="' + apps.settings.vars.currWinBlend + '"> <button onClick="apps.settings.vars.setWinBlend()">Set</button>'}
                     }
                 },
                 taskbar: {
@@ -7299,13 +7322,13 @@ c(function(){
                 if(menu === 'oldMenu'){
                     openapp(apps.settings, 'oldMenu');
                 }else{
-                    apps.settings.appWindow.setContent('<div id="STNmenuDiv" style="font-family:aosProFont, monospace;font-size:12px;width:calc(100% - 3px);height:100%;overflow:auto"><span style="font-size:36px"><button onclick="apps.settings.vars.showMenu(apps.settings.vars.menus)">Home</button> ' + menu.folderName + '</span><br><br></div>');
+                    apps.settings.appWindow.setContent('<div id="STNmenuDiv" style="font-family:aosProFont, monospace;font-size:12px;width:calc(100% - 3px);height:100%;overflow:auto"><span style="font-size:36px">' + menu.folderName + ' <button onclick="apps.settings.vars.showMenu(apps.settings.vars.menus)" style="float:right;margin:8px">Home</button></span><br><br></div>');
                     if(menu.folder === 1){
                         getId("STNmenuDiv").innerHTML += '<hr><table id="STNmenuTable" style="width:100%;"></table>';
                         var j = 0;
                         var appendStr = '<tr class="STNtableTR">';
                         for(var i in menu){
-                            if(i !== 'folder' && i !== 'folderName' && i !== 'folderPath' && i !== 'image'){
+                            if(i !== 'folder' && i !== 'folderName' && i !== 'folderPath' && i !== 'image' && i !== 'oldMenu'){
                                 if(j % 3 === 0 && j !== 0){
                                     appendStr += '</tr><tr class="STNtableTR">';
                                 }
@@ -8051,21 +8074,21 @@ c(function(){
                 this.screensavers[type].selected();
                 ufsave("aos_system/screensaver/selected_screensaver", this.currScreensaver);
             },
-            currWinColor: "rgba(190, 190, 255, .3)",
+            currWinColor: "rgba(150, 150, 200, 0.5)",
             currWinBlend: "screen",
             currWinblurRad: "5",
-            isAero: 1,
+            isAero: 0,
             sB: function(nosave){
                 perfStart('settings');
                 getId('aOSloadingBg').style.backgroundImage = "url(" + getId('bckGrndImg').value + ")";
                 getId("monitor").style.backgroundImage = "url(" + getId("bckGrndImg").value + ")";
                 getId("bgSizeElement").src = getId("bckGrndImg").value;
-                //if(this.isAero){
-                this.tempArray = document.getElementsByClassName("winAero");
-                for(var elem = 0; elem < this.tempArray.length; elem++){
-                    this.tempArray[elem].style.backgroundImage = "url(" + getId("bckGrndImg").value + ")";
+                if(this.isAero){
+                    this.tempArray = document.getElementsByClassName("winAero");
+                    for(var elem = 0; elem < this.tempArray.length; elem++){
+                        this.tempArray[elem].style.backgroundImage = "url(" + getId("bckGrndImg").value + ")";
+                    }
                 }
-                //}
                 if(!nosave){
                     ufsave("aos_system/desktop/background_image", getId("bckGrndImg").value);
                 }
@@ -8091,6 +8114,9 @@ c(function(){
                         ufsave("aos_system/windows/blur_enabled", "0");
                     }
                 }else{
+                    if(this.isBackdrop){
+                        this.togBackdropFilter(nosave);
+                    }
                     this.tempArray = document.getElementsByClassName("winAero");
                     for(var elem = 0; elem < this.tempArray.length; elem++){
                         this.tempArray[elem].style.backgroundImage = getId("monitor").style.backgroundImage;
@@ -8105,7 +8131,7 @@ c(function(){
                 }
                 d(1, perfCheck('settings') + '&micro;s to toggle windowblur');
             },
-            isBackdrop: 0,
+            isBackdrop: 1,
             togBackdropFilter: function(nosave){
                 perfStart('settings');
                 if(this.isBackdrop){
@@ -8116,11 +8142,15 @@ c(function(){
                     }
                     getId('taskbar').style.webkitBackdropFilter = 'none';
                     getId('taskbar').style.backdropFilter = 'none';
+                    getId('ctxMenu').classList.remove('backdropFilterCtxMenu');
                     this.isBackdrop = 0;
                     if(!nosave){
                         ufsave("aos_system/windows/backdropfilter_blur", "0");
                     }
                 }else{
+                    if(this.isAero){
+                        this.togAero(nosave);
+                    }
                     this.tempArray = document.getElementsByClassName("window");
                     for(var elem = 0; elem < this.tempArray.length; elem++){
                         this.tempArray[elem].style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)';
@@ -8128,6 +8158,7 @@ c(function(){
                     }
                     getId('taskbar').style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)';
                     getId('taskbar').style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)';
+                    getId('ctxMenu').classList.add('backdropFilterCtxMenu');
                     this.isBackdrop = 1;
                     if(!nosave){
                         ufsave("aos_system/windows/backdropfilter_blur", "1");
@@ -8155,9 +8186,17 @@ c(function(){
                 perfStart('settings');
                 this.currWinblurRad = getId("STNwinblurRadius").value;
                 this.tempArray = document.getElementsByClassName("winAero");
-                for(var elem = 0; elem < this.tempArray.length; elem++){
-                    this.tempArray[elem].style.webkitFilter = "blur(" + this.currWinblurRad + "px)";
-                    this.tempArray[elem].style.filter = "blur(" + this.currWinblurRad + "px)";
+                if(this.isAero){
+                    for(var elem = 0; elem < this.tempArray.length; elem++){
+                        this.tempArray[elem].style.webkitFilter = "blur(" + this.currWinblurRad + "px)";
+                        this.tempArray[elem].style.filter = "blur(" + this.currWinblurRad + "px)";
+                    }
+                }
+                if(this.isBackdrop){
+                    for(var elem = 0; elem < this.tempArray.length; elem++){
+                        this.tempArray[elem].style.webkitBackdropFilter = "blur(" + this.currWinblurRad + "px)";
+                        this.tempArray[elem].style.backdropFilter = "blur(" + this.currWinblurRad + "px)";
+                    }
                 }
                 if(!nosave){
                     ufsave("aos_system/windows/blur_radius", this.currWinblurRad);
@@ -9595,10 +9634,11 @@ c(function(){
             "09/30/2019: B1.1.7.1\n : Adjusted Blast screensaver.\n + Added configuration in Blast for zoom, AI battle comfort, ship size, ammo labels, and scoreboard.\n\n" +
             "10/08/2019: B1.1.8.0\n + Added Blast visualizer to Music Player\n + Added Featured list to Music Player visualizers for easy access to main visualizers.\n : Replaced inaccurate images for solid colors in Music Player.\n\n" +
             "10/09/2019: B1.1.9.0\n + Added Seismograph and Barsmograph to music player.\n + Blast can now use arrow keys.\n + Added #debug flag to Music Player.\n + Blast in Music Player now shows its debug screen when #bebug is specified.\n + Blast now avoids Chrome's caching.\n\n" +
-            "10/12/2019: B1.1.10.0\n + Blast AI has been upgraded; AI can decide to rush their target if they have high health, and will seek distance if their health is low.\n + Added lowFpsLasers flag to Blast - for recording 30fps video from 60fps source.",
+            "10/12/2019: B1.1.10.0\n + Blast AI has been upgraded; AI can decide to rush their target if they have high health, and will seek distance if their health is low.\n + Added lowFpsLasers flag to Blast - for recording 30fps video from 60fps source.\n\n" +
+            "10/30/2019: B1.2.0.0\n : Mobile Mode is set to Automatic by default.\n + Open windows now have a glow on their taskbar button.\n + Enabled Backdrop Filter Blur for the new default window glass effect, making windows visible behind other windows.\n + Context menu will have a blurry background if blurry windows is enabled.\n : Changed hover effect on taskbar buttons.\n : Changed hover and click effect on window buttons.\n : Changed default window color from rgba(190, 190, 255, 0.3) to rgba(150, 150, 200, 0.5)\n : Increased shadow on taskbar text.\n + The type of blur on window borders is now automatically set based on browser support.\n : Moved Mobile Mode option to Screen Resolution category.\n : Moved the Home button in Settings to the right side.\n - Removed button for the pre-alpha Settings menu.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.1.10.0 (10/12/2019) r1';
+    window.aOSversion = 'B1.2.0.0 (10/30/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13730,12 +13770,12 @@ c(function(){
                             this.colorModified = 1;
                         }
                     }else if(this.colorModified){
-                        apps.settings.vars.setWinColor(1, ufload("aos_system/windows/border_color") || 'rgba(190, 190, 255, 0.3)');
+                        apps.settings.vars.setWinColor(1, ufload("aos_system/windows/border_color") || 'rgba(150, 150, 200, 0.5)');
                         this.colorModified = 0;
                     }
                     requestAnimationFrame(apps.musicPlayer.vars.colorWindows);
                 }else if(this.colorModified){
-                    apps.settings.vars.setWinColor(1, ufload("aos_system/windows/border_color") || 'rgba(190, 190, 255, 0.3)');
+                    apps.settings.vars.setWinColor(1, ufload("aos_system/windows/border_color") || 'rgba(150, 150, 200, 0.5)');
                     this.colorModified = 0;
                 }
             }
@@ -15834,7 +15874,7 @@ function toTop(appToNudge, dsktpClick){
             }
             getId("win_" + apps[appLication].objName + "_cap").style.opacity = "1";
             getId("win_" + apps[appLication].objName + "_aero").style.opacity = "1";
-            getId('icn_' + apps[appLication].objName).style.backgroundColor = '';
+            getId('icn_' + apps[appLication].objName).classList.remove('activeAppIcon');
         }
     }
     if(!dsktpClick){
@@ -15846,7 +15886,7 @@ function toTop(appToNudge, dsktpClick){
         }
         getId("win_" + appToNudge.objName + "_cap").style.opacity = "1";
         getId("win_" + appToNudge.objName + "_aero").style.opacity = "1";
-        getId('icn_' + appToNudge.objName).style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
+        getId('icn_' + appToNudge.objName).classList.add('activeAppIcon');
         try{
             currTopApp = appToNudge.objName;
             document.title = appToNudge.appDesc + ' | aOS ' + aOSversion;

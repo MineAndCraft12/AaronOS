@@ -112,7 +112,8 @@ hr{
 #ctxMenu{
  border-color:#CCC;
  border-radius:0;
- background-color:#F2F2F2;
+ background-color:#F2F2F2 !important;
+ backdrop-filter:none;
 }
 #ctxMenu hr{
  background-color:#D7D7D7;

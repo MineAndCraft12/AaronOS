@@ -329,6 +329,8 @@ div{
             transform:scale(0.5);
             transform-origin:50%;
             opacity:0;
+            -webkit-backdrop-filter:blur(5px);
+            backdrop-filter:blur(5px);
         }
             .mobileMode .window{
                 border-radius:0;
@@ -342,13 +344,13 @@ div{
                 height:360px;
                 left:-40px;
                 top:-40px;
-                background-image:url(beta1.png);
-                -webkit-filter:blur(5px);
-                filter:blur(5px);
+                /*background-image:url(beta1.png);*/
+                /*-webkit-filter:blur(5px);
+                filter:blur(5px);*/
                 opacity:1;
                 background-position: -485px -260px;
                 /*background-color:rgba(190, 190, 255, .6);*/
-                background-color:rgba(190, 190, 255, .3);
+                background-color:rgba(150, 150, 200, 0.5);
                 /*background-blend-mode:screen;*/
                 background-blend-mode:screen;
             }
@@ -671,39 +673,34 @@ div{
                     overflow:visible;
                 }
             .winExit{
-                height:17px;
                 right: 3px; /* fallback */
                 right:var(--windowBorderWidth);
-                top:5px;
-                width:16px;
-                padding-left:2px;
-                padding-top:1px;
-                font-family:aosProFont, Courier;
-                font-size:24px;
-                line-height:14px;
-                border:1px solid rgba(255, 255, 255, .3);
-                border-radius:5px;
-                color:rgba(255, 255, 255, .3);
-                text-align:center;
-                box-shadow:0 0 1px #000;
                 /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
             }
             .winExit:hover{
+                /*
                 border-color:#C00;
                 color:#C00;
                 background-color:#E55;
+                */
+                background-color:rgba(255, 50, 50, 0.5);
+                color:rgba(255, 255, 255, 0.5);
+                box-shadow:none;
             }
             .winExit:active{
+                /*
                 border-color:#E55;
                 color:#E55;
                 background-color:#C00;
+                */
+                background-color:rgba(200, 0, 0, 0.75);
             }
                 .leftCaptionButtons .winExit{
                     left:3px; /* fallback */
                     left:var(--windowBorderWidth);
                     right:initial;
                 }
-            .winShrink, .winBig, .winFld{
+            .winShrink, .winBig, .winFld, .winExit{
                 height:17px;
                 width:16px;
                 padding-left:2px;
@@ -720,14 +717,19 @@ div{
                 /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
             }
             .winShrink:hover, .winBig:hover, .winFld:hover{
-                border-color:#090;
+                /*border-color:#090;
                 color:#090;
                 background-color:#4C4;
+                */
+                background-color:rgba(100, 150, 255, 0.5);
+                color:rgba(255, 255, 255, 0.5);
+                box-shadow:none;
             }
             .winShrink:active, .winBig:active, .winFld:active{
-                border-color:#4C4;
+                /*border-color:#4C4;
                 color:#4C4;
-                background-color:#090;
+                background-color:#090;*/
+                background-color:rgba(50, 100, 200, 0.75);
             }
             .winShrink{
                 right:49px; /* fallback */
@@ -864,6 +866,8 @@ div{
     box-shadow: 0 0 10px #000;
     z-index:101;
     transform-origin:15px 15px;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter:blur(5px);
 }
 	#icons{
 		height:32px;
@@ -881,8 +885,27 @@ div{
             transition:background-color .5s;
         }
         #icons .icon:hover{
-            background:radial-gradient(25px at 50% 100%, rgba(220, 220, 255, .8) 0px, rgba(220, 220, 255, 0) 25px);
+            /*background:radial-gradient(25px at 50% 100%, rgba(220, 220, 255, .8) 0px, rgba(220, 220, 255, 0) 25px);*/
+            background:rgba(255, 255, 255, 0.1);
         }
+            #icons .icon.activeAppIcon{
+                background: rgba(255, 255, 255, 0.25);
+            }
+            #icons .icon.activeAppIcon:hover{
+                background:rgba(255, 255, 255, 0.35);
+            }
+            #icons .icon .iconOpenIndicator{
+                position:relative;
+                height:5px;
+                width:34px;
+                margin-top:32px;
+                margin-left:5px;
+                margin-bottom:-37px;
+                transition: box-shadow 0.3s;
+            }
+                #icons .icon.openAppIcon .iconOpenIndicator{
+                    box-shadow:0 0 5px #FFF;
+                }
             #icons .iconImg{
                 margin-top:5px;
                 position:static;
@@ -958,30 +981,37 @@ div{
     background-origin:center;
     border-radius:2px;
 }
+    #ctxMenu.backdropFilterCtxMenu{
+        background-color:rgba(255, 255, 255, 0.7);
+        backdrop-filter:blur(5px);
+    }
     .darkMode #ctxMenu{
         background-color:#272727;
         color:#CCC;
     }
+        .darkMode #ctxMenu.backdropFilterCtxMenu{
+            background-color:rgba(39, 39, 39, 0.7);
+        }
     .darkMode #ctxMenu img{
         filter:invert(1);
     }
     #ctxMenu p{
         height:1em;
-        box-shadow:inset 0 0 5px 5px #FFF;
+        /*box-shadow:inset 0 0 5px 5px #FFF;*/
         width:calc(100% - 4px);
         display:block;
         margin:0;
         /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
         transition:0.2s;
-        background-color:#FFF;
+        /*background-color:#FFF;*/
         padding:2px;
         padding-left:4px;
         
     }
-        .darkMode #ctxMenu p{
+        /*.darkMode #ctxMenu p{
             box-shadow:inset 0 0 5px 5px #272727;
             background-color:#272727;
-        }
+        }*/
     #ctxMenu p:hover{
         background-color:rgba(127, 127, 127, 0.3);
         box-shadow:none;
@@ -1209,11 +1239,11 @@ div{
     padding-top:1px;
     height:31px;
     color:#FFF;
-    text-shadow:0 0 1px #000;
+    text-shadow:0 0 2px #000;
     position:static;
     display:inline-block;
     background:rgba(255, 255, 255, 0);
-    transition:background 0.3s;
+    transition:background-color 0.3s;
 }
 .widget:hover{
     background:rgba(255, 255, 255, 0.25);

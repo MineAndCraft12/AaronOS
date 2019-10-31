@@ -41,12 +41,14 @@
     color: #FFF;
     border-radius: 0;
     border: none;
-    height: 19px;
+    height: 29px;
     top: 1px;
     width: 38px;
     font-family:aosProFont;
     font-size:19px;
+    line-height:25px;
     text-align:center;
+    box-shadow:none;
 }
 .winExit{
     right: 1px;

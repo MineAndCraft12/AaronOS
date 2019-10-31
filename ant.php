@@ -19,6 +19,8 @@
             position:absolute;
             right:0;
             background:#7F7F7F;
+            image-rendering:pixelated;
+            box-shadow:0 1px 0 #7F7F7F;
         }
         #controls{
             width:284px;
@@ -35,39 +37,76 @@
     <canvas id="antcnv"></canvas>
     <div id="controls">
         AaronOS Ant<br><br>
+
+        <select id="selector" onchange="select(this.value)"><option>Presets</option></select><br>
         <textarea id="input"></textarea><br><br>
-        <button disabled>Random Inputs</button><br><br>
-        <button onclick="run('slow');">Run Slow</button><br> <!-- 1 step per frame -->
-        <button onclick="run('fast');">Run Fast</button><br> <!-- 10 steps per frame -->
-        <button onclick="run('faster');">Run Faster</button><br> <!-- 50 steps per frame -->
-        <button onclick="run('fastest')">Run Fastest</button><br> <!-- as many as possile per frame -->
+
+        <button onclick="randomize()">Random Inputs</button><br><br>
+
+        <button onclick="run('slow');">Run Slow</button> (1 / frame)<br> <!-- 1 step per frame -->
+        <button onclick="run('fast');">Run Fast</button> (10 / frame)<br> <!-- 10 steps per frame -->
+        <button onclick="run('faster');">Run Faster</button> (50 / frame)<br> <!-- 50 steps per frame -->
+        <button onclick="run('fastest')">Run Fastest</button> (uncapped)<br> <!-- as many as possile per frame -->
         <button onclick="run()">Run Paused</button><br><br>
 
         <button onclick="pause();rendering = 0;">Pause</button><br>
-        <button onclick="step();if(!rendering){render();}">Forward Step</button><br><br>
-        <button disabled>Play Slow</button><br>
-        <button disabled>Play Fast</button><br>
-        <button disabled>Play Faster</button><br>
-        <button disabled>Play Fastest</button>
+        <button onclick="step();if(!rendering){render();}">Forward One Step</button><br><br>
+
+        <button onclick="run('slow')">Play Slow</button> (1 / frame)<br>
+        <button onclick="run('fast')">Play Fast</button> (10 / frame)<br>
+        <button onclick="run('faster')">Play Faster</button> (50 / frame)<br>
+        <button onclick="run('fastest')">Play Fastest</button> (uncapped)
     </div>
     <script defer>
         function getId(target){
             return document.getElementById(target);
         }
 
-        getId("input").value = "" +
-            "#FFF:right\n" +
-            "#F00:left\n" +
-            "#0F0:left\n" +
-            "#0FF:right\n" +
-            "#FF0:right\n" +
-            "#F0F:right\n" +
-            "#7F7F7F:left\n" +
-            "#7F0000:right\n" +
-            "#007F00:left\n" +
-            "#00F:right\n" +
-            "#7F7F00:left\n" +
-            "#7F007F:left";
+        var presets = {
+            "Basic Bridge": "! Basic Bridge\n" +
+                "white:right\n" +
+                "  red:left",
+            "Basic Mess": "! Basic Mess\n" +
+                "white:right\n" +
+                "  red:right\n" +
+                "green:left",
+            "Trippy": "! Trippy\n" +
+                "white:left\n" +
+                "  red:left\n" +
+                "green:right\n" +
+                " blue:right\n",
+            "Rainbow Bridge": "! Rainbow Bridge\n" +
+                "  white:right\n" +
+                "    red:left\n" +
+                "   lime:left\n" +
+                "   aqua:right\n" +
+                " yellow:right\n" +
+                "fuchsia:right\n" +
+                "   gray:left\n" +
+                " maroon:right\n" +
+                "  green:left\n" +
+                "   blue:right\n" +
+                "  olive:left\n" +
+                " purple:left"
+        };
+
+        var presetList = [];
+        for(var i in presets){
+            presetList.push(i);
+            getId("selector").innerHTML += '<option>' + i + '</option>';
+        }
+
+        function select(name){
+            if(name){
+                if(presets[name]){
+                    getId("input").value = presets[name];
+                }
+            }else{
+                getId("input").value = presets[presetList[Math.floor(Math.random() * presetList.length)]];
+            }
+        }
+
+        select();
         
         var tree = [];
 
@@ -79,24 +118,27 @@
         var canvas = canvasElement.getContext("2d");
 
         function run(type){
-            pause();
-
             // parse input text.
             // Format:
             //  color:direction
             //  color:direction
 
             tree = getId("input").value.split("\n");
+            for(var i = tree.length - 1; i >= 0; i--){
+                if(tree[i].trim().indexOf("!") === 0){
+                    tree.splice(i, 1);
+                }
+            }
             for(var i in tree){
                 tree[i] = tree[i].split(":");
             }
 
             // set up canvas and field
-            size = [window.innerWidth - 300, window.innerHeight];
+            size = [Math.floor(window.innerWidth / 2) - 150, Math.floor(window.innerHeight / 2)];
             canvasElement.width = size[0];
             canvasElement.height = size[1];
-            canvasElement.style.width = size[0] + "px";
-            canvasElement.style.height = size[1] + "px";
+            canvasElement.style.width = size[0] * 2 + "px";
+            canvasElement.style.height = size[1] * 2 + "px";
             canvas.clearRect(0, 0, size[0], size[1]);
             pos = [Math.floor(size[0] / 2), Math.floor(size[1] / 2)];
             currDirection = 0;
@@ -109,9 +151,14 @@
                 }
             }
 
+            play(type);
+        }
+
+        function play(playType){
+            pause();
             // set intervals and such
             rendering = 1;
-            switch(type){
+            switch(playType){
                 case "slow":
                     animFrameID = requestAnimationFrame(doFrameStep);
                     render();
