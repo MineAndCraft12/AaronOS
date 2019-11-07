@@ -23,19 +23,21 @@
             </div>
             <div id="currentlyPlaying" class="disabled">No Song Playing</div>
             <div id="controls" class="disabled">
-                <button onclick="play()">Play</button>
-                <button onclick="pause()">Pause</button> |
-                <button onclick="back()">Back</button>
-                <button onclick="next()">Next</button> |
+                <button onclick="refresh()">Reset</button> |
                 <button onclick="shuffle()">Shuffle</button> |
-                <button onclick="refresh()">New Songs</button> |
-                Delay: <input style="width: 50px" type="number" id="delayinput" min="0" max="1" value="0.25" step="0.01" onchange="setDelay(this.value)">
+                <button onclick="back()"><b>|</b>&#9668;</button>
+                <button onclick="if(audio.paused){play();}else{pause();}" id="playbutton">&#9658;</button>
+                <button onclick="next()">&#9658;<b>|</b></button> |
+                Delay: <input style="width: 50px" type="number" id="delayinput" min="0" max="1" value="0.25" step="0.01" onchange="setDelay(this.value)"> |
+                <button onclick="toggleFPS()">Debug</button>
+                <button onclick="togglePerformance()">Fast Mode</button>
                 <br>
                 Visuals: <select id="visfield" onchange="setVis(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openVisualizerMenu();"></select>
                 <button onclick="toggleSmoke()">Smoke</button> |
                 Colors: <select id="colorfield" onchange="setColor(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openColorMenu();"></select> |
-                <button onclick="toggleFPS()">FPS</button> |
-                <button onclick="togglePerformance()">Fast Mode</button>
+                Mod: <select id="modfield" onchange="selectMod(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openModMenu();">
+                    <option value="null">None</option>
+                </select>
             </div>
             <div id="progressContainer" class="disabled" onclick="setProgress(event)"><div id="progress"></div></div>
             <div id="songList" class="disabled"></div>

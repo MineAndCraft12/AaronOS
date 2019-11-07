@@ -351,11 +351,13 @@ function play(){
         }else{
             audio.play();
         }
+        getId("playbutton").innerHTML = "<b>&nbsp;||&nbsp;</b>";
     }
 }
 function pause(){
     if(!microphoneActive){
         audio.pause();
+        getId("playbutton").innerHTML = "&#9658;";
     }
 }
 
@@ -557,8 +559,25 @@ function globalFrame(){
         if(smokeEnabled){
             smokeFrame();
         }
+        // if debug enabled, store current data values
+        var debugEnabled = (window.location.href.indexOf("debug") > -1);
+        
+        if(debugEnabled && currMod){
+            var oldVisData = [];
+            for(var i = 0; i < 1024; i++){
+                oldVisData[i] = visData[i];
+            }
+        }
+        
+        // if mod is selected, modify the data values
+        if(currMod){
+            mods[currMod].mod();
+        }
+        
+        // do the visualizer
         vis[currVis].frame();
-        if(fpsEnabled){
+        if(debugEnabled){
+            // fps
             fps++;
             var currSecond = (new Date().getSeconds());
             if(currSecond !== lastSecond){
@@ -571,7 +590,117 @@ function globalFrame(){
             canvas.fillRect(1, 1, 14, 9);
             canvas.fillStyle = '#FFF';
             canvas.fillText(String(currFPS), 2.5, 9);
+            // extra debug drawing
+            if(currMod){
+                canvas.strokeStyle = "#FFF";
+                canvas.lineWidth = 1;
+                var debugLeftBound = size[0] - 700;
+                canvas.strokeRect(size[0] - 700.5, 10.5, 342, 255);
+                // debug is supersampled -- rgb is 1, 2, 3
+                canvas.fillStyle = '#000';
+                for(var i = 0; i < 1023; i += 3){
+                    canvas.fillRect(debugLeftBound + (i / 3), 10 + (255 - Math.max(oldVisData[i], oldVisData[i + 1], oldVisData[i + 2])), 1, Math.max(oldVisData[i], oldVisData[i + 1], oldVisData[i + 2]));
+                }
+                canvas.globalCompositeOperation = 'screen';
+                canvas.fillStyle = '#F00';
+                for(var i = 0; i < 1024; i += 3){
+                    canvas.fillRect(debugLeftBound + (i / 3), 10 + (255 - oldVisData[i]), 1, oldVisData[i]);
+                }
+                canvas.fillStyle = '#0F0';
+                for(var i = 1; i < 1024; i += 3){
+                    canvas.fillRect(debugLeftBound + ((i - 1) / 3), 10 + (255 - oldVisData[i]), 1, oldVisData[i]);
+                }
+                canvas.fillStyle = '#00F';
+                for(var i = 2; i < 1024; i += 3){
+                    canvas.fillRect(debugLeftBound + ((i - 2) / 3), 10 + (255 - oldVisData[i]), 1, oldVisData[i]);
+                }
+                canvas.globalCompositeOperation = 'normal';
+            }
+            canvas.strokeStyle = "#FFF";
+            canvas.lineWidth = 1;
+            var debugLeftBound = size[0] - 352;
+            canvas.strokeRect(size[0] - 352.5, 10.5, 342, 255);
+            // debug is supersampled -- rgb is 1, 2, 3
+            canvas.fillStyle = '#000';
+            for(var i = 0; i < 1023; i += 3){
+                canvas.fillRect(debugLeftBound + (i / 3), 10 + (255 - Math.max(visData[i], visData[i + 1], visData[i + 2])), 1, Math.max(visData[i], visData[i + 1], visData[i + 2]));
+            }
+            canvas.globalCompositeOperation = 'screen';
+            canvas.fillStyle = '#F00';
+            for(var i = 0; i < 1024; i += 3){
+                canvas.fillRect(debugLeftBound + (i / 3), 10 + (255 - visData[i]), 1, visData[i]);
+            }
+            canvas.fillStyle = '#0F0';
+            for(var i = 1; i < 1024; i += 3){
+                canvas.fillRect(debugLeftBound + ((i - 1) / 3), 10 + (255 - visData[i]), 1, visData[i]);
+            }
+            canvas.fillStyle = '#00F';
+            for(var i = 2; i < 1024; i += 3){
+                canvas.fillRect(debugLeftBound + ((i - 2) / 3), 10 + (255 - visData[i]), 1, visData[i]);
+            }
+            canvas.globalCompositeOperation = 'normal';
         }
+    }
+}
+
+var currMod = null;
+var mods = {
+    powSin: {
+        name: "Power Sine",
+        image: 'mods/powSin.png',
+        mod: function(){
+            for(var i = 0; i < 1024; i++){
+                visData[i] = Math.sin((Math.pow(visData[i], 2) / 255) / 255 * (Math.PI / 2)) * 255;
+            }
+        },
+        test: function(input){
+            //return Math.sin(input / 255 * Math.PI / 6) * 255;
+            return Math.sin((Math.pow(input, 2) / 255) / 255 * (Math.PI / 2)) * 255;
+        }
+    },
+    ogive: {
+        name: "Bell",
+        image: 'mods/ogive.png',
+        mod: function(){
+            for(var i = 0; i < 1024; i++){
+                visData[i] = visData[i] * ((510 - visData[i]) / 255);
+            }
+        },
+        test: function(input){
+            return input * ((510 - input) / 255);
+        }
+    },
+    pow2: {
+        name: "Power (2)",
+        image: 'mods/pow2.png',
+        mod: function(){
+            for(var i = 0; i < 1024; i++){
+                visData[i] = Math.pow(visData[i], 2) / 255;
+            }
+        },
+        test: function(input){
+            return Math.pow(input, 2) / 255;
+        }
+    },
+    sqrt: {
+        name: "Square Root",
+        image: 'mods/sqrt.png',
+        mod: function(){
+            for(var i = 0; i < 1024; i++){
+                visData[i] = Math.sqrt(visData[i]) * this.sqrt255;
+            }
+        },
+        test: function(input){
+            return Math.sqrt(input) * this.sqrt255;
+        },
+        sqrt255: Math.sqrt(255)
+    }
+};
+function selectMod(newMod){
+    if(mods[newMod]){
+        currMod = newMod;
+    }else{
+        currMod = null;
     }
 }
 
@@ -649,6 +778,19 @@ var colors = {
                     ((amount >= 127) * 255 + (amount < 127) * (amount * 2)) + ',' +
                     ((amount < 127) * 255 + (amount >= 127) * ((254.5 - amount) * 2)) + ',' +
                     '0)';
+            }
+        }
+    },
+    triColor: {
+        name: "RGB (for Spikes)",
+        image: "colors/triColor.png",
+        func: function(amount, position){
+            if(Math.round(position / 255 * 1024) % 3 === 0){
+                return '#F00';
+            }else if(Math.round(position / 255 * 1024) % 3 === 1){
+                return '#0F0';
+            }else{
+                return '#00F';
             }
         }
     },
@@ -1134,14 +1276,15 @@ var vis = {
         name: "Curved Lines",
         image: "visualizers/curvedLines_av.png",
         start: function(){
-            canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
-            smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
             smoke.clearRect(0, 0, size[0], size[1]);
+            canvas.lineCap = "round";
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+            smoke.lineCap = "round";
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
             var xdist = size[0] / (this.lineCount + 2) / 2;
             var ydist = size[1] / (this.lineCount + 2) / 2;
             xdist = Math.min(xdist, ydist);
@@ -1252,10 +1395,7 @@ var vis = {
             smoke.lineWidth = 1;
         },
         sizechange: function(){
-            canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
-            smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+
         },
         lineWidth: 6,
         lineCount: 9,
@@ -1297,14 +1437,15 @@ var vis = {
         name: "Centered Lines",
         image: "visualizers/centeredLines_av.png",
         start: function(){
-            canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
-            smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+            
         },
         frame: function(){
             canvas.clearRect(0, 0, size[0], size[1]);
             smoke.clearRect(0, 0, size[0], size[1]);
+            canvas.lineCap = "round";
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+            smoke.lineCap = "round";
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
             var xdist = size[0] / (this.lineCount + 2);
             var datastep = 1024 / this.lineCount;
             var colorstep = 255 / this.lineCount;
@@ -1356,10 +1497,7 @@ var vis = {
             smoke.lineWidth = 1;
         },
         sizechange: function(){
-            canvas.lineCap = "round";
-            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
-            smoke.lineCap = "round";
-            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+
         },
         lineWidth: 6,
         lineCount: 18,
@@ -1369,10 +1507,11 @@ var vis = {
         name: "Cave Lines",
         image: "visualizers/caveLines_av.png",
         start: function(){
-            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
-            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+
         },
         frame: function(){
+            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
             canvas.clearRect(0, 0, size[0], size[1]);
             smoke.clearRect(0, 0, size[0], size[1]);
             var xdist = size[0] / (this.lineCount + 2);
@@ -1432,8 +1571,7 @@ var vis = {
             smoke.lineWidth = 1;
         },
         sizechange: function(){
-            canvas.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
-            smoke.lineWidth = this.lineWidth - (performanceMode * 0.5 * this.lineWidth);
+
         },
         lineWidth: 6,
         lineCount: 18,
@@ -3837,6 +3975,32 @@ var vis = {
         stop: function(){
 
         }
+    },
+    modTest: {
+        name: "Mod Test",
+        //image: "visualizers/modTest.png",
+        start: function(){
+
+        },
+        frame: function(){
+            smoke.clearRect(0, 0, size[0], size[1]);
+            canvas.clearRect(0, 0, size[0], size[1]);
+            canvas.fillStyle = '#FFF';
+            var leftEdge = size[0] / 2 - 255;
+            var topEdge = size[1] / 2 - 127;
+            for(var i = 0; i < 510; i++){
+                if(currMod){
+                    var value = mods[currMod].test(255 - Math.abs(i - 255));
+                }else{
+                    var value = 255 - Math.abs(i - 255);
+                }
+                canvas.fillRect(leftEdge + i, topEdge + 255 - value, 1, value);
+            }
+            canvas.fillRect(leftEdge - 1, 0, 1, size[1]);
+        },
+        stop: function(){
+
+        }
     }
 };
 
@@ -3846,6 +4010,10 @@ for(var i in colors){
 
 for(var i in vis){
     getId('visfield').innerHTML += '<option value="' + i + '">' + vis[i].name + '</option>';
+}
+
+for(var i in mods){
+    getId('modfield').innerHTML += '<option value="' + i + '">' + mods[i].name + '</option>';
 }
 
 var smokeEnabled = 0;
@@ -3977,7 +4145,7 @@ function openColorMenu(){
                 if(colors[i].image){
                     tempHTML += '<div' + namecolor + ' class="colorOption" onclick="overrideColor(\'' + i + '\')">' + colors[i].name + '<br><img src="' + colors[i].image + '"></div>';
                 }else{
-                    tempHTML += '<div' + namecolor + ' class="colorOption" onclick="overrideColor(\'' + i + '\')"></span>' + colors[i].name + '</div>';
+                    tempHTML += '<div' + namecolor + ' class="colorOption" onclick="overrideColor(\'' + i + '\')">' + colors[i].name + '</div>';
                 }
             }else{
                 tempHTML += '<div style="height:auto;background:none;"><hr></div>';
@@ -3994,6 +4162,44 @@ function overrideColor(selectedColor){
     getId("colorfield").value = selectedColor;
     closeMenu();
     getId("colorfield").onchange();
+}
+
+function openModMenu(){
+    if(getId("selectOverlay").classList.contains("disabled")){
+        getId("selectOverlay").classList.remove("disabled");
+        var tempHTML = '';
+        if(!currMod){
+            tempHTML += '<div style="outline:2px solid ' + getColor(255) + ';" class="modOption" onclick="overrideMod(\'null\')"><img src="mods/null.png">None</div>';
+        }else{
+            tempHTML += '<div class="modOption" onclick="overrideMod(\'null\')"><img src="mods/null.png">None</div>';
+        }
+        tempHTML += '<div style="height:auto;background:none;"><hr></div>';
+        for(var i in mods){
+            if(i.indexOf("SEPARATOR") === -1){
+                var namecolor = "";
+                if(i === getId("modfield").value){
+                    namecolor = ' style="outline:2px solid ' + getColor(255) + ';"';
+                }
+                if(mods[i].image){
+                    tempHTML += '<div' + namecolor + ' class="modOption" onclick="overrideMod(\'' + i + '\')"><img src="' + mods[i].image + '">' + mods[i].name + '</div>';
+                }else{
+                    tempHTML += '<div' + namecolor + ' class="modOption" onclick="overrideMod(\'' + i + '\')"><span></span>' + mods[i].name + '</div>';
+                }
+            }else{
+                tempHTML += '<div style="height:auto;background:none;"><hr></div>';
+            }
+        }
+        getId("selectContent").innerHTML = tempHTML;
+        getId("selectContent").scrollTop = 0;
+    }else{
+        closeMenu();
+    }
+}
+
+function overrideMod(selectedMod){
+    getId("modfield").value = selectedMod;
+    closeMenu();
+    getId("modfield").onchange();
 }
 
 function closeMenu(){

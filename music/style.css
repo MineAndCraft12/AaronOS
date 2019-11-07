@@ -134,6 +134,11 @@ div{
     line-height:128px;
     height:128px;
 }
+#selectContent .modOption{
+    margin-top:2px;
+    line-height:128px;
+    height:128px;
+}
 #selectContent div:hover{
     background: rgba(255, 255, 255, 0.1);
 }
@@ -149,8 +154,20 @@ div{
     height:128px;
     margin-right:246px;
 }
+#selectContent .modOption img{
+    height:128px;
+    margin-right:16px;
+    margin-bottom:-52px;
+}
+#selectContent .modOption span{
+    height:128px;
+    margin-right:246px;
+}
 #selectContent div:hover img{
     filter:contrast(0.9) brightness(2);
+}
+#selectContent .modOption:hover img{
+    filter:contrast(0.8);
 }
 #selectContent div:active img{
     filter:contrast(0.9) brightness(5);
