@@ -30,12 +30,13 @@
                 <button onclick="next()">&#9658;<b>|</b></button> |
                 Delay: <input style="width: 50px" type="number" id="delayinput" min="0" max="1" value="0.25" step="0.01" onchange="setDelay(this.value)"> |
                 <button onclick="toggleFPS()">Debug</button>
-                <button onclick="togglePerformance()">Fast Mode</button>
+                <button onclick="togglePerformance()">Fast Mode</button><span style="display:none" id="tskbrModeButton"> |
+                <button onclick="toggleTaskbarMode()">Taskbar Mode</button></span>
                 <br>
-                Visuals: <select id="visfield" onchange="setVis(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openVisualizerMenu();"></select>
+                Visuals: <select id="visfield" onchange="setVis(this.value)" onmousedown="if(!taskbarMode){requestAnimationFrame(()=>{this.blur()});}" onclick="if(!taskbarMode){openVisualizerMenu();}"></select>
                 <button onclick="toggleSmoke()">Smoke</button> |
-                Colors: <select id="colorfield" onchange="setColor(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openColorMenu();"></select> |
-                Mod: <select id="modfield" onchange="selectMod(this.value)" onmousedown="requestAnimationFrame(()=>{this.blur()});" onclick="openModMenu();">
+                Colors: <select id="colorfield" onchange="setColor(this.value)" onmousedown="if(!taskbarMode){requestAnimationFrame(()=>{this.blur()});}" onclick="if(!taskbarMode){openColorMenu();}"></select> |
+                Mod: <select id="modfield" onchange="selectMod(this.value)" onmousedown="if(!taskbarMode){requestAnimationFrame(()=>{this.blur()});}" onclick="if(!taskbarMode){openModMenu();}">
                     <option value="null">None</option>
                 </select>
             </div>

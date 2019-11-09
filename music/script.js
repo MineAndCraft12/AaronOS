@@ -5,6 +5,16 @@ window.onerror = function(errorMsg, url, lineNumber){
 function getId(target){
     return document.getElementById(target);
 }
+
+var windowBorders = [6, 35, 0];
+function recieveWindowBorders(response){
+    windowBorders = [
+        response.content.left + response.content.right,
+        response.content.top + response.content.bottom,
+        1
+    ];
+}
+
 var iframeMode = 0;
 window.aosTools_connectFailListener = function(){
     var aosStylesheet = document.createElement("link");
@@ -18,6 +28,8 @@ window.aosTools_connectListener = function(){
         action: "appwindow:open_window"
     }, console.log);
     iframeMode = 1;
+    getId("tskbrModeButton").style.display = "";
+    aosTools.getBorders(recieveWindowBorders);
 }
 if(window.aosTools){
     aosTools.testConnection();
@@ -2514,7 +2526,7 @@ var vis = {
             smoke.clearRect(0, 0, size[0], size[1]);
             var step = size[0] / 1024;
             var last = -1;
-            for(var i = 0; i < 1024; i++){
+            for(var i = 0; i < 1025; i++){
                 var strength = 0;
                 if(i === 0){
                     strength = visData[i];
@@ -2570,7 +2582,7 @@ var vis = {
             smoke.clearRect(0, 0, size[0], size[1]);
             var step = size[0] / 180;
             var last = -1;
-            for(var i = 0; i < 180; i++){
+            for(var i = 0; i < 181; i++){
                 var strength = 0;
                 if(i === 0){
                     strength = visData[i];
@@ -4205,4 +4217,29 @@ function overrideMod(selectedMod){
 function closeMenu(){
     getId("selectContent").innerHTML = "";
     getId("selectOverlay").classList.add("disabled");
+}
+
+var taskbarMode = 0;
+function toggleTaskbarMode(){
+    if(taskbarMode){
+        aosTools.setDims({
+            x: "auto",
+            y: "auto",
+            width: 1038,
+            height: 626
+        });
+        taskbarMode = 0;
+    }else{
+        aosTools.getScreenDims(finishSettingTaskbarMode);
+        taskbarMode = 1;
+    }
+}
+function finishSettingTaskbarMode(res){
+    aosTools.setDims({
+        x: -0.5 * windowBorders[0] - 4,
+        y: res.content.height - 109 - windowBorders[1] + windowBorders[0] * 0.5,
+        width: res.content.width + 8 + windowBorders[0],
+        height: 113 + windowBorders[1],
+    });
+    overrideVis("spectrumBass");
 }

@@ -1036,6 +1036,94 @@
             <li><code>false</code>: Padding could not be disabled.</li>
         </ul>
     </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_get_borders" data-search-terms="appwindow:get_borders">Get Window Border Width</h1>
+    <p>
+        Action: <code>appwindow:get_borders</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.getBorders(function(res){document.getElementById('try_appwindow_get_borders').innerHTML = [res.content.left, res.content.top, res.content.right, res.content.bottom].join(', ')})">Try It</button>:
+    <code class="aosTools_try" id="try_appwindow_get_borders">&nbsp;</code>
+    <p>
+        This action will return the size of the window borders.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.getBorders((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:get_borders"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content.left</code>
+        <ul>
+            <li>number: Width of the border on the left edge of the window.</li>
+        </ul>
+    </p>
+    <p>
+        <code>response.content.top</code>
+        <ul>
+            <li>number: Width of the border on the top edge of the window, including the window caption.</li>
+        </ul>
+    </p>
+    <p>
+        <code>response.content.right</code>
+        <ul>
+            <li>number: Width of the border on the right edge of the window.</li>
+        </ul>
+    </p>
+    <p>
+        <code>response.content.bottom</code>
+        <ul>
+            <li>number: Width of the border on the bottom edge of the window.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_get_screen_dims" data-search-terms="appwindow:get_screen_dims">Get Screen Dimensions</h1>
+    <p>
+        Action: <code>appwindow:get_screen_dims</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.getScreenDims(function(res){document.getElementById('try_appwindow_get_screen_dims').innerHTML = [res.content.width, res.content.height].join(', ')})">Try It</button>:
+    <code class="aosTools_try" id="try_appwindow_get_screen_dims">&nbsp;</code>
+    <p>
+        This action will return the width and height of the AaronOS desktop environment.
+        Note that if a scale is set, this will not be equal to the user's physical screen resolution, but rather the AaronOS virtual monitor resolution.
+        For instance, a 1920x1080 screen running AaronOS at a scaling level of 2 will report a 1280x720 screen resolution.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.getScreenDims((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:get_screen_dims"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content.width</code>
+        <ul>
+            <li>number: Width of the AaronOS virtual monitor in pixels.</li>
+        </ul>
+    </p>
+    <p>
+        <code>response.content.height</code>
+        <ul>
+            <li>number: Height of the AaronOS virtual monitor in pixels, including the taskbar.</li>
+        </ul>
+    </p>
 </div>
 
 <div class="docPage" id="doc_at_js" data-doc-title="aosTools: JavaScript on AaronOS" data-search-terms="web apps">

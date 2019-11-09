@@ -164,6 +164,16 @@ window.aosTools = {
             height: newDims.height || null
         }, callback);
     },
+    getBorders: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:get_borders"
+        }, callback);
+    },
+    getScreenDims: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:get_screen_dims"
+        }, callback);
+    },
 
     alert: function(paramObj, callback){
         aosTools.sendRequest({
