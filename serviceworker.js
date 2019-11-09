@@ -15,6 +15,13 @@ self.addEventListener('install', function(event){
 });
 
 self.addEventListener('fetch', function(event){
+  if(event.request.url.indexOf(".js") > -1 || event.request.url.indexOf(".css") > -1){
+    event.respondWith(
+      fetch(event.request).then((netResponse) => {
+        return netResponse;
+      })
+    );
+  }
   if(event.request.url.indexOf('ms_shadows/s') > -1){
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
@@ -33,5 +40,4 @@ self.addEventListener('fetch', function(event){
       })
     );
   }
-  
 });
