@@ -14,6 +14,16 @@
     <style id="smartIconStyle"></style>
     <style id="cursorStyle"></style>
     <style id="aosCustomStyle"></style>
+
+    <svg>
+        <defs>
+            <filter id="svgblur">
+                <feImage xlink:href="winimg_disp.png" result="dispImg" width="256px" height="256px" preserveAspectRatio="none"/>
+                <feTile in="dispImg" result="dispMap" preserveAspectRatio="none"/>
+                <feDisplacementMap id="svgDisplaceMap" in2="dispMap" in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
 </head>
 <body style="background-color:#000" id="pagebody">
     <!-- helps JS find scrollbar stuff -->

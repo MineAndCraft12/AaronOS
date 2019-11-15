@@ -6622,6 +6622,11 @@ c(function(){
                             if(ufload("aos_system/windows/border_width")){
                                 apps.settings.vars.setWinBorder(ufload("aos_system/windows/border_width"), 1);
                             }
+                            if(ufload("aos_system/windows/distortion_enabled")){
+                                if(ufload("aos_system/windows/distortion_enabled") === "1"){
+                                    apps.settings.vars.togDispMap(1);
+                                }
+                            }
                             if(ufload("aos_system/windows/controls_on_left")){
                                 if(ufload("aos_system/windows/controls_on_left") === "1"){
                                     apps.settings.vars.togCaptionButtonsLeft(1);
@@ -6692,7 +6697,7 @@ c(function(){
                                 apps.settings.vars.setBgFit(ufload("aos_system/desktop/background_fit"), 1);
                             }
                             if(ufload("aos_system/desktop/background_live_enabled")){
-                                if(ufload("aos_system/desktop/background_live_enabled")){
+                                if(ufload("aos_system/desktop/background_live_enabled") === "1"){
                                     apps.settings.vars.togLiveBg(1);
                                 }
                             }
@@ -7112,6 +7117,11 @@ c(function(){
                         option: 'Window Border Texture',
                         description: function(){return 'An image on the border of the window that adds some texture. Also useful for if you want to disable Windowblur but want your windows to have a cool texture on them. Enabled: ' + numtf(apps.settings.vars.enabWinImg)},
                         buttons: function(){return '<button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="winimg.png" value="' + apps.settings.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button>'}
+                    },
+                    displaceMap: {
+                        option: 'Glass Distortion Effect <i>(experimental)</i>',
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(apps.settings.vars.dispMapEffect)">false</span>. This experimental effect adds distortion to the glass effect that matches the default window texture.'},
+                        buttons: function(){return '<button onClick="apps.settings.vars.togDispMap()">Toggle Distortion Effect</button>'}
                     },
                     fadeDist: {
                         option: 'Window Fade Distance',
@@ -8132,6 +8142,24 @@ c(function(){
                 d(1, perfCheck('settings') + '&micro;s to toggle windowblur');
             },
             isBackdrop: 1,
+            dispMapEffect: '',
+            togDispMap: function(nosave){
+                if(this.dispMapEffect){
+                    this.dispMapEffect = "";
+                    if(!nosave){
+                        ufsave("aos_system/windows/distort_enabled", "0");
+                    }
+                }else{
+                    this.dispMapEffect = " url(#svgblur)";
+                    if(!nosave){
+                        ufsave("aos_system/windows/distort_enabled", "1");
+                    }
+                }
+                if(this.isBackdrop){
+                    this.togBackdropFilter(1);
+                    this.togBackdropFilter(1);
+                }
+            },
             togBackdropFilter: function(nosave){
                 perfStart('settings');
                 if(this.isBackdrop){
@@ -8153,11 +8181,11 @@ c(function(){
                     }
                     this.tempArray = document.getElementsByClassName("window");
                     for(var elem = 0; elem < this.tempArray.length; elem++){
-                        this.tempArray[elem].style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)';
-                        this.tempArray[elem].style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)';
+                        this.tempArray[elem].style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
+                        this.tempArray[elem].style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
                     }
-                    getId('taskbar').style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)';
-                    getId('taskbar').style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)';
+                    getId('taskbar').style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
+                    getId('taskbar').style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
                     getId('ctxMenu').classList.add('backdropFilterCtxMenu');
                     this.isBackdrop = 1;
                     if(!nosave){
@@ -8185,18 +8213,24 @@ c(function(){
             setAeroRad: function(nosave){
                 perfStart('settings');
                 this.currWinblurRad = getId("STNwinblurRadius").value;
-                this.tempArray = document.getElementsByClassName("winAero");
+                getId("svgDisplaceMap").setAttribute("scale", this.currWinblurRad);
                 if(this.isAero){
                     for(var elem = 0; elem < this.tempArray.length; elem++){
+                        this.tempArray = document.getElementsByClassName("winAero");
                         this.tempArray[elem].style.webkitFilter = "blur(" + this.currWinblurRad + "px)";
                         this.tempArray[elem].style.filter = "blur(" + this.currWinblurRad + "px)";
                     }
+                    getId("tskbrAero").style.webkitFilter = "blur(" + this.currWinblurRad + "px)";
+                    getId("tskbrAero").style.filter = "blur(" + this.currWinblurRad + "px)";
                 }
                 if(this.isBackdrop){
+                    this.tempArray = document.getElementsByClassName("window");
                     for(var elem = 0; elem < this.tempArray.length; elem++){
-                        this.tempArray[elem].style.webkitBackdropFilter = "blur(" + this.currWinblurRad + "px)";
-                        this.tempArray[elem].style.backdropFilter = "blur(" + this.currWinblurRad + "px)";
+                        this.tempArray[elem].style.webkitBackdropFilter = "blur(" + this.currWinblurRad + "px)" + this.dispMapEffect;
+                        this.tempArray[elem].style.backdropFilter = "blur(" + this.currWinblurRad + "px)" + this.dispMapEffect;
                     }
+                    getId("taskbar").style.webkitBackdropFilter = "blur(" + this.currWinblurRad + "px)" + this.dispMapEffect;
+                    getId("taskbar").style.backdropFilter = "blur(" + this.currWinblurRad + "px)" + this.dispMapEffect;
                 }
                 if(!nosave){
                     ufsave("aos_system/windows/blur_radius", this.currWinblurRad);
@@ -9637,10 +9671,11 @@ c(function(){
             "10/12/2019: B1.1.10.0\n + Blast AI has been upgraded; AI can decide to rush their target if they have high health, and will seek distance if their health is low.\n + Added lowFpsLasers flag to Blast - for recording 30fps video from 60fps source.\n\n" +
             "10/30/2019: B1.2.0.0\n : Mobile Mode is set to Automatic by default.\n + Open windows now have a glow on their taskbar button.\n + Enabled Backdrop Filter Blur for the new default window glass effect, making windows visible behind other windows.\n + Context menu will have a blurry background if blurry windows is enabled.\n : Changed hover effect on taskbar buttons.\n : Changed hover and click effect on window buttons.\n : Changed default window color from rgba(190, 190, 255, 0.3) to rgba(150, 150, 200, 0.5)\n : Increased shadow on taskbar text.\n + The type of blur on window borders is now automatically set based on browser support.\n : Moved Mobile Mode option to Screen Resolution category.\n : Moved the Home button in Settings to the right side.\n - Removed button for the pre-alpha Settings menu.\n\n" +
             "11/07/2019: B1.2.1.0\n + Added data mods for Music Player - modifies how visualizers see music data.\n + Added RGB color to Music Player for use with Spikes Classic to find cool patterns.\n : Rearranged UI for Music Player.\n\n" +
-            "11/09/2019: B1.2.2.0\n + Added Taskbar Mode to Music Player.\n + Added appwindow:get_borders and appwindow:get_screen_dims to aosTools.\n : Fixed Spectrum and Bass Spectrum visualizers not filling the whole screen in MPl.\n : In theory, fixed Chrome's caching of JS and CSS.",
+            "11/09/2019: B1.2.2.0\n + Added Taskbar Mode to Music Player.\n + Added appwindow:get_borders and appwindow:get_screen_dims to aosTools.\n : Fixed Spectrum and Bass Spectrum visualizers not filling the whole screen in MPl.\n : In theory, fixed Chrome's caching of JS and CSS.\n\n" +
+            "11/15/2019: B1.2.2.1\n + Added Window Glass Distortion effect, distorts the background by the glass texture. It's experimental and disabled by default.\n : Fixed Window Glass Blur setting not working.\n : Fixed Live Desktop Background always being enabled if the setting was ever changed.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.2.0 (11/09/2019) r1';
+    window.aOSversion = 'B1.2.2.1 (11/15/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
