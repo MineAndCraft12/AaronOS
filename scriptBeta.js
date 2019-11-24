@@ -6622,8 +6622,8 @@ c(function(){
                             if(ufload("aos_system/windows/border_width")){
                                 apps.settings.vars.setWinBorder(ufload("aos_system/windows/border_width"), 1);
                             }
-                            if(ufload("aos_system/windows/distortion_enabled")){
-                                if(ufload("aos_system/windows/distortion_enabled") === "1"){
+                            if(ufload("aos_system/windows/distort_enabled")){
+                                if(ufload("aos_system/windows/distort_enabled") === "1"){
                                     apps.settings.vars.togDispMap(1);
                                 }
                             }
@@ -9672,10 +9672,11 @@ c(function(){
             "10/30/2019: B1.2.0.0\n : Mobile Mode is set to Automatic by default.\n + Open windows now have a glow on their taskbar button.\n + Enabled Backdrop Filter Blur for the new default window glass effect, making windows visible behind other windows.\n + Context menu will have a blurry background if blurry windows is enabled.\n : Changed hover effect on taskbar buttons.\n : Changed hover and click effect on window buttons.\n : Changed default window color from rgba(190, 190, 255, 0.3) to rgba(150, 150, 200, 0.5)\n : Increased shadow on taskbar text.\n + The type of blur on window borders is now automatically set based on browser support.\n : Moved Mobile Mode option to Screen Resolution category.\n : Moved the Home button in Settings to the right side.\n - Removed button for the pre-alpha Settings menu.\n\n" +
             "11/07/2019: B1.2.1.0\n + Added data mods for Music Player - modifies how visualizers see music data.\n + Added RGB color to Music Player for use with Spikes Classic to find cool patterns.\n : Rearranged UI for Music Player.\n\n" +
             "11/09/2019: B1.2.2.0\n + Added Taskbar Mode to Music Player.\n + Added appwindow:get_borders and appwindow:get_screen_dims to aosTools.\n : Fixed Spectrum and Bass Spectrum visualizers not filling the whole screen in MPl.\n : In theory, fixed Chrome's caching of JS and CSS.\n\n" +
-            "11/15/2019: B1.2.2.1\n + Added Window Glass Distortion effect, distorts the background by the glass texture. It's experimental and disabled by default.\n : Fixed Window Glass Blur setting not working.\n : Fixed Live Desktop Background always being enabled if the setting was ever changed.",
+            "11/15/2019: B1.2.2.1\n + Added Window Glass Distortion effect, distorts the background by the glass texture. It's experimental and disabled by default.\n : Fixed Window Glass Blur setting not working.\n : Fixed Live Desktop Background always being enabled if the setting was ever changed.\n\n" +
+            "11/23/2019: B1.2.2.2\n : Fixed Glass Distortion preference not saving properly.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.2.1 (11/15/2019) r0';
+    window.aOSversion = 'B1.2.2.2 (11/23/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
