@@ -8167,9 +8167,11 @@ c(function(){
                     for(var elem = 0; elem < this.tempArray.length; elem++){
                         this.tempArray[elem].style.webkitBackdropFilter = 'none';
                         this.tempArray[elem].style.backdropFilter = 'none';
+                        getId(this.tempArray[elem].id.substring(0, this.tempArray[elem].id.length - 4) + "_img").style.backgroundPosition = "";
                     }
                     getId('taskbar').style.webkitBackdropFilter = 'none';
                     getId('taskbar').style.backdropFilter = 'none';
+                    getId("tskbrBimg").style.backgroundPosition = "";
                     getId('ctxMenu').classList.remove('backdropFilterCtxMenu');
                     this.isBackdrop = 0;
                     if(!nosave){
@@ -8183,9 +8185,15 @@ c(function(){
                     for(var elem = 0; elem < this.tempArray.length; elem++){
                         this.tempArray[elem].style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
                         this.tempArray[elem].style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
+                        if(this.dispMapEffect){
+                            getId(this.tempArray[elem].id.substring(0, this.tempArray[elem].id.length - 4) + "_img").style.backgroundPosition = "0 100%";
+                        }
                     }
                     getId('taskbar').style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
                     getId('taskbar').style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
+                    if(this.dispMapEffect){
+                        getId("tskbrBimg").style.backgroundPosition = "0 100%";
+                    }
                     getId('ctxMenu').classList.add('backdropFilterCtxMenu');
                     this.isBackdrop = 1;
                     if(!nosave){
@@ -9673,10 +9681,11 @@ c(function(){
             "11/07/2019: B1.2.1.0\n + Added data mods for Music Player - modifies how visualizers see music data.\n + Added RGB color to Music Player for use with Spikes Classic to find cool patterns.\n : Rearranged UI for Music Player.\n\n" +
             "11/09/2019: B1.2.2.0\n + Added Taskbar Mode to Music Player.\n + Added appwindow:get_borders and appwindow:get_screen_dims to aosTools.\n : Fixed Spectrum and Bass Spectrum visualizers not filling the whole screen in MPl.\n : In theory, fixed Chrome's caching of JS and CSS.\n\n" +
             "11/15/2019: B1.2.2.1\n + Added Window Glass Distortion effect, distorts the background by the glass texture. It's experimental and disabled by default.\n : Fixed Window Glass Blur setting not working.\n : Fixed Live Desktop Background always being enabled if the setting was ever changed.\n\n" +
-            "11/23/2019: B1.2.2.2\n : Fixed Glass Distortion preference not saving properly.",
+            "11/23/2019: B1.2.2.2\n : Fixed Glass Distortion preference not saving properly.\n\n" +
+            "11/26/2019: B1.2.2.3\n : Fixed Glass Distortion texture not lining up with Window Border texture. (texture was anchored to top, shader was anchored to bottom. both are now bottom)",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.2.2 (11/23/2019) r0';
+    window.aOSversion = 'B1.2.2.3 (11/26/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
