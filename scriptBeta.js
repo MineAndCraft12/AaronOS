@@ -9769,7 +9769,7 @@ c(function(){
                     break;
                 case "close":
                     if(this.vars.counting){
-                        apps.prompt.vars.alert('Please don\'t close the window until it is done counting.', 'Oh, I nearly broke stuff.', function(){}, 'Properties');
+                        apps.prompt.vars.alert('Please don\'t close the window until it is done counting.', 'Oh. I nearly broke stuff.', function(){}, 'Properties');
                     }else{
                         this.appWindow.closeWindow();
                         setTimeout(function(){
