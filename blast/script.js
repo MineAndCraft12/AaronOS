@@ -91,7 +91,35 @@ var blast = {
         }
         this.totalLasers++;
     },
+    // this.fpsCount + " fps, " + this.frametime + "ms (" + this.fps + "), " + this.fpsMod,
+    lastSecond: performance.now(),
+    fpsCount: 0,
+    fpsFinal: 0,
+    lastFrame: performance.now(),
+    currFrame: performance.now(),
+    frametime: 0,
+    fps: 0,
+    fpsMod: 1,
     frame: function(){
+        this.lastFrame = this.currFrame;
+        this.currFrame = performance.now();
+        this.frametime = this.currFrame - this.lastFrame;
+        this.fps = 1000 / this.frametime;
+        if(this.currFrame > this.lastSecond + 1000){
+            this.fpsFinal = this.fpsCount;
+            this.fpsCount = 0;
+            this.lastSecond = this.currFrame;
+        }
+        this.fpsCount++;
+
+        // fpsMod is modification of game timing based on the FPS
+        // if the FPS is > 60, then fpsMod will be < 1
+        // if the FPS is < 60, then fpsMod will be > 1
+        // this way the ships and lasers all move at the same physical speed between 30, 60, and 120fps and such
+        if(this.settings.fpsCompensation){
+            this.fpsMod = 1 / (this.fps / 60);
+        }
+
         canvas.clearRect(0, 0, size[0], size[1]);
         // do bullet simulation first
         for(var i in this.lasers){
@@ -128,14 +156,14 @@ var blast = {
                 this.lasers[i].pos[0],
                 this.lasers[i].pos[1],
                 this.lasers[i].angle,
-                this.lasers[i].vel
+                this.lasers[i].vel * this.fpsMod
             );
             if(this.settings.lowFpsLasers){
                 var newLaserPosFake = this.pointFromAngle(
                     this.lasers[i].pos[0],
                     this.lasers[i].pos[1],
                     this.lasers[i].angle,
-                    this.lasers[i].vel * 2
+                    this.lasers[i].vel * 2 * this.fpsMod
                 );
                 canvas.lineTo(newLaserPosFake[0], newLaserPosFake[1]);
             }else{
@@ -156,16 +184,16 @@ var blast = {
 
                     // do player movement third
                     if(this.inputs.left){
-                        this.ships[ship].pos[0] -= this.settings.shipChase;
+                        this.ships[ship].pos[0] -= this.settings.shipChase * this.fpsMod;
                     }
                     if(this.inputs.right){
-                        this.ships[ship].pos[0] += this.settings.shipChase;
+                        this.ships[ship].pos[0] += this.settings.shipChase * this.fpsMod;
                     }
                     if(this.inputs.up){
-                        this.ships[ship].pos[1] -= this.settings.shipChase;
+                        this.ships[ship].pos[1] -= this.settings.shipChase * this.fpsMod;
                     }
                     if(this.inputs.down){
-                        this.ships[ship].pos[1] += this.settings.shipChase;
+                        this.ships[ship].pos[1] += this.settings.shipChase * this.fpsMod;
                     }
                     // do player firing fourth
                     if(this.inputs.mouse){
@@ -233,7 +261,7 @@ var blast = {
                                         );
                                         if(this.ships[ship].pressuring){
                                             if(this.ships[ship].health > this.settings.shipHealth * 0.5){
-                                                if(this.settings.shipPressureChance < Math.random()){
+                                                if(this.settings.shipPressureChance * this.fpsMod < Math.random()){
                                                     moveMode = "pressure";
                                                 }else{
                                                     moveMode = "fight";
@@ -245,7 +273,7 @@ var blast = {
                                             }
                                         }else{
                                             if(this.ships[ship].health > this.settings.shipHealth * 0.5){
-                                                if(this.settings.shipPressureChance >= Math.random()){
+                                                if(this.settings.shipPressureChance * this.fpsMod >= Math.random()){
                                                     moveMode = "pressure";
                                                     this.ships[ship].pressuring = 1;
                                                 }else{
@@ -302,7 +330,7 @@ var blast = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     moveAngle,
-                                    this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                    (this.settings.shipChase * (Math.random() * 0.85 + 0.15)) * this.fpsMod
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
@@ -310,7 +338,7 @@ var blast = {
                                 if(typeof this.ships[ship].prevActionSide !== "number"){
                                     this.ships[ship].prevActionSide = Math.round(Math.random());
                                 }
-                                if(Math.random() < 0.05){
+                                if(Math.random() < 0.05 * this.fpsMod){
                                     this.ships[ship].prevActionSide = Math.abs(this.ships[ship].prevActionSide - 1);
                                 }
                                 if(this.ships[ship].prevActionSide){
@@ -323,7 +351,7 @@ var blast = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     moveAngle,
-                                    this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                    (this.settings.shipChase * (Math.random() * 0.85 + 0.15)) * this.fpsMod
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
@@ -333,7 +361,7 @@ var blast = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     moveAngle,
-                                    this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                    (this.settings.shipChase * (Math.random() * 0.85 + 0.15)) * this.fpsMod
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
@@ -349,7 +377,7 @@ var blast = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     moveAngle,
-                                    this.settings.shipChase * (Math.random() * 0.65 + 0.35)
+                                    (this.settings.shipChase * (Math.random() * 0.65 + 0.35)) * this.fpsMod
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
@@ -357,7 +385,7 @@ var blast = {
                                 if(typeof this.ships[ship].prevActionSide !== "number"){
                                     this.ships[ship].prevActionSide = Math.round(Math.random());
                                 }
-                                if(Math.random() < 0.05){
+                                if(Math.random() < 0.05 * this.fpsMod){
                                     this.ships[ship].prevActionSide = Math.abs(this.ships[ship].prevActionSide - 1);
                                 }
                                 if(this.ships[ship].prevActionSide){
@@ -370,7 +398,7 @@ var blast = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     moveAngle,
-                                    this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                    (this.settings.shipChase * (Math.random() * 0.85 + 0.15)) * this.fpsMod
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
@@ -380,7 +408,7 @@ var blast = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     moveAngle,
-                                    this.settings.shipChase * (Math.random() * 0.65 + 0.35)
+                                    (this.settings.shipChase * (Math.random() * 0.65 + 0.35)) * this.fpsMod
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
@@ -396,7 +424,7 @@ var blast = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     moveAngle,
-                                    this.settings.shipChase * (Math.random() * 0.65 + 0.35)
+                                    (this.settings.shipChase * (Math.random() * 0.65 + 0.35)) * this.fpsMod
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
@@ -404,7 +432,7 @@ var blast = {
                                 if(typeof this.ships[ship].prevActionSide !== "number"){
                                     this.ships[ship].prevActionSide = Math.round(Math.random());
                                 }
-                                if(Math.random() < 0.05){
+                                if(Math.random() < 0.05 * this.fpsMod){
                                     this.ships[ship].prevActionSide = Math.abs(this.ships[ship].prevActionSide - 1);
                                 }
                                 if(this.ships[ship].prevActionSide){
@@ -417,7 +445,7 @@ var blast = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     moveAngle,
-                                    this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                    (this.settings.shipChase * (Math.random() * 0.85 + 0.15)) * this.fpsMod
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
@@ -427,7 +455,7 @@ var blast = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     moveAngle,
-                                    this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                    (this.settings.shipChase * (Math.random() * 0.85 + 0.15)) * this.fpsMod
                                 );
                                 this.ships[ship].pos[0] = moveCoords[0];
                                 this.ships[ship].pos[1] = moveCoords[1];
@@ -436,26 +464,26 @@ var blast = {
                         case "dodge":
                             var ms = Date.now();
                             if(this.ships[ship].dodging === dodging && ms - this.ships[ship].lastDodge < this.settings.dodgeTime){
-                                dodgeAngle = this.ships[ship].dodgeAngle + Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
+                                dodgeAngle = this.ships[ship].dodgeAngle + (Math.random() * this.settings.shipWander * 2 - this.settings.shipWander) * this.fpsMod;
                                 this.ships[ship].dodgeAngle = dodgeAngle;
                             }else{
                                 this.ships[ship].lastDodge = ms;
                                 this.ships[ship].dodging = dodging;
-                                dodgeAngle = Math.round(Math.random() * 360) + Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
+                                dodgeAngle = Math.round(Math.random() * 360) + (Math.random() * this.settings.shipWander * 2 - this.settings.shipWander) * this.fpsMod;
                                 this.ships[ship].dodgeAngle = dodgeAngle;
                             }
                             var newPos = this.pointFromAngle(
                                 this.ships[ship].pos[0],
                                 this.ships[ship].pos[1],
                                 dodgeAngle,
-                                this.settings.shipChase
+                                this.settings.shipChase * this.fpsMod
                             );
                             this.ships[ship].pos[0] = newPos[0];
                             this.ships[ship].pos[1] = newPos[1];
                             break;
                         default:
                             this.ships[ship].dodging = null;
-                            this.ships[ship].wanderDirection += Math.random() * this.settings.shipWander - (this.settings.shipWander / 2);
+                            this.ships[ship].wanderDirection += (Math.random() * this.settings.shipWander - (this.settings.shipWander / 2)) * this.fpsMod;
                             if(this.ships[ship].wanderDirection > 360){
                                 this.ships[ship].wanderDirection -= 360;
                             }else if(this.ships[ship].wanderDirection < 0){
@@ -465,7 +493,7 @@ var blast = {
                                 this.ships[ship].pos[0],
                                 this.ships[ship].pos[1],
                                 this.ships[ship].wanderDirection,
-                                this.settings.shipIdle
+                                this.settings.shipIdle * this.fpsMod
                             )
                     }
                 }
@@ -760,6 +788,15 @@ var blast = {
             }
             canvas.font = "24px Sans-Serif";
         }
+
+        // debug
+        if(this.settings.debug){
+            canvas.fillStyle = "#FFF";
+            canvas.fillText(
+                this.fpsFinal + " fps, " + Math.round(this.frametime) + "ms (" + Math.round(this.fps) + "), " + this.fpsMod,
+                size[0] / 2 - 125, 40
+            );
+        }
     },
     angleFromPoints: function(x1, y1, x2, y2){
         return this.rad2deg(Math.atan2(y2 - y1, x2 - x1));
@@ -876,6 +913,10 @@ var blast = {
 
         // draws AI debug lines
         debug: false,
+
+        // enables or disables FPS Compensation
+        // prevents ships from moving and thinking too quickly/slowly on high/low framerates
+        fpsCompensation: true,
 
         // enable or disable the player
         player: true,
