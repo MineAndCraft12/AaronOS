@@ -618,15 +618,15 @@ function globalFrame(){
         
         // do the visualizer
         vis[currVis].frame();
+        // fps
+        fps++;
+        var currSecond = (new Date().getSeconds());
+        if(currSecond !== lastSecond){
+            currFPS = fps;
+            fps = 0;
+            lastSecond = currSecond;
+        }
         if(debugEnabled){
-            // fps
-            fps++;
-            var currSecond = (new Date().getSeconds());
-            if(currSecond !== lastSecond){
-                currFPS = fps;
-                fps = 0;
-                lastSecond = currSecond;
-            }
             canvas.font = '12px aosProFont, monospace';
             canvas.fillStyle = 'rgba(0, 0, 0, 0.5)';
             canvas.fillRect(1, 1, 14, 9);
