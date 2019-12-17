@@ -521,7 +521,7 @@ function toggleFullscreen(){
 }
 
 var fps = 0;
-var currFPS = 0;
+var currFPS = "0";
 var lastSecond = 0;
 var fpsEnabled = 0;
 function toggleFPS(){
@@ -535,9 +535,39 @@ var smokeElement = getId("smokeCanvas");
 var smoke = smokeElement.getContext("2d");
 
 var highFreqRange = 0;
+var perfLast = performance.now();
+var perfCurrent = perfLast;
+var perfTime = 0;
+var fpsApproximate = 60;
+var fpsCompensation = 1;
 
 function globalFrame(){
     requestAnimationFrame(globalFrame);
+    /*
+    this.lastFrame = this.currFrame;
+    this.currFrame = performance.now();
+    this.frametime = this.currFrame - this.lastFrame;
+    this.fps = 1000 / this.frametime;
+    this.fpsMod = 1 / (this.fps / 60);
+    if(this.currFrame > this.lastSecond + 1000){
+        this.fpsFinal = this.fpsCount;
+        this.fpsCount = 0;
+        this.lastSecond = this.currFrame;
+    }
+    this.fpsCount++;
+    */
+    perfLast = perfCurrent;
+    perfCurrent = performance.now();
+    perfTime = perfCurrent - perfLast;
+    fpsApproximate = 1000 / perfTime;
+    fpsCompensation = 1 / (fpsApproximate / 60);
+
+    // fpsCompensation is a helper for adjusting timing based on the FPS
+    // multiply a value by fpsCompensation to adjust it to the current performance.
+    // 120fps = 0.5
+    // 60fps = 1
+    // 30fps = 2
+
     if(winsize[0] !== window.innerWidth || winsize[1] !== window.innerHeight){
         winsize = [window.innerWidth, window.innerHeight];
         if(fullscreen){
@@ -601,7 +631,7 @@ function globalFrame(){
             canvas.fillStyle = 'rgba(0, 0, 0, 0.5)';
             canvas.fillRect(1, 1, 14, 9);
             canvas.fillStyle = '#FFF';
-            canvas.fillText(String(currFPS), 2.5, 9);
+            canvas.fillText(currFPS, 2.5, 9);
             // extra debug drawing
             if(currMod){
                 canvas.strokeStyle = "#FFF";
@@ -1842,7 +1872,7 @@ var vis = {
             for(var i = 0; i < 10; i++){
                 var strength = Math.pow(ringPools[i], 2) / 65025;
                 var ringColor = getColor(strength * 255, (9 - i) * 28);
-                this.ringPositions[i] += strength * 5;
+                this.ringPositions[i] += strength * 5 * fpsCompensation;
                 if(this.ringPositions[i] >= 360){
                     this.ringPositions[i] -= 360;
                 }
@@ -1903,7 +1933,7 @@ var vis = {
             for(var i = 0; i < 10; i++){
                 var strength = Math.pow(ringPools[i], 2) / 65025;
                 var ringColor = getColor(strength * 255, (9 - i) * 28);
-                this.ringPositions[i] += strength * 5;
+                this.ringPositions[i] += strength * 5 * fpsCompensation;
                 if(this.ringPositions[i] >= 360){
                     this.ringPositions[i] -= 360;
                 }
@@ -2988,14 +3018,21 @@ var vis = {
 
             this.visBassAvgElements.push(this.visBassAvg);
             this.visBassAvgTotal += this.visBassAvg;
-            if(this.visBassAvgElements.length > this.settings.soundMemory){
+            while(this.visBassAvgElements.length > Math.round(this.settings.soundMemory / 60 * currFPS)){
                 this.visBassAvgTotal -= this.visBassAvgElements.shift();
             }
 
             this.visBassAvgVolume = this.visBassAvgTotal / this.visBassAvgElements.length;
 
+            if(!this.visPastAvgs){
+                this.visPastAvgs = [];
+            }
+
             //if(this.visBassAvg < 255 * this.settings.soundSensitivity){
-            if(this.visBassAvgVolume + this.settings.soundMemoryAdd > this.visBassAvg){
+            if(
+                this.visBassAvgVolume + this.settings.soundMemoryAdd > this.visBassAvg ||
+                this.visBassAvgElements[this.visBassAvgElements.length - 1] <= this.visBassAvgElements[this.visBassAvgElements.length - 3]
+            ){
                 this.soundShoot = 0;
             }
 
@@ -3020,26 +3057,28 @@ var vis = {
                 canvas.strokeRect(10.5, size[1] - 265.5, 10, 255);
                 canvas.strokeRect(30.5, size[1] - 265.5 - this.settings.soundMemoryAdd, 10, 255 + this.settings.soundMemoryAdd);
 
-                if(!this.visPastAvgs){
-                    this.visPastAvgs = [];
-                }
+                var adjustedSoundMemory = Math.round(this.settings.soundMemory / 60 * currFPS);
+
                 this.visPastAvgs.push(this.visBassAvgVolume + this.settings.soundMemoryAdd);
-                if(this.visPastAvgs.length > this.settings.soundMemory){
+                while(this.visPastAvgs.length > adjustedSoundMemory){
                     this.visPastAvgs.shift();
                 }
 
                 for(var i = 0; i < this.visBassAvgElements.length; i++){
                     canvas.fillStyle = "#0F0";
-                    if(this.visBassAvgElements[i] > this.visPastAvgs[i]){
-                        canvas.fillRect(50 + (this.settings.soundMemory - i), size[1] - 285 - this.settings.soundMemoryAdd, 1, 10);
+                    if(this.visBassAvgElements[i] < this.visBassAvgElements[i - 2]){
+                        canvas.fillStyle = "#070";
                     }
-                    canvas.fillRect(50 + (this.settings.soundMemory - i), size[1] - 10 - this.visBassAvgElements[i], 1, this.visBassAvgElements[i]);
+                    if(this.visBassAvgElements[i] > this.visPastAvgs[i]){
+                        canvas.fillRect(50 + (adjustedSoundMemory - i), size[1] - 285 - this.settings.soundMemoryAdd, 1, 10);
+                    }
+                    canvas.fillRect(50 + (adjustedSoundMemory - i), size[1] - 10 - this.visBassAvgElements[i], 1, this.visBassAvgElements[i]);
                     canvas.fillStyle = "#F00";
-                    canvas.fillRect(50 + (this.settings.soundMemory - i), size[1] - 10 - this.visPastAvgs[i], 1, 1);
+                    canvas.fillRect(50 + (adjustedSoundMemory - i), size[1] - 10 - this.visPastAvgs[i], 1, 1);
                 }
                 
-                canvas.strokeRect(50.5, size[1] - 265.5 - this.settings.soundMemoryAdd, this.settings.soundMemory + 1, 255 + this.settings.soundMemoryAdd);
-                canvas.strokeRect(50.5, size[1] - 285.5 - this.settings.soundMemoryAdd, this.settings.soundMemory + 1, 10);
+                canvas.strokeRect(50.5, size[1] - 265.5 - this.settings.soundMemoryAdd, adjustedSoundMemory + 1, 255 + this.settings.soundMemoryAdd);
+                canvas.strokeRect(50.5, size[1] - 285.5 - this.settings.soundMemoryAdd, adjustedSoundMemory + 1, 10);
             }
 
 
@@ -3078,7 +3117,7 @@ var vis = {
                     this.lasers[i].pos[0],
                     this.lasers[i].pos[1],
                     this.lasers[i].angle,
-                    this.lasers[i].vel
+                    this.lasers[i].vel * fpsCompensation
                 );
                 canvas.lineTo(newLaserPos[0], newLaserPos[1]);
                 canvas.stroke();
@@ -3117,16 +3156,16 @@ var vis = {
 
                         // do player movement third
                         if(this.inputs.left){
-                            this.ships[ship].pos[0] -= this.settings.shipChase;
+                            this.ships[ship].pos[0] -= this.settings.shipChase * fpsCompensation;
                         }
                         if(this.inputs.right){
-                            this.ships[ship].pos[0] += this.settings.shipChase;
+                            this.ships[ship].pos[0] += this.settings.shipChase * fpsCompensation;
                         }
                         if(this.inputs.up){
-                            this.ships[ship].pos[1] -= this.settings.shipChase;
+                            this.ships[ship].pos[1] -= this.settings.shipChase * fpsCompensation;
                         }
                         if(this.inputs.down){
-                            this.ships[ship].pos[1] += this.settings.shipChase;
+                            this.ships[ship].pos[1] += this.settings.shipChase * fpsCompensation;
                         }
                         // do player firing fourth
                         if(this.inputs.mouse){
@@ -3232,7 +3271,7 @@ var vis = {
                                         this.ships[ship].pos[0],
                                         this.ships[ship].pos[1],
                                         moveAngle,
-                                        this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                        (this.settings.shipChase * (Math.random() * 0.85 + 0.15)) * fpsCompensation
                                     );
                                     this.ships[ship].pos[0] = moveCoords[0];
                                     this.ships[ship].pos[1] = moveCoords[1];
@@ -3240,7 +3279,7 @@ var vis = {
                                     if(typeof this.ships[ship].prevActionSide !== "number"){
                                         this.ships[ship].prevActionSide = Math.round(Math.random());
                                     }
-                                    if(Math.random() < 0.05){
+                                    if(Math.random() < 0.05 * fpsCompensation){
                                         this.ships[ship].prevActionSide = Math.abs(this.ships[ship].prevActionSide - 1);
                                     }
                                     if(this.ships[ship].prevActionSide){
@@ -3253,7 +3292,7 @@ var vis = {
                                         this.ships[ship].pos[0],
                                         this.ships[ship].pos[1],
                                         moveAngle,
-                                        this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                        (this.settings.shipChase * (Math.random() * 0.85 + 0.15)) * fpsCompensation
                                     );
                                     this.ships[ship].pos[0] = moveCoords[0];
                                     this.ships[ship].pos[1] = moveCoords[1];
@@ -3263,7 +3302,7 @@ var vis = {
                                         this.ships[ship].pos[0],
                                         this.ships[ship].pos[1],
                                         moveAngle,
-                                        this.settings.shipChase * (Math.random() * 0.85 + 0.15)
+                                        (this.settings.shipChase * (Math.random() * 0.85 + 0.15)) * fpsCompensation
                                     );
                                     this.ships[ship].pos[0] = moveCoords[0];
                                     this.ships[ship].pos[1] = moveCoords[1];
@@ -3272,26 +3311,26 @@ var vis = {
                             case "dodge":
                                 var ms = Date.now();
                                 if(this.ships[ship].dodging === dodging && ms - this.ships[ship].lastDodge < this.settings.dodgeTime){
-                                    dodgeAngle = this.ships[ship].dodgeAngle + Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
+                                    dodgeAngle = this.ships[ship].dodgeAngle + (Math.random() * this.settings.shipWander * 2 - this.settings.shipWander) * fpsCompensation;
                                     this.ships[ship].dodgeAngle = dodgeAngle;
                                 }else{
                                     this.ships[ship].lastDodge = ms;
                                     this.ships[ship].dodging = dodging;
-                                    dodgeAngle = Math.round(Math.random() * 360) + Math.random() * this.settings.shipWander * 2 - this.settings.shipWander;
+                                    dodgeAngle = Math.round(Math.random() * 360) + (Math.random() * this.settings.shipWander * 2 - this.settings.shipWander) * fpsCompensation;
                                     this.ships[ship].dodgeAngle = dodgeAngle;
                                 }
                                 var newPos = this.pointFromAngle(
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     dodgeAngle,
-                                    this.settings.shipChase
+                                    this.settings.shipChase * fpsCompensation
                                 );
                                 this.ships[ship].pos[0] = newPos[0];
                                 this.ships[ship].pos[1] = newPos[1];
                                 break;
                             default:
                                 this.ships[ship].dodging = null;
-                                this.ships[ship].wanderDirection += Math.random() * this.settings.shipWander - (this.settings.shipWander / 2);
+                                this.ships[ship].wanderDirection += (Math.random() * this.settings.shipWander - (this.settings.shipWander / 2)) * fpsCompensation;
                                 if(this.ships[ship].wanderDirection > 360){
                                     this.ships[ship].wanderDirection -= 360;
                                 }else if(this.ships[ship].wanderDirection < 0){
@@ -3301,7 +3340,7 @@ var vis = {
                                     this.ships[ship].pos[0],
                                     this.ships[ship].pos[1],
                                     this.ships[ship].wanderDirection,
-                                    this.settings.shipIdle
+                                    this.settings.shipIdle * fpsCompensation
                                 )
                         }
                     }
@@ -3717,7 +3756,7 @@ var vis = {
             // memory formula will remember this many frames
             soundMemory: 60, // 60 = appx 1 second
             // added to memory value, larger numbers make bots less sound sensitive
-            soundMemoryAdd: 8
+            soundMemoryAdd: 6
 
         },
 
@@ -4067,8 +4106,8 @@ function updateSmoke(leftpos, toppos, shortwidth, shortheight){
     }
 }
 function smokeFrame(){
-    smokePos[0] += 2;
-    smokePos[1]++;
+    smokePos[0] += 2 * fpsCompensation;
+    smokePos[1] += fpsCompensation;
     if(smokePos[0] >= 1000){
         smokePos[0] -= 1000;
     }
