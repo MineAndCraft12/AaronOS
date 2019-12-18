@@ -6842,7 +6842,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Desktop Background',
                     folderPath: 'apps.settings.vars.menus.background',
-                    image: 'settingIcons/beta/dsktpBack.png',
+                    image: 'settingIcons/new/background.png',
                     setUrl: {
                         option: 'Background Image URL',
                         description: function(){return 'Set an image as your desktop background. This can be png, jpg, gif, or any other web-compatible image. If aOS is loaded over HTTPS, make sure your image is on HTTPS as well.'},
@@ -6879,7 +6879,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Performance',
                     folderPath: 'apps.settings.vars.menus.performance',
-                    image: 'settingIcons/beta/performance.png',
+                    image: 'settingIcons/new/performance.png',
                     perfMode: {
                         option: 'Performance Mode',
                         description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.performanceMode)">' + numtf(apps.settings.vars.performanceMode) + '</span>; Performance Mode attempts to raise framerate by lowering the CPU usage of some system functions'},
@@ -6922,7 +6922,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Information',
                     folderPath: 'apps.settings.vars.menus.info',
-                    image: 'settingIcons/beta/info.png',
+                    image: 'settingIcons/new/information.png',
                     copyright: {
                         option: 'Copyright Notice',
                         description: function(){return 'AaronOS is &copy; <i>2016 Aaron Adams</i>'}, //         <-- COPYRIGHT NOTICE
@@ -7041,7 +7041,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Screen Resolution',
                     folderPath: 'apps.settings.vars.menus.screenRes',
-                    image: 'settingIcons/beta/screenRes.png',
+                    image: 'settingIcons/new/resolution.png',
                     fullscreen: {
                         option: 'Full Screen',
                         description: function(){return 'Puts aOS into fullscreen, so it does not look like it has been loaded into a browser. You <i>may</i> need to Fit aOS to Window after toggling.'},
@@ -7082,7 +7082,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Windows',
                     folderPath: 'apps.settings.vars.menus.windows',
-                    image: 'settingIcons/beta/windows.png',
+                    image: 'settingIcons/new/windows.png',
                     capBtnLeft: {
                         option: 'Window Controls on Left',
                         description: function(){return 'Moves the window control buttons to the left side of the titlebar.'},
@@ -7143,7 +7143,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Taskbar',
                     folderPath: 'apps.settings.vars.menus.taskbar',
-                    image: 'settingIcons/beta/taskbar.png',
+                    image: 'settingIcons/new/taskbar.png',
                     taskbarPos: {
                         option: 'Taskbar Position',
                         description: function(){return 'Change the position of the taskbar on the screen.'},
@@ -7159,7 +7159,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Dashboard',
                     folderPath: 'apps.settings.vars.menus.dashboard',
-                    image: 'settingIcons/beta/dashboard.png',
+                    image: 'settingIcons/new/dashboard.png',
                     dashDefault: {
                         option: 'Default Dashboard',
                         description: function(){return 'The default Dashboard of AaronOS. Features quick shortcuts at the top and a searchable list of apps along with their three-letter IDs.'},
@@ -7185,7 +7185,7 @@ c(function(){
                     folder: 0,
                     folderName: 'NORAA',
                     folderPath: 'apps.settings.vars.menus.noraa',
-                    image: 'settingIcons/beta/noraa.png',
+                    image: 'settingIcons/new/noraa.png',
                     advHelp: {
                         option: 'Advanced Help Pages',
                         description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.noraHelpTopics)">' + numtf(apps.settings.vars.noraHelpTopics) + '</span>; NORAA returns more advanced help pages when you ask for OS help, instead of plain text.'},
@@ -7216,6 +7216,7 @@ c(function(){
                     folder: 0,
                     folderName: "Smart Icons",
                     folderPath: "apps.settings.vars.menus.smartIcons",
+                    image: 'settingIcons/new/smartIcon_fg.png',
                     autoRedirectToApp: {
                         option: "Smart Icon Settings",
                         description: function(){return "Click below to open the Smart Icon Settings app."},
@@ -7233,6 +7234,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Clipboard',
                     folderPath: 'apps.settings.vars.menus.clipboard',
+                    image: 'settingIcons/new/clipboard.png',
                     size: {
                         option: 'Clipboard Slots',
                         description: function(){return 'Current: <span class="liveElement" data-live-eval="textEditorTools.slots">' + textEditorTools.slots + '</span>. Number of slots in your clipboard. An excessively large clipboard may be difficult to manage.'},
@@ -7248,6 +7250,7 @@ c(function(){
                     folder: 0,
                     folderName: "Screen Saver",
                     folderPath: "apps.settings.vars.menus.screensaver",
+                    image: 'settingIcons/new/screensaver.png',
                     enable: {
                         option: "Enable Screen Saver",
                         description: function(){return "Current: " + numtf(apps.settings.vars.screensaverEnabled) + ". Enable the aOS Screensaver."},
@@ -7290,6 +7293,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Language',
                     folderPath: 'apps.settings.vars.menus.language',
+                    image: 'settingIcons/new/language.png',
                     currentLanguage: {
                         option: 'Current Language',
                         description: function(){return languagepacks[currentlanguage]},
@@ -7310,6 +7314,7 @@ c(function(){
                     folder: 0,
                     folderName: 'Advanced',
                     folderPath: 'apps.settings.vars.menus.advanced',
+                    image: 'settingIcons/new/advanced.png',
                     trustedApps: {
                         option: 'Trusted Apps',
                         description: function(){return 'This is a list of all external apps that you have allowed to use permissions on aOS. The list is JSON-encoded.';},
@@ -7332,25 +7337,30 @@ c(function(){
                 if(menu === 'oldMenu'){
                     openapp(apps.settings, 'oldMenu');
                 }else{
-                    apps.settings.appWindow.setContent('<div id="STNmenuDiv" style="font-family:aosProFont, monospace;font-size:12px;width:calc(100% - 3px);height:100%;overflow:auto"><span style="font-size:36px">' + menu.folderName + ' <button onclick="apps.settings.vars.showMenu(apps.settings.vars.menus)" style="float:right;margin:8px">Home</button></span><br><br></div>');
+                    apps.settings.appWindow.setContent(
+                        '<div id="STNmenuDiv" style="font-family:aosProFont, monospace;font-size:12px;width:calc(100% - 3px);height:100%;overflow:auto">' +
+                        '<span style="font-size:36px">' + menu.folderName +
+                        ' <button onclick="apps.settings.vars.showMenu(apps.settings.vars.menus)" style="float:right;margin:8px">Home</button>' +
+                        '</span><br><br></div>'
+                    );
                     if(menu.folder === 1){
-                        getId("STNmenuDiv").innerHTML += '<hr><table id="STNmenuTable" style="width:100%;"></table>';
-                        var j = 0;
-                        var appendStr = '<tr class="STNtableTR">';
+                        getId("STNmenuDiv").innerHTML += '<hr><div id="STNmenuTable" style="width:100%;position:relative;"></div>';
+                        //var j = 0;
+                        var appendStr = '';
                         for(var i in menu){
                             if(i !== 'folder' && i !== 'folderName' && i !== 'folderPath' && i !== 'image' && i !== 'oldMenu'){
-                                if(j % 3 === 0 && j !== 0){
-                                    appendStr += '</tr><tr class="STNtableTR">';
-                                }
+                                //if(j % 3 === 0 && j !== 0){
+                                //    appendStr += '</tr><tr class="STNtableTR">';
+                                //}
                                 if(menu[i].image){
-                                    appendStr += '<td class="STNtableTD cursorPointer" onclick="apps.settings.vars.showMenu(' + menu[i].folderPath + ')"><img src="' + menu[i].image + '" style="max-width:75px;max-height:75px;' + darkSwitch('', 'filter:invert(1);') + '"><br>' + menu[i].folderName + '</td>';
+                                    appendStr += '<div class="STNtableTD cursorPointer" onclick="apps.settings.vars.showMenu(' + menu[i].folderPath + ')"><img src="' + menu[i].image + '" style="margin-bottom:-12px;width:32px;height:32px;margin-right:3px;' + darkSwitch('', 'filter:invert(1);') + '"> ' + menu[i].folderName + '</div>';
                                 }else{
-                                    appendStr += '<td class="STNtableTD cursorPointer" onclick="apps.settings.vars.showMenu(' + menu[i].folderPath + ')">' + menu[i].folderName + '</td>';
+                                    appendStr += '<div class="STNtableTD cursorPointer" onclick="apps.settings.vars.showMenu(' + menu[i].folderPath + ')"><div style="margin-bottom:-12px;width:32px;height:32px;margin-right:3px;position:relative;display:inline-block;"></div> ' + menu[i].folderName + '</div>';
                                 }
-                                j++;
+                                //j++;
                             }
                         }
-                        getId('STNmenuTable').innerHTML += appendStr + '</tr>';
+                        getId('STNmenuTable').innerHTML += appendStr;
                     }else{
                         for(var i in menu){
                             if(i !== 'folder' && i !== 'folderName' && i !== 'folderPath' && i !== 'image'){
@@ -9684,10 +9694,11 @@ c(function(){
             "11/23/2019: B1.2.2.2\n : Fixed Glass Distortion preference not saving properly.\n\n" +
             "11/26/2019: B1.2.2.3\n : Fixed Glass Distortion texture not lining up with Window Border texture. (texture was anchored to top, shader was anchored to bottom. both are now bottom)\n + New Smart Icon for window glass test app.\n + New Smart Icon for Blast in the Hub.\n + New icon for Glass Windows style in the Hub.\n\n" +
             "12/14/2019: B1.2.2.4\n + Added FPS compensation to the Blast game. Ships and lasers now run the correct speed regardless of the FPS.\n\n" +
-            "12/17/2019: B1.2.2.5\n : Introduction screen to Music Player is far more user-friendly.\n + Added Tiles visualizer to Music player.\n + Improved smoke effect in Music Player. Looks like actual smoke rather than a scrolling image.\n + Added FPS compensation to Music Player (MPl). Allows things to move the correct speed at high/low FPS.\n + FPS compensation for Smoke effect in MPl.\n + FPS compensation in Blast for MPl.\n + Better beat detection in Blast for MPl, velocity-based.\n : Slightly raised sensitivity for Blast in MPl.\n + Added FPS compensation to Rings and Ghost Rings in MPl.",
+            "12/17/2019: B1.2.2.5\n : Introduction screen to Music Player is far more user-friendly.\n + Added Tiles visualizer to Music player.\n + Improved smoke effect in Music Player. Looks like actual smoke rather than a scrolling image.\n + Added FPS compensation to Music Player (MPl). Allows things to move the correct speed at high/low FPS.\n + FPS compensation for Smoke effect in MPl.\n + FPS compensation in Blast for MPl.\n + Better beat detection in Blast for MPl, velocity-based.\n : Slightly raised sensitivity for Blast in MPl.\n + Added FPS compensation to Rings and Ghost Rings in MPl.\n\n" +
+            "12/18/2019: B1.2.3.0\n : Completely redid the main menu for Settings.\n : Adjusted ground reflection effect in Monstercat and Obelisks for MPl.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.2.5 (12/17/2019) r2';
+    window.aOSversion = 'B1.2.3.0 (12/18/2019) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

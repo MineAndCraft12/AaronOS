@@ -1195,7 +1195,7 @@ var vis = {
             var maxHeight = size[1] * 0.5 - size[1] * 0.2;
             
             var monstercatGradient = canvas.createLinearGradient(0, Math.round(size[1] / 2) + 4, 0, size[1]);
-            monstercatGradient.addColorStop(0, 'rgba(0, 0, 0, 0.9)');
+            monstercatGradient.addColorStop(0, 'rgba(0, 0, 0, 0.75)');
             monstercatGradient.addColorStop(0.1, 'rgba(0, 0, 0, 1)');
             canvas.fillStyle = monstercatGradient;
             canvas.fillRect(0, Math.round(size[1] / 2) + 4, size[0], Math.round(size[1] / 2) - 4);
@@ -1261,7 +1261,7 @@ var vis = {
             var maxHeight = size[1] * 0.5 - size[1] * 0.2;
 
             var monstercatGradient = canvas.createLinearGradient(0, Math.round(size[1] / 2) + 4, 0, size[1]);
-            monstercatGradient.addColorStop(0, 'rgba(0, 0, 0, 0.9)');
+            monstercatGradient.addColorStop(0, 'rgba(0, 0, 0, 0.75)');
             monstercatGradient.addColorStop(0.1, 'rgba(0, 0, 0, 1)');
             canvas.fillStyle = monstercatGradient;
             canvas.fillRect(0, Math.round(size[1] / 2) + 4, size[0], Math.round(size[1] / 2) - 4);
