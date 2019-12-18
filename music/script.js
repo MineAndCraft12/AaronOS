@@ -528,8 +528,9 @@ var fps = 0;
 var currFPS = "0";
 var lastSecond = 0;
 var fpsEnabled = 0;
+var debugForce = 0;
 function toggleFPS(){
-    fpsEnabled = Math.abs(fpsEnabled - 1);
+    debugForce = Math.abs(debugForce - 1);
 }
 
 var canvasElement = getId("visCanvas");
@@ -606,7 +607,7 @@ function globalFrame(){
             smokeFrame();
         }
         // if debug enabled, store current data values
-        var debugEnabled = (window.location.href.indexOf("debug") > -1);
+        var debugEnabled = debugForce || (window.location.href.indexOf("debug") > -1);
         
         if(debugEnabled && currMod){
             var oldVisData = [];
@@ -630,7 +631,7 @@ function globalFrame(){
             fps = 0;
             lastSecond = currSecond;
         }
-        if(debugEnabled){
+        if(debugEnabled || debugForce){
             canvas.font = '12px aosProFont, monospace';
             canvas.fillStyle = 'rgba(0, 0, 0, 0.5)';
             canvas.fillRect(1, 1, 14, 9);
@@ -2662,6 +2663,84 @@ var vis = {
             }
         }
     },
+    tiles: {
+        name: "Tiles",
+        image: "visualizers/tiles.png",
+        start: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var freqs = [];
+            for(var i = 0; i < 1024; i++){
+                freqs.push(i);
+            }
+            for (var i = 1024; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = freqs[i];
+                freqs[i] = freqs[j];
+                freqs[j] = temp;
+            }
+            tiles = [];
+            var index = 0;
+            for(var i = 0; i < 32; i++){
+                this.tiles.push([]);
+                for(var j = 0; j < 32; j++){
+                    this.tiles[this.tiles.length - 1].push(freqs[index]);
+                    index++;
+                }
+            }
+            this.boxSize = [Math.round(size[0] / 32), Math.round(size[1] / 32)];
+        },
+        sizechange: function(){
+            canvas.clearRect(0, 0, size[0], size[1]);
+            smoke.clearRect(0, 0, size[0], size[1]);
+            var freqs = [];
+            for(var i = 0; i < 1024; i++){
+                freqs.push(i);
+            }
+            for (var i = 1024; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var temp = freqs[i];
+                freqs[i] = freqs[j];
+                freqs[j] = temp;
+            }
+            tiles = [];
+            var index = 0;
+            for(var i = 0; i < 32; i++){
+                this.tiles.push([]);
+                for(var j = 0; j < 32; j++){
+                    this.tiles[this.tiles.length - 1].push(freqs[index]);
+                    index++;
+                }
+            }
+            this.boxSize = [Math.round(size[0] / 32), Math.round(size[1] / 32)];
+        },
+        frame: function(){
+            if(smokeEnabled){
+                smoke.clearRect(0, 0, size[0], size[1]);
+            }else{
+                canvas.clearRect(0, 0, size[0], size[1]);
+            }
+            for(var i = 0; i < 32; i++){
+                for(var j = 0; j < 32; j++){
+                    var strength = visData[this.tiles[i][j]];
+                    var color = getColor(strength);
+                    if(smokeEnabled){
+                        smoke.fillStyle = color;
+                        smoke.fillRect(i * this.boxSize[0], j * this.boxSize[1], this.boxSize[0], this.boxSize[1]);
+                    }else{
+                        canvas.fillStyle = color;
+                        canvas.fillRect(i * this.boxSize[0], j * this.boxSize[1], this.boxSize[0], this.boxSize[1]);
+                    }
+                }
+            }
+        },
+        stop: function(){
+            this.tiles = [];
+            this.boxSize = [];
+        },
+        tiles: [],
+        boxSize: []
+    },
     solidColor: {
         name: "Solid Color",
         image: "visualizers/solidColor.png",
@@ -3042,7 +3121,7 @@ var vis = {
 
 
             // debug drawing
-            if(window.location.href.indexOf("debug") !== -1){
+            if(window.location.href.indexOf("debug") !== -1 || debugForce){
                 canvas.fillStyle = "#0F0";
                 if(this.soundShoot){
                     canvas.fillRect(10, size[1] - 285, 10, 10);
@@ -4135,9 +4214,9 @@ function smokeFrame(){
 resizeSmoke();
 
 var featuredVis = {
-    spikes1to1: 1,
     bassCircle: 1,
     monstercat: 1,
+    tiles: 1,
     blast: 1
 };
 

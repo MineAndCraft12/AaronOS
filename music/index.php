@@ -8,18 +8,34 @@
     <body style="margin:0;padding:0;width:100%;height:100%;overflow:hidden;">
         <div class="winHTML" style="width:calc(100% - 8px);height:calc(100% - 6px);margin:0;padding:3px;padding-right:5px;overflow-y:auto;overflow-x:hidden">
             <div id="introduction">
-                AaronOS Music Player: Your files are not uploaded; everything stays on your computer.<br><br>
-                Load a folder of music files:<br>
-                <input type="file" id="folderInput" webkitdirectory directory multiple onchange="loadFolder()"><br><br>
-                Load one or multiple individual files:<br>
-                <input type="file" id="fileInput" multiple accept="audio/*" onchange="loadFiles()"><br><br>
-                Weird filetype or not recognized? Use this one:<br>
-                <input type="file" id="fileWeirdInput" multiple onchange="loadWeirdFiles()"><br>
-                (mobile users, you might need to use this one)<br><br>
-                Or, hook up your microphone to play with the visualizers.<br>
-                <button onclick="loadMicrophone()">Microphone</button><br><br><br>
-                <i>Visualizations in the list whose thumbnails use the Rainbow color scheme are modeled after the AudioVision app for Android.<br>
-                Those visualizations' designs were created by &Scaron;tefan Schindler.</i>
+                <h1 style="text-align:center">AaronOS Music</h1>
+                <div style="text-align:center; position:relative; margin-top:-16px; margin-bottom:-16px;">
+                    <div class="selectIcon">
+                        <input type="file" id="folderInput" webkitdirectory directory multiple onchange="loadFolder()">
+                        <img src="icons/folder.png" style="pointer-events:none;">
+                        <span>Folder</span>
+                    </div>
+                    <div class="selectIcon">
+                        <input type="file" id="fileInput" multiple accept="audio/*" onchange="loadFiles()">
+                        <img src="icons/files.png" style="pointer-events:none;">
+                        <span>Files</span>
+                    </div>
+                    <div class="selectIcon">
+                        <input type="file" id="fileWeirdInput" multiple onchange="loadWeirdFiles()">
+                        <img src="icons/mobile.png" style="pointer-events:none;">
+                        <span>Mobile</span>
+                    </div>
+                </div>
+                <div style="text-align:center;max-width:500px;margin:auto;">
+                    Or, hook up your microphone to play with the visualizers.<br><br>
+                    <button onclick="loadMicrophone()">Microphone</button><br><br><br>
+                    <i>
+                        Your files are not uploaded and will not leave your device.
+                        <br><br>
+                        Visualizations in the list whose thumbnails use the Rainbow color scheme are modeled after the AudioVision app for Android.<br><br>
+                        The AudioVision designs were created by &Scaron;tefan Schindler.
+                    </i>
+                </div>
             </div>
             <div id="currentlyPlaying" class="disabled">No Song Playing</div>
             <div id="controls" class="disabled">
