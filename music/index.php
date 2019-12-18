@@ -44,6 +44,8 @@
             <div id="songList" class="disabled"></div>
             <div id="visualizer" class="disabled">
                 <canvas id="smokeCanvas"></canvas>
+                <div id="smokeScreen1"></div>
+                <div id="smokeScreen2"></div>
                 <canvas id="visCanvas" onclick="toggleFullscreen()"></canvas>
             </div>
             <div id="selectOverlay" class="disabled">

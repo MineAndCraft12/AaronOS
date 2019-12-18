@@ -122,6 +122,8 @@ function loadFolder(event){
     }
     if(!smokeEnabled){
         smokeElement.classList.add("disabled");
+        smokeScreen1.classList.add("disabled");
+        smokeScreen2.classList.add("disabled");
     }
     
     audioContext = new AudioContext();
@@ -297,6 +299,8 @@ function loadMicrophone(event){
     }
     if(!smokeEnabled){
         smokeElement.classList.add("disabled");
+        smokeScreen1.classList.add("disabled");
+        smokeScreen2.classList.add("disabled");
     }
     
     audioContext = new AudioContext();
@@ -4069,18 +4073,28 @@ for(var i in mods){
 
 var smokeEnabled = 0;
 var smokePos = [0, 0];
+var smokeScreen1 = getId("smokeScreen1");
+var smokeScreen2 = getId("smokeScreen2");
 function toggleSmoke(){
     if(smokeEnabled){
         smokeElement.style.filter = "";
         smoke.clearRect(0, 0, size[0], size[1]);
         smokeElement.classList.add("disabled");
+        smokeScreen1.classList.add("disabled");
+        smokeScreen2.classList.add("disabled");
+        /*
         canvasElement.style.backgroundPosition = "";
         canvasElement.style.backgroundImage = "";
+        */
         smokeEnabled = 0;
     }else{
         smokeElement.classList.remove("disabled");
+        smokeScreen1.classList.remove("disabled");
+        smokeScreen2.classList.remove("disabled");
+        /*
         canvasElement.style.backgroundPosition = "0px 0px";
         canvasElement.style.backgroundImage = "url(smoke_transparent.png)";
+        */
         smokeEnabled = 1;
         resizeSmoke();
         if(vis[currVis].sizechange){
@@ -4093,9 +4107,9 @@ function resizeSmoke(){
     smokeElement.height = size[1];
     if(smokeEnabled){
         if(performanceMode){
-            smokeElement.style.filter = "blur(" + Math.round((size[0] * 2 + size[1] * 2) / 50) + "px) brightness(3)";
+            smokeElement.style.filter = "blur(" + Math.round((size[0] * 2 + size[1] * 2) / 50) + "px) brightness(4)";
         }else{
-            smokeElement.style.filter = "blur(" + Math.round((size[0] + size[1]) / 50) + "px) brightness(3)";
+            smokeElement.style.filter = "blur(" + Math.round((size[0] + size[1]) / 50) + "px) brightness(4)";
         }
     }
 }
@@ -4114,7 +4128,8 @@ function smokeFrame(){
     if(smokePos[1] >= 1000){
         smokePos[1] -= 1000;
     }
-    canvasElement.style.backgroundPosition = smokePos[0] + "px " + smokePos[1] + "px";
+    smokeScreen1.style.backgroundPosition = smokePos[0] + "px " + smokePos[1] + "px";
+    smokeScreen2.style.backgroundPosition = (smokePos[1] + 250) + "px " + (smokePos[0] - 175) + "px";
 }
 
 resizeSmoke();
