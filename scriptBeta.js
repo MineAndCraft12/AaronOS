@@ -15443,7 +15443,7 @@ c(function(){
                     URL.revokeObjectURL(this.src);
                 }
             }
-        }, 0, 'textBinary', 'appicons/ds/CAM.png'
+        }, 1, 'textBinary', 'appicons/ds/CAM.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Pet Cursors';
 });
