@@ -1797,23 +1797,30 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
         if(typeof this.appWindow.appImg === "string"){
             this.appWindow.appImg = {foreground:this.appWindow.appImg};
         }
-        if(this.appWindow.appImg){
-            getId("desktop").innerHTML +=
-                '<div class="app cursorPointer" id="app_' + appPath + '" oncontextmenu="ctxMenu(baseCtx.appXXX, 1, event, [event, \'' + appPath + '\', \'' + appIcon + '\'])">' +
-                //'<div class="appIcon" id="ico_' + appPath + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
-                '<div class="appIcon" id="ico_' + appPath + '" style="pointer-events:none">' + buildSmartIcon(64, this.appWindow.appImg) + '</div>' +
-                '<div class="appDesc" id="dsc_' + appPath + '">' + this.appDesc + '</div>' +
-                '</div></div>';
-        }else{
-            getId("desktop").innerHTML +=
-                '<div class="app cursorPointer" id="app_' + appPath + '" oncontextmenu="ctxMenu(baseCtx.appXXX, 1, event, [event, \'' + appPath + '\', \'' + appIcon + '\'])">' +
-                '<div class="appIcon" id="ico_' + appPath + '">' + appIcon + '</div>' +
-                '<div class="appDesc" id="dsc_' + appPath + '">' + this.appDesc + '</div>' +
-                '</div></div>';
-        }
+        //if(this.appWindow.appImg){
+            //getId("desktop").innerHTML +=
+            //    '<div class="app cursorPointer" id="app_' + appPath + '" oncontextmenu="ctxMenu(baseCtx.appXXX, 1, event, [event, \'' + appPath + '\', \'' + appIcon + '\'])">' +
+            //    //'<div class="appIcon" id="ico_' + appPath + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
+            //    '<div class="appIcon" id="ico_' + appPath + '" style="pointer-events:none">' + buildSmartIcon(64, this.appWindow.appImg) + '</div>' +
+            //    '<div class="appDesc" id="dsc_' + appPath + '">' + this.appDesc + '</div>' +
+            //    '</div></div>';
+        //}else{
+            //getId("desktop").innerHTML +=
+            //    '<div class="app cursorPointer" id="app_' + appPath + '" oncontextmenu="ctxMenu(baseCtx.appXXX, 1, event, [event, \'' + appPath + '\', \'' + appIcon + '\'])">' +
+            //    '<div class="appIcon" id="ico_' + appPath + '">' + appIcon + '</div>' +
+            //    '<div class="appDesc" id="dsc_' + appPath + '">' + this.appDesc + '</div>' +
+            //    '</div></div>';
+        //}
         this.keepOffDesktop = keepOffDesktop;
-        if(!keepOffDesktop){
-            appTotal++;
+        if(!this.keepOffDesktop){
+            newDsktpIcon(appPath, appPath, null, this.appDesc, this.appWindow.appImg,
+                ['arg', 'openapp(apps[arg], "dsktp");'], [appPath],
+                ['arg1', 'arg2', 'ctxMenu(baseCtx.appXXX, 1, event, [event, arg1, arg2]);'], [appPath, appIcon],
+                1
+            );
+        }
+        //if(!keepOffDesktop){
+        //    appTotal++;
             //these two lines all to determine the app's location on the desktop. phew!
             //that big comment is the old version; this new one is more accurate and also works to infinite total apps; in theory
             /*
@@ -1825,16 +1832,16 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             getId("app" + appIcon).style.left = (8 + (Math.floor(appTotal / (Math.floor(window.innerHeight + 78) / 95))) * 108) + "px";
             getId("app" + appIcon).style.top = (8 + ((appTotal - 1) % Math.floor((window.innerHeight - 30) / 83) * 83)) + "px";
             */
-            getId("app_" + appPath).style.left = appPosX + "px";
-            getId("app_" + appPath).style.top = appPosY + "px";
-            appPosY += 98;
-            if(appPosY > window.innerHeight - 105){
-                appPosY = 8;
-                appPosX += 108;
-            }
-        }else{
-            getId("app_" + appPath).style.display = "none";
-        }
+        //    getId("app_" + appPath).style.left = appPosX + "px";
+        //    getId("app_" + appPath).style.top = appPosY + "px";
+        //    appPosY += 98;
+        //    if(appPosY > window.innerHeight - 105){
+        //        appPosY = 8;
+        //        appPosX += 108;
+        //    }
+        //}else{
+        //    getId("app_" + appPath).style.display = "none";
+        //}
         getId("desktop").innerHTML +=
             '<div class="window closedWindow" id="win_' + appPath + '_top">' +
             '<div class="winAero" id="win_' + appPath + '_aero"></div>' +
@@ -1869,7 +1876,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
         getId("win_" + appPath + "_size").setAttribute("onmousedown", "if(!apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winres(event);}event.preventDefault();return false;}");
         getId("win_" + appPath + "_cap").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winmove(event);}event.preventDefault();return false;}");
         getId("win_" + appPath + "_size").setAttribute("onclick", "if(apps.settings.vars.clickToMove){if(event.button!==2){toTop(apps." + appPath + ");winres(event);}event.preventDefault();return false;}");
-        getId("app_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", 'dsktp')");
+        //getId("app_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", 'dsktp')");
         getId("icn_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", function(){if(apps." + appPath + ".appWindow.appIcon){return 'tskbr'}else{return 'dsktp'}}())");
         getId("win_" + appPath + "_top").setAttribute("onClick", "toTop(apps." + appPath + ")");
         if(appPath !== 'startMenu' && appPath !== 'nora'){
@@ -2457,31 +2464,134 @@ function repoRemovePackage(query, callback){
     }
 }
 
+// desktop vars
+var dsktp = {};
+function newDsktpIcon(id, owner, position, title, icon, action, actionArgs, ctxAction, ctxActionArgs, nosave){
+    if(!id){
+        id = "uico_" + (new Date().getTime());
+    }
+    if(!title){
+        if(apps[owner]){
+            title = apps[owner].appDesc;
+        }else{
+            title = "Icon";
+        }
+    }
+    if(!icon){
+        if(apps[owner]){
+            icon = {...apps[owner].appWindow.appImg};
+        }else{
+            icon = {...apps.startMenu.appWindow.appImg};
+        }
+    }
+    if(typeof icon === "string"){
+        icon = {foreground: icon};
+    }
+    if(!action){
+        if(apps[owner]){
+            action = [
+                'arg',
+                'openapp(apps[arg], "dsktp");'
+            ];
+            actionArgs = [owner];
+        }else{
+            action = [
+                'apps.prompt.vars.alert("This icon has no assigned action.", "Okay.", function(){}, "AaronOS");'
+            ];
+            actionArgs = [];
+        }
+    }
+    if(typeof action === "string"){
+        action = [action];
+    }
+    if(!actionArgs){
+        actionArgs = [];
+    }
+    if(!ctxAction){
+        if(apps[owner]){
+            ctxAction = [
+                'arg1', 'arg2',
+                'ctxMenu(baseCtx.appXXX, 1, event, [event, arg1, arg2]);'
+            ]
+            ctxActionArgs = [id, apps[owner].dsktpIcon];
+        }else{
+            ctxAction = [
+                'arg1',
+                'ctxMenu(baseCtx.appXXX, 1, event, [event, arg1, "aOS"]);'
+            ];
+            ctxActionArgs = [id];
+        }
+    }
+    if(typeof ctxAction === "string"){
+        ctxAction = [ctxAction];
+    }
+    if(!ctxActionArgs){
+        ctxActionArgs = [];
+    }
+    dsktp[id] = {
+        id: id,
+        owner: owner,
+        position: position,
+        title: title,
+        icon: icon,
+        action: action,
+        actionArgs: actionArgs || [],
+        ctxAction: ctxAction,
+        ctxActionArgs: ctxActionArgs || []
+    };
+    if(getId("app_" + id)){
+        getId("dsktp").removeChild(getId("app_" + id));
+    }
+    var tempIco = document.createElement("div");
+    tempIco.classList.add("app");
+    tempIco.classList.add("cursorPointer");
+    tempIco.id = "app_" + id;
+    tempIco.setAttribute("data-icon-id", id);
+    tempIco.setAttribute("onclick", 'Function(...dsktp[this.getAttribute("data-icon-id")].action)(...dsktp[this.getAttribute("data-icon-id")].actionArgs)');
+    tempIco.setAttribute('oncontextmenu', 'Function(...dsktp[this.getAttribute("data-icon-id")].ctxAction)(...dsktp[this.getAttribute("data-icon-id")].ctxActionArgs)');
+    tempIco.innerHTML = '<div class="appIcon" id="ico_' + id + '" style="pointer-events:none">' +
+        buildSmartIcon(64, icon) +
+        '</div>' +
+        '<div class="appDesc" id="dsc_' + id + '">' + title + '</div>';
+    getId("desktop").appendChild(tempIco);
+    if(!nosave){
+        ufsave("aos_system/desktop/user_icons/ico_" + id, JSON.stringify(dsktp[id]));
+    }
+    arrangeDesktopIcons();
+    console.log("yeet");
+}
+function removeDsktpIcon(id, nosave){
+    if(dsktp[id]){
+        delete dsktp[id];
+        getId("desktop").removeChild(getId("app_" + id));
+        if(!nosave){
+            if(ufload("aos_system/desktop/user_icons/ico_" + id)){
+                ufdel("aos_system/desktop/user_icons/ico_" + id);
+            }else{
+                ufsave("aos_system/desktop/user_icons/ico_" + id, JSON.stringify({"removed": "true", "id": id}));
+            }
+        }
+        arrangeDesktopIcons();
+    }
+};
+
 function arrangeDesktopIcons(){
     appTotal = 0;
     appPosX = 8;
     appPosY = 8;
-    for(var app in apps){
-        try{
-            if(!apps[app].keepOffDesktop){
-                if(!ufload("aos_system/desktop/ico_app_" + app)){
-                    appTotal++;
-                    getId("app_" + app).style.left = appPosX + "px";
-                    getId("app_" + app).style.top = appPosY + "px";
-                    appPosY += 98;
-                    if(appPosY > parseInt(getId('monitor').style.height) - 105){
-                        appPosY = 8;
-                        appPosX += 108;
-                    }
-                }else{
-                    getId("app_" + app).style.left = JSON.parse(ufload("aos_system/desktop/ico_app_" + app))[0] + "px";
-                    getId("app_" + app).style.top = JSON.parse(ufload("aos_system/desktop/ico_app_" + app))[1] + "px";
-                }
-            }else{
-                getId("app_" + app).style.display = "none";
+    for(var ico in dsktp){
+        if(!dsktp[ico].position){
+            appTotal++;
+            getId("app_" + ico).style.left = appPosX + "px";
+            getId("app_" + ico).style.top = appPosY + "px";
+            appPosY += 98;
+            if(appPosY > parseInt(getId('monitor').style.height) - 105){
+                appPosY = 8;
+                appPosX += 108;
             }
-        }catch(err){
-            doLog("Error arranging icons - " + err, "#F00");
+        }else{
+            getId("app_" + ico).style.left = dsktp[ico].position[0] + "px";
+            getId("app_" + ico).style.top = dsktp[ico].position[1] + "px";
         }
     }
 }
@@ -3436,6 +3546,34 @@ c(function(){
                 [' ' + lang('ctxMenu', 'openApp'), function(arg){
                     openapp(apps[arg], "dsktp");
                 }, 'ctxMenu/beta/window.png'],
+                [function(arg){
+                    if(dsktp[arg]){
+                        return '_Add Desktop Icon';
+                    }else{
+                        return '+Add Desktop Icon';
+                    }
+                }, function(arg){
+                    if(dsktp[arg]){
+                        removeDsktpIcon(arg);
+                    }else{
+                        newDsktpIcon(arg, arg);
+                    }
+                    openapp(apps.startMenu, 'tskbr');
+                }, 'ctxMenu/beta/add.png'],
+                [function(arg){
+                    if(dsktp[arg]){
+                        return ' Remove Desktop Icon';
+                    }else{
+                        return '-Remove Desktop Icon';
+                    }
+                }, function(arg){
+                    if(dsktp[arg]){
+                        removeDsktpIcon(arg);
+                    }else{
+                        newDsktpIcon(arg, arg);
+                    }
+                    openapp(apps.startMenu, 'tskbr');
+                }, 'ctxMenu/beta/x.png'],
                 ['+About This App', function(arg){
                     openapp(apps.appInfo, arg);
                 }, 'ctxMenu/beta/file.png'],
@@ -4767,8 +4905,9 @@ c(function(){
                     this.appWindow.setCaption('App Info: ' + apps[launchtype].appDesc);
                     this.appWindow.setContent(
                         '<div style="font-size:12px;font-family:aosProFont, monospace;top:0;right:0;color:#7F7F7F">' + apps[launchtype].dsktpIcon + '</div>' +
+                        '<div style="font-size:12px;font-family:aosProFont, monospace;top:0;left:0;color:#7F7F7F">' + launchtype + '</div>' +
                         //'<img src="' + apps[launchtype].appWindow.appImg + '" style="margin-left:calc(50% - 128px);width:256px;height:256px" onerror="this.src=\'appicons/ds/redx.png\'">' +
-                        buildSmartIcon(256, apps[launchtype].appWindow.appImg, 'margin-left:calc(50% - 128px);') +
+                        buildSmartIcon(256, apps[launchtype].appWindow.appImg, 'margin-left:calc(50% - 128px);margin-top:16px;') +
                         '<h1 style="text-align:center;">' + apps[launchtype].appDesc + '</h1>' +
                         '<hr>' + (apps[launchtype].vars.appInfo || "There is no help page for this app.")
                     );
@@ -8719,13 +8858,18 @@ c(function(){
                 this.appWindow.setDims("auto", "auto", 400, 500);
                 this.appWindow.setCaption('Desktop Icon Maker');
                 this.appWindow.setContent(
-                    '<h1>Desktop Icon Maker</h1><hr>' +
-                    'Position X: <input id="IcMleft" value="' + (Math.round(this.newlaunch[1] / 108) + 1) + '"><br>' +
-                    'Position Y: <input id="IcMtop" value="' + (Math.round(this.newlaunch[2] / 98) + 1) + '"><br><br>' +
+                    '<h1>New Icon</h1><hr>' +
+                    '<span style="display:none">' +
+                    'Horizontal tile position: <input id="IcMleft" value="' + (Math.round(this.newlaunch[1] / 108) + 1) + '"><br>' +
+                    'Vertical tile position: <input id="IcMtop" value="' + (Math.round(this.newlaunch[2] / 98) + 1) + '"><br><br>' +
+                    '</span>' +
                     'Type of shortcut: <button onclick="apps.iconMaker.vars.setType(0)" id="IcMapp">Application</button> <button onclick="apps.iconMaker.vars.setType(1)" id="IcMfile">JavaScript</button><br><br>' +
                     'Name of shortcut: <input id="IcMname"><br><br>' +
-                    'Enter the shortcut item path exactly as it appears in the Apps Browser, or if selected, enter JavaScript code.<br>' +
-                    '<input id="IcMpath"><br><br>' +
+                    'For Applications:<br>' +
+                    'Enter the ID of your target application below.<br>The ID can be found by right-clicking the titlebar of an application and selecting "About This App". It will be small text in the top-left corner of the popup which you can copy-paste into here.<br><br>' +
+                    'For JavaScript:<br>' +
+                    'Enter any JavaScript code into the field below, and it will run when you click your new desktop icon.' +
+                    '<input id="IcMpath" style="width:95%"><br><br>' +
                     '<button onclick="apps.iconMaker.vars.createIcon()">Create Desktop Icon</button>'
                 );
                 //set the icon type to 0 once the function is ready
@@ -8780,9 +8924,23 @@ c(function(){
                             var iconsFolder = ufload("aos_system/desktop/user_icons/");
                             if(iconsFolder){
                                 for(var file in iconsFolder){
-                                    if(file.indexOf('uico_') === 0){
-                                        if(iconsFolder[file].indexOf('[') === 0){
+                                    if(file.indexOf('ico_') === 0){
+                                        //if(iconsFolder[file].indexOf('[') === 0){
+                                        try{
                                             apps.iconMaker.vars.buildIcon(iconsFolder[file]);
+                                        }catch(err){
+                                            var temperrmsg = JSON.parse(iconsFolder[file]);
+                                            apps.prompt.vars.alert("Could not restore desktop icon for " + temperrmsg.title + ". Make sure " + temperrmsg[5].owner + " is installed.", "Okay", function(){}, "AaronOS");
+                                        }
+                                        //}
+                                    }
+                                    if(file.indexOf('uico_') === 0){
+                                        try{
+                                            apps.iconMaker.vars.buildIcon(iconsFolder[file]);
+                                            ufdel('aos_system/desktop/user_icons/' + file);
+                                        }catch(err){
+                                            var temperrmsg = JSON.parse(iconsFolder[file]);
+                                            apps.prompt.vars.alert("Could not restore desktop icon for " + temperrmsg[4] + ". Make sure " + temperrmsg[5] + " is installed.", "Okay", function(){}, "AaronOS");
                                         }
                                     }
                                 }
@@ -8814,50 +8972,128 @@ c(function(){
                 }
             },
             createIcon: function(icon, id){
+                //if(icon){
+                //    apps.savemaster.vars.save('aos_system/desktop/user_icons/uico_' + id, icon, 1);
+                //}else{
+                var donotsave = 0;
                 if(icon){
-                    apps.savemaster.vars.save('aos_system/desktop/user_icons/uico_' + id, icon, 1);
-                }else{
-                    if(parseInt(getId('IcMleft').value) > 0 && parseInt(getId('IcMtop').value) > 0 && getId('IcMname').value.length > 0 && getId('IcMpath').value.length > 0){
-                        var currMS = (new Date().getTime());
-                        if(this.type === 0){
-                            if(eval(getId('IcMpath').value) !== undefined){
-                                var tempIconObj = [
-                                    currMS,
+                    donotsave = 1;
+                }
+                if(parseInt(getId('IcMleft').value) > 0 && parseInt(getId('IcMtop').value) > 0 && getId('IcMname').value.length > 0 && getId('IcMpath').value.length > 0){
+                    var currMS = (new Date().getTime());
+                    if(this.type === 0){
+                        if(apps[getId('IcMpath').value] !== undefined){
+                            var tempIconObj = {
+                                id: currMS,
+                                owner: getId("IcMpath").value,
+                                position: [
                                     (parseInt(getId('IcMleft').value) - 1) * 108 + 8,
-                                    (parseInt(getId('IcMtop').value) - 1) * 98 + 8,
-                                    this.type,
-                                    getId('IcMname').value,
-                                    getId('IcMpath').value
-                                ];
-                                this.compiledIcon = JSON.stringify(tempIconObj);
-                                apps.savemaster.vars.save('aos_system/desktop/user_icons/uico_' + currMS, this.compiledIcon, 1);
-                                this.buildIcon(this.compiledIcon);
-                            }else{
-                                apps.prompt.vars.alert('The specified app could not be found. Please check that the file path to your app is spelled correctly.', 'Okay', function(){}, 'Icon Maker')
-                            }
-                        }else{
-                            var tempIconObj = [
-                                currMS,
-                                (parseInt(getId('IcMleft').value) - 1) * 108 + 8,
-                                (parseInt(getId('IcMtop').value) - 1) * 98 + 8,
-                                this.type,
-                                getId('IcMname').value,
-                                getId('IcMpath').value
-                            ];
+                                    (parseInt(getId('IcMtop').value) - 1) * 98 + 8
+                                ],
+                                title: getId('IcMname').value,
+                                icon: null,
+                                action: null,
+                                actionArgs: null,
+                                ctxAction: null,
+                                ctxActionArgs: null
+                            };
                             this.compiledIcon = JSON.stringify(tempIconObj);
-                            apps.savemaster.vars.save('aos_system/desktop/user_icons/uico_' + currMS, this.compiledIcon, 1);
+                            //apps.savemaster.vars.save('aos_system/desktop/user_icons/uico_' + currMS, this.compiledIcon, 1);
                             this.buildIcon(this.compiledIcon);
+                        }else{
+                            apps.prompt.vars.alert('The specified app could not be found. Please check that the file path to your app is spelled correctly.', 'Okay', function(){}, 'Icon Maker')
                         }
                     }else{
-                        apps.prompt.vars.alert('Please properly fill all fields.', 'Okay', function(){}, 'Icon Maker');
+                        var tempIconObj = {
+                            id: currMS,
+                            owner: null,
+                            position: [
+                                (parseInt(getId('IcMleft').value) - 1) * 108 + 8,
+                                (parseInt(getId('IcMtop').value) - 1) * 98 + 8
+                            ],
+                            title: getId('IcMname').value,
+                            icon: apps.jsConsole.appWindow.appImg,
+                            action: [
+                                getId("IcMpath").value
+                            ],
+                            actionArgs: null,
+                            ctxAction: [
+                                "arg1",
+                                "ctxMenu(baseCtx.appXXXjs, 1, event, [event, arg1]);"
+                            ],
+                            ctxActionArgs: [currMS],
+                            donotsave
+                        };
+                        this.compiledIcon = JSON.stringify(tempIconObj);
+                        //apps.savemaster.vars.save('aos_system/desktop/user_icons/uico_' + currMS, this.compiledIcon, 1);
+                        this.buildIcon(this.compiledIcon);
                     }
+                }else{
+                    apps.prompt.vars.alert('Please properly fill all fields.', 'Okay', function(){}, 'Icon Maker');
                 }
+                //}
             },
             iconClicks: {
                 
             },
-            buildIcon: function(icon){
+            buildIcon: function(icon, nosave){
                 apps.iconMaker.vars.decompiled = JSON.parse(icon);
+                if(icon[0] === '['){
+                    if(apps.iconMaker.vars.decompiled[3] === 0){
+                        newDsktpIcon(
+                            apps.iconMaker.vars.decompiled[0],
+                            apps.iconMaker.vars.decompiled[5].substring(5),
+                            [apps.iconMaker.vars.decompiled[1], apps.iconMaker.vars.decompiled[2]],
+                            apps.iconMaker.vars.decompiled[4],
+                            apps[apps.iconMaker.vars.decompiled[5].substring(5)].appWindow.appImg,
+                            [
+                                'arg',
+                                'openapp(apps[arg], "dsktp")'
+                            ],
+                            [apps.iconMaker.vars.decompiled[5].substring(5)],
+                            [
+                                "arg1",
+                                "ctxMenu(baseCtx.appXXX, 1, event, [event, arg1]);"
+                            ],
+                            [apps.iconMaker.vars.decompiled[0]]
+                        );
+                    }else if(apps.iconMaker.vars.decompiled[3] === 1){
+                        newDsktpIcon(
+                            apps.iconMaker.vars.decompiled[0],
+                            null,
+                            [apps.iconMaker.vars.decompiled[1], apps.iconMaker.vars.decompiled[2]],
+                            apps.iconMaker.vars.decompiled[4],
+                            apps.jsConsole.appWindow.appImg,
+                            [
+                                apps.iconMaker.vars.decompiled[5]
+                            ],
+                            [],
+                            [
+                                "arg1",
+                                "ctxMenu(baseCtx.appXXXjs, 1, event, [event, arg1]);"
+                            ],
+                            [apps.iconMaker.vars.decompiled[0]]
+                        );
+                    }
+                }else if(icon[0] === '{'){
+                    if(apps.iconMaker.vars.decompiled.removed){
+                        removeDsktpIcon(apps.iconMaker.vars.decompiled.id, 1);
+                    }else{
+                        newDsktpIcon(
+                            apps.iconMaker.vars.decompiled.id,
+                            apps.iconMaker.vars.decompiled.owner,
+                            apps.iconMaker.vars.decompiled.position,
+                            apps.iconMaker.vars.decompiled.title,
+                            apps.iconMaker.vars.decompiled.icon,
+                            apps.iconMaker.vars.decompiled.action,
+                            apps.iconMaker.vars.decompiled.actionArgs,
+                            apps.iconMaker.vars.decompiled.ctxAction,
+                            apps.iconMaker.vars.decompiled.ctxActionArgs,
+                            nosave
+                        );
+                    }
+                }
+                /*
                 if(apps.iconMaker.vars.decompiled[3]){
                     apps.iconMaker.vars.iconClicks['c' + apps.iconMaker.vars.decompiled[0]] = apps.iconMaker.vars.decompiled[5];
                     getId('desktop').innerHTML +=
@@ -8875,6 +9111,7 @@ c(function(){
                         '<div class="appDesc" id="dsc' + apps.iconMaker.vars.decompiled[0] + '">' + apps.iconMaker.vars.decompiled[4] + '</div>' +
                         '</div>';
                 }
+                */
             },
             moveSelect: '0',
             moveTo: [0, 0],
@@ -9695,10 +9932,10 @@ c(function(){
             "11/26/2019: B1.2.2.3\n : Fixed Glass Distortion texture not lining up with Window Border texture. (texture was anchored to top, shader was anchored to bottom. both are now bottom)\n + New Smart Icon for window glass test app.\n + New Smart Icon for Blast in the Hub.\n + New icon for Glass Windows style in the Hub.\n\n" +
             "12/14/2019: B1.2.2.4\n + Added FPS compensation to the Blast game. Ships and lasers now run the correct speed regardless of the FPS.\n\n" +
             "12/17/2019: B1.2.2.5\n : Introduction screen to Music Player is far more user-friendly.\n + Added Tiles visualizer to Music player.\n + Improved smoke effect in Music Player. Looks like actual smoke rather than a scrolling image.\n + Added FPS compensation to Music Player (MPl). Allows things to move the correct speed at high/low FPS.\n + FPS compensation for Smoke effect in MPl.\n + FPS compensation in Blast for MPl.\n + Better beat detection in Blast for MPl, velocity-based.\n : Slightly raised sensitivity for Blast in MPl.\n + Added FPS compensation to Rings and Ghost Rings in MPl.\n\n" +
-            "12/18/2019: B1.2.3.0\n : Completely redid the main menu for Settings.\n : Adjusted ground reflection effect in Monstercat and Obelisks for MPl.",
+            "12/18/2019: B1.2.3.0\n + Desktop icons can now be quickly created from the Dashboard, and from the taskbar.\n : Completely redid the main menu for Settings.\n + Built-in desktop icons can now be deleted.\n : Changed the look of the 'add desktop icon' feature.\n : Modified the menu for 'About This App'.\n : Completely rewrote the system for desktop icons. They are now more robust and consistent, and easier to program.\n : Adjusted ground reflection effect in Monstercat and Obelisks for MPl.\n : Fixed multiple issues pertaining to desktop icons.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.3.0 (12/18/2019) r1';
+    window.aOSversion = 'B1.2.3.0 (12/18/2019) r2';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -16123,6 +16360,7 @@ var icomoveOrX = 0;
 var icomoveOrY = 0;
 function icomove(e, elem){
     if(elem){
+        console.log(elem);
         getId("icomove").style.display = "block";
         icomoveSelect = "app_" + elem;
         icomovex = e.pageX;
@@ -16136,7 +16374,9 @@ function icomove(e, elem){
         var newYCoord = icomoveOrY + (e.pageY - icomovey) * (1 / screenScale);
         newXCoord = Math.round(newXCoord / 108) * 108 + 8;
         newYCoord = Math.round(newYCoord / 98) * 98 + 8;
-        ufsave('aos_system/desktop/ico_' + icomoveSelect, '[' + newXCoord + ',' + newYCoord + ']');
+        dsktp[icomoveSelect.substring(4)].position = [newXCoord, newYCoord];
+        ufsave('aos_system/desktop/user_icons/ico_' + icomoveSelect.substring(4), JSON.stringify(dsktp[icomoveSelect.substring(4)]));
+        //ufsave('aos_system/desktop/ico_' + icomoveSelect, '[' + newXCoord + ',' + newYCoord + ']');
         getId(icomoveSelect).style.left = newXCoord + "px";
         getId(icomoveSelect).style.top = newYCoord + "px";
     }
@@ -16513,7 +16753,21 @@ var baseCtx = {
         }, 'ctxMenu/beta/window.png'],
         ['+' + lang('ctxMenu', 'moveIcon'), function(args){
             icomove(args[0], args[1]);
-        }]
+        }],
+        ['+Delete Icon', function(args){
+            removeDsktpIcon(args[1]);
+        }, 'ctxMenu/beta/x.png']
+    ],
+    appXXXjs: [
+        [' Execute', function(args){
+            Function(...dsktp[args[1]].action)(...dsktp[args[1]].actionArgs);
+        }, 'ctxMenu/beta/window.png'],
+        ['+' + lang('ctxMenu', 'moveIcon'), function(args){
+            icomove(args[0], args[1]);
+        }],
+        ['+Delete Icon', function(args){
+            removeDsktpIcon(args[1]);
+        }, 'ctxMenu/beta/x.png']
     ],
     icnXXX: [
         [function(arg){
@@ -16550,6 +16804,32 @@ var baseCtx = {
                 getId('icn_' + arg).style.display = 'none';
             }
         }, 'ctxMenu/beta/minimize.png'],
+        [function(arg){
+            if(dsktp[arg]){
+                return '_Add Desktop Icon';
+            }else{
+                return '+Add Desktop Icon';
+            }
+        }, function(arg){
+            if(dsktp[arg]){
+                removeDsktpIcon(arg);
+            }else{
+                newDsktpIcon(arg, arg);
+            }
+        }, 'ctxMenu/beta/add.png'],
+        [function(arg){
+            if(dsktp[arg]){
+                return ' Remove Desktop Icon';
+            }else{
+                return '-Remove Desktop Icon';
+            }
+        }, function(arg){
+            if(dsktp[arg]){
+                removeDsktpIcon(arg);
+            }else{
+                newDsktpIcon(arg, arg);
+            }
+        }, 'ctxMenu/beta/x.png'],
         ['+' + lang('ctxMenu', 'closeApp'), function(arg){
             apps[arg].signalHandler('close');
         }, 'ctxMenu/beta/x.png']
