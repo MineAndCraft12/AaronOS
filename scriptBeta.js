@@ -587,6 +587,13 @@ function numtf(num){
         return false;
     }
 }
+function numEnDis(num){
+    if(num){
+        return 'Enabled';
+    }else{
+        return 'Disabled';
+    }
+}
 
 // languages system
 var currentlanguage = getId('bootLanguage').innerHTML;
@@ -3308,7 +3315,7 @@ c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
                                     // getId('appDsBtable').style.cursor = '';
                                     getId('appDsBtable').classList.remove('cursorLoadLight');
-                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsClassName('dashboardSearchItem');
+                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
                                 //});
                             }else{
                                 getId('appDsBtable').innerHTML = this.vars.listOfApps;
@@ -6985,21 +6992,24 @@ c(function(){
                     setUrl: {
                         option: 'Background Image URL',
                         description: function(){return 'Set an image as your desktop background. This can be png, jpg, gif, or any other web-compatible image. If aOS is loaded over HTTPS, make sure your image is on HTTPS as well.'},
-                        buttons: function(){return '<input id="bckGrndImg" placeholder="beta1.png" style="display:inline-block; width:500px" value="' + ufload("aos_system/desktop/background_image") + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
+                        buttons: function(){return '<input id="bckGrndImg" placeholder="beta1.png" style="display:inline-block; width:50%" value="' + (ufload("aos_system/desktop/background_image") || 'beta1.png') + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
                     },
                     bgFit: {
                         option: 'Background Image Fit',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="apps.settings.vars.bgFit">?</span>. This determines the size and positioning of your background.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="apps.settings.vars.bgFit">?</span>.<br>' +
+                            'This determines the size and positioning of your background.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.setBgFit(\'corner\')">Corner</button> <button onclick="apps.settings.vars.setBgFit(\'center\')">Center</button> <button onclick="apps.settings.vars.setBgFit(\'cover\')">Cover</button> <button onclick="apps.settings.vars.setBgFit(\'stretch\')">Stretch</button> <button onclick="apps.settings.vars.setBgFit(\'fit\')">Fit</button>'}
                     },
                     liveBackground: {
                         option: 'Live Background',
-                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.liveBackgroundEnabled)"></span>, Live Background allows you to set a website as your desktop wallpaper. Live Background is not fully compatible with WindowBlur. Not all websites work in Live Background.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.liveBackgroundEnabled)"></span>.<br>' +
+                            'Live Background allows you to set a website as your desktop wallpaper. Not all websites work as Live Backgrounds.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togLiveBg()">Toggle</button> | <input id="STNliveBg" placeholder="URL to site" value="' + apps.settings.vars.liveBackgroundURL + '"> <button onclick="apps.settings.vars.setLiveBg(getId(\'STNliveBg\').value)">Set URL</button>'}
                     },
                     parallaxBackground: {
                         option: 'Parallax Background',
-                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.prlxBackgroundEnabled)"></span>, Parallax Background allows you to create your own wallpapers with depth in them. The wallpaper moves around as you move your mouse. Provide a comma-separated list of image URLs. The first image is displayed at the bottom of the stack.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.prlxBackgroundEnabled)"></span>.<br>' +
+                            'Parallax Background allows you to create your own wallpapers with depth in them. The wallpaper moves around as you move your mouse. Provide a comma-separated list of image URLs. The first image is displayed at the bottom of the stack.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togPrlxBg()">Toggle</button> | <input id="STNprlxBg" placeholder="comma-separated image URLs" value="' + (apps.settings.vars.prlxBackgroundURLs || "p1.png,p2.png,p3.png,p4.png") + '"> <button onclick="apps.settings.vars.setPrlxBg(getId(\'STNprlxBg\').value)">Set URLs</button>'}
                     },
                     premade: {
@@ -7021,41 +7031,33 @@ c(function(){
                     image: 'settingIcons/new/performance.png',
                     perfMode: {
                         option: 'Performance Mode',
-                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.performanceMode)">' + numtf(apps.settings.vars.performanceMode) + '</span>; Performance Mode attempts to raise framerate by lowering the CPU usage of some system functions'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.performanceMode)">' + numEnDis(apps.settings.vars.performanceMode) + '</span>.<br>' +
+                            'Performance Mode attempts to raise framerate by lowering the intensity of some system functions.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.togPerformanceMode()">Toggle</button>'}
                     },
                     clickToMove: {
                         option: 'Legacy Window Moving',
-                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.clickToMove)"></span>; Legacy support for window-moving, in which you must click the window to move and then click again somewhere on the screen to move it.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.clickToMove)"></span>.<br>' +
+                            'Legacy controls for window-moving, in which you must click the window title to select it and then click again somewhere on the screen to move it. This is useful for mobile devices which might not support dragging windows.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togClickToMove()">Toggle</button>'}
                     },
                     longTap: {
                         option: 'Double Tap Opens Context Menu',
-                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.longTap)">' + numtf(apps.settings.vars.longTap) + '</span>; Only for mobile browsers, requires touch on top-level ctxmenu element (rightclicking a window will not give the desktop ctxmenu)'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.longTap)">' + numEnDis(apps.settings.vars.longTap) + '</span>.<br>' +
+                            'Only for mobile browsers, requires touch on top-level ctxmenu element (rightclicking a window will not give the desktop ctxmenu)'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togLongTap()">Toggle</button>'}
                     },
                     allowStnWindow: {
                         option: 'File Browser Debug',
-                        description: function(){return 'Allows File Browser to access the global Window object. Dangerous!'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.FILcanWin)"></span>.<br>' +
+                            'Allows File Browser to access the global Window object. Dangerous!'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togFILwin()">Toggle</button>'}
-                    }
-                    /*
-                    opsPerSec: {
-                        option: 'Operations Per Second',
-                        description: function(){return 'Calculate your browser\'s operations per second, for integers, floating points, and strings.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.calcFLOPS()">Calculate</button>'}
                     },
-                    debugLevel: {
-                        option: 'Debug Level',
-                        description: function(){return langOld('settings', 'dbgExplain')},
-                        buttons: function(){return '<button onclick="apps.settings.vars.setDebugLevel(0)">Vital Only</button> <button onclick="apps.settings.vars.setDebugLevel(1)">Normal</button> <button onclick="apps.settings.vars.setDebugLevel(2)">High</button>'}
-                    },
-                    testPerformance: {
-                        option: 'Test Performance',
-                        description: function(){return 'Use the Function Grapher app to measure performance OS performance. The information displayed is the time in total since the graph had started, to completion. The bottom of the graph is millisecond 0. Each 1 bar higher is 1 millisecond.'},
-                        buttons: function(){return '<button onClick="openapp(apps.graph,\'dsktp\');getId(\'GphInput\').value=\'perfCheck(\\\'graph\\\')/1000-10\';getId(\'GphColor\').value=\'#FF7F00\';perfStart(\'graph\');apps.graph.vars.graph();getId(\'GphStatus\').innerHTML+=\'PerfCheck took \'+(perfCheck(\'graph\')/1000)+\' milliseconds<br>\'">Do Performance Test</button>'}
+                    corsProxy: {
+                        option: 'CORS Proxy',
+                        description: function(){return 'Prefix to URLs used by some apps to access non-aOS websites. If you don\'t know what this is, dont mess with it.'},
+                        buttons: function(){return '<input id="STNcorsInput" placeholder="https://cors-anywhere.herokuapp.com/"> <button onclick="apps.settings.vars.corsProxy = getId(\'STNcorsInput\').value;apps.savemaster.vars.save(\'aos_system/apps/settings/cors_proxy\', apps.settings.vars.corsProxy, 1)">Set</button>'}
                     }
-                    */
                 },
                 info: {
                     folder: 0,
@@ -7077,104 +7079,45 @@ c(function(){
                     },
                     osID: {
                         option: 'aOS ID',
-                        description: function(){return SRVRKEYWORD + ' is your aOS ID. If you would wish to load another copy of aOS, use the button below. Be sure to have its aOS ID and password ready, and set a password on this current machine if you want to get back to it later.'},
+                        description: function(){return 'Your ID: ' + SRVRKEYWORD + '<br>' +
+                            'If you would wish to load another copy of aOS, use the button below. Be sure to have its aOS ID and password ready, and make sure to set a password on this current account if you want to get back to it later.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.changeKey()">Load a Different aOS</button>'}
                     },
                     osPassword: {
                         option: 'aOS Password',
-                        description: function(){return 'This is the password required to access your AaronOS.'},
+                        description: function(){return 'Use this to change the password required to access your account on AaronOS.'},
                         buttons: function(){return '<input id="STNosPass" type="password"> <button onclick="apps.settings.vars.newPassword()">Set</button>'}
                     },
                     osVersion: {
                         option: 'aOS Version',
-                        description: function(){return 'You are running ' + document.title + '.'},
+                        description: function(){return 'You are running AaronOS ' + window.aOSversion + '.'},
                         buttons: function(){return 'aOS is updated automatically between restarts, with no action required on your part.'}
                     },
                     contact: {
                         option: 'Contact',
                         description: function(){return 'Having issues? Need help? Something broken on aOS? Want to suggest changes or features? Have some other need to contact me? Feel free to contact me below!'},
-                        buttons: function(){return 'Email: <a href="mailto:mineandcraft12@gmail.com">mineandcraft12@gmail.com</a> | Messaging app: my username is "{ADMIN} MineAndCraft12"'}
+                        buttons: function(){return 'Email: <a href="mailto:mineandcraft12@gmail.com">mineandcraft12@gmail.com</a><br>Discord: Meowster Chief#1121'}
                     },
                     dataCollect: {
                         option: 'Anonymous Data Collection',
-                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.collectData)">' + numtf(apps.settings.vars.collectData) + '</span>'},
-                        buttons: function(){return '<a href="privacy.txt" target="_blank">Privacy Policy</a><br>' +
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.collectData)">' + numEnDis(apps.settings.vars.collectData) + '</span>'},
+                        buttons: function(){return '<a href="privacy.txt" target="_blank">Privacy Policy</a><br><br>' +
                             '<button onclick="apps.settings.vars.collectData = -1 * apps.settings.vars.collectData + 1">Toggle</button><br>' +
                             'All ongoing data collection campaigns will be detailed in full here:' +
                             apps.settings.vars.getDataCampaigns()}
                     },
-                    /*
-                    googlePlay: {
-                        option: 'Google Play',
-                        description: function(){
-                            if(sessionStorage.getItem('GooglePlay') === 'true'){
-                                return 'Looks like you\'ve downloaded aOS through Google Play! If you have time, please drop a review in Google Play, including ideas and suggestions. Thanks!';
-                            }else{
-                                return 'Great news! aOS is on Google Play! Download the app on any Android device and drop a review!'
-                            }
-                        },
-                        buttons: function(){return 'Thanks, Google, for your terrific platform!'}
-                    },
-                    ipAddress: {
-                        option: 'IP Address',
-                        description: function(){return 'Here is the IP Address of your machine, as the aOS server sees it. If you are using proxies or other network utilities, it may be incorrect. The IP address is not logged by aOS.'},
-                        buttons: function(){return 'Your IP Address: ' + IPADDRESS}
-                    },
-                    donate: {
-                        option: 'Donate',
-                        description: function(){return 'Maintenance of aOS is not free. If you feel so inclined, you can give a donation of any amount through this button, to support future development of aOS. Keep in mind that, for now, aOS is provided as a FREE SERVICE. There is no charge for using aOS in its current form. Donation is purely optional. If I run into some issue and find myself unable to pay for further hosting and upkeep of aOS, I will fallback to donation funds to keep the project going.'},
-                        buttons: function(){
-                            return '<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">' +
-                                '<input type="hidden" name="cmd" value="_s-xclick">' +
-                                '<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">' +
-                                '<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">' +
-                                '<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">' +
-                                '</form>'
-                        }
-                    },
-                    chromeExp: {
-                        option: 'Chrome Experiment',
-                        description: function(){return 'The aOS project has been registered with ChromeExperiments.com, because it uses many Chrome features in its service. This should not change the course of the OS at all, and I intend to keep it on the same track it already was on.'},
-                        buttons: function(){return 'Once the Chrome Experiments page is up, a link will be included here.'}
-                    },
-                    technologies: {
-                        option: 'Technologies',
-                        description: function(){return 'Below is a list of all web technologies used by aOS. Keep in mind that this may be slightly incomplete, as it is hard to remember exactly what I have used in the past, and what I will use in the future.'},
-                        buttons: function(){return 'Main technologies:<ul><li>HTML5</li><li>CSS3</li><li>JavaScript</li><li>PHP</li><li>AJAX</li></ul>' +
-                            'NORAA:<ul><li>Speech Recognition API</li><li>Speech Synthesis API</li></ul>' +
-                            'Canvas Video Games:<ul><li>HTML5 Canvas</li></ul>' +
-                            'Internet:<ul><li>iFrame</li></ul>' +
-                            'File Saving:<ul><li>PHP</li><li>AJAX</li></ul>' +
-                            'Messaging:<ul><li>PHP</li><li>AJAX</li></ul>' +
-                            'Camera:<ul><li>Camera</li><li>HTML5 Video</li></ul>' +
-                            'Music Visualizer:<ul><li>Canvas</li><li>Web Audio API</li><li>Microphone (on standalone version, still in development)</li></ul>' +
-                            'IndyCar, House Game:<ul><li>Canvas</li><li>GameMaker: Studio Professional</li></ul>' +
-                            'RDP Host and Viewer:<ul><li>PHP</li><li>AJAX</li></ul>' +
-                            'Function Grapher:<ul><li>Canvas</li></ul>' +
-                            'External Debugger:<ul><li>Cross-Window JavaScript</li><li>Popup Window</li></ul>'
-                        }
-                    },
-                    */
-                    netAndBat: {
-                        option: 'Network and Battery Status',
-                        description: function(){return 'Network Online: <span class="liveElement" data-live-eval="window.navigator.onLine">' + window.navigator.onLine + '</span>. Battery Level (if -100, battery not detected): <span class="liveElement" data-live-eval="Math.round(batteryLevel * 100)">' + Math.round(batteryLevel * 100) + '</span>'},
-                        buttons: function(){return 'These values are updated live as of aOS A1.2.8'}
-                    },
                     textLanguage: {
                         option: 'Text Language',
-                        description: function(){return '<span class="liveElement" data-live-eval="languagepacks[currentlanguage]">' + languagepacks[currentlanguage] + '</span>; some apps support different languages. Translation is up to the developer of the app and may not be accurate. Some languages may be limited to few apps.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="languagepacks[(currentlanguage || \'en\')]">' + languagepacks[(currentlanguage || 'en')] + '</span>.<br>' +
+                            'Some apps support different languages. Translation is up to the developer of the app and may not be accurate. Some languages may be limited to few apps.'},
                         buttons: function(){return apps.settings.vars.getTextLanguages()}
                     },
                     uglyLoading: {
-                        option: 'Ugly Loading',
-                        description: function(){return '<span class="liveElement" data-live-eval="numtf(dirtyLoadingEnabled)">' + numtf(dirtyLoadingEnabled) + '</span> Allows you to watch aOS load at startup, but looks dirty compared to having a loading screen.'},
+                        option: 'Visible Loading',
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(dirtyLoadingEnabled)">' + numEnDis(dirtyLoadingEnabled) + '</span>.<br>' +
+                            'Allows you to watch aOS load at startup, but looks dirty compared to having a loading screen.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togDirtyLoad()">Toggle</button>'}
                     },
-                    corsProxy: {
-                        option: 'CORS Proxy',
-                        description: function(){return 'Prefix to URLs used by some apps to access non-aOS websites. If you don\'t know what this is, dont mess with it.'},
-                        buttons: function(){return '<input id="STNcorsInput" placeholder="https://cors-anywhere.herokuapp.com/"> <button onclick="apps.settings.vars.corsProxy = getId(\'STNcorsInput\').value;apps.savemaster.vars.save(\'aos_system/apps/settings/cors_proxy\', apps.settings.vars.corsProxy, 1)">Set</button>'}
-                    }
                 },
                 screenRes: {
                     folder: 0,
@@ -7183,12 +7126,13 @@ c(function(){
                     image: 'settingIcons/new/resolution.png',
                     fullscreen: {
                         option: 'Full Screen',
-                        description: function(){return 'Puts aOS into fullscreen, so it does not look like it has been loaded into a browser. You <i>may</i> need to Fit aOS to Window after toggling.'},
+                        description: function(){return 'Puts aOS into fullscreen, so it does not look like it has been loaded into a browser. A more stable way to achieve this is with the F11 key.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.reqFullscreen()">Enter Fullscreen</button> <button onclick="apps.settings.vars.endFullscreen()">Exit Fullscreen</button>'}
                     },
                     mobileMode: {
                         option: 'Mobile Mode',
-                        description: function(){return 'Changes various bits of AaronOS to be better suited for phones and small screens. EXPERIMENTAL'},
+                        description: function(){return 'Current: ' + function(){if(autoMobile){return 'Automatic'}else{return numEnDis(mobileMode)}}() + '.<br>' +
+                            'Changes various UI and functionality of AaronOS to be better suited for phones and small screens.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.setMobileMode(0)">Turn Off</button> <button onclick="apps.settings.vars.setMobileMode(1)">Turn On</button> <button onclick="apps.settings.vars.setMobileMode(2)">Automatic</button>'}
                     },
                     scaling: {
@@ -7198,12 +7142,13 @@ c(function(){
                     },
                     currRes: {
                         option: 'aOS Monitor Resolution',
-                        description: function(){return '<span class="liveElement" data-live-eval="getId(\'monitor\').style.width">' + getId('monitor').style.width + '</span> by <span class="liveElement" data-live-eval="getId(\'monitor\').style.height">' + getId('monitor').style.height + '</span>'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="getId(\'monitor\').style.width">' + getId('monitor').style.width + '</span> by <span class="liveElement" data-live-eval="getId(\'monitor\').style.height">' + getId('monitor').style.height + '</span>.<br>' +
+                            'This is the dimensions in pixels of AaronOS\'s virtual display. If the virtual display does not fit in your browser window, scrollbars will appear.'},
                         buttons: function(){return '<input id="STNscnresX">px by <input id="STNscnresY">px <button onclick="fitWindowRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Set aOS Screen Res</button>'}
                     },
                     saveRes: {
                         option: 'Save Resolution',
-                        description: function(){return 'Have aOS automatically load to a specified resolution (enter in boxes above)'},
+                        description: function(){return 'Have aOS automatically load to a specified resolution at boot (specified in text fields above).'},
                         buttons: function(){return '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save</button> <button onclick="ufdel(\'aos_system/apps/settings/saved_screen_res\')">Delete</button>'}
                     },
                     currWin: {
@@ -7224,27 +7169,30 @@ c(function(){
                     image: 'settingIcons/new/windows.png',
                     capBtnLeft: {
                         option: 'Window Controls on Left',
-                        description: function(){return 'Moves the window control buttons to the left side of the titlebar.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.captionButtonsLeft)">Disabled</span>.<br>' +
+                            'Moves the window control buttons to the left side of the titlebar.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togCaptionButtonsLeft()">Toggle</button>'}
                     },
                     darkMode: {
                         option: 'Dark Mode',
-                        description: function(){return 'Makes your aOS apps use either a light or dark background. Some apps may need to be restarted to see changes.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(darkMode)">Disabled</span>.<br>' +
+                            'Makes your aOS apps use a dark background and light foreground. Some apps may need to be restarted to see changes.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togDarkMode()">Toggle</button>'}
                     },
                     windowBorderWidth: {
                         option: 'Window Border Width',
-                        description: function(){return 'Set the width of the borders of windows.'},
+                        description: function(){return 'Set the width of the left, right, and bottom borders of windows.'},
                         buttons: function(){return '<input id="STNwinBorderInput" placeholder="3" value="' + apps.settings.vars.winBorder + '"> <button onclick="apps.settings.vars.setWinBorder(getId(\'STNwinBorderInput\').value)">Set</button>'}
                     },
                     windowColor: {
                         option: 'Window Color',
-                        description: function(){return 'Set the color of your window borders, as any CSS-compatible color.'},
+                        description: function(){return 'Set the color of your window borders, as any CSS-compatible color. (#HEX, RGBA, or a common color name)'},
                         buttons: function(){return '<input id="STNwinColorInput" placeholder="rgba(150, 150, 200, 0.5)" value="' + apps.settings.vars.currWinColor + '"> <button onClick="apps.settings.vars.setWinColor()">Set</button>'}
                     },
                     backdropFilter: {
                         option: 'Window Glass Effect',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(apps.settings.vars.isBackdrop)">true</span>. Toggle the glass effect that blurs everything behind a window.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.isBackdrop)">true</span>.<br>' +
+                            'Toggle the glass effect that blurs everything behind transparent window borders and the taskbar.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.togBackdropFilter()">Toggle Glass Effect</button>'}
                     },
                     blurStrength: {
@@ -7254,22 +7202,25 @@ c(function(){
                     },
                     winImg: {
                         option: 'Window Border Texture',
-                        description: function(){return 'An image on the border of the window that adds some texture. Also useful for if you want to disable Windowblur but want your windows to have a cool texture on them. Enabled: ' + numtf(apps.settings.vars.enabWinImg)},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.enabWinImg)">' + numEnDis(apps.settings.vars.enabWinImg) + '</span>.<br>' +
+                            'An image overlay on the border of windows and the taskbar that adds some texture.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="winimg.png" value="' + apps.settings.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button>'}
                     },
                     displaceMap: {
                         option: 'Glass Distortion Effect <i>(experimental)</i>',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(apps.settings.vars.dispMapEffect)">false</span>. This experimental effect adds distortion to the glass effect that matches the default window texture.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.dispMapEffect)">false</span>.<br>' +
+                            'This experimental effect adds distortion to the glass effect that matches the default window texture. This makes it look more like textured glass and less like a simple blur.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.togDispMap()">Toggle Distortion Effect</button>'}
                     },
                     fadeDist: {
-                        option: 'Window Fade Distance',
-                        description: function(){return 'The distance from the screen that windows will fade from view when closed. If set to 1, windows will not change size when closed. If between 0 and 1, the window will get smaller, or further away when closed. If larger than 1, the window will get bigger when closed.'},
+                        option: 'Window Fade Size',
+                        description: function(){return 'The animated change in size of a window when being closed or opened. If set to 1, windows will not change size when closed. If between 0 and 1, the window will get smaller when closed. If larger than 1, the window will get bigger when closed.'},
                         buttons: function(){return '<input id="STNwinFadeInput" placeholder="0.8" value="' + apps.settings.vars.winFadeDistance + '"> <button onClick="apps.settings.vars.setFadeDistance(getId(\'STNwinFadeInput\').value)">Set</button>'}
                     },
                     windowBlur: {
                         option: 'Legacy Windowblur (OLD!)',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numtf(parseInt(ufload(\'aos_system/windows/blur_enabled\') || \'0\'))">true</span>. This is the old version of the glass effect that aOS used before it was supported. This effect only shows a blurred version of the desktop background and you can\'t see other windows through it. This can be helpful if the glass effect doesn\'t work on your browser.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(parseInt(ufload(\'aos_system/windows/blur_enabled\') || \'0\'))">Disabled</span>.<br>' +
+                            'This is the old version of the glass effect that aOS used before it was supported. This effect only shows a blurred version of the desktop background and you can\'t see other windows through it. This can be helpful if the newer glass effect doesn\'t work on your browser.'},
                         buttons: function(){return '<button onClick="apps.settings.vars.togAero()">Toggle Legacy Windowblur Effect</button>'}
                     },
                     blurBlend: {
@@ -7327,12 +7278,14 @@ c(function(){
                     image: 'settingIcons/new/noraa.png',
                     advHelp: {
                         option: 'Advanced Help Pages',
-                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.noraHelpTopics)">' + numtf(apps.settings.vars.noraHelpTopics) + '</span>; NORAA returns more advanced help pages when you ask for OS help, instead of plain text.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.noraHelpTopics)">' + numtf(apps.settings.vars.noraHelpTopics) + '</span>.<br>' +
+                            'NORAA returns more advanced help pages when you ask for OS help, instead of plain text.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togNoraListen()">Toggle</button>'}
                     },
                     listen: {
                         option: 'NORAA Listening',
-                        description: function(){return '<span class="liveElement" data-live-eval="numtf(apps.settings.vars.currNoraListening)">' + numtf(apps.settings.vars.currNoraListening) + '</span>; NORAA listens for you to say a specified phrase that will activate him.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(parseInt(apps.settings.vars.currNoraListening))">' + numtf(apps.settings.vars.currNoraListening) + '</span>.<br>' +
+                            'NORAA listens for you to say a specified phrase that will activate him.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togNoraListen()">Toggle</button>'}
                     },
                     listenFor: {
@@ -7376,7 +7329,8 @@ c(function(){
                     image: 'settingIcons/new/clipboard.png',
                     size: {
                         option: 'Clipboard Slots',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="textEditorTools.slots">' + textEditorTools.slots + '</span>. Number of slots in your clipboard. An excessively large clipboard may be difficult to manage.'},
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="textEditorTools.slots">' + textEditorTools.slots + '</span>.<br>' +
+                            'Number of slots in your clipboard. An excessively large clipboard may be difficult to manage and can cause context menu scrollbars.'},
                         buttons: function(){return '<input id="STNclipboardSlots"> <button onclick="apps.settings.vars.setClipboardSlots(getId(\'STNclipboardSlots\').value)">Set</button>'}
                     },
                     clear: {
@@ -7392,17 +7346,20 @@ c(function(){
                     image: 'settingIcons/new/screensaver.png',
                     enable: {
                         option: "Enable Screen Saver",
-                        description: function(){return "Current: " + numtf(apps.settings.vars.screensaverEnabled) + ". Enable the aOS Screensaver."},
+                        description: function(){return "Current: " + numtf(apps.settings.vars.screensaverEnabled) + ".<br>" +
+                            "This is an animation or other screen that appears when you're away from your computer."},
                         buttons: function(){return '<button onclick="apps.settings.vars.togScreensaver()">Toggle</button>'}
                     },
                     time: {
                         option: "Time to Wait",
-                        description: function(){return "Current: " + (apps.settings.vars.screensaverTime / 1000 / 1000 / 60) + ". This is the time in minutes that aOS waits to activate the screensaver."},
+                        description: function(){return "Current: " + (apps.settings.vars.screensaverTime / 1000 / 1000 / 60) + ".<br>" +
+                            "This is the time in minutes that aOS waits to activate the screensaver."},
                         buttons: function(){return '<input id="STNscreensaverTime"> <button onclick="apps.settings.vars.setScreensaverTime(parseFloat(getId(\'STNscreensaverTime\').value) * 1000 * 1000 * 60)">Set</button>'}
                     },
                     type: {
                         option: "Type of Screensaver",
-                        description: function(){return 'Current: ' + apps.settings.vars.currScreensaver + ". This is the type of screensaver that aOS will select."},
+                        description: function(){return 'Current: ' + apps.settings.vars.currScreensaver + ".<br>" +
+                            "This is the type of screensaver that aOS will display."},
                         buttons: function(){return apps.settings.vars.grabScreensavers()}
                     },
                     blocks: {
@@ -7435,7 +7392,7 @@ c(function(){
                     image: 'settingIcons/new/language.png',
                     currentLanguage: {
                         option: 'Current Language',
-                        description: function(){return languagepacks[currentlanguage]},
+                        description: function(){return 'Current: ' + languagepacks[(currentlanguage || 'en')] + '.'},
                         buttons: function(){return 'You must reboot aOS for language changes to take effect.'}
                     },
                     changeLanguage: {
@@ -7478,35 +7435,49 @@ c(function(){
                 }else{
                     apps.settings.appWindow.setContent(
                         '<div id="STNmenuDiv" style="font-family:aosProFont, monospace;font-size:12px;width:calc(100% - 3px);height:100%;overflow:auto">' +
-                        '<span style="font-size:36px">' + menu.folderName +
-                        ' <button onclick="apps.settings.vars.showMenu(apps.settings.vars.menus)" style="float:right;margin:8px">Home</button>' +
-                        '</span><br><br></div>'
+                        '<p id="STNmenuTitle" style="font-size:36px;margin:8px;">' + menu.folderName +
+                        '<button id="STNhomeButton" onclick="apps.settings.vars.showMenu(apps.settings.vars.menus)" style="float:left;margin:8px;top:8px;left:0;position:absolute;display:none;">Home</button>' +
+                        '</p><br></div>'
                     );
-                    if(menu.folder === 1){
-                        getId("STNmenuDiv").innerHTML += '<hr><div id="STNmenuTable" style="width:100%;position:relative;"></div>';
+                    //if(menu.folder === 1){
+                        getId("STNmenuDiv").innerHTML += '<div id="STNmenuTable" style="width:100%;position:relative;"></div>';
                         //var j = 0;
                         var appendStr = '';
-                        for(var i in menu){
+                        for(var i in this.menus){
                             if(i !== 'folder' && i !== 'folderName' && i !== 'folderPath' && i !== 'image' && i !== 'oldMenu'){
                                 //if(j % 3 === 0 && j !== 0){
                                 //    appendStr += '</tr><tr class="STNtableTR">';
                                 //}
-                                if(menu[i].image){
-                                    appendStr += '<div class="STNtableTD cursorPointer" onclick="apps.settings.vars.showMenu(' + menu[i].folderPath + ')"><img src="' + menu[i].image + '" style="margin-bottom:-12px;width:32px;height:32px;margin-right:3px;' + darkSwitch('', 'filter:invert(1);') + '"> ' + menu[i].folderName + '</div>';
+                                if(this.menus[i].image){
+                                    appendStr += '<div class="STNtableTD cursorPointer" onclick="apps.settings.vars.showMenu(' + this.menus[i].folderPath + ')"><img src="' + this.menus[i].image + '" style="margin-bottom:-12px;width:32px;height:32px;margin-right:3px;' + darkSwitch('', 'filter:invert(1);') + '"> ' + this.menus[i].folderName + '</div>';
                                 }else{
-                                    appendStr += '<div class="STNtableTD cursorPointer" onclick="apps.settings.vars.showMenu(' + menu[i].folderPath + ')"><div style="margin-bottom:-12px;width:32px;height:32px;margin-right:3px;position:relative;display:inline-block;"></div> ' + menu[i].folderName + '</div>';
+                                    appendStr += '<div class="STNtableTD cursorPointer" onclick="apps.settings.vars.showMenu(' + this.menus[i].folderPath + ')"><div style="margin-bottom:-12px;width:32px;height:32px;margin-right:3px;position:relative;display:inline-block;"></div> ' + this.menus[i].folderName + '</div>';
                                 }
                                 //j++;
                             }
                         }
                         getId('STNmenuTable').innerHTML += appendStr;
-                    }else{
+                    //}else{
+                    if(!menu.folder){
+                        getId('STNmenuTable').style.width = '225px';
+                        getId('STNmenuTable').style.position = 'absolute';
+                        getId('STNmenuTable').style.height = 'calc(100% - 64px)';
+                        getId('STNmenuTable').style.bottom = '0';
+                        getId('STNmenuTable').style.overflowY = 'auto';
+                        getId('STNmenuTitle').style.marginLeft = '232px';
+                        if(menu !== this.menus){
+                            getId('STNhomeButton').style.display = 'block';
+                        }
+                        getId('STNmenuDiv').innerHTML += '<div id="STNcontentDiv" style="width:calc(100% - 232px);padding-top:5px;right:0;bottom:0;height:calc(100% - 69px);overflow-y:auto;"></div>';
                         for(var i in menu){
                             if(i !== 'folder' && i !== 'folderName' && i !== 'folderPath' && i !== 'image'){
-                                getId('STNmenuDiv').innerHTML += '<hr><span style="font-size:18px">' + menu[i].option + ':</span> ' + menu[i].description() + '<br>' + menu[i].buttons();
+                                getId('STNcontentDiv').innerHTML += '<span style="font-size:24px">' + menu[i].option +
+                                    '</span><br><br>' + menu[i].description() +
+                                    '<br><br>' + menu[i].buttons() + '<br><br><br>';
                             }
                         }
                     }
+                    //}
                 }
             },
             availableBackgrounds: [
@@ -9932,10 +9903,11 @@ c(function(){
             "11/26/2019: B1.2.2.3\n : Fixed Glass Distortion texture not lining up with Window Border texture. (texture was anchored to top, shader was anchored to bottom. both are now bottom)\n + New Smart Icon for window glass test app.\n + New Smart Icon for Blast in the Hub.\n + New icon for Glass Windows style in the Hub.\n\n" +
             "12/14/2019: B1.2.2.4\n + Added FPS compensation to the Blast game. Ships and lasers now run the correct speed regardless of the FPS.\n\n" +
             "12/17/2019: B1.2.2.5\n : Introduction screen to Music Player is far more user-friendly.\n + Added Tiles visualizer to Music player.\n + Improved smoke effect in Music Player. Looks like actual smoke rather than a scrolling image.\n + Added FPS compensation to Music Player (MPl). Allows things to move the correct speed at high/low FPS.\n + FPS compensation for Smoke effect in MPl.\n + FPS compensation in Blast for MPl.\n + Better beat detection in Blast for MPl, velocity-based.\n : Slightly raised sensitivity for Blast in MPl.\n + Added FPS compensation to Rings and Ghost Rings in MPl.\n\n" +
-            "12/18/2019: B1.2.3.0\n + Desktop icons can now be quickly created from the Dashboard, and from the taskbar.\n : Completely redid the main menu for Settings.\n + Built-in desktop icons can now be deleted.\n : Changed the look of the 'add desktop icon' feature.\n : Modified the menu for 'About This App'.\n : Completely rewrote the system for desktop icons. They are now more robust and consistent, and easier to program.\n : Adjusted ground reflection effect in Monstercat and Obelisks for MPl.\n : Fixed multiple issues pertaining to desktop icons.",
+            "12/18/2019: B1.2.3.0\n + Desktop icons can now be quickly created from the Dashboard, and from the taskbar.\n : Completely redid the main menu for Settings.\n + Built-in desktop icons can now be deleted.\n : Changed the look of the 'add desktop icon' feature.\n : Modified the menu for 'About This App'.\n : Completely rewrote the system for desktop icons. They are now more robust and consistent, and easier to program.\n : Adjusted ground reflection effect in Monstercat and Obelisks for MPl.\n : Fixed multiple issues pertaining to desktop icons.\n\n" +
+            "12/22/2019: B1.2.4.0\n : Revamped the rest of the Settings UI and reworded most of the setting descriptions.\n : Fixed bug in Aero dashboard.\n : The default Trusted Apps file now dynamically sets itself to trust the current domain, instead of requiring a manual edit on non-official hosts.\n - Removed some useless setting options.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.3.0 (12/18/2019) r2';
+    window.aOSversion = 'B1.2.4.0 (12/22/2019) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -12553,21 +12525,7 @@ c(function(){
                 return str;
             },
             trustedApps: {
-                "https://aaronos.dev": {
-                    "fs": "true",
-                    "readsetting": "true",
-                    "writesetting": "true",
-                    "js": "true",
-                    "bgservice": "true"
-                },
-                "http://localhost": {
-                    "fs": "true",
-                    "readsetting": "true",
-                    "writesetting": "true",
-                    "js": "true",
-                    "bgservice": "true"
-                },
-                "https://localhost": {
+                [window.location.origin]: {
                     "fs": "true",
                     "readsetting": "true",
                     "writesetting": "true",
