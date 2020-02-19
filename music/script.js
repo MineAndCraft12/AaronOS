@@ -1195,10 +1195,9 @@ var vis = {
             var maxHeight = size[1] * 0.5 - size[1] * 0.2;
             
             var monstercatGradient = canvas.createLinearGradient(0, Math.round(size[1] / 2) + 4, 0, size[1]);
-            monstercatGradient.addColorStop(0, 'rgba(0, 0, 0, 0.75)');
-            monstercatGradient.addColorStop(0.1, 'rgba(0, 0, 0, 1)');
-            canvas.fillStyle = monstercatGradient;
-            canvas.fillRect(0, Math.round(size[1] / 2) + 4, size[0], Math.round(size[1] / 2) - 4);
+            monstercatGradient.addColorStop(0, 'rgba(0, 0, 0, 0.8)'); // 0.8
+            monstercatGradient.addColorStop(0.025, 'rgba(0, 0, 0, 0.9)'); // 0.9
+            monstercatGradient.addColorStop(0.1, 'rgba(0, 0, 0, 1)');// 1
             
             for(var i = 0; i < 64; i++){
                 var strength = 0;
@@ -1218,13 +1217,28 @@ var vis = {
                     Math.round(barWidth),
                     Math.round(strength / 255 * maxHeight + 5)
                 );
-                canvas.fillStyle = "#000";
-                canvas.fillRect(
-                    Math.round(left + i * barSpacing),
-                    Math.floor(size[1] / 2) + 4,
-                    Math.round(barWidth),
-                    Math.round(strength / 255 * maxHeight + 5)
-                );
+                //canvas.fillStyle = "#000";
+                if(strength > 10){
+                    canvas.fillRect(
+                        Math.round(left + i * barSpacing),
+                        Math.floor(size[1] / 2) + 4,
+                        Math.round(barWidth),
+                        Math.round(10 / 255 * maxHeight + 4)
+                    );
+                    canvas.fillRect(
+                        Math.round(left + i * barSpacing - 1),
+                        Math.floor(size[1] / 2) + 4 + (10 / 255 * maxHeight) + 4,
+                        Math.round(barWidth + 2),
+                        Math.round((strength - 10) / 255 * maxHeight)
+                    );
+                }else{
+                    canvas.fillRect(
+                        Math.round(left + i * barSpacing),
+                        Math.floor(size[1] / 2) + 4,
+                        Math.round(barWidth),
+                        Math.round(strength / 255 * maxHeight + 4)
+                    );
+                }
                 if(smokeEnabled){
                     smoke.fillStyle = fillColor;
                     smoke.fillRect(
@@ -1235,6 +1249,10 @@ var vis = {
                     );
                 }
             }
+
+            canvas.fillStyle = monstercatGradient;
+            canvas.fillRect(0, Math.round(size[1] / 2) + 4, size[0], Math.round(size[1] / 2) - 4);
+
             //updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
             canvas.fillStyle = '#FFF';
             canvas.font = (size[1] * 0.25) + 'px aosProFont, sans-serif';
@@ -1298,12 +1316,27 @@ var vis = {
                     Math.round((strength / 255 * maxHeight + 5) * 2) - 2
                 )
                 canvas.fillStyle = "#000";
-                canvas.fillRect(
-                    Math.round(left + i * barSpacing) + 2,
-                    Math.floor(size[1] / 2) - Math.round(strength / 255 * maxHeight) + 2,
-                    Math.round(barWidth) - 4,
-                    Math.round((strength / 255 * maxHeight + 5) * 2) - 4
-                );
+                if(strength > 10){
+                    canvas.fillRect(
+                        Math.round(left + i * barSpacing),
+                        Math.floor(size[1] / 2) + 4,
+                        Math.round(barWidth),
+                        Math.round(10 / 255 * maxHeight + 4)
+                    );
+                    canvas.fillRect(
+                        Math.round(left + i * barSpacing - 1),
+                        Math.floor(size[1] / 2) + 4 + (10 / 255 * maxHeight) + 4,
+                        Math.round(barWidth + 2),
+                        Math.round((strength - 10) / 255 * maxHeight)
+                    );
+                }else{
+                    canvas.fillRect(
+                        Math.round(left + i * barSpacing),
+                        Math.floor(size[1] / 2) + 4,
+                        Math.round(barWidth),
+                        Math.round(strength / 255 * maxHeight + 4)
+                    );
+                }
             }
             //updateSmoke(left, size[1] * 0.2, maxWidth, size[1] * 0.3 + 10);
             canvas.fillStyle = '#FFF';
