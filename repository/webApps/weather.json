@@ -1,0 +1,13 @@
+{
+    "name": "Weather",
+    "id": "weather",
+    "version": "1.1",
+    "abbreviation": "Wtr",
+    "appType": "webApp",
+    "homeURL": "weather/",
+    "icon": {
+        "foreground": "appicons/ds/systemApp.png"
+    },
+    "windowSize": [700, 500],
+    "manualOpen": 1
+}

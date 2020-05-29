@@ -1,6 +1,6 @@
 /* Windows XP */
 .winExit, .winShrink, .winBig{
-    top:2px;
+    top:6px;
     border:1px solid #FFF;
     color:#FFF;
     border-radius:3px;
@@ -33,9 +33,9 @@
     display:none;
 }
 #icn_startMenu{
-    border-top-right-radius:10px;
-    border-bottom-right-radius:10px;
-    background:linear-gradient(to bottom, #479246 0, #8FC08F 3px, #409A3F 6px, #43A543 60%, #38A638 90%, #31723F 100%);
+    border-top-right-radius:10px !important;
+    border-bottom-right-radius:10px !important;
+    background:linear-gradient(to bottom, #479246 0, #8FC08F 3px, #409A3F 6px, #43A543 60%, #38A638 90%, #31723F 100%) !important;
     box-shadow:inset 6px 6px 3px -5px #559B55, inset -6px -6px 10px -5px #246825, 2px 2px 1px #2A71E2;
 }
 #time{
@@ -52,7 +52,7 @@
     top:0;
     padding-left:3px;
     width:100% !important;
-    padding-top:1px;
+    padding-top:0px;
     background:linear-gradient(to bottom, #075FED 0, #3994FF 3px, #0054E3 6px, #0055EA 52%, #046EFC 82%, #0444D1 92%);
     box-shadow:inset 25px 0px 10px -20px #0022C7, inset -25px 0px 10px -20px #0022C7;
 }

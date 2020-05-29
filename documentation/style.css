@@ -1,0 +1,154 @@
+@font-face{
+    font-family: "aosProFont";
+    src:
+        url('../ProFont/ProFontOnline.ttf') format('truetype'),
+        url('../ProFont/ProFontOnline.woff') format('woff'),
+        url('../ProFont/ProFontOnline.eot'),
+        url('../ProFont/ProFontOnline.svg') format('svg');
+}
+
+body, html{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    padding:0;
+    margin:0;
+    font-family:sans-serif;
+}
+
+.noselect {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome and Opera */
+}
+
+.winHTML{
+    width:calc(100% - 16px);
+    height:calc(100% - 16px);
+    padding:8px;
+}
+#navigate{
+    height:calc(100% - 6em);
+    width: 280px;
+    max-width:calc(50% - 12px);
+    left:8px;
+    bottom:8px;
+    border:1px solid #7F7F7F;
+    position:absolute;
+    overflow-x:auto;
+    overflow-y:scroll;
+}
+#navigate ul{
+    font-family:monospace;
+    list-style-type:none;
+    padding-left:20px;
+}
+#mainList ul{
+    margin-bottom:8px;
+}
+#mainList li:first-child:not(.nav_header_li){
+    margin-bottom:8px;
+}
+#navigate #mainList{
+    padding-left:3px;
+}
+#navigate li{
+    cursor:pointer;
+    white-space:nowrap;
+}
+#navigate li:hover{
+    background:rgba(127, 127, 127, 0.1);
+}
+#navigate li:active{
+    background:rgba(127, 127, 127, 0.2);
+}
+#navigate li.selected{
+    background:rgba(127, 127, 127, 0.25);
+}
+#content{
+    height:calc(100% - 6em);
+    width:calc(100% - 310px);
+    min-width:calc(50% - 18px);
+    right:8px;
+    bottom:8px;
+    border:1px solid #7F7F7F;
+    position:absolute;
+    overflow:auto;
+}
+#content .docPage{
+    display:none;
+    position:absolute;
+    left:0;
+    top:0;
+    overflow:auto;
+    width:calc(100% - 3px);
+    height:100%;
+    padding-left:3px;
+}
+.docPage pre{
+    font-family:aosProFont, monospace;
+    font-size:12px;
+    padding:12px;
+    width:80%;
+    max-height:70%;
+    margin-left:20px;
+    display:block;
+    border-radius:12px;
+    background:rgba(127, 127, 127, 0.25);
+    overflow:auto;
+}
+.docPage code{
+    background:rgba(127, 127, 127, 0.25);
+    border-radius:5px;
+    padding:3px;
+}
+.docPage pre code{
+    background:none;
+    border-radius:none;
+    padding:none;
+    font-family:monospace;
+}
+.docPage.visible{
+    display:block !important;
+}
+.docPage li{
+    margin-top:6px;
+}
+
+.aosTools_try{
+    display:none;
+}
+
+.img{
+    text-align:center;
+    max-width:60%;
+    margin: 0 auto;
+    position:relative;
+    background:rgba(127, 127, 127, 0.25);
+    border-radius:15px;
+    width:fit-content;
+    font-style:italic;
+    overflow:hidden;
+}
+    .img img{
+        max-width:100%;
+        /* max-height:75vh; */
+        margin:0;
+        width:-webkit-fill-available;
+        margin-bottom:-4px;
+    }
+    .img > div{
+        position:relative;
+        display:flex;
+        margin-top:4px;
+    }
+    .img > div > div{
+        position:relative;
+        flex-grow:1;
+        width:0;
+        padding:8px;
+    }

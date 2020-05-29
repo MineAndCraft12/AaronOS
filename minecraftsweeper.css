@@ -6,7 +6,7 @@
 }
 #MSwField button{
     border:none;
-    background:url(/mc/grass_top.png);
+    background:url(mc/grass_top.png);
     width:16px !important;
     height:18px !important;
 }
@@ -18,17 +18,26 @@
     margin-right:-9px !important;
 }
 .mcdirt{
-    background:url(/mc/dirt.png) !important;
+    background:url(mc/dirt.png) !important;
 }
 .mctnt{
-    background:url(/mc/tnt_top.png) !important;
+    background:url(mc/tnt_top.png) !important;
 }
 .mcflagon{
-    background:url(/mc/flagon.png) !important;
+    background:url(mc/flagon.png) !important;
 }
 .mcflagoff{
-    background:url(/mc/flagoff.png) !important;
+    background:url(mc/flagoff.png) !important;
 }
 .mcstone{
-    background:url(/mc/stone.png) !important;
+    background:url(mc/stone.png) !important;
+}
+#MSwShadow{
+    line-height:16px;
+    padding-left:1px;
+    padding-top:7px;
+}
+#MSwShadow div{
+    width:16px !important;
+    height:16px !important;
 }

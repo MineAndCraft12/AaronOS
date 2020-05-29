@@ -1,6 +1,6 @@
 /* Windows XP Transparent */
 .winExit, .winShrink, .winBig{
-    top:2px;
+    top:6px;
     border:1px solid #FFF;
     color:#FFF;
     border-radius:3px;
@@ -33,6 +33,7 @@
     background:radial-gradient(ellipse farthest-corner at 100% 100%, #D93401 55%, #F0A896 100%);
 }
 #icons{
+    width:100%;
     background:linear-gradient(to bottom, rgba(255, 255, 255, 0.19) 0, rgba(255, 255, 255, 0.37) 3px, rgba(0,0, 0, 0.14) 6px, rgba(255, 255, 255, 0.13) 60%, rgba(255, 255, 255, 0.17) 90%, rgba(0, 0, 0, 0.03) 100%);
 }
 /*
@@ -41,9 +42,9 @@
 }
 */
 #icn_startMenu{
-    border-top-right-radius:10px;
-    border-bottom-right-radius:10px;
-    background:linear-gradient(to bottom, #479246 0, #8FC08F 3px, #409A3F 6px, #43A543 60%, #38A638 90%, #31723F 100%);
+    border-top-right-radius:10px !important;
+    border-bottom-right-radius:10px !important;
+    background:linear-gradient(to bottom, #479246 0, #8FC08F 3px, #409A3F 6px, #43A543 60%, #38A638 90%, #31723F 100%) !important;
     box-shadow:inset 6px 6px 3px -5px #559B55, inset -6px -6px 10px -5px #246825, 2px 2px 1px rgba(255, 255, 255, 0.2);
 }
 #time{
@@ -54,13 +55,14 @@
     background:linear-gradient(to bottom, #0D79D7 0, #18B5F2 3px, #139CEC 6px, #0D8DEA 60%, #1395E4 90%, #095BC9 100%);
     box-shadow:inset 10px 0 10px -10px #21C1F3;
     border-left:1px solid #0A365A;
+    z-index:2;
 }
 .winCap{
     left:0;
     top:0;
     padding-left:3px;
     width:100% !important;
-    padding-top:1px;
+    padding-top:0px;
     background:linear-gradient(to bottom, rgba(0, 0, 0, 0.14) 0, rgba(255, 255, 255, 0.29) 3px, rgba(0, 0, 0, 0.08) 6px, rgba(255, 255, 255, 0.12) 52%, rgba(255, 255, 255, 0.18) 82%, rgba(0, 0, 0, 0.17) 92%);
     box-shadow:inset 25px 0px 10px -20px rgba(0, 0, 0, 0), inset -25px 0px 10px -20px rgba(0, 0, 0, 0);
 }

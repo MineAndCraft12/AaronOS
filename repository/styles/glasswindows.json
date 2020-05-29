@@ -1,0 +1,7 @@
+{
+    "name": "Glass Windows",
+    "id": "glasswindows",
+    "version": "1.0",
+    "appType": "stylesheet",
+    "styleContent": ".winHTML{\n    background:none;\n}\n.darkMode .winHTML{\n    background:none;\n}\n#FIL2cntn, #FIL2sidebar{\n    background:none !important;\n}\n#FIL2tbl div{\n    background:#FFF;\n}\n.darkMode #FIL2tbl div{\n    background:#000;\n}\n#FIL2search{\n    border-bottom-left-radius:5px;\n    border-bottom-right-radius:5px;\n}\n#win_notepad2_html div{\n    background:none !important;\n}\n#win_notepad2_html div div{\n    background:#FFF !important;\n}\n.darkMode #win_notepad2_html div div{\n    background:#000 !important;\n}\n#stickyNotePad{\n    background:none !important;\n    box-shadow:none;\n}\n.darkMode #stickyNotePad{\n    color:#FFF;\n}"
+}

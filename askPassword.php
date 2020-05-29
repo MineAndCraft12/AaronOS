@@ -3,13 +3,60 @@
     <head>
         <title>AaronOS - Password</title>
         <script defer>
+            function getId(target){
+                return document.getElementById(target);
+            }
             var googlePlay = "";
             if(window.location.href.indexOf('GooglePlay=true') > -1){
                 googlePlay = '?GooglePlay=true';
             }
+            function acceptPassword(token){
+                document.cookie = "logintoken=" + token + ';';
+                getId("checkBtn").style.opacity = "0.5";
+                getId("checkBtn").style.pointerEvents = "none";
+                getId("password").style.opacity = "0.5";
+                getId("password").style.pointerEvents = "none";
+                setTimeout(function(){
+                    window.location = 'aosBeta.php' + googlePlay;
+                }, 500);
+            }
+            function rejectPassword(message){
+                getId("error").innerHTML = message;
+                getId('password').value = '';
+            }
+            if(localStorage.getItem("login_failmessage")){
+                rejectPassword(localStorage.getItem("login_failmessage"));
+                localStorage.removeItem("login_failmessage");
+            }
+            var running = 0;
             function checkPassword(){
-                document.cookie = 'password=' + document.getElementById('password').value + "; Max-Age:315576000";
-                window.location = 'aosBeta.php' + googlePlay;
+                //document.cookie = 'password=' + document.getElementById('password').value + "; Max-Age:315576000";
+                //window.location = 'aosBeta.php' + googlePlay;
+                if(!running){
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.onreadystatechange = () => {
+                        if(xhttp.readyState === 4){
+                            if(xhttp.status === 200){
+                                if(xhttp.responseText === 'REJECT'){
+                                    rejectPassword("Password incorrect.");
+                                }else if(xhttp.responseText.indexOf(' ') === -1 && xhttp.responseText.length === 30 && xhttp.responseText !== ''){
+                                    acceptPassword(xhttp.responseText);
+                                }else{
+                                    rejectPassword("Error: " + xhttp.responseText + '.');
+                                }
+                            }else{
+                                rejectPassword("Connection error " + xhttp.status + ". Try again.");
+                            }
+                            running = 0;
+                        }
+                    };
+                    var fd = new FormData();
+                    fd.append("pass", document.getElementById('password').value);
+                    fd.append("loggingInViaUI", "true");
+                    xhttp.open('POST', 'checkPassword.php');
+                    xhttp.send(fd);
+                    running = 1;
+                }
             }
             function skipPassword(){
                 if(confirm("Are you sure you want to create a new account and potentially lose all the data associated with your old one?")){
@@ -190,8 +237,8 @@
     <body>
         <?php
             if(isset($_COOKIE['keyword'])){
-                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_BACKGROUND.txt')){
-                    echo '<div id="background" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/APP_STN_SETTING_BACKGROUND.txt').');"></div>';
+                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt')){
+                    echo '<div id="background" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt').');"></div>';
                 }else{
                     echo '<div id="background"></div>';
                 }
@@ -213,9 +260,10 @@
                     echo 'Welcome';
                 }
             ?><br><br>
-            OS ID: <?php echo $_COOKIE['keyword'] ?><br><br>
+            OS ID: <?php echo $_COOKIE['keyword'] ?><br>
             &nbsp;<br>
-            <input type="password" placeholder="Password" onkeypress="if(event.keyCode === 13){checkPassword();}" id="password"> <button onclick="checkPassword()">Log In</button><br><br>
+            <span id="error"></span><br>
+            <input type="password" placeholder="Password" onkeypress="if(event.keyCode === 13){checkPassword();}" id="password"> <button id="checkBtn" onclick="checkPassword()">Log In</button><br><br>
             Or, if this isn't your account, <button onclick="skipPassword()">Create a New One</button>.<br><br>
         </div>
     </body>

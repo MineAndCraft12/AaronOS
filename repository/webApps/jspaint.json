@@ -1,0 +1,12 @@
+{
+    "name": "JS Paint",
+    "id": "jspaint",
+    "version": "1.0",
+    "abbreviation": "jsP",
+    "appType": "webApp",
+    "homeURL": "https://jspaint.app/",
+    "icon": {
+        "foreground": "appicons/ds/CSE.png"
+    },
+    "windowSize": [753, 507]
+}

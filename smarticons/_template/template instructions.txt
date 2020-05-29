@@ -1,0 +1,32 @@
+PaintDotNet
+
+Layer Setup:
+	transparent grid 512->32 (delete before production)
+	your work (for shadowing, duplicate layer and replace lower layer with shadow)
+	size guide (delete before production)
+	your background (delete for foreground export)
+
+Rounded Rectangle
+	stroke width = 32px
+	rounded corner = 10 (on "a")
+	rounded corner = 1 (on bracket)
+
+Main Feature Shadowing
+	32px radius
+	50% hardness
+	#000 color
+
+Sub-Feature (on top of main feature) Shadowing
+	16px radius
+	25% hardness
+	#000 color
+
+EXAMPLE JSON - default icon
+{
+	backgroundColor: "#303947",
+	foreground: "smarticons/aOS/fg.png",
+	backgroundBorder: {
+		thickness: 2,
+		color: "#252F3A"
+	}
+}

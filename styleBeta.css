@@ -11,55 +11,98 @@
     width:16px;
     background-color:#555;
     box-shadow:inset 0 0 10px #CCC;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 ::-webkit-scrollbar-corner{
     background-color:#555;
     box-shadow:inset 0 0 10px #CCC;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 ::-webkit-resizer{
     border-radius:8px;
     background-color:#CCC;
     box-shadow:inset 0 0 10px #555;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 ::-webkit-scrollbar-thumb{
     border-radius:8px;
     background-color:#CCC;
     box-shadow:inset 0 0 10px #555;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 ::-webkit-scrollbar-button{
     border-radius:8px;
     background-color:#CCC;
     box-shadow:inset 0 0 10px #555;
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
     .darkMode ::-webkit-scrollbar{
         width:16px;
-        background-color:#222;
-        box-shadow:inset 0 0 10px #333;
+        background-color:#272727;
+        box-shadow:inset 0 0 10px #383838;
     }
     .darkMode ::-webkit-scrollbar-corner{
-        background-color:#222;
-        box-shadow:inset 0 0 10px #333;
+        background-color:#272727;
+        box-shadow:inset 0 0 10px #383838;
     }
     .darkMode ::-webkit-resizer{
         border-radius:8px;
         background-color:#555;
-        box-shadow:inset 0 0 10px #222;
+        box-shadow:inset 0 0 10px #272727;
     }
     .darkMode ::-webkit-scrollbar-thumb{
         border-radius:8px;
         background-color:#555;
-        box-shadow:inset 0 0 10px #222;
+        box-shadow:inset 0 0 10px #272727;
     }
     .darkMode ::-webkit-scrollbar-button{
         border-radius:8px;
         background-color:#555;
-        box-shadow:inset 0 0 10px #222;
+        box-shadow:inset 0 0 10px #272727;
     }
+
+.marquee{
+    width:100%;
+    overflow:hidden;
+    position:relative;
+    display:block;
+    height:auto;
+}
+.marquee .marqueetext1{
+    width:100%;
+    animation:cssmarquee1 10s infinite linear;
+    position:relative;
+    height:0;
+    overflow:visible;
+}
+.marquee .marqueetext2{
+    width:100%;
+    animation:cssmarquee2 10s infinite linear;
+    position:relative;
+}
+@keyframes cssmarquee1{
+    from {
+        transform:translateX(100%);
+    }
+    to {
+        transform:translateX(0%);
+    }
+}
+@keyframes cssmarquee2{
+    from {
+        transform:translateX(0%);
+    }
+    to {
+        transform:translateX(-100%);
+    }
+}
+
+.darkMode a{
+    color:#7F9FEE;
+}
+.darkMode a:visited{
+    color:#956ADB;
+}
 
 button{
     background-color:#FFF;
@@ -81,20 +124,54 @@ button:active{
     box-shadow:inset 0 0 10px #999;
 }
     .darkMode button{
-        background-color:#000;
+        background-color:#272727;
         box-shadow:inset 0 0 5px #333;
         color:#CCC;
         border:1px solid #CCC;
     }
     .darkMode button:hover{
-        box-shadow:inset 0 0 5px #555;
+        box-shadow:inset 0 0 5px #777;
     }
     .darkMode button:focus{
-        box-shadow:inset 0 0 5px #666;
+        box-shadow:inset 0 0 5px #777;
     }
     .darkMode button:active{
-        box-shadow:inset 0 0 10px #666;
+        box-shadow:inset 0 0 10px #777;
     }
+select{
+    background-color:#FFF;
+    box-shadow:inset 0 0 5px #CCC;
+    border-radius:5px;
+    color:#333;
+    border:1px solid #333;
+    outline:none;
+    transition:0.2s;
+    cursor:inherit;
+}
+    select:hover{
+        box-shadow:inset 0 0 5px #AAA;
+    }
+    select:focus{
+        box-shadow:inset 0 0 5px #999;
+    }
+    select:active{
+        box-shadow:inset 0 0 10px #999;
+    }
+        .darkMode select{
+            background-color:#272727;
+            box-shadow:inset 0 0 5px #333;
+            color:#CCC;
+            border:1px solid #CCC;
+        }
+        .darkMode select:hover{
+            box-shadow:inset 0 0 5px #777;
+        }
+        .darkMode select:focus{
+            box-shadow:inset 0 0 5px #777;
+        }
+        .darkMode select:active{
+            box-shadow:inset 0 0 10px #777;
+        }
 input, textarea{
     background-color:#FFF;
     border:1px solid #333;
@@ -114,19 +191,19 @@ input:active, textarea:active{
     box-shadow:inset 0 0 10px #999;
 }
     .darkMode input, .darkMode textarea{
-        background-color:#000;
+        background-color:#272727;
         border:1px solid #CCC;
         color:#CCC;
         box-shadow:inset 0 0 5px #333;
     }
     .darkMode input:hover, .darkMode textarea:hover{
-        box-shadow:inset 0 0 5px #555;
+        box-shadow:inset 0 0 5px #777;
     }
     .darkMode input:focus, .darkMode textarea:focus{
-        box-shadow:inset 0 0 5px #666;
+        box-shadow:inset 0 0 5px #777;
     }
     .darkMode input:active, .darkMode textarea:active{
-        box-shadow:inset 0 0 10px #666;
+        box-shadow:inset 0 0 10px #777;
     }
 hr{
     width:100%;
@@ -136,7 +213,7 @@ hr{
     background-size:100% 2px;
 }
 a{
-    cursor:url(cursors/beta/pointer.png) 20 4, pointer;
+    cursor:url(cursors/beta/pointer.png) 11 2, pointer;
 }
 #pagebody{
     margin:0;
@@ -170,7 +247,7 @@ div{
         aeroFriendly3 = url(http://i50.photobucket.com/albums/f331/HawaiiWirikidor/ththththStickPeople.gif)
         interesting1 = url(http://orig11.deviantart.net/dec2/f/2012/185/9/2/tileable_futuristic_grid_by_ndugger-d55yz5h.png)
     */
-    background-image:url(p.png);
+    background-image:url(beta1.png);
     /*background-size:cover;*/
     background-position:0 0;
     font-family:sans-serif;
@@ -186,6 +263,38 @@ div{
 		height:570px;
 		overflow:visible;
     }
+        .smarticon{
+            display:inline-block;
+            position:relative;
+        }
+            .smarticon div{
+                pointer-events:none;
+            }
+            .smarticon_bg{
+                width:100%;
+                height:100%;
+                background-size:contain !important;
+                overflow:hidden;
+                border-radius:100%;
+                display:block;
+            }
+                .smarticon_fg{
+                    width:100%;
+                    height:100%;
+                    background-size:contain !important;
+                }
+                .smarticon_border{
+                    width:100%;
+                    height:100%;
+                    background:none;
+                    border-radius:100%;
+                }
+            .smarticon_nobg{
+                width:100%;
+                height:100%;
+                background-size:contain !important;
+                display:none;
+            }
         #hideall{
             width: 100%;
             height: 100%;
@@ -227,6 +336,8 @@ div{
             transform:scale(0.5);
             transform-origin:50%;
             opacity:0;
+            -webkit-backdrop-filter:blur(5px);
+            backdrop-filter:blur(5px);
         }
             .mobileMode .window{
                 border-radius:0;
@@ -240,13 +351,13 @@ div{
                 height:360px;
                 left:-40px;
                 top:-40px;
-                background-image:url(p.png);
-                -webkit-filter:blur(5px);
-                filter:blur(5px);
+                /*background-image:url(beta1.png);*/
+                /*-webkit-filter:blur(5px);
+                filter:blur(5px);*/
                 opacity:1;
                 background-position: -485px -260px;
                 /*background-color:rgba(190, 190, 255, .6);*/
-                background-color:rgba(190, 190, 255, .3);
+                background-color:rgba(150, 150, 200, 0.5);
                 /*background-blend-mode:screen;*/
                 background-blend-mode:screen;
             }
@@ -256,7 +367,7 @@ div{
                     background-position: 40px 40px !important;
                 }
                 #tskbrAero{
-                    height: 70px;
+                    height: 72px;
                     width: 1090px;
                     left: -20px;
                     top: -20px;
@@ -282,7 +393,11 @@ div{
                 width: calc(100% - 98px); /* fallback */
                 width:calc(100% - 92px - var(--windowBorderWidth) - var(--windowBorderWidth));
                 white-space:nowrap;
+<<<<<<< HEAD
                 height:21px;
+=======
+                height:32px;
+>>>>>>> upstream/master
                 text-shadow:0px 0px 2px #000;
                 color:#FFF;
                 /*cursor:url(cursors/move.png) 14 14, move;*/
@@ -291,11 +406,29 @@ div{
                 .leftCaptionButtons .winCap{
                     padding-left:69px;
                 }
+                .winCap .legacyCaptionIcon{
+                    width:32px;
+                    height:32px;
+                }
+                .winCap .winCaptionTitle{
+                    position:relative;
+                    display:inline-block;
+                    padding-left:8px;
+                    padding-right:16px;
+                    height:32px;
+                    line-height:32px;
+                }
+            .winBgService{
+                display:none;
+                width:0;
+                height:0;
+                border:none;
+            }
             .winHTML{
                 width:calc(100% - 9px); /* fallback */
-                height:calc(100% - 24px); /* fallback */
+                height:calc(100% - 35px); /* fallback */
                 width:calc(100% - 3px - var(--windowBorderWidth) - var(--windowBorderWidth));
-                height:calc(100% - 21px - var(--windowBorderWidth));
+                height:calc(100% - 32px - var(--windowBorderWidth));
                 bottom:3px; /* fallback */
                 left:3px; /* fallback */
                 bottom:var(--windowBorderWidth);
@@ -307,7 +440,7 @@ div{
             }
                 .mobileMode .winHTML{
                     width:calc(100% - 3px) !important;
-                    height:calc(100% - 21px) !important;
+                    height:calc(100% - 32px) !important;
                     bottom: 0;
                     left:0 !important;
                     border-radius:0;
@@ -321,16 +454,38 @@ div{
                         width:100% !important;
                     }
                 .darkMode .winHTML{
-                    background-color:#000;
-                    color:#FFF;
+                    background-color:#272727;
+                    color:#DDD;
                 }
+                .darkResponsive{
+                    background-color:#FFF;
+                    color:#000;
+                    border-color:#000;
+                }
+                .darkMode .darkResponsive{
+                    background-color:#272727;
+                    color:#DDD;
+                    border-color:#DDD;
+                }
+                .darkMode .darkInvert{
+                    filter: invert(1);
+                }
+                /*
                 .STNtableTR{
-                    height:100px;
                     text-align:center;
+                    padding:16px;
                 }
+                */
                 .STNtableTD{
-                    width:33%;
-                    transition:1s;
+                    max-width:85%;
+                    width:200px;
+                    transition:0.3s;
+                    padding: 8px;
+                    padding-bottom:20px;
+                    margin: 3px;
+                    position:relative;
+                    display:inline-block;
+                    
                     /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
                 }
                 .STNtableTD:hover{
@@ -361,7 +516,11 @@ div{
                     font-family:aosProFont, monospace;
                     font-size:12px;
                 }
+<<<<<<< HEAD
                 #FIL2tbl div, .FIL2sidetbl div{
+=======
+                #FIL2tbl > div, .FIL2sidetbl > div{
+>>>>>>> upstream/master
                     font-family:aosProFont, monospace;
                     position:relative;
                     white-space:nowrap;
@@ -370,10 +529,17 @@ div{
                 .FIL2sidetbl{
                     position:relative;
                 }
+<<<<<<< HEAD
                 #FIL2tbl div:hover, .FIL2sidetbl div:hover{
                     background-color:#AAA;
                 }
                     .darkMode #FIL2tbl div:hover, .darkMode .FIL2sidetbl div:hover{
+=======
+                #FIL2tbl > div:hover, .FIL2sidetbl > div:hover{
+                    background-color:#AAA;
+                }
+                    .darkMode #FIL2tbl > div:hover, .darkMode .FIL2sidetbl > div:hover{
+>>>>>>> upstream/master
                         background-color:#555;
                     }
                     
@@ -389,7 +555,11 @@ div{
                         filter:invert(1);
                     }
                 
+<<<<<<< HEAD
                 #FIL2tbl .FIL2aosAppIcon, .FIL2sidetbl .FIL2aosAppIcon{
+=======
+                #FIL2tbl .FIL2aosAppIcon, .FIL2sidetbl .FIL2aosAppIcon, #FIL2tbl .smarticon, .FIL2sidetbl .smarticon{
+>>>>>>> upstream/master
                     width:16px;
                     height:16px;
                     margin-top:0;
@@ -400,7 +570,7 @@ div{
                         filter:none;
                     }
                 
-                .FIL2viewCompact div{
+                .FIL2viewCompact > div{
                     font-size:12px;
                     width:148px;
                     height:18px;
@@ -408,15 +578,15 @@ div{
                     display:inline-block;
                     margin-left:3px;
                     margin-top:3px;
-                    margin-bottom:-4px;
+                    margin-bottom:-3px;
                     border:1px solid #000;
                     padding:1px;
                 }
-                    .darkMode .FIL2viewCompact div{
+                    .darkMode .FIL2viewCompact > div{
                         border:1px solid #FFF;
                     }
                 
-                .FIL2viewSmall div{
+                .FIL2viewSmall > div{
                     font-size:12px;
                     width:298px;
                     height:18px;
@@ -424,15 +594,15 @@ div{
                     display:inline-block;
                     margin-left:3px;
                     margin-top:3px;
-                    margin-bottom:-4px;
+                    margin-bottom:-3px;
                     border:1px solid #000;
                     padding:1px;
                 }
-                    .darkMode .FIL2viewSmall div{
+                    .darkMode .FIL2viewSmall > div{
                         border:1px solid #FFF;
                     }
                 
-                .FIL2viewMedium div{
+                .FIL2viewMedium > div{
                     font-size:12px;
                     width:calc(100% - 8px);
                     height:14px;
@@ -442,12 +612,16 @@ div{
                     margin-top:1px;
                     padding:1px;
                 }
+<<<<<<< HEAD
                     #FIL2tbl.FIL2viewMedium .FIL2aosAppIcon, .FIL2sidetbl.FIL2viewMedium .FIL2aosAppIcon{
+=======
+                    #FIL2tbl.FIL2viewMedium .FIL2aosAppIcon, .FIL2sidetbl.FIL2viewMedium .FIL2aosAppIcon, #FIL2tbl.FIL2viewMedium .smarticon, .FIL2sidetbl.FIL2viewMedium .smarticon{
+>>>>>>> upstream/master
                         margin-top:-1px;
                         margin-bottom:-5px;
                     }
                 
-                .FIL2viewLarge div{
+                .FIL2viewLarge > div{
                     font-size:12px;
                     width:calc(100% - 10px);
                     height:18px;
@@ -458,7 +632,7 @@ div{
                     border:1px solid #000;
                     padding:1px;
                 }
-                    .darkMode .FIL2viewLarge div{
+                    .darkMode .FIL2viewLarge > div{
                         border:1px solid #FFF;
                     }
                 
@@ -483,10 +657,6 @@ div{
                     font-size:12px;
                     overflow:scroll;
                 }
-                    .darkMode #NORAout{
-                        background-color:#000;
-                        color:#FFF;
-                    }
                     #NORAout a{
                         color: #0F0;
                     }
@@ -542,65 +712,63 @@ div{
                     overflow:visible;
                 }
             .winExit{
-                height:16px;
                 right: 3px; /* fallback */
                 right:var(--windowBorderWidth);
-                width:16px;
-                padding-left:2px;
-                font-family:aosProFont, Courier;
-                font-size:24px;
-                line-height:14px;
-                border:1px solid rgba(255, 255, 255, .3);
-                border-top:none;
-                border-radius:5px;
-                border-top-right-radius:0;
-                border-top-left-radius:0;
-                color:rgba(255, 255, 255, .3);
-                text-align:center;
-                box-shadow:0 0 1px #000;
                 /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
             }
             .winExit:hover{
+                /*
                 border-color:#C00;
                 color:#C00;
                 background-color:#E55;
+                */
+                background-color:rgba(255, 50, 50, 0.5);
+                color:rgba(255, 255, 255, 0.5);
+                box-shadow:none;
             }
             .winExit:active{
+                /*
                 border-color:#E55;
                 color:#E55;
                 background-color:#C00;
+                */
+                background-color:rgba(200, 0, 0, 0.75);
             }
                 .leftCaptionButtons .winExit{
                     left:3px; /* fallback */
                     left:var(--windowBorderWidth);
                     right:initial;
                 }
-            .winShrink, .winBig, .winFld{
-                height:16px;
+            .winShrink, .winBig, .winFld, .winExit{
+                height:17px;
                 width:16px;
                 padding-left:2px;
+                padding-top:1px;
+                top:5px;
                 font-family:aosProFont, Courier;
                 font-size:24px;
                 line-height:14px;
                 border:1px solid rgba(255, 255, 255, .3);
-                border-top:none;
                 border-radius:5px;
-                border-top-right-radius:0;
-                border-top-left-radius:0;
                 color:rgba(255, 255, 255, .3);
                 text-align:center;
                 box-shadow:0 0 1px #000;
                 /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
             }
             .winShrink:hover, .winBig:hover, .winFld:hover{
-                border-color:#090;
+                /*border-color:#090;
                 color:#090;
                 background-color:#4C4;
+                */
+                background-color:rgba(100, 150, 255, 0.5);
+                color:rgba(255, 255, 255, 0.5);
+                box-shadow:none;
             }
             .winShrink:active, .winBig:active, .winFld:active{
-                border-color:#4C4;
+                /*border-color:#4C4;
                 color:#4C4;
-                background-color:#090;
+                background-color:#090;*/
+                background-color:rgba(50, 100, 200, 0.75);
             }
             .winShrink{
                 right:49px; /* fallback */
@@ -641,7 +809,7 @@ div{
             }
         .app{
             width:100px;
-            height:75px;
+            height:90px; /*75px*/
             border-radius:5px;
             text-align:center;
             /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
@@ -665,7 +833,6 @@ div{
                 text-shadow:0px 0px 5px #000;
                 width:100px;
                 font-size:50px;
-                top:-6px;
                 overflow:visible;
             }
             .appIcon img{
@@ -683,7 +850,11 @@ div{
                 font-size:12px;
                 text-align:center;
                 width:100px;
+                height:2em;
             }
+                .app:hover .appDesc{
+                    overflow:visible;
+                }
     #winmove{
         left:0;
         top:0;
@@ -724,7 +895,7 @@ div{
 	bottom:0;
 	left:0;
 	width:1050px;
-	height:30px;
+	height:32px;
 	/*Aero theme if supported
 	background-color:rgba(190, 190, 255, .6);*/
 	color:#FFF;
@@ -734,14 +905,16 @@ div{
     box-shadow: 0 0 10px #000;
     z-index:101;
     transform-origin:15px 15px;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter:blur(5px);
 }
 	#icons{
-		height:30px;
+		height:32px;
 		/*width:600px;*/
 	}
-        .icon{
-            height:30px;
-            width:45px;
+        #icons .icon{
+            height:32px;
+            width:44px;
             /*border-right:2px solid rgba(100, 100, 155, .6);*/
             border-radius:2px;
             display:none;
@@ -750,22 +923,40 @@ div{
             position:static;
             transition:background-color .5s;
         }
-        .icon:hover{
-            background:radial-gradient(25px at 50% 100%, rgba(220, 220, 255, .8) 0px, rgba(220, 220, 255, 0) 25px);
+        #icons .icon:hover{
+            /*background:radial-gradient(25px at 50% 100%, rgba(220, 220, 255, .8) 0px, rgba(220, 220, 255, 0) 25px);*/
+            background:rgba(255, 255, 255, 0.1);
         }
-            .iconImg{
-                margin-top:3px;
+            #icons .icon.activeAppIcon{
+                background: rgba(255, 255, 255, 0.25);
+            }
+            #icons .icon.activeAppIcon:hover{
+                background:rgba(255, 255, 255, 0.35);
+            }
+            #icons .icon .iconOpenIndicator{
+                position:relative;
+                height:5px;
+                width:34px;
+                margin-top:32px;
+                margin-left:5px;
+                margin-bottom:-37px;
+                transition: box-shadow 0.3s;
+            }
+                #icons .icon.openAppIcon .iconOpenIndicator{
+                    box-shadow:0 0 5px #FFF;
+                }
+            #icons .iconImg{
+                margin-top:5px;
                 position:static;
                 text-align:center;
             }
-            .imageIco{
+            #icons .imageIco{
                 max-height:32px; /* 25 25 */
                 max-width:32px;
-                margin-top:-1px;
                 margin-left:6px;
             }
 	#time{
-		height:29px;
+	    height:32px;
 		right:2px;
 		top:0;
 		text-align:right;
@@ -829,30 +1020,49 @@ div{
     background-origin:center;
     border-radius:2px;
 }
+    #ctxMenu.backdropFilterCtxMenu{
+        background-color:rgba(255, 255, 255, 0.7);
+        backdrop-filter:blur(5px);
+    }
     .darkMode #ctxMenu{
+<<<<<<< HEAD
         background-color:#000;
+=======
+        background-color:#272727;
+>>>>>>> upstream/master
         color:#CCC;
     }
+        .darkMode #ctxMenu.backdropFilterCtxMenu{
+            background-color:rgba(39, 39, 39, 0.7);
+        }
     .darkMode #ctxMenu img{
         filter:invert(1);
     }
     #ctxMenu p{
         height:1em;
+<<<<<<< HEAD
         box-shadow:inset 0 0 5px 3px #FFF;
+=======
+        /*box-shadow:inset 0 0 5px 5px #FFF;*/
+>>>>>>> upstream/master
         width:calc(100% - 4px);
         display:block;
         margin:0;
         /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
         transition:0.2s;
+<<<<<<< HEAD
         background-color:#FFF;
+=======
+        /*background-color:#FFF;*/
+>>>>>>> upstream/master
         padding:2px;
         padding-left:4px;
         
     }
-        .darkMode #ctxMenu p{
-            box-shadow:inset 0 0 5px 3px #000;
-            background-color:#000;
-        }
+        /*.darkMode #ctxMenu p{
+            box-shadow:inset 0 0 5px 5px #272727;
+            background-color:#272727;
+        }*/
     #ctxMenu p:hover{
         background-color:rgba(127, 127, 127, 0.3);
         box-shadow:none;
@@ -898,7 +1108,7 @@ div{
     z-index:9999999999999998;
     transition:opacity 1s;
     background-color:#000;
-    background-image:url('p.png');
+    background-image:url('beta1.png');
     filter:blur(10px);
     background-position:center;
     background-size:cover;
@@ -1016,28 +1226,28 @@ div{
     }
 
 .cursorDefault{
-    cursor:url(cursors/beta/default.png) 3 3, default;
+    cursor:url(cursors/beta/default.png) 3 2, default;
 }
 .cursorMove{
-    cursor:url(cursors/beta/move.png) 20 20, move;
+    cursor:url(cursors/beta/move.png) 16 15, move;
 }
 .cursorOpenHand{
-    cursor:url(cursors/beta/movpre.png) 20 20, move;
+    cursor:url(cursors/beta/movpre.png) 15 16, move;
 }
 .cursorCloseHand{
-    cursor:url(cursors/beta/moving.png) 20 20, move;
+    cursor:url(cursors/beta/moving.png) 12 10, move;
 }
 .cursorPointer{
-    cursor:url(cursors/beta/pointer.png) 20 4, pointer;
+    cursor:url(cursors/beta/pointer.png) 11 2, pointer;
 }
 .cursorLoadLight{
-    cursor:url(cursors/beta/wait.png) 20 20, wait;
+    cursor:url(cursors/beta/wait.png) 14 13, wait;
 }
 .cursorLoadDark{
-    cursor:url(cursors/beta/wait.png) 20 20, wait;
+    cursor:url(cursors/beta/wait.png) 14 13, wait;
 }
 .cursorForceLoad{
-    cursor:url(cursors/beta/wait.png) 20 20, wait !important;
+    cursor:url(cursors/beta/wait.png) 14 13, wait !important;
 }
 
 .changeLogTitle, .changeLogDate, .changeLogAddition, .changeLogTweak, .changeLogRemoval, .changeLogUnknown{
@@ -1077,13 +1287,14 @@ div{
     }
 
 .widget{
-    height:100%;
+    padding-top:1px;
+    height:31px;
     color:#FFF;
-    text-shadow:0 0 1px #000;
+    text-shadow:0 0 2px #000;
     position:static;
     display:inline-block;
     background:rgba(255, 255, 255, 0);
-    transition:background 0.3s;
+    transition:background-color 0.3s;
 }
 .widget:hover{
     background:rgba(255, 255, 255, 0.25);
@@ -1101,21 +1312,21 @@ div{
     border-top-right-radius:5px;
     */
     border-radius:5px;
-    background-color:#FFF;
-    border:2px solid #000;
+    /*background-color:#FFF;*/
+    border:2px solid;
     /*border-bottom:none;*/
-    color:#000;
+    /*color:#000;*/
     font-family:aosProFont, monospace;
     font-size:12px;
     box-shadow:0 0 20px #000;
     transition:0.3s;
     z-index:100;
 }
-    .darkMode #widgetMenu{
+    /*.darkMode #widgetMenu{
         background-color:#000;
         border: 2px solid #FFF;
         color:#FFF;
-    }
+    }*/
 #widgetTitle{
     font-size:24px;
     left:2px;
@@ -1137,9 +1348,9 @@ div{
     min-height:100px;
     min-width:300px;
     border-radius:5px;
-    background-color:#FFF;
-    border:2px solid #000;
-    color:#000;
+    /*background-color:#FFF;*/
+    border:2px solid;
+    /*color:#000;*/
     font-family:aosProFont, monospace;
     font-size:12px;
     box-shadow:0 0 20px #000;
@@ -1147,11 +1358,11 @@ div{
     transition:0.3s;
     z-index:110;
 }
-    .darkMode #notifWindow{
+    /*.darkMode #notifWindow{
         background-color:#000;
         border:2px solid #FFF;
         color:#FFF;
-    }
+    }*/
 #notifWindow:hover{
     opacity:1;
 }
@@ -1232,6 +1443,7 @@ div{
 #widgetMenu .winExit, #notifWindow .winExit{
     color:#000;
     border-color:#000;
+    top:3px;
 }
 .darkMode #widgetMenu .winExit, .darkMode #notifWindow .winExit{
     color:#FFF;

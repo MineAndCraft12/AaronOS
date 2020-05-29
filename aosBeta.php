@@ -11,32 +11,23 @@
     <link rel="icon" href="faviconBeta.ico" type="image/x-icon">
     <link rel="manifest" href="manifest.json">
     <style id="windowBorderStyle"></style>
+    <style id="smartIconStyle"></style>
     <style id="cursorStyle"></style>
     <style id="aosCustomStyle"></style>
 
-    <!--
-    <script defer src="html2canvas.js"></script>
-    html2canvas(document.body, {onrendered:function(canvas){getId('winjsCa').style.backgroundImage = 'url(' + canvas.toDataURL('image/png') + ')'}})
-    -->
+    <svg>
+        <defs>
+            <filter id="svgblur">
+                <feImage xlink:href="winimg_disp.png" result="dispImg" width="256px" height="256px" preserveAspectRatio="none"/>
+                <feTile in="dispImg" result="dispMap" preserveAspectRatio="none"/>
+                <feDisplacementMap id="svgDisplaceMap" in2="dispMap" in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
 </head>
 <body style="background-color:#000" id="pagebody">
-    <!-- OLD VERSION AT https://www.codecademy.com/MineAndCraft12/codebits/RfyrKj -->
     <!-- helps JS find scrollbar stuff -->
     <div id="findScrollSize" style="height:100px; width:100px; overflow:scroll;"></div>
-    <!-- messaging relies on this -->
-    <!--<iframe id="messagingframe" style="display:none"></iframe>-->
-    <!-- Allows filesaving -->
-    <!--
-    <div id="mastersaveframediv" style="display:none">
-        <iframe id="mastersaveframe" name="mastersaveframe" src=""></iframe>
-        <form action="filesavernew.php" method="POST" target="mastersaveframe">
-            <input name="k" value="">
-            <input name="f" value="">
-            <textarea name="c"></textarea>
-            <input type="submit" id="savesubmit">
-        </form>
-    </div>
-    -->
     <div id="bootLanguage" style="display:none"><?php
         if(isset($_COOKIE['keyword'])){
             if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/language.txt')){
@@ -54,12 +45,12 @@
             <div id="hideall" onClick="toTop({dsktpIcon: 'DESKTOP'}, 1)"></div>
             <!--<div id="dsktpWidgets"></div>-->
             <p id="timesUpdated">Oops!</p>
-            <div id="widgetMenu" style="opacity:0;pointer-events:none;bottom:-350px">
+            <div id="widgetMenu" class="darkResponsive" style="opacity:0;pointer-events:none;bottom:-350px">
                 <div id="widgetTitle"></div>
                 <div id="widgetContent"></div>
                 <div class="winExit cursorPointer" onClick="closeWidgetMenu()">x</div>
             </div>
-            <div id="notifWindow" style="opacity:0;pointer-events:none;right:-350px">
+            <div id="notifWindow" class="darkResponsive" style="opacity:0;pointer-events:none;right:-350px">
                 <div id="notifTitle">Notification</div>
                 <div id="notifContent">Content</div>
                 <div id="notifButtons"><button>Button 1</button> <button>Button 2</button></div>
@@ -67,11 +58,6 @@
                 <div class="winExit cursorPointer" onClick="getId('notifWindow').style.opacity='0';getId('notifWindow').style.pointerEvents='none';getId('notifWindow').style.right = '-350px';window.setTimeout(function(){apps.prompt.vars.checkPrompts();}, 300);apps.prompt.vars.currprompt[3](-1);">x</div>
             </div>
         </div>
-        <!-- old window move/resize and icon move elements
-        <div id="winmove" onclick="winmove(event)" onmousemove="winmoving(event)"></div>
-        <div id="icomove" onclick="icomove(event)" onmousemove="icomoving(event)"></div>
-        <div id="winres" onclick="winres(event)" onmousemove="winresing(event)"></div>
-        -->
         <div id="winmove" class="cursorOpenHand" onmouseup="winmove(event)" onmousemove="winmoving(event)"></div>
         <div id="icomove" class="cursorOpenHand" onclick="icomove(event)" onmousemove="icomoving(event)"></div>
         <div id="icnmove" class="cursorOpenHand" onclick="icnmove(event)" onmousemove="icnmoving(event)"></div>
@@ -84,7 +70,7 @@
             <div id="icons">Loading, please wait.</div>
         </div>
         <canvas id="aDE"></canvas>
-        <div id="ctxMenu" onclick="getId('ctxMenu').style.display='none'"></div>
+        <div id="ctxMenu" onclick="getId('ctxMenu').style.display='none'" class="backdropFilterCtxMenu"></div>
         <div id="screensaverLayer"></div>
         <div id="petCursors"></div>
         <!--<div id="aOSloadingBg"></div>-->
@@ -112,7 +98,7 @@
                 <h1>AaronOS</h1>
                 <hr>
                 <div id="aOSloadingInfoDiv">
-                    <div id="aOSloadingInfo" class="liveElement" liveVar="finishedWaitingCodes / totalWaitingCodes * 100 + '%'" liveTarget="style.width">Initializing...</div>
+                    <div id="aOSloadingInfo" class="liveElement" data-live-eval="finishedWaitingCodes / totalWaitingCodes * 100 + '%'" data-live-target="style.width">Initializing...</div>
                 </div><br><br>
                 &nbsp;<br>
                 <a href="?safeMode"><button>Safe Mode</button></a><br><br>
@@ -122,7 +108,11 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
     <img style="display:none" id="bgSizeElement" src="p.png" onload="try{updateBgSize()}catch(err){}">
+=======
+    <img style="display:none" id="bgSizeElement" src="beta1.png" onload="try{updateBgSize()}catch(err){}">
+>>>>>>> upstream/master
 </body>
 <!--<script defer src="script.js"></script>-->
 <?php
@@ -148,9 +138,15 @@
     echo '<script defer>';
     require 'filepreloaderBeta.php';
     echo '</script>';
+<<<<<<< HEAD
     echo '<script>';
     //require 'test_ssl.php';
     echo '</script>';
+=======
+    //echo '<script>';
+    //require 'test_ssl.php';
+    //echo '</script>';
+>>>>>>> upstream/master
 ?>
 </html>
 <?php ob_end_flush(); ?>

@@ -1,0 +1,7 @@
+{
+    "name": "Terminal Theme",
+    "id": "terminalstyle",
+    "version": "1.0",
+    "appType": "stylesheet",
+    "styleLink": "customStyles/terminal/aosCustomStyle.css"
+}

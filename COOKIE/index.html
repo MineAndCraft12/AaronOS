@@ -5,9 +5,9 @@
             <link rel="stylesheet" href="style.css">
        <script defer src="script.js"></script>
     </head>
-    <body background="/winimg.png">
+    <body background="../winimg.png">
         <div onclick="ShowShop()" id="showShop"><span id="ShopName">Shop</span>&#10095;</div>
-        <div id="cookieShop" style="background:url(/win7blur1080.png);background-color:#222">
+        <div id="cookieShop" style="background:url(../win7blur1080.png);background-color:#222">
                 <div id="cookieupgradeHeader">Upgrades</div>
             <div id="Upgrades">
                 
@@ -106,9 +106,9 @@
             <input type="checkbox" checked>
             <div class="slider round" onclick="allowBulletHoles = -1 * allowBulletHoles + 1;ctx.clearRect(0, 0, 360, 360);localStorage.removeItem('canvasImage')"></div>
         </label><br><br>Enable Destruction<br><br>
-    <p style="position:absolute;left:10px;bottom:90px;display:block;z-index:1000;">Version 0.7B</p>
+    <p style="position:absolute;left:10px;bottom:90px;display:block;z-index:1000;">Version 0.7.9B</p>
     <button id="updates" style="position:absolute;left:10px;bottom:70px;display:block;z-index:1000;" onclick="showUpdate()">Updates</button>
-    <button style="position:absolute;left:10px;bottom:50px;display:block;z-index:1000;" onclick="if(confirm('Those poor cookies. You sure you want to delete them cookies?')){window.localStorage.setItem('startOver','true');window.location='/COOKIE'}">Delete all progress</button>
+    <button style="position:absolute;left:10px;bottom:50px;display:block;z-index:1000;" onclick="if(confirm('Those poor cookies. You sure you want to delete them cookies?')){window.localStorage.setItem('startOver','true');window.location='../COOKIE'}">Delete all progress</button>
     <button onclick='toggleHowPlay()'>How to play</button><br><br>
     <!-- disabled as it messes with aOS
     <button onclick='exportSave()'>Export Save</button><br>

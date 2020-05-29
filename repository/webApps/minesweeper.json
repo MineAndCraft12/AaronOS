@@ -1,0 +1,13 @@
+{
+    "name": "Minesweeper",
+    "id": "minesweeper",
+    "version": "1.1",
+    "abbreviation": "MSw",
+    "appType": "webApp",
+    "homeURL": "minesweeper.php",
+    "icon": {
+        "foreground": "repository/webApps/minesweeper.png"
+    },
+    "windowSize": [550, 600],
+    "manualOpen": 1
+}

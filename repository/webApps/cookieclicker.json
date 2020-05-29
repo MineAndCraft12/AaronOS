@@ -1,0 +1,12 @@
+{
+    "name": "Cookie Clicker",
+    "id": "cookieclicker",
+    "version": "1.0",
+    "abbreviation": "CCl",
+    "appType": "webApp",
+    "homeURL": "COOKIE/",
+    "icon": {
+        "foreground": "appicons/ds/CCl.png"
+    },
+    "windowSize": [800, 600]
+}

@@ -1,0 +1,7 @@
+{
+    "name": "Test Stylesheet",
+    "id": "teststyle",
+    "version": "1.0",
+    "appType": "stylesheet",
+    "styleContent": "button { color:#0AA !important; }"
+}

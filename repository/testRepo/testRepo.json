@@ -1,0 +1,81 @@
+{
+    "repoName": "AaronOS Testing Repository",
+    "repoID": "aaronos_test",
+    "repoAliases": ["aaronos", "aos", "test"],
+    "repoVersion": "1.0",
+    "packages": {
+        "bing": {
+            "packageName": "Bing",
+            "packageID": "bing",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/testRepo/bing.json",
+            "icon": {
+                "foreground": "http://www.designtagebuch.de/wp-content/uploads/mediathek/2013/09/bing-b.jpg",
+                "backgroundColor": "#FFF"
+            },
+            "description": "It's bing."
+        },
+        "guitartab": {
+            "packageName": "Guitar Tab",
+            "packageID": "guitartab",
+            "packageAliases": ["guitar"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/guitartab.json",
+            "icon": {
+                "foreground": "appicons/ds/aOS.png"
+            },
+            "description": "This version of Guitar Tab will always need to update, for testing repo features."
+        },
+        "aosToolsTest": {
+            "packageName": "aosTools Test App",
+            "packageID": "aosToolsTest",
+            "packageAliases": [],
+            "version": "1.1",
+            "packageType": "webApp",
+            "installURL": "repository/testRepo/aosToolsTest.json",
+            "icon": {
+                "foreground": "appicons/ds/aOS.png"
+            },
+            "description": "Test app for the aosToolsTest.js utility."
+        },
+        "mapjs": {
+            "packageName": "MapJS",
+            "packageID": "mapjs",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/testRepo/mapjs.json",
+            "icon": {
+                "foreground": "appicons/ds/aOS.png"
+            },
+            "description": "Maps JS objects graphically"
+        },
+        "testbootscript": {
+            "packageName": "Test Boot Script",
+            "packageID": "testbootscript",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "bootscript",
+            "installURL": "repository/testRepo/testbootscript.json",
+            "icon": {
+                "foreground": "appicons/aOS.png"
+            },
+            "description": "This is a test boot script that simply logs to the JS console."
+        },
+        "teststyle": {
+            "packageName": "Test Style",
+            "packageID": "teststyle",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/testRepo/teststyle.json",
+            "icon": {
+                "foreground": "appicons/aOS.png"
+            },
+            "description": "This is a test stylesheet that will turn all text in buttons blue."
+        }
+    }
+}

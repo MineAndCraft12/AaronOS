@@ -1,0 +1,13 @@
+{
+    "name": "MapJS",
+    "id": "mapjs",
+    "version": "1.0",
+    "abbreviation": "MJS",
+    "appType": "webApp",
+    "homeURL": "mapjs.php",
+    "icon": {
+        "foreground": "appicons/ds/aOS.png"
+    },
+    "windowSize": [500, 400],
+    "manualOpen": 0
+}

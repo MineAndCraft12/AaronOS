@@ -1,0 +1,8 @@
+{
+	backgroundColor: "#303947",
+	foreground: "smarticons/aerotest/fg.png",
+	backgroundBorder: {
+		thickness: 2,
+		color: "#252F3A"
+	}
+}

@@ -1,4 +1,4 @@
-*{
+*:not(.smarticon):not(.smarticon_nobg):not(.smarticon_bg):not(.smarticon_fg):not(.smarticon_border){
     background:#000 !important;
     border-color:#0F0 !important;
     border-radius:0 !important;
@@ -23,7 +23,7 @@
     background:none !important;
     outline:3px solid #0F0;
 }
-img{
+img, .smarticon{
     filter:grayscale(1) sepia(1) saturate(13) hue-rotate(45deg) contrast(4) !important;
 }
 input[type=radio], input[type=checkbox]{

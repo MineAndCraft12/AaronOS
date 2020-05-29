@@ -8,26 +8,35 @@
  border-color:rgba(0, 0, 0, 0.4);
  color:#FFF;
  text-shadow:0 0 1px #000;
+ top:-2px;
 }
 .winFld{
+    border-top-left-radius:0;
+    border-top-right-radius:0;
+    margin-left:-1px;
  box-shadow:0 0 0 1px rgba(255, 255, 255, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.4), inset 0 8px 4px rgba(255, 255, 255, 0.4);
 }
 .winExit{
  border-bottom-left-radius:0;
- width:21px;
+ border-top-left-radius:0;
+ border-top-right-radius:0;
+ width:42px;
+ margin-right:-1px;
  background-color:#D44;
  box-shadow:1px 1px 0 rgba(255, 255, 255, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.4), inset 0 8px 4px rgba(255, 255, 255, 0.4);
 }
 .winBig{
  border-radius:0;
  width:20px;
-margin-right:1px;
+ margin-right:21px;
  box-shadow:0 1px 0 rgba(255, 255, 255, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.4), inset 0 8px 4px rgba(255, 255, 255, 0.4);
 }
 .winShrink{
  border-bottom-right-radius:0;
+ border-top-left-radius:0;
+ border-top-right-radius:0;
  width:22px;
- margin-right:1px;
+ margin-right:21px;
  box-shadow:-1px 1px 0 rgba(255, 255, 255, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.4), inset 0 8px 4px rgba(255, 255, 255, 0.4);
 }
 .winBig:hover, .winShrink:hover, .winFld:hover{
@@ -102,7 +111,9 @@ hr{
 }
 #ctxMenu{
  border-color:#CCC;
- background-color:#F2F2F2;
+ border-radius:0;
+ background-color:#F2F2F2 !important;
+ backdrop-filter:none;
 }
 #ctxMenu hr{
  background-color:#D7D7D7;
@@ -115,6 +126,8 @@ hr{
  transition: 0s;
  color: #000;
  border-radius:3px;
+ background-color:#F2F2F2;
+ box-shadow:none;
 }
 #ctxMenu p:hover{
  transition: 0s;

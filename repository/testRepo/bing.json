@@ -1,0 +1,12 @@
+{
+    "name": "Bing",
+    "id": "bing",
+    "version": "1.0",
+    "abbreviation": "BNG",
+    "appType": "webApp",
+    "homeURL": "https://bing.com/",
+    "icon": {
+        "foreground": "appicons/ds/aOS.png"
+    },
+    "windowSize": [500, 400]
+}

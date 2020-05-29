@@ -10,6 +10,17 @@
                     mkdir('USERFILES/'.$_POST['k']);
                 }
                 if(file_exists('USERFILES/'.$_POST['k'].'/aOSpassword.txt')){
+                    if(isset($_COOKIE['logintoken'])){
+                        if((require 'checkToken.php') === 0){
+                            echo 'Error - Not logged in.';
+                            die();
+                        }
+                    }else{
+                        echo 'Error - Not logged in.';
+                        die();
+                    }
+                    
+                    /*
                     if(strlen(file_get_contents('USERFILES/'.$_POST['k'].'/aOSpassword.txt')) === 64){
                         unlink('USERFILES/'.$_POST['k'].'/aOSpassword.txt');
                     }else{
@@ -30,6 +41,7 @@
                         echo 'Error - Password not provided.';
                         die();
                     }
+                    */
                 }
                 
                 if(strpos($_POST['f'], '..') != FALSE){
