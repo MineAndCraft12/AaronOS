@@ -828,6 +828,7 @@ div{
                 text-align:center;
                 width:100px;
                 height:2em;
+                overflow:inherit;
             }
                 .app:hover .appDesc{
                     overflow:visible;
