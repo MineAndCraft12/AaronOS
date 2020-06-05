@@ -1,16 +1,11 @@
-<<<<<<< HEAD
-=======
 window.onerror = function(errorMsg, url, lineNumber){
     alert("oof, u got a error\n\n" + url + '[' + lineNumber + ']:\n' + errorMsg)
 }
 
->>>>>>> upstream/master
 function getId(target){
     return document.getElementById(target);
 }
 
-<<<<<<< HEAD
-=======
 var windowBorders = [6, 35, 0];
 function recieveWindowBorders(response){
     windowBorders = [
@@ -40,22 +35,15 @@ if(window.aosTools){
     aosTools.testConnection();
 }
 
->>>>>>> upstream/master
 var audio = new Audio();
 var audioDuration = 1;
 function updateProgress(){
     progressBar.style.width = audio.currentTime / audioDuration * 100 + "%";
-<<<<<<< HEAD
-=======
     progressBar.style.backgroundColor = getColor(audio.currentTime / audioDuration * 255);
->>>>>>> upstream/master
     requestAnimationFrame(updateProgress);
 }
 requestAnimationFrame(updateProgress);
 
-<<<<<<< HEAD
-var folderInput = getId("folderInput");
-=======
 /*global AudioContext*/
 
 var audioContext;
@@ -75,7 +63,6 @@ var microphone;
 var folderInput = getId("folderInput");
 var fileInput = getId("fileInput");
 var fileWeirdInput = getId("fileWeirdInput");
->>>>>>> upstream/master
 var songList = getId("songList");
 var progressBar = getId("progress");
 var currentlyPlaying = getId("currentlyPlaying");
@@ -85,22 +72,14 @@ var filesAmount = 0;
 var fileNames = [];
 var filesLength = 0;
 
-<<<<<<< HEAD
-var supportedFormats = ['wav', 'mp3', 'ogg', 'flac'];
-=======
 var supportedFormats = ['aac', 'aiff', 'wav', 'm4a', 'mp3', 'amr', 'au', 'weba', 'oga', 'wma', 'flac', 'ogg', 'opus', 'webm'];
->>>>>>> upstream/master
 
 var URL;
 
 function listSongs(){
     var str = "";
     for(var i in fileNames){
-<<<<<<< HEAD
-        str += '<div id="song' + i + '" onclick="selectSong(' + i + ')">' + fileNames[i][1] + ": " + fileNames[i][0] + '</div>';
-=======
         str += '<div id="song' + i + '" onclick="selectSong(' + i + ')">' + fileNames[i][1] + ": " + fileNames[i][3] + fileNames[i][0] + '</div>';
->>>>>>> upstream/master
     }
     songList.innerHTML = str;
 }
@@ -113,16 +92,6 @@ function loadFolder(event){
     filesLength = 0;
     fileNames = [];
     for(var i = 0; i < filesAmount; i++){
-<<<<<<< HEAD
-        var fileName = files[i].name.split('.');
-        if(supportedFormats.indexOf(fileName.pop()) !== -1){
-            filesLength++;
-            fileNames.push([fileName.join('.'), i, URL.createObjectURL(files[i])]);
-        }
-    }
-    listSongs();
-    getId("controls").classList.remove("disabled");
-=======
         if(files[i].type.indexOf("audio/") === 0){
             var fileName = files[i].name.split('.');
             if(fileName[fileName.length - 1] !== 'mid' && fileName[fileName.length - 1] !== 'midi'){
@@ -365,7 +334,6 @@ function loadMicrophone(event){
     microphoneActive = 1;
     
     requestAnimationFrame(globalFrame);
->>>>>>> upstream/master
 }
 
 var currentSong = -1;
@@ -376,8 +344,6 @@ function selectSong(id){
     audio.currentTime = 0;
     audio.src = fileNames[id][2];
     getId("currentlyPlaying").innerHTML = fileNames[id][1] + ": " + fileNames[id][0];
-<<<<<<< HEAD
-=======
     document.title = fileNames[id][0] + " | aOS Music Player";
     if(iframeMode){
         aosTools.sendRequest({
@@ -386,7 +352,6 @@ function selectSong(id){
             conversation: "set_caption"
         });
     }
->>>>>>> upstream/master
     try{
         document.getElementsByClassName("selected")[0].classList.remove("selected");
     }catch(err){
@@ -396,16 +361,6 @@ function selectSong(id){
 }
 
 function play(){
-<<<<<<< HEAD
-    if(currentSong === -1){
-        selectSong(0);
-    }else{
-        audio.play();
-    }
-}
-function pause(){
-    audio.pause();
-=======
     if(!microphoneActive){
         if(currentSong === -1){
             selectSong(0);
@@ -420,7 +375,6 @@ function pause(){
         audio.pause();
         getId("playbutton").innerHTML = "&#9658;";
     }
->>>>>>> upstream/master
 }
 
 function firstPlay(){
@@ -429,25 +383,6 @@ function firstPlay(){
 }
 audio.addEventListener("canplaythrough", firstPlay);
 
-<<<<<<< HEAD
-function back(){
-    if(audio.currentTime < 3){
-        currentSong--;
-        if(currentSong < 0){
-            currentSong = fileNames.length - 1;
-        }
-        selectSong(currentSong);
-    }else{
-        audio.currentTime = 0;
-    }
-}
-function next(){
-    currentSong++;
-    if(currentSong > fileNames.length - 1){
-        currentSong = 0;
-    }
-    selectSong(currentSong);
-=======
 function setProgress(e){
     if(!microphoneActive && currentSong !== -1){
         var timeToSet = e.pageX - 5;
@@ -481,7 +416,6 @@ function next(){
         }
         selectSong(currentSong);
     }
->>>>>>> upstream/master
 }
 audio.addEventListener("ended", next);
 
@@ -496,14 +430,6 @@ function shuffleArray(array){
 }
 
 function shuffle(){
-<<<<<<< HEAD
-    audio.pause();
-    audio.currentTime = 0;
-    currentSong = 0;
-    shuffleArray(fileNames);
-    listSongs();
-    selectSong(0);
-=======
     if(!microphoneActive){
         audio.pause();
         audio.currentTime = 0;
@@ -512,28 +438,12 @@ function shuffle(){
         listSongs();
         selectSong(0);
     }
->>>>>>> upstream/master
 }
 
 function refresh(){
     window.location = "?refresh=" + (new Date()).getTime();
 }
 
-<<<<<<< HEAD
-function getStyleInfo(event){
-    console.log(event.data);
-    if(event.data === "aosreply:success:readsetting:darkmode:true"){
-        document.body.classList.add("darkMode");
-    }else if(event.data.indexOf("aosreply:success:readsetting:customstyle:") === 0){
-        getId("aosCustomStyle").innerHTML = event.data.substring(41, event.data.length);
-    }
-}
-window.addEventListener("message", getStyleInfo);
-
-if(window.self !== window.top){
-    window.top.postMessage("aos:readsetting:darkmode");
-    window.top.postMessage("aos:readsetting:customstyle");
-=======
 var performanceMode = 0;
 function togglePerformance(){
     if(performanceMode){
@@ -4498,5 +4408,4 @@ function finishSettingTaskbarMode(res){
         height: 113 + windowBorders[1],
     });
     overrideVis("spectrumBass");
->>>>>>> upstream/master
 }

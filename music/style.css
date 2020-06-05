@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-html, body{
-    background:none;
-=======
 @font-face{
     font-family: "aosProFont";
     src:
@@ -14,15 +10,12 @@ html, body{
 html, body{
     background:none;
     font-family:sans-serif;
->>>>>>> upstream/master
 }
 
 div{
     position:relative;
 }
 
-<<<<<<< HEAD
-=======
 .selectIcon{
     width:128px;
     height:calc(128px + 4em);
@@ -51,7 +44,6 @@ div{
     padding-top:0.5em;
 }
 
->>>>>>> upstream/master
 #progressContainer{
     background:#000;
     width:100%;
@@ -65,17 +57,11 @@ div{
 #songList{
     border:1px solid #000;
     width:100%;
-<<<<<<< HEAD
-    height:300px;
-=======
     height:calc(100% - 75px);
->>>>>>> upstream/master
     overflow:auto;
     font-family:aosProFont, Courier, monospace;
     font-size:12px;
 }
-<<<<<<< HEAD
-=======
 #visualizer{
     position:absolute;
     left:3px;
@@ -125,7 +111,6 @@ div{
     height:100%;
     z-index:900;
 }
->>>>>>> upstream/master
 #songList div{
     cursor:pointer;
     padding:3px;
@@ -136,22 +121,16 @@ div{
 }
 #currentlyPlaying{
     width:100%;
-<<<<<<< HEAD
-=======
     height:24px;
     max-height:24px;
->>>>>>> upstream/master
     border:1px solid #000;
     font-family:aosProFont;
     font-size:24px;
 }
 #controls{
     width:100%;
-<<<<<<< HEAD
-=======
     height:38px;
     max-height:38px;
->>>>>>> upstream/master
     text-align:center;
     border:1px solid #000;
 }
@@ -164,10 +143,6 @@ div{
     background:rgba(127, 127, 127, 0.1);
 }
 .disabled{
-<<<<<<< HEAD
-    opacity:0.5;
-    pointer-events:none;
-=======
     display:none !important;
 }
 .winHTML{
@@ -255,5 +230,4 @@ div{
     position:absolute;
     width:100%;
     height:100%;
->>>>>>> upstream/master
 }

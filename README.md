@@ -69,8 +69,4 @@ The main PHP file is /aosBeta.php
 
 The main JavaScript file is /scriptBeta.js
 
-<<<<<<< HEAD
 The main CSS file is /styleBeta.css
-=======
-The main CSS file is /styleBeta.css
->>>>>>> upstream/master

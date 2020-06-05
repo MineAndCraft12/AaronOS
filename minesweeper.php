@@ -2,11 +2,7 @@
 <html>
     <head>
         <title>aOS Minesweeper</title>
-<<<<<<< HEAD
-        <link rel="stylesheet" href="customStyles/Windows98/aosCustomStyle.css">
-=======
         <!--<link rel="stylesheet" href="customStyles/Windows98/aosCustomStyle.css">-->
->>>>>>> upstream/master
         <link rel="stylesheet" href="" id="minecraft">
         <script defer src="aosTools.js"></script>
         <style>
