@@ -393,7 +393,11 @@ div{
                 width: calc(100% - 98px); /* fallback */
                 width:calc(100% - 92px - var(--windowBorderWidth) - var(--windowBorderWidth));
                 white-space:nowrap;
+<<<<<<< HEAD
+                height:21px;
+=======
                 height:32px;
+>>>>>>> upstream/master
                 text-shadow:0px 0px 2px #000;
                 color:#FFF;
                 /*cursor:url(cursors/move.png) 14 14, move;*/
@@ -512,7 +516,11 @@ div{
                     font-family:aosProFont, monospace;
                     font-size:12px;
                 }
+<<<<<<< HEAD
+                #FIL2tbl div, .FIL2sidetbl div{
+=======
                 #FIL2tbl > div, .FIL2sidetbl > div{
+>>>>>>> upstream/master
                     font-family:aosProFont, monospace;
                     position:relative;
                     white-space:nowrap;
@@ -521,10 +529,17 @@ div{
                 .FIL2sidetbl{
                     position:relative;
                 }
+<<<<<<< HEAD
+                #FIL2tbl div:hover, .FIL2sidetbl div:hover{
+                    background-color:#AAA;
+                }
+                    .darkMode #FIL2tbl div:hover, .darkMode .FIL2sidetbl div:hover{
+=======
                 #FIL2tbl > div:hover, .FIL2sidetbl > div:hover{
                     background-color:#AAA;
                 }
                     .darkMode #FIL2tbl > div:hover, .darkMode .FIL2sidetbl > div:hover{
+>>>>>>> upstream/master
                         background-color:#555;
                     }
                     
@@ -540,7 +555,11 @@ div{
                         filter:invert(1);
                     }
                 
+<<<<<<< HEAD
+                #FIL2tbl .FIL2aosAppIcon, .FIL2sidetbl .FIL2aosAppIcon{
+=======
                 #FIL2tbl .FIL2aosAppIcon, .FIL2sidetbl .FIL2aosAppIcon, #FIL2tbl .smarticon, .FIL2sidetbl .smarticon{
+>>>>>>> upstream/master
                     width:16px;
                     height:16px;
                     margin-top:0;
@@ -593,7 +612,11 @@ div{
                     margin-top:1px;
                     padding:1px;
                 }
+<<<<<<< HEAD
+                    #FIL2tbl.FIL2viewMedium .FIL2aosAppIcon, .FIL2sidetbl.FIL2viewMedium .FIL2aosAppIcon{
+=======
                     #FIL2tbl.FIL2viewMedium .FIL2aosAppIcon, .FIL2sidetbl.FIL2viewMedium .FIL2aosAppIcon, #FIL2tbl.FIL2viewMedium .smarticon, .FIL2sidetbl.FIL2viewMedium .smarticon{
+>>>>>>> upstream/master
                         margin-top:-1px;
                         margin-bottom:-5px;
                     }
@@ -1003,7 +1026,11 @@ div{
         backdrop-filter:blur(5px);
     }
     .darkMode #ctxMenu{
+<<<<<<< HEAD
+        background-color:#000;
+=======
         background-color:#272727;
+>>>>>>> upstream/master
         color:#CCC;
     }
         .darkMode #ctxMenu.backdropFilterCtxMenu{
@@ -1014,13 +1041,21 @@ div{
     }
     #ctxMenu p{
         height:1em;
+<<<<<<< HEAD
+        box-shadow:inset 0 0 5px 3px #FFF;
+=======
         /*box-shadow:inset 0 0 5px 5px #FFF;*/
+>>>>>>> upstream/master
         width:calc(100% - 4px);
         display:block;
         margin:0;
         /*cursor:url(cursors/pointer.png) 9 3, pointer;*/
         transition:0.2s;
+<<<<<<< HEAD
+        background-color:#FFF;
+=======
         /*background-color:#FFF;*/
+>>>>>>> upstream/master
         padding:2px;
         padding-left:4px;
         

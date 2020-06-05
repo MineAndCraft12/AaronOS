@@ -108,7 +108,11 @@
             </div>
         </div>
     </div>
+<<<<<<< HEAD
+    <img style="display:none" id="bgSizeElement" src="p.png" onload="try{updateBgSize()}catch(err){}">
+=======
     <img style="display:none" id="bgSizeElement" src="beta1.png" onload="try{updateBgSize()}catch(err){}">
+>>>>>>> upstream/master
 </body>
 <!--<script defer src="script.js"></script>-->
 <?php
@@ -134,9 +138,15 @@
     echo '<script defer>';
     require 'filepreloaderBeta.php';
     echo '</script>';
+<<<<<<< HEAD
+    echo '<script>';
+    //require 'test_ssl.php';
+    echo '</script>';
+=======
     //echo '<script>';
     //require 'test_ssl.php';
     //echo '</script>';
+>>>>>>> upstream/master
 ?>
 </html>
 <?php ob_end_flush(); ?>
