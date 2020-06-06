@@ -37,7 +37,7 @@
             <div id="intro">
                 Welcome to the AaronOS Weather App.<br><br>
                 Units:
-                <div>
+                <div style="position:relative">
                     <input type="radio" id="usUnitChoice" name="unitChoice" checked>
                     <label for="usUnitChoice">US customary (&deg;F)</label><br>
                     <input type="radio" id="siUnitChoice" name="unitChoice">
