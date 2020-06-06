@@ -36,6 +36,13 @@
         <div class="winHTML" style="font-family:sans-serif">
             <div id="intro">
                 Welcome to the AaronOS Weather App.<br><br>
+                Units:
+                <div>
+                    <input type="radio" id="usUnitChoice" name="unitChoice" checked>
+                    <label for="usUnitChoice">US customary (&deg;F)</label><br>
+                    <input type="radio" id="siUnitChoice" name="unitChoice">
+                    <label for="siUnitChoice">SI (&deg;C)</label>
+                </div><br>
                 Get your location automatically: <button onclick="setup('automatic')">Start with Location</button><br><br>
                 Or, enter some coordinates:<br>
                 <input id="inputLat" placeholder="Latitude (south is negative)"><br>

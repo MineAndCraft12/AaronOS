@@ -67,6 +67,11 @@ function recieveURLs(){
                 if(tempjson.properties){
                     weatherURLs.forecast = tempjson.properties.forecast;
                     weatherURLs.forecastHourly = tempjson.properties.forecastHourly;
+                    if(getId("siUnitChoice").checked === true) {
+                        weatherURLs.forecast += "?units=si";
+                        weatherURLs.forecastHourly += "?units=si";
+                    }
+                    else {}
                     city = tempjson.properties.relativeLocation.properties.city;
                     state = tempjson.properties.relativeLocation.properties.state;
                     getId("intro").style.display = "none";
