@@ -5,6 +5,7 @@
         <script defer>
             var city = "";
             var state = "";
+            var unitChoice = "F";
 
             window.aosTools_connectListener = function(){
                 aosTools.sendRequest({
@@ -19,6 +20,9 @@
                                 state = tempjson.state;
                                 setInterval(checkAlerts, 120000);
                                 checkAlerts();
+                            }
+                            if(tempjson.units === "C"){
+                                unitChoice = "C";
                             }
                         }
                     }

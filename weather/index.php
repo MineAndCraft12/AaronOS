@@ -38,9 +38,9 @@
                 Welcome to the AaronOS Weather App.<br><br>
                 Units:
                 <div style="position:relative">
-                    <input type="radio" id="usUnitChoice" name="unitChoice" checked>
+                    <input type="radio" id="usUnitChoice" name="unitChoice" checked onchange="setUnitChoice(this)">
                     <label for="usUnitChoice">US customary (&deg;F)</label><br>
-                    <input type="radio" id="siUnitChoice" name="unitChoice">
+                    <input type="radio" id="siUnitChoice" name="unitChoice" onchange="setUnitChoice(document.getElementById('usUnitChoice'))">
                     <label for="siUnitChoice">SI (&deg;C)</label>
                 </div><br>
                 Get your location automatically: <button onclick="setup('automatic')">Start with Location</button><br><br>

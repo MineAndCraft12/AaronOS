@@ -7,6 +7,8 @@ if(typeof lat !== "number"){
     window.long = 0;
 }
 
+var unitChoice = "F";
+
 var urlhttp = null;
 
 var weatherURLs = {
@@ -47,6 +49,11 @@ function setup(type, coords){
         alert('wat');
         canContinue = 0;
     }
+    if(coords){
+        if(coords.units){
+            unitChoice = coords.units;
+        }
+    }
     if(canContinue){
         urlhttp = new XMLHttpRequest();
         urlhttp.open("GET", "getURLs.php?dom=" + location.origin + "&lat=" + lat + "&lon=" + long);
@@ -59,6 +66,14 @@ function recieveGeoCoords(geoResponse){
     setup("automatic", [geoResponse.coords.latitude, geoResponse.coords.longitude]);
 }
 
+function setUnitChoice(elem){
+    if(elem.checked){
+        unitChoice = "F";
+    }else{
+        unitChoice = "C";
+    }
+}
+
 function recieveURLs(){
     if(urlhttp.readyState === 4){
         if(urlhttp.status === 200){
@@ -67,11 +82,11 @@ function recieveURLs(){
                 if(tempjson.properties){
                     weatherURLs.forecast = tempjson.properties.forecast;
                     weatherURLs.forecastHourly = tempjson.properties.forecastHourly;
-                    if(getId("siUnitChoice").checked === true) {
+                    // UNIT CHOICE
+                    if(unitChoice === "C") {
                         weatherURLs.forecast += "?units=si";
                         weatherURLs.forecastHourly += "?units=si";
                     }
-                    else {}
                     city = tempjson.properties.relativeLocation.properties.city;
                     state = tempjson.properties.relativeLocation.properties.state;
                     getId("intro").style.display = "none";
@@ -85,6 +100,7 @@ function recieveURLs(){
                             state: state,
                             lat: lat,
                             long: long,
+                            units: unitChoice,
                             weatherURLs: {
                                 forecast: weatherURLs.forecast,
                                 forecastHourly: weatherURLs.forecastHourly
@@ -137,6 +153,9 @@ function getPercentage(temp){
     //var compareNumber = recordHigh - recordLow;
     //var adjustedTemp = temp - recordLow;
     //return adjustedTemp / compareNumber;
+    if(unitChoice === "C"){
+        temp = temp * (9 / 5) + 32;
+    }
     temp -= 32;
     if(temp <= 0){
         return 0;
@@ -186,7 +205,7 @@ function recieveForecast(){
                         }
                         str += day + "<br>";
                         str += hour + ampm + "<br>";
-                        str += tempjson.properties.periods[i].temperature + "&deg; F<br>";
+                        str += tempjson.properties.periods[i].temperature + " &deg;" + unitChoice + "<br>";
                         str += '<div style="width:100%;position:relative;text-overflow:ellipsis;white-space:nowrap">' + tempjson.properties.periods[i].shortForecast + '</div>';
                         str += "</div>";
                     }
@@ -202,9 +221,9 @@ function recieveForecast(){
                         str += "<h3>" + tempjson.properties.periods[i].name + ", " +
                             tempjson.properties.periods[i].shortForecast + "</h3>";
                         if(tempjson.properties.periods[i].temperatureTrend === null){
-                            str += "<p>Temperature: " + tempjson.properties.periods[i].temperature + "&deg; F</p>";
+                            str += "<p>Temperature: " + tempjson.properties.periods[i].temperature + " &deg;" + unitChoice + "</p>";
                         }else{
-                            str += "<p>Temperature: " + tempjson.properties.periods[i].temperature + "&deg; F and " +
+                            str += "<p>Temperature: " + tempjson.properties.periods[i].temperature + " &deg;" + unitChoice + " and " +
                                 tempjson.properties.periods[i].temperatureTrend + "</p>";
                         }
                         str += "<p>" + tempjson.properties.periods[i].detailedForecast + "</p>";
