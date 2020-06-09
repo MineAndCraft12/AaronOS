@@ -600,7 +600,7 @@ var currentlanguage = getId('bootLanguage').innerHTML;
 // supported languages
 var languagepacks = {
     en: 'US English',
-    uv: 'Ultra-Verbose',
+    uv: 'Ultra-Verbose US English',
     //uv: 'Ultra Verbose'
     ch: '&#x4E2D;&#x6587; (Chinese)'
 };
@@ -6635,10 +6635,10 @@ c(function(){
                     langOld('settings', 'batteryLevel') + ': ' + Math.round(batteryLevel * 100) + '%<br>' +
                     '<i>' + langOld('settings', 'batteryDesc') + '</i><br><br>' +
                     'Text Language: ' + languagepacks[currentlanguage] + '<br>' +
-                    '<i>Some apps support different languages. Translation is up to the developer of the app and may not be accurate. Some languages may be limited to few apps.</i><br>' +
+                    '<i>Some apps support different languages. Translation is up to the developer of the app and may not be accurate. Some languages may be limited to a few apps.</i><br>' +
                     apps.settings.vars.getTextLanguages() + '<br><br>' +
                     'OS ID: ' + SRVRKEYWORD + '<br>' +
-                    '<button onclick="apps.settings.vars.changeKey()">Load a Different aOS</button><br><i>You need the OS ID of the target aOS, and the target aOS must have a set password and you must enter it correctly.</i><br><br>' +
+                    '<button onclick="apps.settings.vars.changeKey()">Load a Different aOS</button><br><i>You need the OS ID of the target aOS, and the target aOS must have a set password (and you must enter it correctly).</i><br><br>' +
                     '<i>If you experience issues with the OS, such as saved files not being recovered, email me and reference your OS ID and the details of the issue.</i><br><br>' +
                     'The old Text-To-Speech service was the creation of <a href="http://codewelt.com/proj/speak">codewelt.com/proj/speak</a> and may take several seconds to work after hitting the button. I take NO credit for the creation of that amazing tool. The new TTS service is built-in to Chrome 33 and later.<hr>' +
                     '<b>Screen Resolution</b><br>' +
@@ -7065,7 +7065,7 @@ c(function(){
                     image: 'settingIcons/new/information.png',
                     copyright: {
                         option: 'Copyright Notice',
-                        description: function(){return 'AaronOS is &copy; <i>2016 Aaron Adams</i>'}, //         <-- COPYRIGHT NOTICE
+                        description: function(){return 'AaronOS is &copy; 2016 Aaron Adams'}, //         <-- COPYRIGHT NOTICE
                         buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' +
                             function(){
                                 if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0 && window.location.href.indexOf('https://aaronos.dev/AaronOS/') !== 0){
@@ -7418,7 +7418,7 @@ c(function(){
                     },
                     reset: {
                         option: 'Reset aOS',
-                        description: function(){return 'If you wish, you can completely reset aOS. This will give you a new OS ID, which will have the effect of removing all of your files. Your old files will still be preserved, so you can ask the developer for help if you mistakenly reset aOS. If you wish for your old files to be permanantly removed, please contact the developer.'},
+                        description: function(){return 'If you wish, you can completely reset aOS. This will give you a new OS ID, which will have the effect of removing all of your files. Your old files will still be preserved, so you can ask the developer for help if you mistakenly reset aOS. If you wish for your old files to be permanently removed, please contact the developer.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.resetOS()">Reset aOS</button>'}
                     }
                 },
@@ -7760,7 +7760,7 @@ c(function(){
             dataCampaigns: [
                 [
                     'Example Campaign <i>(not real)</i>',
-                    ['Session Error Logs', 'etc other useful stuff']
+                    ['Session Error Logs', 'Feature Usage Statistics', 'Other useful stuff']
                 ]
             ],
             getDataCampaigns: function(){
@@ -11437,7 +11437,7 @@ c(function(){
                 }else{
                     this.latestDel += 'with no defined event trigger';
                 }
-                apps.prompt.vars.confirm(this.latestDel + ' wants to permanantly delete the file ' + filepath + '. Do you give permission to delete the file? This cannot be undone.', ['No, do nothing', 'Yes, delete file'], function(btn){
+                apps.prompt.vars.confirm(this.latestDel + ' wants to permanently delete the file ' + filepath + '. Do you give permission to delete the file? This cannot be undone.', ['No, do nothing', 'Yes, delete file'], function(btn){
                     if(btn){
                 */
                 if(!noUserFiles){
