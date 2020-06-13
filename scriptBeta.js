@@ -385,7 +385,7 @@ window.onerror = function(errorMsg, url, lineNumber){
     */
 };
 
-// scale of screen, for hidpi compatibility
+// scale of screen, for HiDPI compatibility
 var screenScale = 1;
 
 // debugging psuedo-module system
@@ -600,7 +600,7 @@ var currentlanguage = getId('bootLanguage').innerHTML;
 // supported languages
 var languagepacks = {
     en: 'US English',
-    uv: 'Ultra-Verbose',
+    uv: 'Ultra-Verbose US English',
     //uv: 'Ultra Verbose'
     ch: '&#x4E2D;&#x6587; (Chinese)'
 };
@@ -6622,7 +6622,7 @@ c(function(){
                     langOld('settings', 'dbgLevel') + ': <button onclick="apps.settings.vars.setDebugLevel(0)">Vital Only</button> <button onclick="apps.settings.vars.setDebugLevel(1)">Normal</button> <button onclick="apps.settings.vars.setDebugLevel(2)">High</button><br>' +
                     '<i>' + langOld('settings', 'dbgExplain') + '</i><br><br>' +
                     'Long Tap Opens Context Menu: ' + this.vars.longTap + ' <button onclick="apps.settings.vars.togLongTap()">Toggle</button><br>' +
-                    '<i>Only for mobile browsers, requires touch on top-level ctxmenu element (rightclicking a window will not give the desktop ctxmenu)</i><br><br>' +
+                    '<i>Only for mobile browsers, requires touch on top-level ctxmenu element (right-clicking a window will not give the desktop ctxmenu)</i><br><br>' +
                     langOld('settings', 'perfModeOn') + ': ' + apps.settings.vars.performanceMode + '<br>' +
                     langOld('settings', 'perfModeTog') + ' <button onClick="apps.settings.vars.togPerformanceMode()">Performance Mode</button><br>' +
                     '<i>' + langOld('settings', 'perfModeDesc') + '</i><hr>' +
@@ -6635,10 +6635,10 @@ c(function(){
                     langOld('settings', 'batteryLevel') + ': ' + Math.round(batteryLevel * 100) + '%<br>' +
                     '<i>' + langOld('settings', 'batteryDesc') + '</i><br><br>' +
                     'Text Language: ' + languagepacks[currentlanguage] + '<br>' +
-                    '<i>Some apps support different languages. Translation is up to the developer of the app and may not be accurate. Some languages may be limited to few apps.</i><br>' +
+                    '<i>Some apps support different languages. Translation is up to the developer of the app and may not be accurate. Some languages may be limited to a few apps.</i><br>' +
                     apps.settings.vars.getTextLanguages() + '<br><br>' +
                     'OS ID: ' + SRVRKEYWORD + '<br>' +
-                    '<button onclick="apps.settings.vars.changeKey()">Load a Different aOS</button><br><i>You need the OS ID of the target aOS, and the target aOS must have a set password and you must enter it correctly.</i><br><br>' +
+                    '<button onclick="apps.settings.vars.changeKey()">Load a Different aOS</button><br><i>You need the OS ID of the target aOS, and the target aOS must have a set password (and you must enter it correctly).</i><br><br>' +
                     '<i>If you experience issues with the OS, such as saved files not being recovered, email me and reference your OS ID and the details of the issue.</i><br><br>' +
                     'The old Text-To-Speech service was the creation of <a href="http://codewelt.com/proj/speak">codewelt.com/proj/speak</a> and may take several seconds to work after hitting the button. I take NO credit for the creation of that amazing tool. The new TTS service is built-in to Chrome 33 and later.<hr>' +
                     '<b>Screen Resolution</b><br>' +
@@ -6990,7 +6990,7 @@ c(function(){
                     image: 'settingIcons/new/background.png',
                     setUrl: {
                         option: 'Background Image URL',
-                        description: function(){return 'Set an image as your desktop background. This can be png, jpg, gif, or any other web-compatible image. If aOS is loaded over HTTPS, make sure your image is on HTTPS as well.'},
+                        description: function(){return 'Set an image as your desktop background. This can be png, jpg, gif, or any other web-compatible image. You can enter a filename from the "aOS Backgrounds" list at the bottom of this page or an external image URL. If aOS is loaded over HTTPS, make sure your image URL is on HTTPS as well. Some external image URLs may not allow aOS to load them.'},
                         buttons: function(){return '<input id="bckGrndImg" placeholder="beta1.png" style="display:inline-block; width:50%" value="' + (ufload("aos_system/desktop/background_image") || 'beta1.png') + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
                     },
                     bgFit: {
@@ -7043,11 +7043,11 @@ c(function(){
                     longTap: {
                         option: 'Double Tap Opens Context Menu',
                         description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.longTap)">' + numEnDis(apps.settings.vars.longTap) + '</span>.<br>' +
-                            'Only for mobile browsers, requires touch on top-level ctxmenu element (rightclicking a window will not give the desktop ctxmenu)'},
+                            'Only for mobile browsers, requires touch on top-level ctxmenu element (right-clicking a window will not give the desktop ctxmenu)'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togLongTap()">Toggle</button>'}
                     },
                     allowStnWindow: {
-                        option: 'File Browser Debug',
+                        option: 'File Browser Debug Mode',
                         description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.FILcanWin)"></span>.<br>' +
                             'Allows File Browser to access the global Window object. Dangerous!'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togFILwin()">Toggle</button>'}
@@ -7065,18 +7065,21 @@ c(function(){
                     image: 'settingIcons/new/information.png',
                     copyright: {
                         option: 'Copyright Notice',
-                        description: function(){return 'AaronOS is &copy; <i>2016 Aaron Adams</i>'}, //         <-- COPYRIGHT NOTICE
+                        description: function(){return 'AaronOS is &copy; 2016 Aaron Adams'}, //         <-- COPYRIGHT NOTICE
                         buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' +
                             function(){
                                 if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0 && window.location.href.indexOf('https://aaronos.dev/AaronOS/') !== 0){
                                     return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaronos.dev/">https://aaronos.dev/</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';
+                                }
+                                else{
+                                    return '';
                                 }
                             }()
                         }
                     },
                     osID: {
                         option: 'aOS ID',
-                        description: function(){return 'Your ID: ' + SRVRKEYWORD + '<br>' +
+                        description: function(){return 'Your aOS ID: ' + SRVRKEYWORD + '<br>' +
                             'If you would wish to load another copy of aOS, use the button below. Be sure to have its aOS ID and password ready, and make sure to set a password on this current account if you want to get back to it later.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.changeKey()">Load a Different aOS</button>'}
                     },
@@ -7123,18 +7126,18 @@ c(function(){
                     image: 'settingIcons/new/resolution.png',
                     fullscreen: {
                         option: 'Full Screen',
-                        description: function(){return 'Puts aOS into fullscreen, so it does not look like it has been loaded into a browser. A more stable way to achieve this is with the F11 key.'},
+                        description: function(){return 'Puts aOS into fullscreen mode, so it does not look like it has been loaded in a browser. A more stable way to achieve this is with the F11 key.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.reqFullscreen()">Enter Fullscreen</button> <button onclick="apps.settings.vars.endFullscreen()">Exit Fullscreen</button>'}
                     },
                     mobileMode: {
                         option: 'Mobile Mode',
                         description: function(){return 'Current: ' + function(){if(autoMobile){return 'Automatic'}else{return numEnDis(mobileMode)}}() + '.<br>' +
-                            'Changes various UI and functionality of AaronOS to be better suited for phones and small screens.'},
+                            'Changes various UI elements and functionality of AaronOS to be better suited for phones and other devices with small screens.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.setMobileMode(0)">Turn Off</button> <button onclick="apps.settings.vars.setMobileMode(1)">Turn On</button> <button onclick="apps.settings.vars.setMobileMode(2)">Automatic</button>'}
                     },
                     scaling: {
                         option: 'Content Scaling',
-                        description: function(){return 'If you have a hi-dpi screen or text and buttons on aOS are too small, you can use this option to make aOS bigger. Regular size is 1. Double size is 2. Triple size is 3. It is not recommended, but you can also shrink aOS with a decimal value less than 1. For instance, half size is 0.5'},
+                        description: function(){return 'If you have a HiDPI screen or text and buttons on aOS are too small, you can use this option to make aOS bigger. Regular size is 1. Double size is 2. Triple size is 3. It is not recommended, but you can also shrink aOS with a decimal value less than 1. For instance, half size is 0.5'},
                         buttons: function(){return '<input placeholder="1" id="STNscaling"> <button onclick="apps.settings.vars.setScale(getId(\'STNscaling\').value)">Set</button>'}
                     },
                     currRes: {
@@ -7145,7 +7148,7 @@ c(function(){
                     },
                     saveRes: {
                         option: 'Save Resolution',
-                        description: function(){return 'Have aOS automatically load to a specified resolution at boot (specified in text fields above).'},
+                        description: function(){return 'Have aOS automatically load to a specified resolution at boot (specified in the text fields above).'},
                         buttons: function(){return '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save</button> <button onclick="ufdel(\'aos_system/apps/settings/saved_screen_res\')">Delete</button>'}
                     },
                     currWin: {
@@ -7398,7 +7401,7 @@ c(function(){
                         buttons: function(){return apps.settings.vars.getTextLanguages()}
                     },
                     credits: {
-                        option: 'Tranlsation Credits',
+                        option: 'Translation Credits',
                         description: function(){return 'I got a lot of help with translating aOS from volunteers. So far, here\'s the people who\'ve helped me out.'},
                         buttons: function(){return 'US English: Me, of course. This is the native language of aOS.<br>Chinese: Noah McDermott (noahmcdaos@gmail.com).'}
                     }
@@ -7415,7 +7418,7 @@ c(function(){
                     },
                     reset: {
                         option: 'Reset aOS',
-                        description: function(){return 'If you wish, you can completely reset aOS. This will give you a new OS ID, which will have the effect of removing all of your files. Your old files will still be preserved, so you can ask the developer for help if you mistakenly reset aOS. If you wish for your old files to be permanantly removed, please contact the developer.'},
+                        description: function(){return 'If you wish, you can completely reset aOS. This will give you a new OS ID, which will have the effect of removing all of your files. Your old files will still be preserved, so you can ask the developer for help if you mistakenly reset aOS. If you wish for your old files to be permanently removed, please contact the developer.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.resetOS()">Reset aOS</button>'}
                     }
                 },
@@ -7757,7 +7760,7 @@ c(function(){
             dataCampaigns: [
                 [
                     'Example Campaign <i>(not real)</i>',
-                    ['Session Error Logs', 'etc other useful stuff']
+                    ['Session Error Logs', 'Feature Usage Statistics', 'Other useful stuff']
                 ]
             ],
             getDataCampaigns: function(){
@@ -9639,7 +9642,7 @@ c(function(){
             "02/23/2016: A1.2.3.0\n + Copyright notice added to Settings application - (c) 2016 Aaron Adams\n + Waiting Code system modified to allow args in functions.\n : Resizing of the aOS monitor is now manual - reduces strain on CPU.\n + Ability to send error reports if the filesaving service is intact.\n + aOS replaces requestAnimationFrame with a custom function if requestAnimationFrame is unsupported in your browser.\n + True fullscreen support - remember to use Chrome.\n\n" +
             "04/04/2016: A1.2.4.0\n : Window Rotation changed to Window Scaling.\n + Windows can now fit to the size of the desktop - just hit the 'O' button and watch what it does.\n + Change calulating app, ChC.\n : Various bug fixes - this one is spread between the last few updates, just forgot to mention it.\n : aOS version format changed from 'V_._._' to 'A_._._', 'A' meaning alpha. When in beta form, it will be changed to 'B_._._', and on full release will be changed back to 'V_._._'.\n + RemoveTimeout is added to task manager.\n : File manager can no longer cripple the system.\n + Replaces performance.now with custom function if not supported by your browser.\n + Added messaging app, lets you message all other aOS users with Messaging app currently open.\n + Added performance-checking features, see an example in the initialization-time log in the console.\n + Ability to switch between OS accounts.\n + Built-in apps now fully support variable window sizes.\n + Network status now shown on taskbar.\n + NORAA added.\n : TTS uses Googles built-in TTS.\n + NORAA can hear the user, if given permission.\n\n" +
             "06/06/2016: A1.2.5.0\n + Bing app added for quick bing search (google wont let me).\n + NORAA can now tell you what nearly anything is.\n : Improvements to formDate to help with CPU load.\n + Files can view window object.\n : Context menus better to create and faster.\n + Files now can show properties of a file.\n + New font called aosProFont i think, credits to its creator, not me.\n : Settings app rewritten.\n + NORAA can listen for you to speak to him, and now referrs to himself as 'me' instead of 'NORAA'.\n : filesaving optimised.\n + Help App.\n + Music Visualiser (add /unrelated/keyfingers/visual.php to the URL to get non-laggy version).\n + Taskmanager can close tasks.\n : More optimised for mobile FPS on performance mode.\n + New prompt system that does not freeze browser.\n : Messaging more safe but breaks on mobile still.\n + More icons added.\n + Mobile can double-tap to context menu, but only on some objects.\n : When ctxmenu opens using that method, drag both fingers out of the OS window before lifting them, or the menu will close.\n : Files is safer to use.\n : Probably many other changes but forgotten what as I keep forgetting to log them.\n\n" +
-            "08/17/2016: A1.2.6.0\n + Properties now displays the size of functions.\n + When needed, Properties now shows KB, MB, and GB so values are easier to count.\n : Battery no longer has blue background, and instead gives the foreground a blue tint when charging.\n + Performance Monitor app shows CPU usage stats.\n : Changelog is easier to read.\n : Properties app shows shorter description for file sizes.\n + Windows now have texture to their borders, looks good if you can find a glassy texture like Windows has (i wont steal theirs) or if your device cant run windowblur.\n + Rightclick menu lets you open an app from its icon.\n + App controls are now accessible from the app's window caption.\n : Camera app now resizes correctly.\n : Music Visualizer now waits for the song to load before trying to play it.\n - Application List can no longer be moved or resized.\n + If JavaScript is disabled or unsupported, the loading page will nag you to enable it.\n + Alerts, confirms, and prompts can now tell you where they came from.\n + Music Visualizer now shows loading progress and song playtime progress.\n + New simple version of Music Visualizer, uses a canvas (thus looks worse), and runs on one color only: black (with a green screen behind it), which achieves 60fps instead of 15.\n + New Ringtone for Messaging.\n + New Looketh Over There ringtone for Messaging.\n + Fix for double quotes in Messaging.\n + Apps can now stay Always On Top.\n : Notepad reworked.\n : Fixed NORAA looking up definitions.\n + Copy/Paste added.\n : Fixed Fullscreen Dimensions.\n\n" +
+            "08/17/2016: A1.2.6.0\n + Properties now displays the size of functions.\n + When needed, Properties now shows KB, MB, and GB so values are easier to count.\n : Battery no longer has blue background, and instead gives the foreground a blue tint when charging.\n + Performance Monitor app shows CPU usage stats.\n : Changelog is easier to read.\n : Properties app shows shorter description for file sizes.\n + Windows now have texture to their borders, looks good if you can find a glassy texture like Windows has (i wont steal theirs) or if your device cant run windowblur.\n + Right-click menu lets you open an app from its icon.\n + App controls are now accessible from the app's window caption.\n : Camera app now resizes correctly.\n : Music Visualizer now waits for the song to load before trying to play it.\n - Application List can no longer be moved or resized.\n + If JavaScript is disabled or unsupported, the loading page will nag you to enable it.\n + Alerts, confirms, and prompts can now tell you where they came from.\n + Music Visualizer now shows loading progress and song playtime progress.\n + New simple version of Music Visualizer, uses a canvas (thus looks worse), and runs on one color only: black (with a green screen behind it), which achieves 60fps instead of 15.\n + New Ringtone for Messaging.\n + New Looketh Over There ringtone for Messaging.\n + Fix for double quotes in Messaging.\n + Apps can now stay Always On Top.\n : Notepad reworked.\n : Fixed NORAA looking up definitions.\n + Copy/Paste added.\n : Fixed Fullscreen Dimensions.\n\n" +
             "09/23/2016: A1.2.7.0\n + Mathway app Added.\n : Developers can now keep their app out of the apps list, in case it acts as a utility of sorts..\n + Icon added to music visualizer.\n + Apps can now be opened by Files browser.\n + Files can now be deleted in File Browser.\n + New AppBrowser, for opening any app installed on the system.\n : Task Manager is now capitalized in application list.\n + Simon Says App.\n : Updated the appearance of apps on the desktop; two-word names no longer overlap the icon, and it looks a bit cleaner and easier to read with bright and dark backgrounds alike.\n + Smoother animations in desktop icons and window borders and buttons.\n + Taskbar now shows which app is active.\n : Stylish Battery icon now looks like a AA battery rather than just a box.\n : OS loads your files more cautiously, notifies you of errors.\n : Fixed inconsitency in desktop icon ctxMenus.\n : Changelog is a little better.\n : Apps can no longer interrup each others saving processes.\n : Deleting now works properly again.\n + Shut down and restart are now a feature; lets apps save their progress if you do it while they running.\n + Large additions to aOS API documentation.\n + Complete aOS API Documentation started in the aOS Help App.\n + Raw battery information is now stored outside of an anonymous function.\n : aOS now tries up to three times to set up the battery.\n + Bug Central app, to track and document known bugs.\n + Donation button added.\n + Indycar app added; the first app not written 100% by hand.\n + Added Dont-Save argument to most settings.\n\n" +
             "09/23/2016: A1.2.8.0\n + New changelog mechanic - Because aOS is updated live, it's harder to keep one version number on everything. Updates will be tracked in more detail, adding a fourth update number, and dates will be closer together so you can tell exactly when each visible change was made.\n : Controls changed in House game.\n + New sprites in House game, explosion animation and soldiers now shoot at an angle.\n + Experimental RDP system. No, it's not perfect, but it's a start.\n\n" +
             "09/24/2016: A1.2.8.1\n : Complete rewrite of render system for music visualizer, you now get max fps instead of 10.\n : Along with this new render system, by clicking on the visualization it will resize to fit its window. Theoretically, it will work for any width 2048 pixels or less, and for any height physically possible.\n + You can access Visualizer as its own separate browser window! Visit https://aaronos.dev/AaronOS/unrelated/keyfingers/cnv.php, and that way the OS itself wont slow down the visualizer and you can also put it into true fullscreen.\n\n" +
@@ -9734,7 +9737,7 @@ c(function(){
             "08/14/2017: B0.1.6.0\n + Added new Modding Tutorials app and a tutorial for making your own NORAA apps.\n : Changed default screensaver back to Hue, as Bouncy Ball had some locking problems. Still have no idea what happened.\n : Changed error message to be a bit less intimidating.\n\n" +
             "08/15/2017: B0.1.7.0\n + Added App Information Viewer that allows you to see the full app icon and a help page for an app.\n + Added Help Pages for all built-in apps on the App Information Viewer.\n\n" +
             "08/21/2017: B0.1.8.0\n : Changed symbols used in window control buttons, they are now all the same size and are more consistent\n : Fixed setting names in Messaging\n : Fixed Bouncy Ball screensaver and set as default again.\n : Changed default Window Fade Distance to 0.8 from 0.5, it is smoother and less distracting \n + Added password setting in Settings - Information.\n\n" +
-            "08/22/2017: B0.1.8.1\n + Added support for HiDpi displays in Settings - Screen Resolution\n : Changed CORS proxy to https://cors-anywhere.herokuapp.com/ and NORAA can now answer 'what is' questions again.\n\n" +
+            "08/22/2017: B0.1.8.1\n + Added support for HiDPI displays in Settings - Screen Resolution\n : Changed CORS proxy to https://cors-anywhere.herokuapp.com/ and NORAA can now answer 'what is' questions again.\n\n" +
             "08/23/2017: B0.1.8.2\n : Fixed cutoff of icons on window titlebar\n + Added funny error messages\n : Fixed File Manager UI\n : Fixed JavaScript Console UI\n : Fixed crash in Firefox when typing into alert box\n\n" +
             "08/24/2017: B0.1.8.3\n + Added Phosphor screensaver from Linux XScreenSaver and set as default.\n : Fixed screensavers freezing aOS when deactivated by keypress.\n\n" +
             "09/08/2017: B0.1.8.4\n : Window titlebar buttons look much cleaner now; font is consistent across devices and looks less like text than a button.\n\n" +
@@ -11434,7 +11437,7 @@ c(function(){
                 }else{
                     this.latestDel += 'with no defined event trigger';
                 }
-                apps.prompt.vars.confirm(this.latestDel + ' wants to permanantly delete the file ' + filepath + '. Do you give permission to delete the file? This cannot be undone.', ['No, do nothing', 'Yes, delete file'], function(btn){
+                apps.prompt.vars.confirm(this.latestDel + ' wants to permanently delete the file ' + filepath + '. Do you give permission to delete the file? This cannot be undone.', ['No, do nothing', 'Yes, delete file'], function(btn){
                     if(btn){
                 */
                 if(!noUserFiles){
@@ -13540,7 +13543,7 @@ c(function(){
                         '2': 'Application Icons<br><img src="helpapp/taskbar/appIcons/thumb.png">',
                         helpPage:
                             'These icons appear when any application is running. The icon displayed gives a quick indication to what is open, and allows you to find a single window if many are open.<br><br>' +
-                            'Click an icon to open the app to view, if it has been minimised.<br><img src="helpapp/taskbar/appIcons/rightclick.png"><br>Right click an app icon to get the options to open them or to close them; useful if an app has beem minimised and you want to close it without first opening it.'
+                            'Click an icon to open the app to view, if it has been minimised.<br><img src="helpapp/taskbar/appIcons/right-click.png"><br>Right click an app icon to get the options to open them or to close them; useful if an app has beem minimised and you want to close it without first opening it.'
                     },
                     statusIcons: {
                         '1': 'land',
@@ -14891,7 +14894,7 @@ c(function(){
             }
         },
         {
-            appInfo: 'Magnify the aOS screen to make it easier to see with visual impairments or HiDpi monitors.',
+            appInfo: 'Magnify the aOS screen to make it easier to see with visual impairments or HiDPI monitors.',
             running: 0,
             currMag: 2,
             startMag: function(event){
