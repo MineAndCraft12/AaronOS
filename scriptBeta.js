@@ -13543,7 +13543,7 @@ c(function(){
                         '2': 'Application Icons<br><img src="helpapp/taskbar/appIcons/thumb.png">',
                         helpPage:
                             'These icons appear when any application is running. The icon displayed gives a quick indication to what is open, and allows you to find a single window if many are open.<br><br>' +
-                            'Click an icon to open the app to view, if it has been minimised.<br><img src="helpapp/taskbar/appIcons/right-click.png"><br>Right click an app icon to get the options to open them or to close them; useful if an app has beem minimised and you want to close it without first opening it.'
+                            'Click an icon to open the app to view, if it has been minimised.<br><img src="helpapp/taskbar/appIcons/rightclick.png"><br>Right click an app icon to get the options to open them or to close them; useful if an app has beem minimised and you want to close it without first opening it.'
                     },
                     statusIcons: {
                         '1': 'land',
