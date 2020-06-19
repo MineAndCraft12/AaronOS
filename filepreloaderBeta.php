@@ -24,7 +24,7 @@
             mkdir('logins');
             file_put_contents('logins/.htaccess', 'Deny from all');
         }
-        echo 'alert("By hosting AaronOS or otherwise using its code or resources, you are agreeing to the End User License Agreement which will open in a new window/tab when you click anywhere on the aOS desktop.");window.tosClick=function(){window.open("eula.txt","_blank");window.removeEventListener("click",window.tosClick)};window.addEventListener("click",window.tosClick);';
+        echo 'alert("By hosting AaronOS or otherwise using its code or resources, you are agreeing to the End User License Agreement which will open in a new window/tab when you click anywhere on the aOS desktop.\nAaronOS is provided FREE OF CHARGE. If you paid money for this software, please contact mineandcraft12@gmail.com");window.tosClick=function(){window.open("eula.txt","_blank");window.removeEventListener("click",window.tosClick)};window.addEventListener("click",window.tosClick);';
     }
     
     if(isset($_COOKIE['password'])){

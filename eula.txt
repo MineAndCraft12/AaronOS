@@ -76,6 +76,7 @@ You are allowed to place your own, separate copyright notice anywhere you wish, 
 SHARE ALIKE
 
 If you use your own agreements (EULA, Terms of Service, etc) pertaining to a fork or other distribution this project, you must use the same or a similar agreement to this.
+AaronOS and content created by or owned by Aaron are to be provided FREE OF CHARGE. This content is not to be distributed or served in return for currency of any kind.
 
 
 EXTERNAL RESOURCES
@@ -99,4 +100,4 @@ The AaronOS project's code and resources are provided as-is, and Aaron is not in
     otherwise changed by people or services beyond Aaron himself.
 
 
-Last updated 2019-04-14 at 5:28pm
+Document last updated 2020-06-19 at 12:38pm
