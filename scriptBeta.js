@@ -7065,7 +7065,7 @@ c(function(){
                     image: 'settingIcons/new/information.png',
                     copyright: {
                         option: 'Copyright Notice',
-                        description: function(){return 'AaronOS is &copy; 2016 Aaron Adams<br>This software is provided FREE OF CHARGE.<br>If you were charged for the use of this software, please contact mineandcraft12@gmail.com'}, //         <-- COPYRIGHT NOTICE
+                        description: function(){return 'AaronOS is &copy; 2016 Aaron Adams<br><br>This software is provided FREE OF CHARGE.<br>If you were charged for the use of this software, please contact mineandcraft12@gmail.com<br><br>Original AaronOS source-code provided as-is at <a target="_blank" href="https://github.com/MineAndCraft12/AaronOS">Github</a>'}, //         <-- COPYRIGHT NOTICE
                         buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' +
                             function(){
                                 if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0 && window.location.href.indexOf('https://aaronos.dev/AaronOS/') !== 0){
