@@ -2,6 +2,36 @@ function getId(target){
     return document.getElementById(target);
 }
 
+var autoScroll = 0;
+var autoScrollAmount = 5;
+var autoScrollPosition = 0;
+function toggleAutoScroll(){
+    if(autoScroll){
+        autoScroll = 0;
+    }else{
+        autoScroll = 1;
+        autoScrollAmount = parseInt(getId("autoscroll_input").value || "0");
+        autoScrollPosition = document.scrollingElement.scrollTop;
+    }
+}
+var lastScrollTime = performance.now();
+function calcAutoScroll(){
+    var scrollTime = performance.now();
+    var scrollAdjust = scrollTime - lastScrollTime;
+    lastScrollTime = scrollTime;
+
+    if(autoScroll){
+        autoScrollPosition += autoScrollAmount * (scrollAdjust / 1000);
+        document.scrollingElement.scrollTop = Math.round(autoScrollPosition);
+    }
+
+    requestAnimationFrame(calcAutoScroll);
+}
+requestAnimationFrame(calcAutoScroll);
+document.body.addEventListener("scroll", function(){
+    autoScrollPosition = document.scrollingElement.scrollTop;
+})
+
 var n = "-";
 var b = "|";
 
