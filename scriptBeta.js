@@ -619,7 +619,7 @@ var langContent = { // LANGUAGES
             errorReport: 'Failed to save the report. The OS has either failed to initialize or crucial components have been deleted. Please email mineandcraft12@gmail.com with the details of your issue if you would like it fixed.'
         },
         appNames: {
-            startMenu: "aOS Dashboard",
+            startMenu: "aOa Dashboard",
             nora: "NORAA",
             taskManager: "Task Manager",
             jsConsole: "JavaScript Console",
