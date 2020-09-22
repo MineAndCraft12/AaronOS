@@ -2,7 +2,7 @@
     "repoName": "AaronOS Official",
     "repoID": "aaronos_official",
     "repoAliases": ["aaronos", "aos", "official"],
-    "repoVersion": "1.0",
+    "repoVersion": "1.0.1",
     "packages": {
         "guitartab": {
             "packageName": "Guitar Tab",
@@ -195,7 +195,7 @@
             "icon": {
                 "foreground": "repository/styles/win7style.png"
             },
-            "description": "Themes aOS to look similar to Microsoft's beautiful Windows 7.\n\nRecommended settings:\nWindow Background Image: \"win7blur1080.png\"\nWindow Border Width: 6"
+            "description": "Themes aOS to look similar to Microsoft's beautiful Windows 7.\n\nRecommended settings:\nWindow Background Image: \"images/win7blur1080.png\"\nWindow Border Width: 6"
         },
         "highsierrastyle": {
             "packageName": "MacOS Theme",

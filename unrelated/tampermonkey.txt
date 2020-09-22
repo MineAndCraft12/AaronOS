@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         aOS On All Tabs
-// @namespace    https://aaron-os-mineandcraft12.c9.io/
-// @version      1.1
+// @namespace    https://aaronos.dev/
+// @version      1.2
 // @description  AaronOS on all of your tabs!
 // @author       Aaron Adams
 // @match        http://*/*
@@ -13,7 +13,7 @@
     'use strict';
 
     // Your code here...
-    if(window.top === window.self && window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io') !== 0 && window.location.href.indexOf('http://aaron-os-mineandcraft12.c9.io') !== 0 && window.location.href.indexOf('aaron-os-mineandcraft12.c9.io') !== 0){
+    if(window.top === window.self && window.location.href.indexOf('https://aaronos.dev') !== 0 && window.location.href.indexOf('http://aaronos.dev') !== 0 && window.location.href.indexOf('aaronos.dev') !== 0){
         window.aOSextensionDiv = window.document.createElement('div');
         window.aOSextensionDiv.id = 'aOSextensionDiv';
         window.aOSextensionDiv.setAttribute('style', 'transition:right 1s;overflow:hidden;border-left:1px solid #AAC;border-bottom:1px solid #AAC;width:80%;height:80%;right:calc(-80% + 5px);top:0;position:fixed;z-index:9999999999999999;background-color:#000;border-top-left-radius:5px;border-bottom-left-radius:5px');
@@ -23,7 +23,7 @@
         window.aOSextensionToggle = function(){
             if(!window.aOSextensionRunning){
                 window.setTimeout(function(){
-                    window.aOSextensionDiv.childNodes[1].src = "https://aaron-os-mineandcraft12.c9.io/";
+                    window.aOSextensionDiv.childNodes[1].src = "https://aaronos.dev/";
                 }, 1000);
                 window.aOSextensionDiv.style.borderBottomColor = '#557';
                 window.aOSextensionDiv.style.borderLeftColor = '#557';

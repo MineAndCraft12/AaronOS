@@ -6530,7 +6530,7 @@ c(function(){
                                 if(this.currprompt[5]){
                                     getId('notifImage').src = this.currprompt[5];
                                 }else{
-                                    getId('notifImage').src = 'EMPTY.png';
+                                    getId('notifImage').src = 'images/EMPTY.png';
                                 }
                                 getId('notifContent').innerHTML = this.currprompt[1];
                                 getId('notifButtons').innerHTML = '';
@@ -6628,7 +6628,7 @@ c(function(){
                     langOld('settings', 'perfModeTog') + ' <button onClick="apps.settings.vars.togPerformanceMode()">Performance Mode</button><br>' +
                     '<i>' + langOld('settings', 'perfModeDesc') + '</i><hr>' +
                     '<b>' + langOld('settings', 'info') + '</b><br>' +
-                    '&nbsp;<b>&copy;</b> <i>2016 Aaron Adams</i><br>' + //          <= COPYRIGHT NOTICE
+                    '&nbsp;<b>&copy;</b> <i>2015-2020 Aaron Adams</i><br>' + //          <= COPYRIGHT NOTICE
                     '<i>' + langOld('settings', 'cookies') + '</i><br>' +
                     'Anonymous data collection: ' + this.vars.collectData + ' <button onclick="apps.settings.vars.collectData = -1 * apps.settings.vars.collectData + 1">Toggle</button><br><br>' +
                     'If you have suggestions, please email <a href="mailto:mineandcraft12@gmail.com">mineandcraft12@gmail.com</a>!<br><br>' +
@@ -6655,7 +6655,7 @@ c(function(){
                     'Windowblur Strength: <input id="STNwinblurRadius" placeholder="5" value="' + this.vars.currWinblurRad + '"> <button onclick="apps.settings.vars.setAeroRad()">Set</button><br>' +
                     '<i>Window Blur uses a Blend Mode to determine how its color affects the background. Since people will have conflicting ideas on what is best, I give you the choice.</i><br>' +
                     'Window Blur Blend Mode: <input id="STNwinBlendInput" placeholder="screen" value="' + this.vars.currWinBlend + '"> <button onClick="apps.settings.vars.setWinBlend()">Set</button><br>' +
-                    'Window Background Image: <button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="winimg.png" value="' + this.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button><hr>' +
+                    'Window Background Image: <button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="images/winimg.png" value="' + this.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button><hr>' +
                     '<b>Taskbar</b><br>' +
                     '<i>Toggle the display of different elements of the taskbar</i><br>' +
                     '<button onclick="apps.settings.vars.togTimeComp()">Toggle Compact Time</button> <button onclick="apps.settings.vars.togNetStat()">Toggle Network Status</button> <button onclick="apps.settings.vars.togBatStat()">Toggle Battery Status</button> <button onclick="apps.settings.vars.togBatComp()">Toggle Stylish Battery</button> <button onclick="apps.settings.vars.togFpsStat()">Toggle FPS Status</button> <button onclick="apps.settings.vars.togFpsComp()">Toggle Compact FPS</button> <button onclick="apps.settings.vars.togLodStat()">Toggle CPU Status</button><hr>' +
@@ -6992,7 +6992,7 @@ c(function(){
                     setUrl: {
                         option: 'Background Image URL',
                         description: function(){return 'Set an image as your desktop background. This can be png, jpg, gif, or any other web-compatible image. You can enter a filename from the "aOS Backgrounds" list at the bottom of this page or an external image URL. If aOS is loaded over HTTPS, make sure your image URL is on HTTPS as well. Some external image URLs may not allow aOS to load them.'},
-                        buttons: function(){return '<input id="bckGrndImg" placeholder="beta1.png" style="display:inline-block; width:50%" value="' + (ufload("aos_system/desktop/background_image") || 'beta1.png') + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
+                        buttons: function(){return '<input id="bckGrndImg" placeholder="images/beta1.png" style="display:inline-block; width:50%" value="' + (ufload("aos_system/desktop/background_image") || 'images/beta1.png') + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
                     },
                     bgFit: {
                         option: 'Background Image Fit',
@@ -7010,7 +7010,7 @@ c(function(){
                         option: 'Parallax Background',
                         description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.prlxBackgroundEnabled)"></span>.<br>' +
                             'Parallax Background allows you to create your own wallpapers with depth in them. The wallpaper moves around as you move your mouse. Provide a comma-separated list of image URLs. The first image is displayed at the bottom of the stack.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.togPrlxBg()">Toggle</button> | <input id="STNprlxBg" placeholder="comma-separated image URLs" value="' + (apps.settings.vars.prlxBackgroundURLs || "p1.png,p2.png,p3.png,p4.png") + '"> <button onclick="apps.settings.vars.setPrlxBg(getId(\'STNprlxBg\').value)">Set URLs</button>'}
+                        buttons: function(){return '<button onclick="apps.settings.vars.togPrlxBg()">Toggle</button> | <input id="STNprlxBg" placeholder="comma-separated image URLs" value="' + (apps.settings.vars.prlxBackgroundURLs || "images/p1.png,images/p2.png,images/p3.png,images/p4.png") + '"> <button onclick="apps.settings.vars.setPrlxBg(getId(\'STNprlxBg\').value)">Set URLs</button>'}
                     },
                     premade: {
                         option: 'aOS Backgrounds',
@@ -7064,9 +7064,20 @@ c(function(){
                     folderName: 'Information',
                     folderPath: 'apps.settings.vars.menus.info',
                     image: 'settingIcons/new/information.png',
+                    osID: {
+                        option: 'aOS ID',
+                        description: function(){return 'Your aOS ID: ' + SRVRKEYWORD + '<br>' +
+                            'If you would wish to load another copy of aOS, use the button below. Be sure to have its aOS ID and password ready, and make sure to set a password on this current account if you want to get back to it later.'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.changeKey()">Load a Different aOS</button>'}
+                    },
+                    osPassword: {
+                        option: 'aOS Password',
+                        description: function(){return 'Change the password required to access your account on AaronOS.'},
+                        buttons: function(){return '<input id="STNosPass" type="password"> <button onclick="apps.settings.vars.newPassword()">Set</button>'}
+                    },
                     copyright: {
                         option: 'Copyright Notice',
-                        description: function(){return 'AaronOS is &copy; 2016 Aaron Adams<br><br>This software is provided FREE OF CHARGE.<br>If you were charged for the use of this software, please contact mineandcraft12@gmail.com<br><br>Original AaronOS source-code provided as-is at <a target="_blank" href="https://github.com/MineAndCraft12/AaronOS">Github</a>'}, //         <-- COPYRIGHT NOTICE
+                        description: function(){return 'AaronOS is &copy; 2015-2020 Aaron Adams<br><br>This software is provided FREE OF CHARGE.<br>If you were charged for the use of this software, please contact mineandcraft12@gmail.com<br><br>Original AaronOS source-code provided as-is at <a target="_blank" href="https://github.com/MineAndCraft12/AaronOS">Github</a>'}, //         <-- COPYRIGHT NOTICE
                         buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' +
                             function(){
                                 if(window.location.href.indexOf('https://aaronos.dev/AaronOS/') !== 0){
@@ -7077,17 +7088,6 @@ c(function(){
                                 }
                             }()
                         }
-                    },
-                    osID: {
-                        option: 'aOS ID',
-                        description: function(){return 'Your aOS ID: ' + SRVRKEYWORD + '<br>' +
-                            'If you would wish to load another copy of aOS, use the button below. Be sure to have its aOS ID and password ready, and make sure to set a password on this current account if you want to get back to it later.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.changeKey()">Load a Different aOS</button>'}
-                    },
-                    osPassword: {
-                        option: 'aOS Password',
-                        description: function(){return 'Use this to change the password required to access your account on AaronOS.'},
-                        buttons: function(){return '<input id="STNosPass" type="password"> <button onclick="apps.settings.vars.newPassword()">Set</button>'}
                     },
                     osVersion: {
                         option: 'aOS Version',
@@ -7205,7 +7205,7 @@ c(function(){
                         option: 'Window Border Texture',
                         description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.enabWinImg)">' + numEnDis(apps.settings.vars.enabWinImg) + '</span>.<br>' +
                             'An image overlay on the border of windows and the taskbar that adds some texture.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="winimg.png" value="' + apps.settings.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button>'}
+                        buttons: function(){return '<button onclick="apps.settings.vars.togWinImg()">Toggle</button> | <input id="STNwinImgInput" placeholder="images/winimg.png" value="' + apps.settings.vars.currWinImg + '"> <button onclick="apps.settings.vars.setWinImg()">Set</button>'}
                     },
                     displaceMap: {
                         option: 'Glass Distortion Effect <i>(experimental)</i>',
@@ -7482,11 +7482,11 @@ c(function(){
                 }
             },
             availableBackgrounds: [
-                'beta1.png',
-                'p.png',
-                'bgBeta.png',
-                'p-bin.png',
-                'p-phonebin_1.png'
+                'images/beta1.png',
+                'images/p.png',
+                'images/bgBeta.png',
+                'images/p-bin.png',
+                'images/p-phonebin_1.png'
             ],
             screensaverBlockNames: [],
             corsProxy: 'https://cors-anywhere.herokuapp.com/',
@@ -7586,7 +7586,7 @@ c(function(){
             liveBackgroundEnabled: 0,
             liveBackgroundURL: '',
             prxlBackgroundEnabled: 0,
-            prlxBackgroundURLs: 'p1.png,p2.png,p3.png,p4.png',
+            prlxBackgroundURLs: 'images/p1.png,images/p2.png,images/p3.png,images/p4.png',
             prlxBackgroundUsable: 0,
             togLiveBg: function(nosave){
                 if(apps.settings.vars.prlxBackgroundEnabled){
@@ -7789,7 +7789,7 @@ c(function(){
                 ufsave("aos_system/apps/files/window_debug", '' + this.FILcanWin);
             },
             enabWinImg: 1,
-            currWinImg: 'winimg.png',
+            currWinImg: 'images/winimg.png',
             togWinImg: function(nosave){
                 perfStart('settings');
                 if(this.enabWinImg){
@@ -9907,10 +9907,11 @@ c(function(){
             "12/18/2019: B1.2.3.0\n + Desktop icons can now be quickly created from the Dashboard, and from the taskbar.\n : Completely redid the main menu for Settings.\n + Built-in desktop icons can now be deleted.\n : Changed the look of the 'add desktop icon' feature.\n : Modified the menu for 'About This App'.\n : Completely rewrote the system for desktop icons. They are now more robust and consistent, and easier to program.\n : Adjusted ground reflection effect in Monstercat and Obelisks for MPl.\n : Fixed multiple issues pertaining to desktop icons.\n\n" +
             "12/22/2019: B1.2.4.0\n : Revamped the rest of the Settings UI and reworded most of the setting descriptions.\n : Fixed bug in Aero dashboard.\n : The default Trusted Apps file now dynamically sets itself to trust the current domain, instead of requiring a manual edit on non-official hosts.\n + New icons for Messaging and Sticky Note.\n - Removed some useless setting options.\n : Fixed mislabeled buttons in Files.\n\n" +
             "02/18/2020: B1.2.4.1\n : Fixed reflection of bars in Monstercat and Obelisk music visualizers.\n\n" +
-            "06/22/2020: B1.2.5.0\n + AutoScroll for Guitar music writer.\n : Various spellchecks.\n : Various fixes.",
-            oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover.\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
+            "06/22/2020: B1.2.5.0\n + AutoScroll for Guitar music writer.\n : Various spellchecks.\n : Various fixes.\n\n" +
+            "09/22/2020: B1.2.6.0\n : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.\n : Rearranged Info tab in Settings.\n : Made copyright notices more accurate.\n : Numerous bug fixes the last few months didn't make it into the changelog.",
+            oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover. (These links are dead; new links coming eventually)\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.4.1 (02/18/2020) r1';
+    window.aOSversion = 'B1.2.6.0 (09/22/2020) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

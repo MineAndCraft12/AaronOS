@@ -18,7 +18,7 @@
     <svg>
         <defs>
             <filter id="svgblur">
-                <feImage xlink:href="winimg_disp.png" result="dispImg" width="256px" height="256px" preserveAspectRatio="none"/>
+                <feImage xlink:href="images/winimg_disp.png" result="dispImg" width="256px" height="256px" preserveAspectRatio="none"/>
                 <feTile in="dispImg" result="dispMap" preserveAspectRatio="none"/>
                 <feDisplacementMap id="svgDisplaceMap" in2="dispMap" in="SourceGraphic" scale="5" xChannelSelector="R" yChannelSelector="G"/>
             </filter>
@@ -108,7 +108,7 @@
             </div>
         </div>
     </div>
-    <img style="display:none" id="bgSizeElement" src="beta1.png" onload="try{updateBgSize()}catch(err){}">
+    <img style="display:none" id="bgSizeElement" src="images/beta1.png" onload="try{updateBgSize()}catch(err){}">
 </body>
 <!--<script defer src="script.js"></script>-->
 <?php

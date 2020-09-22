@@ -68,7 +68,7 @@
                 width:100%;
                 height:2px;
                 border:none;
-                background-image:url(/hr.png);
+                background-image:url(images/hr.png);
                 background-size:100% 2px;
             }
             a{

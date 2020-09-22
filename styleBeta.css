@@ -209,7 +209,7 @@ hr{
     width:100%;
     height:2px;
     border:none;
-    background-image:url(hr.png);
+    background-image:url(images/hr.png);
     background-size:100% 2px;
 }
 a{
@@ -247,7 +247,7 @@ div{
         aeroFriendly3 = url(http://i50.photobucket.com/albums/f331/HawaiiWirikidor/ththththStickPeople.gif)
         interesting1 = url(http://orig11.deviantart.net/dec2/f/2012/185/9/2/tileable_futuristic_grid_by_ndugger-d55yz5h.png)
     */
-    background-image:url(beta1.png);
+    background-image:url(images/beta1.png);
     /*background-size:cover;*/
     background-position:0 0;
     font-family:sans-serif;
@@ -375,7 +375,7 @@ div{
             .winBimg{
                 width:100%;
                 height:100%;
-                background-image:url(winimg.png);
+                background-image:url(images/winimg.png);
             }
             .winRes{
                 height:100%;
@@ -1074,7 +1074,7 @@ div{
     z-index:9999999999999998;
     transition:opacity 1s;
     background-color:#000;
-    background-image:url('beta1.png');
+    background-image:url('images/beta1.png');
     filter:blur(10px);
     background-position:center;
     background-size:cover;
