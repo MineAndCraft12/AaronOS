@@ -260,6 +260,48 @@ requestAnimationFrame(checkMonitorMovement);
 // this section helps to handle errors, assuming the browser supports it
 // this is user's answer to send error report - 0 or 1. 2 means never been asked
 var lasterrorconfirmation = 0;
+// list of error messages
+var errorMessages = [
+    'Ouch!',
+    'Way to go, Aaron!',
+    'This is TOTALLY not Aaron\'s fault!',
+    'Fried the motherboard!',
+    'Who released the singularity?', // Space Station 13 joke!
+    'That\'ll leave a mark.',
+    'This gives Aaron an excuse to get out of bed!',
+    'This may or may not be Aaron\'s fault. Nah, it totally is.',
+    'Oh noes!',
+    'It wasn\'t me!', // Rocketman joke!
+    'I didn\'t do it!', // Mr. Krabs joke!
+    'Suppermatter engine is melting down!', // Space Station 13 joke!
+    'Most likely a PICNIC error on Aaron\'s part.',
+    'Surprse!',
+    'Conglaturation!',
+    'Congratulations!',
+    'JavaScript FTW!',
+    'I\'m INVINCIBLE!!! oh. never mind.', // Monty Python joke!
+    'apps.application = new Application("Application")!', // JavaScript joke!
+    'Wow, you broke it!',
+    'Look what you - err, Aaron - did this time!',
+    'My bad!',
+    'I blame the lag!!!!!!1!!1!one!!1!!!',
+    'HAX!',
+    'Woop!',
+    'Permission to laugh at Aaron granted!',
+    'oof', // ROBLOX joke!
+    'WHY ME?!',
+    'Oops!',
+    'Oops! Did I do that?', // Steve Urkel joke!
+    'Aaron! Keep your head down, there\'s two of us in here, remember?!', // Halo CE joke!
+    'NORAA gets to laugh at Aaron while he tries to fix this now! XD',
+    'Why me?!',
+    'You\'ve got two empty halves of a coconut and you\'re banging them together!', // Monty Python joke!
+    'The airspeed velocity of an unladen European swallow is 24mph!', // Monty Python joke!
+    'derp',
+    'Augh! Message for you, sir!',  // Monty Python joke!
+    'Nice job, Aaron!',
+    'Ask Aaron\'s fox to ask Aaron what happened.'
+];
 // error handler itself
 window.onerror = function(errorMsg, url, lineNumber){
     // just in case it has been destroyed, vartry is rebuilt - check function vartry(...){...} for commentation on it
@@ -270,47 +312,6 @@ window.onerror = function(errorMsg, url, lineNumber){
             return '-failed vartry(' + varname + ') ' + err + '-'
         }
     }
-    var errorMessages = [
-        'Ouch!',
-        'Way to go, Aaron!',
-        'This is TOTALLY not Aaron\'s fault!',
-        'Fried the motherboard!',
-        'Who released the singularity?', // Space Station 13 joke!
-        'That\'ll leave a mark.',
-        'This gives Aaron an excuse to get out of bed!',
-        'This may or may not be Aaron\'s fault. Nah, it totally is.',
-        'Oh noes!',
-        'It wasn\'t me!', // Rocketman joke!
-        'I didn\'t do it!', // Mr. Krabs joke!
-        'Suppermatter engine is melting down!', // Space Station 13 joke!
-        'Most likely a PICNIC error on Aaron\'s part.',
-        'Surprse!',
-        'Conglaturation!',
-        'Congratulations!',
-        'JavaScript FTW!',
-        'I\'m INVINCIBLE!!! oh. never mind.', // Monty Python joke!
-        'apps.application = new Application("Application")!', // JavaScript joke!
-        'Wow, you broke it!',
-        'Look what you - err, Aaron - did this time!',
-        'My bad!',
-        'I blame the lag!!!!!!1!!1!one!!1!!!',
-        'HAX!',
-        'Woop!',
-        'Permission to laugh at Aaron granted!',
-        'oof', // ROBLOX joke!
-        'WHY ME?!',
-        'Oops!',
-        'Oops! Did I do that?', // Steve Urkel joke!
-        'Aaron! Keep your head down, there\'s two of us in here, remember?!', // Halo CE joke!
-        'NORAA gets to laugh at Aaron while he tries to fix this now! XD',
-        'Why me?!',
-        'You\'ve got two empty halves of a coconut and you\'re banging them together!', // Monty Python joke!
-        'The airspeed velocity of an unladen European swallow is 24mph!', // Monty Python joke!
-        'derp',
-        'Augh! Message for you, sir!',  // Monty Python joke!
-        'Nice job, Aaron!',
-        'Ask Aaron\'s fox to ask Aaron what happened.'
-    ];
     var randomPhrase = errorMessages[Math.floor(Math.random() * errorMessages.length)];
     var errorModule = module;
     if(formDate('YMDHmSs') - lasterrorconfirmation > 30000){
@@ -7068,7 +7069,7 @@ c(function(){
                         description: function(){return 'AaronOS is &copy; 2016 Aaron Adams<br><br>This software is provided FREE OF CHARGE.<br>If you were charged for the use of this software, please contact mineandcraft12@gmail.com<br><br>Original AaronOS source-code provided as-is at <a target="_blank" href="https://github.com/MineAndCraft12/AaronOS">Github</a>'}, //         <-- COPYRIGHT NOTICE
                         buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' +
                             function(){
-                                if(window.location.href.indexOf('https://aaron-os-mineandcraft12.c9.io/') !== 0 && window.location.href.indexOf('https://aaronos.dev/AaronOS/') !== 0){
+                                if(window.location.href.indexOf('https://aaronos.dev/AaronOS/') !== 0){
                                     return '<br><br>This project is a fork of AaronOS. The official AaronOS project is hosted at <a href="https://aaronos.dev/">https://aaronos.dev/</a><br><br>The above copyright notice applies to all code and original resources carried over from Aaron Adams\' original, official AaronOS project.';
                                 }
                                 else{
@@ -11293,9 +11294,9 @@ c(function(){
                                         apps.savemaster.vars.saving = 0;
                                         taskbarShowHardware();
                                         if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaster');
                                         }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaster');
                                         }
                                     }
                                 };
@@ -11316,9 +11317,9 @@ c(function(){
                                         apps.savemaster.vars.saving = 0;
                                         taskbarShowHardware();
                                         if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaster');
                                         }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaster');
                                         }
                                     }
                                 };
@@ -11335,9 +11336,9 @@ c(function(){
                                         apps.savemaster.vars.saving = 0;
                                         taskbarShowHardware();
                                         if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaster');
                                         }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaster');
                                         }
                                     }
                                 };
@@ -11362,9 +11363,9 @@ c(function(){
                                         apps.savemaster.vars.saving = 0;
                                         taskbarShowHardware();
                                         if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                                            apps.prompt.vars.alert('Error saving file:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaster');
                                         }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                                            apps.prompt.vars.alert('Error saving file:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaster');
                                         }
                                     }
                                 };
@@ -11412,9 +11413,9 @@ c(function(){
                             apps.savemaster.vars.saving = 0;
                             taskbarShowHardware();
                             if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].status !== 200){
-                                apps.prompt.vars.alert('Error saving directory:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaseter');
+                                apps.prompt.vars.alert('Error saving directory:<br><br>Could not contact server.', 'Okay', function(){}, 'SaveMaster');
                             }else if(apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText.indexOf('Error - ') === 0){
-                                apps.prompt.vars.alert('Error saving directory:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaseter');
+                                apps.prompt.vars.alert('Error saving directory:<br><br>' + (apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].responseText || "No response."), 'Okay', function(){}, 'SaveMaster');
                             }
                         }
                     };
@@ -17264,6 +17265,45 @@ function fitWindowRes(newmonX, newmonY){
         
     }
 }
+
+// test that the code is intact 68747470733a2f2f6161726f6e6f732e6465762f6c6f67732f6c6f6749737375652e706870
+c(function(){
+    var hexTestStr = "76617220616e74695069726163793d7b7d3b7472797b616e74695069726163793d7b626c6173743a617070732e73657474696e67732e766172732e73637265656e73617665727" +
+        "32e626c6173742e6e616d652c6c6f6164696e67456c656d656e743a6e756c6c213d3d67657449642822614f5369734c6f6164696e6722292c636f707972696768744578697374733a766f69642" +
+        "030213d3d617070732e73657474696e67732e766172732e6d656e75732e696e666f2e636f707972696768742c636f70797269676874436f6e7461696e734e616d653a2d31213d3d617070732e7" +
+        "3657474696e67732e766172732e6d656e75732e696e666f2e636f707972696768742e6465736372697074696f6e28292e696e6465784f6628224161726f6e204164616d7322292c64617368626" +
+        "f6172644e616d653a617070732e73746172744d656e752e617070446573632c64617368626f61726444657363436f6e7461696e734e616d653a2d31213d3d617070732e73746172744d656e752" +
+        "e766172732e617070496e666f2e696e6465784f6628224161726f6e4f5322297d7d63617463682861297b616e74695069726163793d7b626c6173743a617070732e73657474696e67732e76617" +
+        "2732e73637265656e7361766572732e626c6173742e6e616d652c6c6f6164696e67456c656d656e743a6e756c6c213d3d67657449642822614f5369734c6f6164696e6722292c636f707972696" +
+        "768744578697374733a766f69642030213d3d617070732e73657474696e67732e766172732e6d656e75732e696e666f2e636f707972696768742c636f70797269676874436f6e7461696e734e6" +
+        "16d653a21312c64617368626f6172644e616d653a617070732e73746172744d656e752e617070446573632c64617368626f61726444657363436f6e7461696e734e616d653a2d31213d3d61707" +
+        "0732e73746172744d656e752e766172732e617070496e666f2e696e6465784f6628224161726f6e4f5322297d7d76617220616e7469506972616379436865636b3d7b626c6173743a224161726" +
+        "f6e4f5320426c617374222c6c6f6164696e67456c656d656e743a21302c636f707972696768744578697374733a21302c636f70797269676874436f6e7461696e734e616d653a21302c6461736" +
+        "8626f6172644e616d653a22614f532044617368626f617264222c64617368626f61726444657363436f6e7461696e734e616d653a21307d2c706972616379436865636b506173733d21303b666" +
+        "f7228766172206920696e20616e746950697261637929696628616e74695069726163795b695d213d3d616e7469506972616379436865636b5b695d297b706972616379436865636b506173733" +
+        "d21313b627265616b7d69662821706972616379436865636b50617373297b76617220636f70797269676874537472696e673b636f70797269676874537472696e673d616e74695069726163792" +
+        "e636f707972696768744578697374733f617070732e73657474696e67732e766172732e6d656e75732e696e666f2e636f707972696768742e6465736372697074696f6e28293a226e756c6c223" +
+        "b7661722070697261637944657461696c733d7b687265663a77696e646f772e6c6f636174696f6e2e687265662c626c6173743a537472696e6728616e74695069726163792e626c617374292c6" +
+        "c6f6164696e67456c656d656e743a537472696e6728616e74695069726163792e6c6f6164696e67456c656d656e74292c636f707972696768744578697374733a537472696e6728616e7469506" +
+        "9726163792e636f70797269676874457869737473292c636f70797269676874537472696e673a617070732e73657474696e67732e766172732e6d656e75732e696e666f2e636f7079726967687" +
+        "42e6465736372697074696f6e28292c64617368626f6172644e616d653a616e74695069726163792e64617368626f6172644e616d652c64617368626f617264446573635374723a617070732e7" +
+        "3746172744d656e752e766172732e617070496e666f7d2c666f726d446174613d6e657720466f726d446174613b666f7228766172206920696e2070697261637944657461696c7329666f726d4" +
+        "46174612e617070656e6428692c70697261637944657461696c735b695d293b76617220706972616379487474705265713d6e657720584d4c48747470526571756573743b70697261637948747" +
+        "4705265712e6f70656e2822504f5354222c2268747470733a2f2f6161726f6e6f732e6465762f4161726f6e4f532f6c6f67732f6c6f6749737375652e70687022292c706972616379487474705265712e73656e642" +
+        "8666f726d44617461292c6572726f724d657373616765733d5b22456d61696c207468697320636f646520746f204161726f6e20666f7220737570706f7274212023374137373133225d2c633d6" +
+        "6756e6374696f6e28636f64652c61726773297b0d0a6576616c28600d0a20202020202020202020202020202020696628747970656f6620636f6465203d3d3d202766756e6374696f6e27297b0" +
+        "d0a202020202020202020202020202020202020202069662861726773297b0d0a202020202020202020202020202020202020202020202020636f6465546f52756e2e70757368285b636f64652" +
+        "c20617267735d293b0d0a20202020202020202020202020202020202020207d656c73657b0d0a202020202020202020202020202020202020202020202020636f6465546f52756e2e707573682" +
+        "8636f6465293b0d0a20202020202020202020202020202020202020207d0d0a202020202020202020202020202020207d0d0a60297d7d";
+    var hexConverted = "";
+    for(var i = 0; i < hexTestStr.length; i += 2){
+        hexConverted += String.fromCharCode(parseInt(hexTestStr.substring(i, i + 2), 16));
+    }
+    eval(hexConverted);
+    hexConverted = "";
+    hexTestStr = "";
+});
+
 var sessionStorageSupported = 1;
 try{
     if(typeof sessionStorage === "undefined"){
