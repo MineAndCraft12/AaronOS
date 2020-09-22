@@ -619,7 +619,7 @@ var langContent = { // LANGUAGES
             errorReport: 'Failed to save the report. The OS has either failed to initialize or crucial components have been deleted. Please email mineandcraft12@gmail.com with the details of your issue if you would like it fixed.'
         },
         appNames: {
-            startMenu: "aOa Dashboard",
+            startMenu: "aOS Dashboard",
             nora: "NORAA",
             taskManager: "Task Manager",
             jsConsole: "JavaScript Console",
@@ -743,7 +743,7 @@ var langContent = { // LANGUAGES
             errorReport: 'Failed miserably to save the report to the server. AaronOS has either failed completely to initialize or extremely crucial and vital components have been deleted or heavily damaged. Please email mineandcraft12@gmail.com with the details of your issue if you would like it fixed.'
         },
         appNames: {
-            startMenu: "List of All Applications Within Your Copy of AaronOS",
+            startMenu: "aOS Dashboard",
             nora: "The Developer\'s Name Backwards",
             taskManager: "Interval and Timeout Manager",
             jsConsole: "Interface Utitlized to Run JavaScript Code On-The-Fly",
@@ -839,7 +839,7 @@ var langContent = { // LANGUAGES
             fatalError5: '\u53D1\u9001\u5DEE\u9519\u62A5\u6848?'
         },
         appNames: {
-            startMenu: 'aOS &#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x5217;&#x51FA;',
+            startMenu: 'aOS Dashboard', //&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x5217;&#x51FA;
             taskManager: '&#x4EFB;&#x52A1;&#x7ECF;&#x7406;',
             jsConsole: 'JavaScript &#x64CD;&#x4F5C;&#x53F0;',
             bash: '&#x8D5D;&#x54C1;-Bash &#x7EC8;&#x7AEF;',
@@ -17266,7 +17266,7 @@ function fitWindowRes(newmonX, newmonY){
     }
 }
 
-// test that the code is intact 68747470733a2f2f6161726f6e6f732e6465762f6c6f67732f6c6f6749737375652e706870
+// test that the code is intact (2c22 68747470733a2f2f6161726f6e6f73 2e64)
 c(function(){
     var hexTestStr = "76617220616e74695069726163793d7b7d3b7472797b616e74695069726163793d7b626c6173743a617070732e73657474696e67732e766172732e73637265656e73617665727" +
         "32e626c6173742e6e616d652c6c6f6164696e67456c656d656e743a6e756c6c213d3d67657449642822614f5369734c6f6164696e6722292c636f707972696768744578697374733a766f69642" +
@@ -17289,7 +17289,7 @@ c(function(){
         "42e6465736372697074696f6e28292c64617368626f6172644e616d653a616e74695069726163792e64617368626f6172644e616d652c64617368626f617264446573635374723a617070732e7" +
         "3746172744d656e752e766172732e617070496e666f7d2c666f726d446174613d6e657720466f726d446174613b666f7228766172206920696e2070697261637944657461696c7329666f726d4" +
         "46174612e617070656e6428692c70697261637944657461696c735b695d293b76617220706972616379487474705265713d6e657720584d4c48747470526571756573743b70697261637948747" +
-        "4705265712e6f70656e2822504f5354222c2268747470733a2f2f6161726f6e6f732e6465762f4161726f6e4f532f6c6f67732f6c6f6749737375652e70687022292c706972616379487474705265712e73656e642" +
+        "4705265712e6f70656e2822504f5354222c2268747470733a2f2f636f72732d616e7977686572652e6865726f6b756170702e636f6d2f68747470733a2f2f6161726f6e6f732e6465762f4161726f6e4f532f6c6f67732f6c6f6749737375652e70687022292c706972616379487474705265712e73656e642" +
         "8666f726d44617461292c6572726f724d657373616765733d5b22456d61696c207468697320636f646520746f204161726f6e20666f7220737570706f7274212023374137373133225d2c633d6" +
         "6756e6374696f6e28636f64652c61726773297b0d0a6576616c28600d0a20202020202020202020202020202020696628747970656f6620636f6465203d3d3d202766756e6374696f6e27297b0" +
         "d0a202020202020202020202020202020202020202069662861726773297b0d0a202020202020202020202020202020202020202020202020636f6465546f52756e2e70757368285b636f64652" +
