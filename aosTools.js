@@ -240,21 +240,21 @@ window.aosTools = {
     waitingPasteTarget: null,
     waitingPasteRange: null,
     recievePasteCommand: function(data){
-        console.log(data);
-        console.log(aosTools.waitingPasteTarget, aosTools.waitingPasteRange);
-        if(aosTools.waitingPasteTarget){
-            if(typeof aosTools.waitingPasteTarget.value === "string"){
-                if(aosTools.waitingPasteRange){
-                    aosTools.waitingPasteTarget.value = (
-                        aosTools.waitingPasteTarget.value.substring(0, aosTools.waitingPasteRange[0]) +
-                        data.pastedText +
-                        aosTools.waitingPasteTarget.value.substring(aosTools.waitingPasteRange[1], aosTools.waitingPasteTarget.value.length)
-                    );
-                }else{
-                    aosTools.waitingPasteTarget.value = (
-                        data.pastedText +
-                        aosTools.waitingPasteTarget.value
-                    );
+        if(data.content === "pasted"){
+            if(aosTools.waitingPasteTarget){
+                if(typeof aosTools.waitingPasteTarget.value === "string"){
+                    if(aosTools.waitingPasteRange){
+                        aosTools.waitingPasteTarget.value = (
+                            aosTools.waitingPasteTarget.value.substring(0, aosTools.waitingPasteRange[0]) +
+                            data.pastedText +
+                            aosTools.waitingPasteTarget.value.substring(aosTools.waitingPasteRange[1], aosTools.waitingPasteTarget.value.length)
+                        );
+                    }else{
+                        aosTools.waitingPasteTarget.value = (
+                            data.pastedText +
+                            aosTools.waitingPasteTarget.value
+                        );
+                    }
                 }
             }
         }
