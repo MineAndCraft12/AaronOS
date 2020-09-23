@@ -6851,6 +6851,11 @@ c(function(){
                             if(ufload("aos_system/clipboard")){
                                 if(ufload("aos_system/clipboard") !== '_cleared_clipboard_'){
                                     textEditorTools.clipboard = JSON.parse(ufload("aos_system/clipboard"));
+                                    if(textEditorTools.clipboard.length < textEditorTools.slots){
+                                        while(textEditorTools.clipboard.length < textEditorTools.slots){
+                                            textEditorTools.clipboard.push("");
+                                        }
+                                    }
                                 }
                             }
                             apps.settings.vars.setScale(ufload("aos_system/apps/settings/ui_scale") || "1", 1);
@@ -9942,7 +9947,7 @@ c(function(){
             "02/18/2020: B1.2.4.1\n : Fixed reflection of bars in Monstercat and Obelisk music visualizers.\n\n" +
             "06/22/2020: B1.2.5.0\n + AutoScroll for Guitar music writer.\n : Various spellchecks.\n : Various fixes.\n\n" +
             "09/22/2020: B1.2.6.0\n : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.\n : Rearranged Info tab in Settings.\n : Made copyright notices more accurate.\n : Numerous bug fixes the last few months didn't make it into the changelog.\n\n" +
-            "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Modified a context menu icon.",
+            "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Fixed context menus breaking completely if the clipboard contains less slots than it thinks it should.\n : Modified a context menu icon.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover. (These links are dead; new links coming eventually)\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
     window.aOSversion = 'B1.2.7.0 (09/23/2020) r0';
