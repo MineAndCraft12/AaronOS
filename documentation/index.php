@@ -1124,57 +1124,276 @@
             <li>number: Height of the AaronOS virtual monitor in pixels, including the taskbar.</li>
         </ul>
     </p>
-</div>
-
-<div class="docPage" id="doc_at_js" data-doc-title="aosTools: JavaScript on AaronOS" data-search-terms="web apps">
-    <h1>aosTools: JavaScript on AaronOS</h1>
-    <p>
-        Permission name: <code>js</code><br>
-        <i>This permission is dangerous to grant; it's unlikely that users will allow it.</i>
-    </p>
-    <p>
-        The <code>js</code> permission is a special permission set aside specifically for executing JavaScript code on AaronOS.
-        Code that you run via this permission will be executed on AaronOS rather than on your web app.
-    </p>
     <hr>
-    <h1 class="docHeader" id="doc_at_js_exec" data-search-terms="js:exec">Execute (eval)</h1>
+    <h1 class="docHeader" id="doc_at_appwindow_take_focus" data-search-terms="appwindow:get_take_focus">Take Focus</h1>
     <p>
-        Action: <code>js:exec</code>
+        Action: <code>appwindow:take_focus</code>
     </p>
-    <button class="aosTools_try" onclick="aosTools.exec('var countNumber = 0;for(var app in apps){countNumber++;}return countNumber;', function(res){document.getElementById('try_js_exec').innerHTML = 'You have ' + res.content + ' apps installed.';})">Try It</button>:
-    <code class="aosTools_try" id="try_js_exec">&nbsp;</code>
+    <button class="aosTools_try" onclick="aosTools.takeFocus(function(res){document.getElementById('try_appwindow_take_focus').innerHTML = res.content})">Try It</button>:
+    <code class="aosTools_try" id="try_appwindow_take_focus">&nbsp;</code>
     <p>
-        This action will execute any JavaScript code you provide on AaronOS.
-        The code is executed via <code>Function</code>.
+        This action will attempt to focus your window as the active window on aOS.
+        Your window will be brought to the top of the stack of windows, and unminimized if not already.
+        Do note, this does not work if your app is closed completely.
     </p>
     <h2>Easy Request</h2>
     <pre><code>
-        aosTools.exec(string code, (response) =&gt; {
+        aosTools.takeFocus((response) =&gt; {
             // callback
         });
     </code></pre>
     <h2>Manual Request</h2>
     <pre><code>
         aosTools.sendRequest({
-            action: "js:exec",
-            content: string
+            action: "appwindow:take_focus"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>true</code>: Command succeeded.</li>
+            <li><code>false</code>: Command failed.</li>
+        </ul>
+    </p>
+</div>
+
+<div class="docPage" id="doc_at_context" data-doc-title="aosTools: Context Menu" data-search-terms="web apps right click right-click">
+    <h1>aosTools: Context Menu</h1>
+    <p>
+        Permission name: <code>context</code><br>
+        <i>This permission is automatically granted.</i>
+    </p>
+    <p>
+        The <code>context</code> permission is all about context menus, or right-click menus.
+        This includes generating context menus to show to the user after they right-click something,
+        and changing the behavior of your app's default right-click action.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_context_enable_default_menu" data-search-terms="enableDefaultMenu disableDefaultMenu context menu">Toggle Default Context Menu</h1>
+    Enable: <button class="aosTools_try" onclick="aosTools.enableDefaultMenu()">Try It</button><br>
+    Disable: <button class="aosTools_try" onclick="aosTools.disableDefaultMenu()">Try It</button>
+    <p>
+        These functions will enable or disable the default context menu of your app.
+        Enabling the default context menu will cause the AaronOS context menu to appear when your user clicks somewhere in your app that doesn't have a menu assigned.
+        Disabling the default context menu will cause the web browser's native context menu to appear instead.
+    </p>
+    <p>
+        This option is enabled by default. The default context menu allows users to copy selected text to their aOS clipboard, paste text from their aOS clipboard into any input or textarea, or speak selected text out loud with NORAA.
+    </p>
+    <h2>Function Call</h2>
+    <pre><code>
+        // enable the default context menu
+        aosTools.enableDefaultMenu();
+
+        // disable the default context menu
+        aosTools.disableDefaultMenu();
+    </code></pre>
+    <p>
+        These functions have no return values and do not communicate with AaronOS on call.
+        Instead, aosTools will issue its own default context menu when it is needed, if this option is enabled.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_context_text_menu" data-search-terms="context:text_menu edit menu text menu right click copy paste copy-paste">Text Editing Menu</h1>
+    <p>
+        Action: <code>context:text_menu</code>
+    </p>
+    <input class="aosTools_try" oncontextmenu="aosTools.editMenu(event, true)" value="Try It - Right Click"><br>
+    <button class="aosTools_try" onclick="aosTools.editMenu(event, false, 'Big text that is very long and would be difficult to select manually')">Try It - Left Click</button>
+    <p>
+        This action will trigger the default aOS text editing context menu, granting your user the ability to copy and paste text, or speak text aloud via NORAA.
+        It is most commonly used if the default context menu is disabled, but you want the user to be able to use their aOS clipboard on a specific field in your app.
+        It can also be used to help the user copy a very long or complex string of text by simply pressing a button.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.editMenu(
+            event,
+            bool enablePaste,      // optional
+            string selectedText,   // optional
+            // position
+            [number x, number y]   // optional
+        );
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "context:text_menu",
+            position: [number x, number y],
+            enablePaste: bool                 // optional
+            selectedText: string,             // optional
         }, (response) =&gt; {
             // callback
         });
     </code></pre>
     <h2>Parameters</h2>
     <p>
-        <code>content</code>:
+        <code>event</code>:
         <ul>
-            <li>JavaScript code formatted as a string.</li>
+            <li>
+                This is exactly what it says; if your request is initated by a user's action, leave this as <code>event</code>.
+                It is highly unlikely to ever happen, but if your request was initiated by a timer or some other non-user reason, use <code>null</code> instead.
+            </li>
+        </ul>
+        <code>enablePaste</code>: <i>(optional)</i>
+        <ul>
+            <li>boolean: When set to true, paste operations are allowed. When set to false, options to paste text do not appear.</li>
+        </ul>
+        <code>selectedText</code>: <i>(optional)</i>
+        <ul>
+            <li>If this is not specified, this will default to whatever text the user has selected on your page.</li>
+            <li>string: When specified, this is the string that AaronOS will allow the user to copy to their clipboard.</li>
+        </ul>
+        <code>position</code>: <i>(optional)</i>
+        <ul>
+            <li>
+                Numerical x and y value; determines where on the screen your context menu appears.
+                If you are using the Easy Request, then this is handled for you and you do <b>not</b> need to include it.
+                If you are using the Manual Request, then you must include a position, otherwise your context menu will appear in the upper-left corner of your window.
+            </li>
+        </ul>
+    </p>
+    <h2>Return Values</h2>
+    <p><i>(Easy Request does NOT have a callback or return values. aosTools handles pasting the text for you with Easy Request.)</i></p>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li><code>"copied"</code>: The user copied the text to their aOS clipboard.</li>
+            <li><code>"pasted"</code>: The user chose to paste text from their clipboard into your app.</li>
+            <li><code>"spoken"</code>: The user asked NORAA to speak the text out loud.</li>
+        </ul>
+        <code>response.pastedText</code>
+        <ul>
+            <li>string: This is the text pasted from the user's clipboard, if any.</li>
+            <li><code>undefined</code>: The user chose not to paste text from their clipboard.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_context_menu" data-search-terms="context:menu">Custom Context Menu</h1>
+    <p>
+        Action: <code>context:menu</code>
+    </p>
+    <code class="aosTools_try" oncontextmenu="aosTools.contextMenu(event, [{name: 'Option 0', image: 'gear'},{name: 'Option 1', image: 'agent', disabled: 'true', sectionBegin: 'true'},{name: 'Option 2', image: 'cookie'}],function(res){document.getElementById('try_context_menu').innerHTML = res.content})">Try It - Right Click</code>:
+    <code class="aosTools_try" id="try_context_menu">&nbsp;</code>
+    <p>
+        This action will trigger a context menu, with the options of your choice. When the user selects an option, its index is returned.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.contextMenu(
+            event,
+            // options
+            [
+                {
+                    name: string,
+                    image: string,         // optional
+                    customImage: string,   // optional
+                    disabled: bool         // optional
+                    sectionBegin: bool     // optional
+                }, ...
+            ],
+            (response) =&gt; {
+                // callback
+            },
+            // position
+            [number x, number y],          // optional
+        );
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "context:menu",
+            position: [number x, number y],
+            options: [
+                {
+                    name: string,
+                    image: string,         // optional
+                    customImage: string,   // optional
+                    disabled: bool,        // optional
+                    sectionBegin: bool     // optional
+                }, ...
+            ]
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Parameters</h2>
+    <p>
+        <code>event</code>:
+        <ul>
+            <li>
+                This is exactly what it says; if your request is initated by a user's action, leave this as <code>event</code>.
+                It is highly unlikely to ever happen, but if your request was initiated by a timer or some other non-user reason, use <code>null</code> instead.
+            </li>
+        </ul>
+        <code>options</code>:
+        <ul>
+            <li>This is an array of all the options in your context menu.</li>
+            <ul>
+                <li><code>name</code>: This is the name of your option, which your user will see.</li>
+                <li><i>(optional)</i> <code>image</code>: This is your option's icon, of existing AaronOS context menu icons. A list of valid icons is below.</li>
+                <li><i>(optional)</i> <code>customImage</code>: This is a URL to an image resource, which will act as your option's icon. Images are displayed at a size of 10x10. Remember to use <code>https://</code>!</li>
+                <li><i>(optional)</i> <code>disabled</code>: Set this to true, and the option will be grayed-out and the user will be unable to select it.</li>
+                <li><i>(optional)</i> <code>sectionBegin</code>: Set this to true, and there will be a separator placed before this option, to create a new section of options.</li>
+            </ul>
+        </ul>
+        <code>position</code>: <i>(optional)</i>
+        <ul>
+            <li>
+                Numerical x and y value; determines where on the screen your context menu appears.
+                If you are using the Easy Request, then this is handled for you and you do <b>not</b> need to include it.
+                If you are using the Manual Request, then you must include a position, otherwise your context menu will appear in the upper-left corner of your window.
+            </li>
         </ul>
     </p>
     <h2>Return Values</h2>
     <p>
         <code>response.content</code>
         <ul>
-            <li>If successful, this will be the return value of your code.</li>
-            <li>If failed, the response will be a string starting with <code>Error:</code>.</li>
+            <li>
+                number: This is the array index of the item in the <code>options</code> parameter that the user selected.
+                Do note that it is possible for the user to ignore your context menu and close it.
+                If this is the case, then your callback will never be executed.
+            </li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_context_icons" data-search-terms="context menu icons context icons context images context menu images">Context Menu Icons</h1>
+    <p>
+        This is a list of all context menu icons that come built-in to AaronOS. They are valid for <code>image</code> parameters on <code>context:menu</code> options.
+        <br>
+        <ul>
+            <li><img src="../ctxMenu/beta/add.png"> add</li>
+            <li><img src="../ctxMenu/beta/agent.png"> agent</li>
+            <li><img src="../ctxMenu/beta/aOS.png"> aOS</li>
+            <li><img src="../ctxMenu/beta/battery.png"> battery</li>
+            <li><img src="../ctxMenu/beta/battery2.png"> battery2</li>
+            <li><img src="../ctxMenu/beta/blank.png"> blank</li>
+            <li><img src="../ctxMenu/beta/circle.png"> circle</li>
+            <li><img src="../ctxMenu/beta/console.png"> console</li>
+            <li><img src="../ctxMenu/beta/cookie.png"> cookie</li>
+            <li><img src="../ctxMenu/beta/cool.png"> cool</li>
+            <li><img src="../ctxMenu/beta/file.png"> file</li>
+            <li><img src="../ctxMenu/beta/folder.png"> folder</li>
+            <li><img src="../ctxMenu/beta/gear.png"> gear</li>
+            <li><img src="../ctxMenu/beta/happy.png"> happy</li>
+            <li><img src="../ctxMenu/beta/less.png"> less</li>
+            <li><img src="../ctxMenu/beta/load.png"> load</li>
+            <li><img src="../ctxMenu/beta/minimize.png"> minimize</li>
+            <li><img src="../ctxMenu/beta/new.png"> new</li>
+            <li><img src="../ctxMenu/beta/paper.png"> paper</li>
+            <li><img src="../ctxMenu/beta/performance.png"> performance</li>
+            <li><img src="../ctxMenu/beta/power.png"> power</li>
+            <li><img src="../ctxMenu/beta/sad.png"> sad</li>
+            <li><img src="../ctxMenu/beta/save.png"> save</li>
+            <li><img src="../ctxMenu/beta/silly.png"> silly</li>
+            <li><img src="../ctxMenu/beta/simple.png"> simple</li>
+            <li><img src="../ctxMenu/beta/smile.png"> smile</li>
+            <li><img src="../ctxMenu/beta/wifi.png"> wifi</li>
+            <li><img src="../ctxMenu/beta/window.png"> window</li>
+            <li><img src="../ctxMenu/beta/x.png"> x</li>
         </ul>
     </p>
 </div>
@@ -1397,6 +1616,60 @@
         </ul>
     </p>
 </div>
+
+<div class="docPage" id="doc_at_js" data-doc-title="aosTools: JavaScript on AaronOS" data-search-terms="web apps">
+    <h1>aosTools: JavaScript on AaronOS</h1>
+    <p>
+        Permission name: <code>js</code><br>
+        <i>This permission is dangerous to grant; it's unlikely that users will allow it.</i>
+    </p>
+    <p>
+        The <code>js</code> permission is a special permission set aside specifically for executing JavaScript code on AaronOS.
+        Code that you run via this permission will be executed on AaronOS rather than on your web app.
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_js_exec" data-search-terms="js:exec">Execute (eval)</h1>
+    <p>
+        Action: <code>js:exec</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.exec('var countNumber = 0;for(var app in apps){countNumber++;}return countNumber;', function(res){document.getElementById('try_js_exec').innerHTML = 'You have ' + res.content + ' apps installed.';})">Try It</button>:
+    <code class="aosTools_try" id="try_js_exec">&nbsp;</code>
+    <p>
+        This action will execute any JavaScript code you provide on AaronOS.
+        The code is executed via <code>Function</code>.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.exec(string code, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "js:exec",
+            content: string
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Parameters</h2>
+    <p>
+        <code>content</code>:
+        <ul>
+            <li>JavaScript code formatted as a string.</li>
+        </ul>
+    </p>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li>If successful, this will be the return value of your code.</li>
+            <li>If failed, the response will be a string starting with <code>Error:</code>.</li>
+        </ul>
+    </p>
+</div>
+
 
 <!--
 <div class="docPage" id="doc_NAME" data-doc-title="TITLE">

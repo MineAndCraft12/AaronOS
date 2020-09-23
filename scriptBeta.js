@@ -3046,17 +3046,27 @@ widgets.flow = new Widget(
 );
 
 //text-editing functionality
-function showEditContext(event){
+function showEditContext(event, fromWebApp, webAppPosition, webAppConversation, webAppFrame, webAppOrigin, webAppPaste){
     if(currentSelection.length === 0){
         textEditorTools.tempvar = '-';
     }else{
         textEditorTools.tempvar = ' ';
     }
     var canPasteHere = 0;
-    if((event.target.tagName === "INPUT" && (event.target.getAttribute("type") === "text" || event.target.getAttribute("type") === "password" || event.target.getAttribute("type") === null)) || event.target.tagName === "TEXTAREA"){
-        canPasteHere = 1;
+    if(!fromWebApp){
+        if((event.target.tagName === "INPUT" && (event.target.getAttribute("type") === "text" || event.target.getAttribute("type") === "password" || event.target.getAttribute("type") === null)) || event.target.tagName === "TEXTAREA"){
+            canPasteHere = 1;
+        }
+    }else{
+        canPasteHere = webAppPaste;
+        textEditorTools.webAppInfo = [webAppConversation, webAppFrame, webAppOrigin];
     }
-    textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "ctxMenu/beta/happy.png", "ctxMenu/beta/load.png", "ctxMenu/beta/save.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
+    if(!fromWebApp){
+        textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "ctxMenu/beta/happy.png", "ctxMenu/beta/load.png", "ctxMenu/beta/save.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
+    }else{
+        var framePosition = webAppFrame.frameElement.getBoundingClientRect();
+        textEditorTools.tmpGenArray = [[webAppPosition[0] + framePosition.x, webAppPosition[1] + framePosition.y, "ctxMenu/beta/happy.png", "ctxMenu/beta/load.png", "ctxMenu/beta/save.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'spoken\',conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1]);getId(\'ctxMenu\').style.display = \'none\'"];
+    }
     for(var i = 1; i <= textEditorTools.slots; i++){
         if(currentSelection.length === 0){
             textEditorTools.tempvar = '-';
@@ -3071,24 +3081,46 @@ function showEditContext(event){
             textEditorTools.tmpGenArray.push(textEditorTools.tempvar + 'Copy "' + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." to Slot ' + i);
         }
         textEditorTools.tmpGenArray[0].push('ctxMenu/beta/load.png');
-        textEditorTools.tmpGenArray.push('textEditorTools.copy(' + (i - 0) + ');getId(\'ctxMenu\').style.display = \'none\'');
+        if(!fromWebApp){
+            textEditorTools.tmpGenArray.push('textEditorTools.copy(' + (i - 0) + ');getId(\'ctxMenu\').style.display = \'none\'');
+        }else{
+            textEditorTools.tmpGenArray.push('textEditorTools.copy(' + (i - 0) + ');apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'copied\',conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1]);getId(\'ctxMenu\').style.display = \'none\'');
+        }
     }
     if(canPasteHere){
         for(var i = 1; i <= textEditorTools.slots; i++){
-            if(textEditorTools.clipboard[i - 1].length === 0 || (typeof event.target.id !== "string" || event.target.id === "") || event.target.getAttribute("disabled") !== null){
-                if(i === 1){
-                    textEditorTools.tmpGenArray.push('_Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+            if(!fromWebApp){
+                if(textEditorTools.clipboard[i - 1].length === 0 || (typeof event.target.id !== "string" || event.target.id === "") || event.target.getAttribute("disabled") !== null){
+                    if(i === 1){
+                        textEditorTools.tmpGenArray.push('_Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    }else{
+                        textEditorTools.tmpGenArray.push('-Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    }
+                    textEditorTools.tmpGenArray.push('');
                 }else{
-                    textEditorTools.tmpGenArray.push('-Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    if(i === 1){
+                        textEditorTools.tmpGenArray.push('+Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    }else{
+                        textEditorTools.tmpGenArray.push(' Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    }
+                    textEditorTools.tmpGenArray.push('textEditorTools.paste(\'' + event.target.id + '\', ' + i + ', ' + event.target.selectionStart + ',' + event.target.selectionEnd + ');getId(\'ctxMenu\').style.display = \'none\'');
                 }
-                textEditorTools.tmpGenArray.push('');
             }else{
-                if(i === 1){
-                    textEditorTools.tmpGenArray.push('+Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                if(textEditorTools.clipboard[i - 1].length === 0){
+                    if(i === 1){
+                        textEditorTools.tmpGenArray.push('_Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    }else{
+                        textEditorTools.tmpGenArray.push('-Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    }
+                    textEditorTools.tmpGenArray.push('');
                 }else{
-                    textEditorTools.tmpGenArray.push(' Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    if(i === 1){
+                        textEditorTools.tmpGenArray.push('+Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    }else{
+                        textEditorTools.tmpGenArray.push(' Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                    }
+                    textEditorTools.tmpGenArray.push('apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'pasted\',pastedText:textEditorTools.clipboard[' + (i - 1) + '],conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1]);getId(\'ctxMenu\').style.display = \'none\'');
                 }
-                textEditorTools.tmpGenArray.push('textEditorTools.paste(\'' + event.target.id + '\', ' + i + ', ' + event.target.selectionStart + ',' + event.target.selectionEnd + ');getId(\'ctxMenu\').style.display = \'none\'');
             }
             textEditorTools.tmpGenArray[0].push('ctxMenu/beta/save.png');
         }
@@ -3123,6 +3155,7 @@ var textEditorTools = {
     tempvar: '',
     tempvar2: '',
     tempvar3: '',
+    webAppInfo:  {},
     slots: 2,
     updateSlots: function(){
         clipboard = [];
@@ -9908,10 +9941,11 @@ c(function(){
             "12/22/2019: B1.2.4.0\n : Revamped the rest of the Settings UI and reworded most of the setting descriptions.\n : Fixed bug in Aero dashboard.\n : The default Trusted Apps file now dynamically sets itself to trust the current domain, instead of requiring a manual edit on non-official hosts.\n + New icons for Messaging and Sticky Note.\n - Removed some useless setting options.\n : Fixed mislabeled buttons in Files.\n\n" +
             "02/18/2020: B1.2.4.1\n : Fixed reflection of bars in Monstercat and Obelisk music visualizers.\n\n" +
             "06/22/2020: B1.2.5.0\n + AutoScroll for Guitar music writer.\n : Various spellchecks.\n : Various fixes.\n\n" +
-            "09/22/2020: B1.2.6.0\n : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.\n : Rearranged Info tab in Settings.\n : Made copyright notices more accurate.\n : Numerous bug fixes the last few months didn't make it into the changelog.",
+            "09/22/2020: B1.2.6.0\n : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.\n : Rearranged Info tab in Settings.\n : Made copyright notices more accurate.\n : Numerous bug fixes the last few months didn't make it into the changelog.\n\n" +
+            "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Modified a context menu icon.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover. (These links are dead; new links coming eventually)\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.6.0 (09/22/2020) r1';
+    window.aOSversion = 'B1.2.7.0 (09/23/2020) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11870,6 +11904,11 @@ c(function(){
             this.appWindow.setContent(
                 '<h1>Web App Maker</h1>' +
                 '<p>Use this tool to add a web page as an app for aOS.</p>' +
+                '<h2>App API</h2>' +
+                '<p>If you are writing an app designed specifically for aOS, there is an API available for you to use and allows you to interface with aOS.</p>' +
+                '<p>Those of you wishing to develop your own app, the Documentation includes directions you should follow. If not, keep reading below.</p>' +
+                '<button onclick="openapp(apps.devDocumentation, \'dsktp\');c(function(){toTop(apps.devDocumentation)})">API Documentation</button>' +
+                '<h2>Getting Started</h2>' +
                 '<p>First, we need a URL to the webpage you would like to add. It needs to follow a few rules first:</p>' +
                 '<ul><li>Address must start with "https://" (not "http://")</li><li>Website must not block aOS from loading it.</li></ul>' +
                 '<p>If you\'re unsure that your app follows the rules above, you can test it out here. Enter the URL into the box below and click "Test". The webpage should appear in the box underneath it.</p>' +
@@ -11899,11 +11938,6 @@ c(function(){
                 '<p>This is the default width and height of your app\'s window when it is first opened.</p>' +
                 'Width: <input id="WAPsizeX" placeholder="700" value="700"><br>' +
                 'Height: <input id="WAPsizeY" placeholder="400" value="400">' +
-                '<hr>' +
-                '<h2>App API</h2>' +
-                '<p>If you are writing an app designed specifically for aOS, there is an API available for you to use, that allows you to interface with aOS.</p>' +
-                '<p>If you are not a developer, you can ignore this section.</p>' +
-                '<button onclick="apps.webAppMaker.vars.alertAPI()">API Documentation</button>' +
                 '<hr>' +
                 '<h2>Install App</h2>' +
                 '<p>This will add your app to your database. Next time you load aOS (or refresh the page), your app will be on the desktop.</p>' +
@@ -12001,10 +12035,98 @@ c(function(){
         },
         {
             appInfo: 'Use this tool to convert any compatible webpage into an app for aOS!<br><br>If you need to delete an app made with this tool, then open its window, right click its title bar, and click "About App". There will be a file name in that info window. You can delete that file in File Manager -> USERFILES, and the app will be uninstalled.',
+            ctxMenus: {
+                defaultCtx: []
+            },
             actions: { // PERMISSIONS
                 context: {
-                    menu: function(input){
-                        return "";
+                    /*
+                        position: [x, y],
+                        options: [
+                            {
+                                name: "Option 1",
+                                icon: "gear",
+                                disabled: "true",
+                            },
+                            {
+                                name: "Option 1",
+                                customIcon: "ctxMenu/beta/gear.png",
+                                sectionBegin: "true"
+                            },
+                        ]
+                    */
+                    // show custom menu
+                    menu: function(input, frame, frameOrigin){
+                        var boundingRect = frame.frameElement.getBoundingClientRect();
+                        var arrayToRender = [];
+                        for(var i in input.options){
+                            var namePrefix = " ";
+                            if(input.options[i].disabled && input.options[i].sectionBegin){
+                                namePrefix = "_";
+                            }else if(input.options[i].disabled){
+                                namePrefix = "-";
+                            }else if(input.options[i].sectionBegin){
+                                namePrefix = "+";
+                            }
+                            if(input.options[i].customImage){
+                                arrayToRender.push([
+                                    namePrefix + input.options[i].name,
+                                    (() => {
+                                        var j = i;
+                                        return () => {
+                                            apps.webAppMaker.vars.postReply({
+                                                messageType: "response",
+                                                content: j,
+                                                conversation: input.conversation
+                                            }, frameOrigin, frame);
+                                        }
+                                    })(),
+                                    input.options[i].customImage
+                                ]);
+                            }else if(input.options[i].image){
+                                arrayToRender.push([
+                                    namePrefix + input.options[i].name,
+                                    (() => {
+                                        var j = i;
+                                        return () => {
+                                            apps.webAppMaker.vars.postReply({
+                                                messageType: "response",
+                                                content: j,
+                                                conversation: input.conversation
+                                            }, frameOrigin, frame);
+                                        }
+                                    })(),
+                                    "ctxMenu/beta/" + input.options[i].image + ".png"
+                                ]);
+                            }else{
+                                arrayToRender.push([
+                                    namePrefix + input.options[i].name,
+                                    (() => {
+                                        var j = i;
+                                        return () => {
+                                            apps.webAppMaker.vars.postReply({
+                                                messageType: "response",
+                                                content: j,
+                                                conversation: input.conversation
+                                            }, frameOrigin, frame);
+                                        }
+                                    })()
+                                ]);
+                            }
+                        }
+                        ctxMenu(
+                            arrayToRender, 1, {
+                                pageX: (input.position || [0, 0])[0] + boundingRect.x,
+                                pageY: (input.position || [0, 0])[1] + boundingRect.y
+                            }, {}
+                        )
+                        return "APPMAKER_DO_NOT_REPLY";
+                    },
+                    // show text-editing menu (copy, paste, etc)
+                    text_menu: function(input, frame, frameOrigin){
+                        currentSelection = input.selectedText;
+                        showEditContext(null, 1, input.position, input.conversation, frame, frameOrigin, input.enablePaste);
+                        return "APPMAKER_DO_NOT_REPLY";
                     }
                 },
                 fs: {
@@ -12291,6 +12413,14 @@ c(function(){
                             width: parseFloat(getId("monitor").style.width),
                             height: parseFloat(getId("monitor").style.height)
                         };
+                    },
+                    take_focus: function(input, frame){
+                        if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                            toTop(apps[frame.frameElement.getAttribute("data-parent-app")]);
+                            return true;
+                        }else{
+                            return false;
+                        }
                     }
                 },
                 bgservice: {
@@ -12351,85 +12481,9 @@ c(function(){
                 appwindow: "manipulate its window",
                 bgservice: "run in the background"
             },
-            commandExamples: {
-                getstyle: {
-                    darkmode: 'aosTools.getDarkMode(function(){<br>' +
-                        '&nbsp; data.content // => "true" or "false"<br>' +
-                        '});',
-                    customstyle: 'aosTools.updateStyle();'
-                },
-                fs: {
-                    read_uf: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "fs:read_uf",<br>' +
-                        '&nbsp; targetFile: "file/name/here"<br>' +
-                        '}, function(data){<br>' +
-                        '&nbsp; data.content // => file contents<br>' +
-                        '});',
-                    write_uf: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "fs:write_uf",<br>' +
-                        '&nbsp; targetFile: "file/name/here",<br>' +
-                        '}, function(data){<br>' +
-                        '&nbsp; data.content // => "success" or "error"<br>' +
-                        '});',
-                    read_lf: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "fs:read_lf",<br>' +
-                        '&nbsp; targetFile: "file/name/here"<br>' +
-                        '}, function(data){<br>' +
-                        '&nbsp; data.content // => file contents<br>' +
-                        '});',
-                    write_lf: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "fs:write_lf",<br>' +
-                        '&nbsp; targetFile: "file/name/here",<br>' +
-                        '}, function(data){<br>' +
-                        '&nbsp; data.content // => "success" or "error"<br>' +
-                        '});'
-                },
-                prompt: {
-                    alert: "",
-                    prompt: "",
-                    confirm: "",
-                    notify: ""
-                },
-                js: {
-                    exec: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "js:exec",<br>' +
-                        '&nbsp; content: "enter your javaScript code here"<br>' +
-                        '}, function(data){<br>' +
-                        '&nbsp; data.content // => the result of your JS code (functions do not get carried over)<br>' +
-                        '});'
-                },
-                appwindow: {
-                    set_caption: 'aosTools.setCaption("Window\'s new caption here");',
-                    open_window: 'aosTools.openWindow();',
-                    close_window: 'aosTools.closeWindow();',
-                    maximize: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "appwindow:maximize"<br>' +
-                        '});',
-                    unmaximize: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "appwindow:unmaximize"<br>' +
-                        '});',
-                    get_maximized: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "appwindow:get_maximized"<br>' +
-                        '}, function(data){<br>' +
-                        '&nbsp; data.content // => "true" or "false"<br>' +
-                        '});',
-                    minimize: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "appwindow:minimize"<br>' +
-                        '});',
-                    enable_padding: 'aosTools.enablePadding();',
-                    disable_padding: 'aosTools.disablePadding();',
-                    set_dims: 'aosTools.sendRequest({<br>' +
-                        '&nbsp; action: "appwindow:set_dims"<br>' +
-                        '&nbsp; left: 100, // any number<br>' +
-                        '&nbsp; top: 100, // any number<br>' +
-                        '&nbsp; width: 100, // any number<br>' +
-                        '&nbsp; height: 100 // any number<br>' +
-                        '});'
-                }
-            },
             commandDescriptions: {
                 context: {
-                    menu: "unimplemented"
+                    menu: "Display a context menu at the click point."
                 },
                 customstyle: {
                     darkmode: "Get the state of dark mode.",
@@ -12442,10 +12496,10 @@ c(function(){
                     write_lf: "Write a file to LOCALFILES"
                 },
                 prompt: {
-                    alert: "unimplemented",
-                    prompt: "unimplemented",
-                    confirm: "unimplemented",
-                    notify: "unimplemented"
+                    alert: "Show an alert window to display information.",
+                    prompt: "Show a prompt window to ask for information.",
+                    confirm: "Show a confirm window to ask for a choice.",
+                    notify: "Show a notification and ask for a choice."
                 },
                 js: {
                     exec: "Execute JS code on aOS"
@@ -12467,32 +12521,6 @@ c(function(){
                     exit_service: "Close your service, if it is running.",
                     check_service: "Get the URL of the currently-running service, or false if none."
                 }
-            },
-            alertAPI: function(){
-                apps.prompt.vars.alert('<div style="display:inline-block;position:relative;text-align:left"><h1>Web App API</h1>' +
-                'Using the aosTools.js utility, you can communicate with aOS from within your app.<br><br>' +
-                'Add aosTools.js to your site with the following line in your HTML head:<br>' +
-                '<div style="background:#7F7F7F;position:relative;display:inline-block;font-family:aosProFont, monospace;font-size:12px;">&lt;sc' + 'ript defer src="https://aaronos.dev/AaronOS/aosTools.js"&gt;&l' + 't;/' + 'script&gt;</div><br><br>' +
-                'In order to send a request to aOS, you can use the following code:<br>' +
-                '<div style="background:#7F7F7F;position:relative;display:inline-block;font-family:aosProFont, monospace;font-size:12px;">aosTools.sendRequest({<br>&nbsp; &nbsp; action: "action:here",<br>&nbsp; &nbsp; content: "request content here"<br>}, callbackFunction);</div><br><br>' +
-                'In order to recieve a reply from aOS, you need a callback function like this:<br>' +
-                '<div style="background:#7F7F7F;position:relative;display:inline-block;font-family:aosProFont, monospace;text-align:left;font-size:12px;">function callbackFunction(data){<br>&nbsp; &nbsp; console.log(data.content);<br>&nbsp; &nbsp;// in most cases the response will be in data.content<br>}</div><br><br>' +
-                'The API relies on permissions, to ensure that the user can control whether your app has permission to access certain groups of commands.<br>' +
-                'To request permission to a certain command type, do this:<br>' +
-                '<span style="background:#7F7F7F;font-family:aosProFont, monospace; font-size:12px;">aosTools.requestPermission("fs", callback)</span><br>' +
-                'In place of "fs", use whichever permission you want to request. At the moment, these are the supported permissions:<br>' +
-                '<span style="font-family:aosProFont, monospace;font-size:12px;">' + this.buildAPI(1) + '</span><br>' +
-                'aOS will respond in one of several ways:<br>' +
-                'No Response = aOS is prompting the user for permission. aOS will reply once the user decides.<br>' +
-                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px;">granted: permissionName</span> = your permission to use the feature is granted.<br>' +
-                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px;">unknown: permissionName</span> = the permission you requested does not exist.<br>' +
-                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px;">denied: permissionName</span> = the user denied your permission to use the feature.<br><br>' +
-                'For certain actions, aosTools provides an easy function that takes care of the request for you.<br>' +
-                'As an example, this command will open your app\'s window on aOS, then call your callback function.<br>' +
-                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px;">aosTools.openWindow(callbackFunction);</span><br>' +
-                'If aOS ever hits an error in processing your command, the reply\'s content will typically start with "error":<br>' +
-                '<span style="background:#7F7F7F;font-family:aosProFont, monospace;font-size:12px">Error - no action provided.</span><br>' +
-                '<h2>Commands:</h2><hr><span style="font-family:aosProFont, monospace;font-size:12px;">' + this.buildAPI() + '</span></div>', "Okay", function(){}, "Web App Maker");
             },
             buildAPI: function(permissions){
                 var str = '';
@@ -12534,13 +12562,15 @@ c(function(){
                     "readsetting": "true",
                     "writesetting": "true",
                     "js": "true",
-                    "bgservice": "true"
+                    "bgservice": "true",
+                    "context": "true"
                 }
             },
             globalPermissions: {
                 "getstyle": "true",
                 "appwindow": "true",
-                "prompt": "true"
+                "prompt": "true",
+                "context": "true"
             },
             updatePermissions: function(){
                 ufsave("aos_system/apps/webAppMaker/trusted_apps", JSON.stringify(apps.webAppMaker.vars.trustedApps, null, 4));

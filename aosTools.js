@@ -174,6 +174,21 @@ window.aosTools = {
             action: "appwindow:get_screen_dims"
         }, callback);
     },
+    takeFocus: function(callback){
+        aosTools.sendRequest({
+            action: "appwindow:take_focus"
+        }, callback);
+    },
+    
+    useDefaultContextMenu: true,
+    windowWasClicked: function(event){
+        aosTools.takeFocus(function(){});
+    },
+    windowWasRightClicked: function(event){
+        if(aosTools.useDefaultContextMenu){
+            aosTools.editMenu(event, true);
+        }
+    },
 
     alert: function(paramObj, callback){
         aosTools.sendRequest({
@@ -220,6 +235,62 @@ window.aosTools = {
                 image: paramObj.image
             }, callback);
         }
+    },
+
+    waitingPasteTarget: null,
+    waitingPasteRange: null,
+    recievePasteCommand: function(data){
+        console.log(data);
+        console.log(aosTools.waitingPasteTarget, aosTools.waitingPasteRange);
+        if(aosTools.waitingPasteTarget){
+            if(typeof aosTools.waitingPasteTarget.value === "string"){
+                if(aosTools.waitingPasteRange){
+                    aosTools.waitingPasteTarget.value = (
+                        aosTools.waitingPasteTarget.value.substring(0, aosTools.waitingPasteRange[0]) +
+                        data.pastedText +
+                        aosTools.waitingPasteTarget.value.substring(aosTools.waitingPasteRange[1], aosTools.waitingPasteTarget.value.length)
+                    );
+                }else{
+                    aosTools.waitingPasteTarget.value = (
+                        data.pastedText +
+                        aosTools.waitingPasteTarget.value
+                    );
+                }
+            }
+        }
+        aosTools.waitingPasteTarget = null;
+        aosTools.waitingPasteRange = null;
+    },
+    contextMenu: function(event, options, callback, positionOverride){
+        aosTools.sendRequest({
+            action: "context:menu",
+            position: positionOverride || event ? [event.pageX, event.pageY] : [0, 0],
+            options: options
+        }, callback);
+        if(event){
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    },
+    editMenu: function(event, enablePaste, textOverride, positionOverride){
+        aosTools.waitingPasteTarget = event ? event.target : null;
+        aosTools.waitingPasteRange = event ? (event.target.selectionStart ? [event.target.selectionStart, event.target.selectionEnd] : null) : null;
+        aosTools.sendRequest({
+            action: "context:text_menu",
+            position: positionOverride || event ? [event.pageX, event.pageY] : [0, 0],
+            selectedText: textOverride || document.getSelection().toString(),
+            enablePaste: (event ? (typeof event.target.value === "string" ? true : false) : false) ? enablePaste : 0
+        }, aosTools.recievePasteCommand);
+        if(event){
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    },
+    enableDefaultMenu: function(){
+        aosTools.useDefaultContextMenu = true;
+    },
+    disableDefaultMenu: function(){
+        aosTools.useDefaultContextMenu = false;
     },
 
     bgService: {
@@ -312,9 +383,12 @@ window.aosTools = {
         officialStyleElement.href = "https://aaronos.dev/AaronOS/styleBeta.css";
         officialStyleElement.rel = "stylesheet";
         document.head.prepend(officialStyleElement);
+        document.body.classList.add("cursorDefault");
     }
 };
 
 aosTools.testConnection();
 
 window.addEventListener("message", aosTools.recieveRequest);
+window.addEventListener("click", aosTools.windowWasClicked);
+window.addEventListener("contextmenu", aosTools.windowWasRightClicked);

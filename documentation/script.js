@@ -30,17 +30,17 @@ for(var i = 0; i < documentElements.length; i++){
 var tempContentsText = "";
 for(var i in allDocuments){
     if(allDocuments[i].searchTerms){
-        tempContentsText += '<li class="nav_doc_li" data-target-doc="' + i + '" data-search-terms="' + allDocuments[i].searchTerms + '">' + allDocuments[i].name + "</li>";
+        tempContentsText += '<li class="nav_doc_li cursorPointer" data-target-doc="' + i + '" data-search-terms="' + allDocuments[i].searchTerms + '">' + allDocuments[i].name + "</li>";
     }else{
-        tempContentsText += '<li class="nav_doc_li" data-target-doc="' + i + '">' + allDocuments[i].name + "</li>";
+        tempContentsText += '<li class="nav_doc_li cursorPointer" data-target-doc="' + i + '">' + allDocuments[i].name + "</li>";
     }
     if(allDocuments[i].numOfContents){
         tempContentsText += "<ul>";
         for(var j in allDocuments[i].contents){
             if(allDocuments[i].contents[j][1]){
-                tempContentsText += '<li class="nav_header_li" data-target-doc="' + i + '" data-target-header="' + j + '" data-search-terms="' + allDocuments[i].contents[j][1] + '">' + allDocuments[i].contents[j][0] + '</li>';
+                tempContentsText += '<li class="nav_header_li cursorPointer" data-target-doc="' + i + '" data-target-header="' + j + '" data-search-terms="' + allDocuments[i].contents[j][1] + '">' + allDocuments[i].contents[j][0] + '</li>';
             }else{
-                tempContentsText += '<li class="nav_header_li" data-target-doc="' + i + '" data-target-header="' + j + '">' + allDocuments[i].contents[j][0] + '</li>';
+                tempContentsText += '<li class="nav_header_li cursorPointer" data-target-doc="' + i + '" data-target-header="' + j + '">' + allDocuments[i].contents[j][0] + '</li>';
             }
         }
         tempContentsText += "</ul>";
