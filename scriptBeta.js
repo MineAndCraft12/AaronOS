@@ -7216,7 +7216,7 @@ c(function(){
                         option: 'Dark Mode',
                         description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(darkMode)">Disabled</span>.<br>' +
                             'Makes your aOS apps use a dark background and light foreground. Some apps may need to be restarted to see changes.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.togDarkMode()">Toggle</button>'}
+                        buttons: function(){return '<button onclick="apps.settings.vars.togDarkMode();apps.settings.vars.showMenu(apps.settings.vars.menus.windows)">Toggle</button>'}
                     },
                     windowBorderWidth: {
                         option: 'Window Border Width',
@@ -9947,10 +9947,11 @@ c(function(){
             "02/18/2020: B1.2.4.1\n : Fixed reflection of bars in Monstercat and Obelisk music visualizers.\n\n" +
             "06/22/2020: B1.2.5.0\n + AutoScroll for Guitar music writer.\n : Various spellchecks.\n : Various fixes.\n\n" +
             "09/22/2020: B1.2.6.0\n : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.\n : Rearranged Info tab in Settings.\n : Made copyright notices more accurate.\n : Numerous bug fixes the last few months didn't make it into the changelog.\n\n" +
-            "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Fixed context menus breaking completely if the clipboard contains less slots than it thinks it should.\n : Modified a context menu icon.",
+            "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Fixed context menus breaking completely if the clipboard contains less slots than it thinks it should.\n : Modified a context menu icon.\n\n" +
+            "09/24/2020: B1.2.7.1\n : Fixed Settings not immediately responding to changes in Light / Dark theme.",
             oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover. (These links are dead; new links coming eventually)\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.7.0 (09/23/2020) r0';
+    window.aOSversion = 'B1.2.7.1 (09/24/2020) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
