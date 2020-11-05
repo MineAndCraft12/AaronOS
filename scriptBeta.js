@@ -1,6 +1,18 @@
 /*
-By Aaron Adams, original somewhere in codecademy.com/MineAndCraft12/codebits
-(check files.changelog_old for the text that was here before)
+By Aaron Adams, officially hosted on https://aaronos.dev/AaronOS/
+I've managed to recover some older versions, at https://aaronos.dev/AaronOS_Old/ along with a tiny bit of history.
+
+Be forewarned, this project was originally created in my freshman year of highschool and I was *not* very good back then.
+I have been working on the project in my spare time in my six or seven years since then, and it's grown to be what it is today.
+The code you are about to read can be anywhere from seven years to a couple of hours old, depending on what you're reading.
+I've developed a lot since the beginning of the project, and the early bits of code were never meant to be seen.
+As such, you will see varying degrees of quality throughout; some written by a beginner, some less-so.
+I like to imagine that the majority of the code is more recent than not... but I would not be surprised if there's still
+    seven-year-old code laying around here somewhere that I haven't touched much since.
+Monologue is over. Thank you for your interest in my project and my code.
+
+(check files.changelog_old for the text that was here before -- a very, very long time ago)
+
        __________      __________      ____________      _
      /______    /    /    __    /    /   _________/    / /
      ______/   /    /   /  /   /    /  /_________     / /
@@ -399,10 +411,14 @@ var initStatus = 0;
 // changes the current module
 function m(msg){
     d(2, 'Module changed: ' + msg);
-    modulelast = module;
-    module = msg;
-    // reset module to idle so it is ready for next one
-    window.setTimeout(function(){module = 'unknown';}, 0);
+    if(module !== msg){
+        modulelast = module;
+        module = msg;
+        // reset module to idle so it is ready for next one
+        if(msg !== "unknown"){
+            window.setTimeout(function(){m('unknown');}, 0);
+        }
+    }
 }
 
 // dynamic debug logging
@@ -660,7 +676,7 @@ var langContent = { // LANGUAGES
             housegame: "House Game",
             simon: "Simon",
             postit: "Sticky Note",
-            bootScript: "Boot Script",
+            bootScript: "Boot Scripts",
             bugCentral: "Bug Central",
             rdp: "Remote Desktop Host",
             rdpViewer: "Remote Desktop Viewer",
@@ -784,7 +800,7 @@ var langContent = { // LANGUAGES
             housegame: "Video Game that Takes Place Between Two Warring Factions",
             simon: "Simon",
             postit: "Sticky Note",
-            bootScript: "Boot Script",
+            bootScript: "Boot Scripts",
             bugCentral: "Bug Central",
             rdp: "Remote Desktop Host",
             rdpViewer: "Remote Desktop Viewer",
@@ -1112,11 +1128,7 @@ function countFPS(){
         stringFPSload = Math.round(100 - Math.min((parseInt(stringFPS, 10) / maxFPS), (parseInt(stringVFPS, 10) / maxVFPS)) * 100) + '%' + lang('aOS', 'cpuUsage');
         numbFPS = 0;
     }
-    if(!apps.settings.vars.performanceMode){
-        makeTimeout("aOS", "TaskbarTime", "countFPS()", 0);
-    }else{
-        window.setTimeout(countFPS, 0);
-    }
+    window.setTimeout(countFPS, 0);
 }
 
 // loading the battery
@@ -3281,9 +3293,7 @@ c(function(){
                 this.appWindow.setCaption(lang('appNames', 'startMenu'));
                 this.appWindow.openWindow();
                 this.appWindow.closeKeepTask();
-            }else if(launchType === 'dsktp'){
-                apps.prompt.vars.notify('By cheating.', [], function(){}, 'How did you do that?', 'appicons/ds/aOS.png');
-            }else if(launchType === 'tskbr'){
+            }else if(launchType === 'dsktp' || launchType === 'tskbr'){
                 if(getId('win_startMenu_top').style.display !== 'block'){
                     switch(tskbrToggle.tskbrPos){
                         case 1:
@@ -3303,7 +3313,22 @@ c(function(){
                     this.vars.listOfApps = '';
                     switch(ufload("aos_system/apps/startMenu/dashboard")){
                         case 'whisker':
-                            this.appWindow.setContent('<span style="color:#FFF;font-family:aosProFont,monospace;font-size:12px">User: ' + apps.messaging.vars.parseBB(apps.messaging.vars.name) + '</span><div class="darkResponsive" style="left:0;bottom:0;height:calc(100% - 3em);overflow-y:scroll;width:calc(70% - 2px);"><table style="position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table></div><div style="right:0;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);text-align:right"><img class="cursorPointer" style="width:10px;height:10px;filter:invert(1)" src="ctxMenu/beta/gear.png" onclick="openapp(apps.settings,\'dsktp\')"> <img class="cursorPointer" style="width:10px;height:10px;filter:invert(1)" src="ctxMenu/beta/power.png" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})"><br><br><br><button style="width:100%" onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button><br><button style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button><br><button style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button><br><button style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button><br><button style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br><button style="width:100%" onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button></div><input style="position:absolute;left:0;top:1.5em;width:calc(100% - 2px);" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>');
+                            this.appWindow.setContent(
+                                '<span style="color:#FFF;font-family:aosProFont,monospace;font-size:12px">User: ' + apps.messaging.vars.parseBB(apps.messaging.vars.name) + '</span>' +
+                                '<div class="darkResponsive" style="left:0;bottom:0;height:calc(100% - 3em);overflow-y:scroll;width:calc(70% - 2px);">' +
+                                '<table style="position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table>' +
+                                '</div>' +
+                                '<div style="right:0;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);text-align:right">' +
+                                '<img class="cursorPointer" style="width:10px;height:10px;filter:invert(1)" src="ctxMenu/beta/gear.png" onclick="openapp(apps.settings,\'dsktp\')"> ' +
+                                '<img class="cursorPointer" style="width:10px;height:10px;filter:invert(1)" src="ctxMenu/beta/power.png" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})"><br><br><br>' +
+                                '<button style="width:100%" onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button><br>' +
+                                '<button style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button><br>' +
+                                '<button style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button><br>' +
+                                '<button style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button><br>' +
+                                '<button style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button>' +
+                                '</div>' +
+                                '<input autocomplete="off" style="position:absolute;left:0;top:1.5em;width:calc(100% - 2px);" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>'
+                            );
                             if(this.vars.listOfApps.length === 0){
                                 getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
@@ -3331,7 +3356,21 @@ c(function(){
                             }
                             break;
                         case 'win7':
-                            this.appWindow.setContent('<button style="position:absolute;right:0;bottom:8px;width:30%" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">Power</button><div class="darkResponsive" style="left:0;top:0;height:calc(100% - 2.5em);overflow-y:scroll;width:calc(70% - 2px);border-top-left-radius:5px;border-top-right-radius:5px;"><table style="border-top-left-radius:5px;border-top-right-radius:5px;position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table></div><div style="right:0;color:#FFF;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);"><img style="width:50px;margin-left:15px;" src="appicons/ds/aOS.png"><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</span><br><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</span><hr><span class="cursorPointer" style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</span><br><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</span><hr><span class="cursorPointer" style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</span><br><br><span class="cursorPointer" style="width:100%" onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</span></div><input style="position:absolute;left:0;bottom:0;background-color:#DDD;width:calc(70% - 2px);height:3em;border:none;border-bottom-right-radius:5px;border-bottom-left-radius:5px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>');
+                            this.appWindow.setContent(
+                                '<button style="position:absolute;right:0;bottom:8px;width:30%" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">Power</button>' +
+                                '<div class="darkResponsive" style="left:0;top:0;height:calc(100% - 2.5em);overflow-y:scroll;width:calc(70% - 2px);border-top-left-radius:5px;border-top-right-radius:5px;">' +
+                                '<table style="border-top-left-radius:5px;border-top-right-radius:5px;position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table>' +
+                                '</div>' +
+                                '<div style="right:0;color:#FFF;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);">' +
+                                '<img style="width:50px;margin-left:15px;" src="appicons/ds/aOS.png"><br>' +
+                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</span><br><br>' +
+                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</span><hr>' +
+                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</span><br><br>' +
+                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</span><hr>' +
+                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</span>' +
+                                '</div>' +
+                                '<input autocomplete="off" style="position:absolute;left:0;bottom:0;background-color:#DDD;width:calc(70% - 2px);height:3em;border:none;border-bottom-right-radius:5px;border-bottom-left-radius:5px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>'
+                            );
                             if(this.vars.listOfApps.length === 0){
                                 getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
@@ -3359,7 +3398,20 @@ c(function(){
                             }
                             break;
                         case 'android':
-                            this.appWindow.setContent('<div style="width:100%;height:100%;overflow-y:scroll"><span style="padding-bottom:4px;">&nbsp;<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  <button onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button> <button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> <button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> <button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> <button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button> <button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br><input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch"></span><hr style="margin:0;margin-top:2px"><div id="appDsBtable" class="darkResponsive" style="font-family:aosProFont, monospace; font-size:12px; width:calc(100% - 2px);"></div></div>');
+                            this.appWindow.setContent(
+                                '<div style="width:100%;height:100%;overflow-y:scroll">' +
+                                '<span style="padding-bottom:4px;">&nbsp;' +
+                                '<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  ' +
+                                '<button onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button> ' +
+                                '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
+                                '<button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> ' +
+                                '<button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> ' +
+                                '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
+                                '<input autocomplete="off" style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch">' +
+                                '</span><hr style="margin:0;margin-top:2px">' +
+                                '<div id="appDsBtable" class="darkResponsive" style="font-family:aosProFont, monospace; font-size:12px; width:calc(100% - 2px);"></div>' +
+                                '</div>'
+                            );
                             if(this.vars.listOfApps.length === 0){
                                 getId('appDsBtable').innerHTML = '<img src="loadLight.gif" style="width:100%;">';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
@@ -3386,8 +3438,21 @@ c(function(){
                                 getId('appDsBsearch').focus();
                             }
                             break;
-                        default:
-                            this.appWindow.setContent('<div style="width:100%;height:100%;overflow-y:scroll;"><span style="padding-bottom:4px;">&nbsp;<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  <button onclick="openapp(apps.taskManager, \'dsktp\')">' + lang('startMenu', 'taskManager') + '</button> <button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> <button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> <button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> <button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button> <button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br><input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span><hr style="margin:0;margin-top:2px"><table id="appDsBtable" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;"></table></div>');
+                        case "legacy":
+                            this.appWindow.setContent(
+                                '<div style="width:100%;height:100%;overflow-y:scroll;">' +
+                                '<span style="padding-bottom:4px;">&nbsp;' +
+                                '<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  ' +
+                                '<button onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button> ' +
+                                '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
+                                '<button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> ' +
+                                '<button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> ' +
+                                '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
+                                '<input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch">' +
+                                '</span><hr style="margin:0;margin-top:2px">' +
+                                '<table id="appDsBtable" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;"></table>' +
+                                '</div>'
+                            );
                             if(this.vars.listOfApps.length === 0){
                                 getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
@@ -3401,6 +3466,55 @@ c(function(){
                                 }
                                 //c(function(){
                                     getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                                    // getId('appDsBtable').style.cursor = '';
+                                    getId('appDsBtable').classList.remove('cursorLoadLight');
+                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
+                                //});
+                            }else{
+                                getId('appDsBtable').innerHTML = this.vars.listOfApps;
+                                this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
+                            }
+                            if(sessionStorage.getItem('GooglePlay') !== "true"){
+                                getId('appDsBsearch').focus();
+                            }
+                            break;
+                        default:
+                            this.appWindow.setContent(
+                                '<div style="width:100%;height:100%;">' +
+                                '<div style="position:relative;text-align:center;">' +
+                                '<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  ' +
+                                '<button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> ' +
+                                '<button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> ' +
+                                '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
+                                '<button onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button> ' +
+                                '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
+                                //'<button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br>' +
+                                '<input autocomplete="off" style="width:calc(100% - 6px);margin-top:3px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch">' +
+                                '</div><div id="appDsBtableWrapper" style="width:100%;overflow-y:scroll;background-color:rgba(' + darkSwitch('255, 255, 255', '39, 39, 39') + ', 0.5);">' +
+                                '<table id="appDsBtable" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;color:' + darkSwitch('#000', '#FFF') + ';"></table>' +
+                                '</div></div>'
+                            );
+                            var outerbound = getId("win_startMenu_html").getBoundingClientRect();
+                            var innerbound = getId("appDsBtableWrapper").getBoundingClientRect();
+                            getId("appDsBtableWrapper").style.height = outerbound.height - (innerbound.top - outerbound.top) + "px";
+                            if(this.vars.listOfApps.length === 0){
+                                getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
+                                //getId('appDsBtable').style.cursor = cursors.loadLight;
+                                getId('appDsBtable').classList.add('cursorLoadLight');
+                                for(var appHandle in appsSorted){
+                                    //c(function(app){
+                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
+                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')">' +
+                                                '<th>' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '</th>' +
+                                                '<td>' + apps[appsSorted[appHandle]].appDesc + '</td>' +
+                                                '<td style="text-align:right;opacity:0.5">' + apps[appsSorted[appHandle]].dsktpIcon + '</td>' +
+                                                '</tr>';
+                                        }
+                                    //}, appsSorted[appHandle]);
+                                }
+                                //c(function(){
+                                    getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                                    getId('appDsBtable').innerHTML += '<tr><th><div style="width:32px;height:32px;position:relative;"></div></th><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td>';
                                     // getId('appDsBtable').style.cursor = '';
                                     getId('appDsBtable').classList.remove('cursorLoadLight');
                                     apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
@@ -3486,6 +3600,7 @@ c(function(){
                                 getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
                             }
                     }
+                    this.appWindow.appIcon = 0;
                     break;
                 case "USERFILES_DONE":
                     // SET UP WIDGETS
@@ -3617,11 +3732,12 @@ c(function(){
                 ['+About This App', function(arg){
                     openapp(apps.appInfo, arg);
                 }, 'ctxMenu/beta/file.png'],
-                [' View in Files', function(arg){
+                [' View Files', function(arg){
                     c(function(){
                         openapp(apps.files2, 'dsktp');
                         c(function(){
-                            apps.files2.vars.next('apps/' + arg + '/');
+                            apps.files2.vars.next('apps/');
+                            apps.files2.vars.next(arg + '/');
                         });
                     });
                 }, 'ctxMenu/beta/folder.png']
@@ -3737,9 +3853,7 @@ c(function(){
                         return false;
                     };
                 }
-            }else if(launchtype === 'dsktp'){
-                apps.prompt.vars.notify('By cheating.', [], function(){}, 'How did you do that?', 'appicons/ds/NRA.png');
-            }else if(launchtype === 'tskbr'){
+            }else if(launchtype === 'dsktp' || launchtype === 'tskbr'){
                 if(getId('win_nora_top').style.display === 'none'){
                     this.appWindow.setDims(45, parseInt(getId('desktop').style.height, 10) - 500, 600, 500);
                 }
@@ -4266,11 +4380,11 @@ c(function(){
                     'how do i [some action on aOS]',
                     'Have me tell you how to do something, as long as that action has been documented.',
                     function(text){
-                        if(this[4].links[text.toLowerCase()] && apps.settings.vars.noraHelpTopics){
-                            apps.nora.vars.say('I found a help topic for you.')
-                            openapp(apps.help, 'dsktp');
-                            apps.help.vars.populateList(this[4].links[text.toLowerCase()]);
-                        }else if(this[4].phrases[text.toLowerCase()]){
+                        //if(this[4].links[text.toLowerCase()] && apps.settings.vars.noraHelpTopics){
+                        //    apps.nora.vars.say('I found a help topic for you.')
+                        //    openapp(apps.help, 'dsktp');
+                        //    apps.help.vars.populateList(this[4].links[text.toLowerCase()]);
+                        if(this[4].phrases[text.toLowerCase()]){
                             apps.nora.vars.say(this[4].phrases[text.toLowerCase()]);
                         }else{
                             apps.nora.vars.say('Sorry, I do not know how to ' + text + ' at the moment. Please try and let MineAndCraft12 know (maybe through the messaging app) and he can tell me how.');
@@ -4998,100 +5112,6 @@ c(function(){
     getId('aOSloadingInfo').innerHTML = 'Mod Tutorials app...'; 
 });
 c(function(){
-    m('init MOD');
-    apps.modding = new Application(
-        'MOD',
-        'Modding Tutorials',
-        0,
-        function(launchType){
-            if(!this.appWindow.appIcon){
-                this.appWindow.setDims("auto", "auto", 600, 500);
-                this.appWindow.setCaption('Modding Tutorials');
-                this.appWindow.setContent(
-                    '<h1>Modding Tutorials</h1>' +
-                    'In this app you will learn about several ways you can add your own content to aOS through advanced tools. Keep in mind that this barely scratches the limit of aOS customization - you can make anything at all that you want in here.' +
-                    '<hr>' +
-                    '<h1>Adding NORAA Commands</h1>' +
-                    'Here is a short tutorial on creating your own NORAA commands.<br>Skills needed: JavaScript<br><br>' +
-                    'NORAA knows many commands, but how does it work? The answer is that NORAA knows all of the commands defined in a big list of commands.<br><br>' +
-                    'Each item in this list is its own command - another list of details about the command and also its code. Here is what a dummy command will look like.<br><br>' +
-                    '<span class="monoinput">' +
-                    '[<br>' +
-                    '&nbsp; &nbsp; commandPhrase,<br>' +
-                    '&nbsp; &nbsp; commandUsage,<br>' +
-                    '&nbsp; &nbsp; commandDescription,<br>' +
-                    '&nbsp; &nbsp; commandFunction(text)<br>' +
-                    ']</span><br><br>' +
-                    'The commandPhrase is what the user must say to invoke this command. For instance, use <span class="monoinput">"make me a"</span> to trigger the command when the user starts a command with "make me a" - for instance, "make me a sandwich" will trigger your command.<br><br>' +
-                    'The commandUsage is a description of how to use your command, that is given when the user asks for help using your command. Here is an example of what to use here: <span class="monoinput">"make me a [object]"</span><br><br>' +
-                    'The commandDescription is how NORAA describes the command when the user asks for help. Remember this is from the point of view of NORAA himself explaining the user what he will do if the user says your command. For instance, <span class="monoinput">"Have me make you something."</span><br><br>' +
-                    'The commandFunction is the code that will run when NORAA decides to run your command. It is a function that takes a parameter that is the text included after your command is mentioned. This is the meat of your command; the actual code that determines what the command does.<br><br>' +
-                    'In order to make NORAA say something, you must use the function <span class="monoinput">apps.nora.vars.say(text)</span>. This function takes a text parameter, which is the phrase that NORAA will say.<br><br>' +
-                    'How do you add a command to NORAA\'s list? Use the BootScript app to write your command and use <span class="monoinput">push()</span> to add it to NORAA\'s command array. Here is an example of a completed BootScript that adds a command to NORAA. You can copy-paste the code below into the BootScript app to test it out, just make sure to reboot aOS so it will work. Your code is injected at boot-time.<br><br>' +
-                    '<span class="monoinput">' +
-                    'apps.nora.vars.commands.push([<br>' +
-                    '&nbsp; &nbsp; "make me a",<br>' +
-                    '&nbsp; &nbsp; "make me a [object]",<br>' +
-                    '&nbsp; &nbsp; "Ask me to make something for you.",<br>' +
-                    '&nbsp; &nbsp; function(text){<br>' +
-                    '&nbsp; &nbsp; &nbsp; &nbsp; apps.nora.vars.say("Go make your own " + text + ".");<br>' +
-                    '&nbsp; &nbsp; }<br>' +
-                    ']);</span><br><br>' +
-                    'Here is an example of a user using this command.<br><br>' +
-                    '<span class="monoinput">' +
-                    '&nbsp;&gt; make me a sandwich<br>' +
-                    '&nbsp;Go make your own sandwich.<br>' +
-                    '&nbsp;&gt; help make me a<br>' +
-                    '&nbsp;make me a<br>' +
-                    '&nbsp;Usage: make me a [object]<br>' +
-                    '&nbsp;Ask me to make something for you.</span><br><br>' +
-                    'It\'s best to use trigger phrases that sound more natural when said out loud - the user is able to speak with their voice to use NORAA and your command.'
-                );
-                getId('win_modding_html').style.overflowY = 'auto';
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
-            appInfo: 'This app is a database of mods that the developer himself encourages or supports.'
-        }, 1, 'modding', 'appicons/ds/HLP.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Modding Tutorials...';
-});
-c(function(){
     m('init tMg');
     apps.taskManager = new Application(
         "tMg",
@@ -5116,10 +5136,10 @@ c(function(){
                 "<tr><td>Code Pieces Waiting to Run:</td><td><span id='tMgCodeWait' class='liveElement' data-live-eval='codeToRun.length'>0</span></td></tr>" +
                 "<tr><td>Temp Speech Running:</td><td><span id='tMgSpeechRun' class='liveElement' data-live-eval='numtf(apps.nora.vars.contRecogRunning)'>false</span></td></tr>" +
                 "<tr><td>Temp Speech Storage:</td><td><span id='tMgSpeechStore' class='liveElement' data-live-eval='apps.nora.vars.currContTrans'></span></td></tr>" +
-                "<tr><td>Current Selection:</td><td><span id='tMgCurrSelect' class='liveElement' data-live-eval='currentSelection'></span></td></tr>" +
                 "<tr><td>Live Elements Loaded:</td><td><span class='liveElement' data-live-eval='liveElements.length'></span></td></tr>" +
                 "</table>" +
                 "<p>modulelast, module: <br><span id='tMgModule' style='font-family:monospace' class='liveElement' data-live-eval='modulelast + \"<br>\" + module'>?<br>?</span></p>" +
+                "<p>Managed Timers:</p>" +
                 "<ul style='font-family:monospace' id='tMgTaskList'></ul>"
             );
             getId('win_taskManager_html').style.overflowY = 'scroll';
@@ -5133,7 +5153,7 @@ c(function(){
             this.vars.updateTsk();
             //this.vars.updateMod();
             //makeInterval("tMg", "MemCheck", "apps.taskManager.vars.updateMem()", 1000);
-            makeInterval("tMg", "TskCheck", "apps.taskManager.vars.updateTsk()", 500);
+            makeInterval("tMg", "TskCheck", "apps.taskManager.vars.updateTsk()", 250);
             //makeInterval("tMg", "ModCheck", "apps.taskManager.vars.updateMod()", 500);
             this.appWindow.openWindow();
         },
@@ -5196,22 +5216,20 @@ c(function(){
             },
             updateTsk: function(){
                 if(apps.taskManager.vars.changed){
-                    c(function(){try{getId("tMgTaskList").innerHTML = "<li>APP<ul><li>TaskName | Command | Interval (ms)</li></ul></li>";}catch(err){}});
-                    for(var apptasky in apps.taskManager.vars.running){
-                        c(function(apptask){
-                            apps.taskManager.vars.currTaskStr = "<li>" + apptask + "<ul>";
-                            for(var apptasking in apps.taskManager.vars.running[apptask]){
-                                if(apps.taskManager.vars.running[apptask][apptasking][3] === 't'){
-                                    apps.taskManager.vars.currTaskStr += "<li style='color:#080' oncontextmenu='ctxMenu([[event.pageX,event.pageY, \"ctxMenu/beta/x.png\"], \" Remove Waiting Task\", \"removeTimeout(`" + apptask + "`,`" + apptasking + "`,1)\"])'>" + apptasking + " | " + apps.taskManager.vars.running[apptask][apptasking][1] + " | " + apps.taskManager.vars.running[apptask][apptasking][2] + "</li>";
-                                }else if(apps.taskManager.vars.running[apptask][apptasking][3] === 'i'){
-                                    apps.taskManager.vars.currTaskStr += "<li style='color:#008' oncontextmenu='ctxMenu([[event.pageX,event.pageY, \"ctxMenu/beta/x.png\"], \" Remove Repeating Task\", \"removeInterval(`" + apptask + "`,`" + apptasking + "`,1)\"])'>" + apptasking + " | " + apps.taskManager.vars.running[apptask][apptasking][1] + " | " + apps.taskManager.vars.running[apptask][apptasking][2] + "</li>";
-                                }else{
-                                    apps.taskManager.vars.currTaskStr += "<li style='color:#800' oncontextmenu='ctxMenu([[event.pageX,event.pageY, \"ctxMenu/beta/sad.png\"], \" Invalid Task\", \"apps.prompt.vars.alert(`This task was incorrectly initiated and is invalid; therefore it cannot be removed.`,`Okay`,function(){},`Task Manager`)\"])'>" + apptasking + " | " + apps.taskManager.vars.running[apptask][apptasking][1] + " | " + apps.taskManager.vars.running[apptask][apptasking][2] + "</li>";
-                                }
+                    try{getId("tMgTaskList").innerHTML = "<li>APP<ul><li>TaskName | Command | Interval (ms)</li></ul></li>";}catch(err){}
+                    for(var apptask in apps.taskManager.vars.running){
+                        apps.taskManager.vars.currTaskStr = "<li>" + apptask + "<ul>";
+                        for(var apptasking in apps.taskManager.vars.running[apptask]){
+                            if(apps.taskManager.vars.running[apptask][apptasking][3] === 't'){
+                                apps.taskManager.vars.currTaskStr += "<li style='color:#080' oncontextmenu='ctxMenu([[event.pageX,event.pageY, \"ctxMenu/beta/x.png\"], \" Remove Waiting Task\", \"removeTimeout(`" + apptask + "`,`" + apptasking + "`,1)\"])'>" + apptasking + " | " + apps.taskManager.vars.running[apptask][apptasking][1] + " | " + apps.taskManager.vars.running[apptask][apptasking][2] + "</li>";
+                            }else if(apps.taskManager.vars.running[apptask][apptasking][3] === 'i'){
+                                apps.taskManager.vars.currTaskStr += "<li style='color:#008' oncontextmenu='ctxMenu([[event.pageX,event.pageY, \"ctxMenu/beta/x.png\"], \" Remove Repeating Task\", \"removeInterval(`" + apptask + "`,`" + apptasking + "`,1)\"])'>" + apptasking + " | " + apps.taskManager.vars.running[apptask][apptasking][1] + " | " + apps.taskManager.vars.running[apptask][apptasking][2] + "</li>";
+                            }else{
+                                apps.taskManager.vars.currTaskStr += "<li style='color:#800' oncontextmenu='ctxMenu([[event.pageX,event.pageY, \"ctxMenu/beta/sad.png\"], \" Invalid Task\", \"apps.prompt.vars.alert(`This task was incorrectly initiated and is invalid; therefore it cannot be removed.`,`Okay`,function(){},`Task Manager`)\"])'>" + apptasking + " | " + apps.taskManager.vars.running[apptask][apptasking][1] + " | " + apps.taskManager.vars.running[apptask][apptasking][2] + "</li>";
                             }
-                            apps.taskManager.vars.currTaskStr += "</ul></li>";
-                        }, apptasky);
-                        c(function(){try{getId("tMgTaskList").innerHTML += apps.taskManager.vars.currTaskStr;}catch(err){}});
+                        }
+                        apps.taskManager.vars.currTaskStr += "</ul></li>";
+                        try{getId("tMgTaskList").innerHTML += apps.taskManager.vars.currTaskStr;}catch(err){}
                     }
                     apps.taskManager.vars.runningLast = apps.taskManager.vars.running;
                     apps.taskManager.vars.changed = 0;
@@ -5343,7 +5361,7 @@ c(function(){
                 'Source Code Line of the Day: ' + lineOfTheDay[0], '#7F7F7F',
                 cleanStr(lineOfTheDay[1].trim()), '#7F7F7F',
                 '', '#7F7F7F',
-                'Took ' + timeToPageLoad + 'ms to load script file.', ''
+                'Took ' + timeToPageLoad + 'ms to fetch primary script.', ''
             ],
             lastInputUsed: 'jsConsoleHasNotBeenUsed',
             makeLog: function(logStr, logClr){
@@ -5416,7 +5434,7 @@ c(function(){
                 this.appWindow.setCaption(lang('appNames', 'bash'));
                 this.appWindow.setDims("auto", "auto", 662, 504);
                 this.appWindow.setContent(
-                    '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;width:100%;">aOS Psuedo-Bash Terminal</span>' +
+                    '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;width:100%;">This terminal is a work-in-progress. Some features are incomplete.</span>' +
                     '<input id="bashInput" onkeydown="apps.bash.vars.checkPrefix()" onkeypress="apps.bash.vars.checkPrefix()" onkeyup="apps.bash.vars.checkPrefix();if(event.keyCode === 13){apps.bash.vars.execute()}" style="background:none;color:inherit;box-shadow:none;display:block;line-height:1em;font-family:aosProFont;font-size:12px;border:none;outline:none;padding:0;width:100%;">'
                 );
                 this.vars.checkPrefix();
@@ -6610,16 +6628,16 @@ c(function(){
             },
             flashNotification: function(nTimes){
                 if(nTimes){ // if number of flashes defined
-                    getId('notifWindow').style.boxShadow = '0 0 20px 20px #FF7F00';
+                    getId('notifWindow').style.opacity = '0.2';
                     setTimeout(function(){
-                        getId('notifWindow').style.boxShadow = '';
+                        getId('notifWindow').style.opacity = '';
                     }, 300);
                     for(var i = 1; i < nTimes; i++){
                         setTimeout(function(){
-                            getId('notifWindow').style.boxShadow = '0 0 20px 20px #FF7F00';
+                            getId('notifWindow').style.opacity = '0.2';
                         }, i * 600);
                         setTimeout(function(){
-                            getId('notifWindow').style.boxShadow = '';
+                            getId('notifWindow').style.opacity = '';
                         }, i * 600 + 300);
                     }
                 }else{ // otherwise just 3 flashes
@@ -7291,22 +7309,27 @@ c(function(){
                     image: 'settingIcons/new/dashboard.png',
                     dashDefault: {
                         option: 'Default Dashboard',
-                        description: function(){return 'The default Dashboard of AaronOS. Features quick shortcuts at the top and a searchable list of apps along with their three-letter IDs.'},
+                        description: function(){return 'The default Dashboard of AaronOS. Features quick shortcuts at the top and a searchable list of apps along with their icons and three-letter IDs.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'default\')">Select Default Dashboard</button>'}
+                    },
+                    dashLegacy: {
+                        option: 'Legacy Dashboard',
+                        description: function(){return 'Previously the default Dashboard of AaronOS, prior to Beta 1.3. Features quick shortcuts at the top and a searchable list of apps along with their three-letter IDs.'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'legacy\')">Select Legacy Dashboard</button>'}
                     },
                     dashWin7: {
                         option: 'Aero Dashboard',
-                        description: function(){return 'Make the Dashboard look similar to the Start Menu of Windows 7 Aero. Features graphical application icons, shortcut buttons, app search, and a more familiar look.'},
+                        description: function(){return 'Make the Dashboard look similar to the Start Menu of Windows 7 Aero. Features icons, shortcut buttons, app search, and a more familiar look.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'win7\')">Select Aero Dashboard</button>'}
                     },
                     dashAndroid: {
                         option: 'Android Dashboard',
-                        description: function(){return 'Make the Dashboard look similar to the app-drawer style of Android launchers. Features shortcut buttons, app search, and graphical appliation icons.'},
+                        description: function(){return 'Make the Dashboard look similar to the app-drawer style of Android launchers. Features shortcut buttons, app search, and icons.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'android\')">Select Android Dashboard</button>'}
                     },
                     dashWhisker: {
                         option: 'Whisker Dashboard',
-                        description: function(){return 'Make the Dashboard look similar to the Whiskermenu of the XFCE desktop environment. Features graphical application icons, shortcut buttons, app search, and quick access to your OS ID.'},
+                        description: function(){return 'Make the Dashboard look similar to the Whiskermenu of the XFCE desktop environment. Features icons, shortcut buttons, app search, and quick access to your OS ID.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'whisker\')">Select Whisker Dashboard</button>'}
                     }
                 },
@@ -8660,60 +8683,6 @@ c(function(){
     }
     getId('aOSloadingInfo').innerHTML = 'Smart Icon Creator';
 });
-
-c(function(){
-    m('init smart icon maker');
-    apps.smartIconCreator = new Application(
-        'SIC',
-        'Smart Icon Creator',
-        1,
-        function(launchtype){
-            this.appWindow.setCaption("Smart Icon Creator");
-            this.appWindow.setDims("auto", "auto", 500, 600);
-            this.appWindow.setContent("coming soon");
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
-            appInfo: 'This app is used to create Smart Icons.',
-            
-        }, 2, 'smartIconCreator', 'appicons/ds/IcM.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Icon Maker';
-});
 c(function(){
     m('init smart icon maker');
     apps.smartIconSettings = new Application(
@@ -8728,13 +8697,13 @@ c(function(){
                 buildSmartIcon(256, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(128, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(64, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(32, this.vars.aOSicon) +
                 '</div>' +
                 '<br><br>&nbsp;Border Radius:<br>' +
-                '&nbsp;<input id="smartIconSettings_tl" value="100" size="3" placeholder="100"> ' + '<div style="width:64px;position:relative;display:inline-block"></div> ' +
-                '<input id="smartIconSettings_tr" value="100" size="3" placeholder="100">' + '<br>' +
-                '&nbsp;<input id="smartIconSettings_bl" value="100" size="3" placeholder="100"> ' + buildSmartIcon(64, this.vars.aOSicon, 'margin-top:-1em') + ' ' +
-                '<input id="smartIconSettings_br" value="100" size="3" placeholder="100">' + '<br><br>' +
+                '&nbsp;<input id="smartIconSettings_tl" value="' + smartIconOptions.radiusTopLeft + '" size="3" placeholder="100"> ' + '<div style="width:64px;position:relative;display:inline-block"></div> ' +
+                '<input id="smartIconSettings_tr" value="' + smartIconOptions.radiusTopRight + '" size="3" placeholder="100">' + '<br>' +
+                '&nbsp;<input id="smartIconSettings_bl" value="' + smartIconOptions.radiusBottomLeft + '" size="3" placeholder="100"> ' + buildSmartIcon(64, this.vars.aOSicon, 'margin-top:-1em') + ' ' +
+                '<input id="smartIconSettings_br" value="' + smartIconOptions.radiusBottomRight + '" size="3" placeholder="100">' + '<br><br>' +
                 '&nbsp;<button onclick="apps.smartIconSettings.vars.saveRadiuses()">Save</button> ' +
                 '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br><br>' +
-                '<input id="smartIconSettings_bgcolor" placeholder="color"> <button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button>'
+                '<input id="smartIconSettings_bgcolor" value="' + smartIconOptions.bgColor + '" placeholder="color"> <button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button>'
             );
             this.appWindow.paddingMode(0);
             this.appWindow.openWindow();
@@ -9156,9 +9125,9 @@ c(function(){
 });
 var files;
 c(function(){
-    m('init NP');
-    apps.notepad = new Application(
-        "TE",
+    m('init NP2');
+    apps.notepad2 = new Application(
+        "TE2",
         "Text Editor",
         1,
         function(launchType){
@@ -9166,221 +9135,6 @@ c(function(){
             this.vars.launchedAs = launchType;
             if(launchType !== "tskbr"){
                 this.appWindow.setCaption("Text Editor");
-                if(!this.appWindow.appIcon){
-                    this.appWindow.setDims("auto", "auto", 650, 400);
-                }
-                
-                /* old UI
-                this.appWindow.setContent(
-                    '<textarea id="npScreen" style="white-space:no-wrap; width:99%; height:90%; position:absolute; border:none; bottom: 0px; left: 0px;font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000;"></textarea>' +
-                    '<button onClick="apps.notepad.vars.saveFile(getId(\'npLoad\').value)" style="position:absolute; width:20%; height:10%; padding:0;">Save</button>' +
-                    '<input type="text" style="position:absolute; left:20%; height:5%; top:2.5%; width:60%" id="npLoad"></input>' +
-                    '<button onClick="apps.notepad.vars.openFile(getId(\'npLoad\').value)" style="position:absolute; height:10%; width:20%; padding:0; right:0px;">Load</button>'
-                );
-                */
-                this.appWindow.setContent(
-                    '<textarea id="npScreen" style="white-space:no-wrap; width:100%; height:359px; position:absolute; padding:0; border:none; bottom: 0px; left: 0px; font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000;"></textarea>' +
-                    '<div style="width:100%; border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + '; height:16px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#000', '#FFF') + ';">' +
-                    '<input id="npLoad" placeholder="filename" style="border:none; height:16px; border-right:1px solid ' + darkSwitch('#000', '#FFF') + '; position:absolute; left:0; top:0; width:75%;"></input>' +
-                    //'<div onclick="apps.notepad.vars.saveFile(getId(\'npLoad\').value)" style="cursor:url(cursors/pointer.png) 9 3, pointer;top:0; right:10%; border-left:1px solid #557; border-right:1px solid #557;">Save</div> ' +
-                    //'<div onclick="apps.notepad.vars.openFile(getId(\'npLoad\').value)" style="cursor:url(cursors/pointer.png) 9 3, pointer;top:0; right:1%; border-left:1px solid #557; border-right:1px solid #557;">Load</div>' +
-                    '<div onclick="requestAnimationFrame(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/save.png\', \'ctxMenu/beta/load.png\'], \' Save\', \'apps.notepad.vars.saveFile(getId(\\\'npLoad\\\').value)\', \' Load\', \'apps.notepad.vars.openFile(getId(\\\'npLoad\\\').value)\'])})" class="cursorPointer" style="top:0; right:1%; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + ';">&nbsp;File&nbsp;</div> ' +
-                    '<div id="npToolsBtn" class="cursorPointer" style="top:0; right:10%; border-left:1px solid ' + darkSwitch('#000', '#FFF') + '; border-right:1px solid ' + darkSwitch('#000', '#FFF') + ';">&nbsp;Tools&nbsp;</div>' +
-                    '</div>'
-                );
-                getId('npToolsBtn').addEventListener('click', apps.notepad.vars.openEditTools);
-                this.appWindow.dimsSet = function(){
-                    if(getId('npScreen') !== null){
-                        getId('npScreen').style.height = this.windowV - 40 + "px";
-                    }
-                }
-                getId("npScreen").wrap = "off";
-                getId('win_notepad_html').style.background = 'none';
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'Simple text editor for AaronOS. Edits text files created by the user, and views strings, numbers, and functions of AaronOS apps.',
-            openEditTools: function(){apps.prompt.vars.notify('This button is unfinished. Right-click the document instead.', [], function(){}, 'Text Editor', 'appicons/ds/TE.png')},
-            launchedAs: '',
-            openFile: function(filename){
-                if(filename.indexOf('window.') === 0){
-                    if(this.launchedAs !== 'open'){
-                        apps.prompt.vars.confirm('You will lose all unsaved work. Continue?', ['No', 'Yes'], function(btn){
-                            if(btn){
-                                getId("npScreen").value = eval(filename);
-                                getId("npScreen").scrollTop = 0;
-                            }
-                        }, 'Text Editor');
-                    }else{
-                        getId("npLoad").value = filename;
-                        getId("npScreen").value = eval(filename);
-                        getId("npScreen").scrollTop = 0;
-                    }
-                }else if(filename.indexOf('files.') === 0 || filename.indexOf('apps.') === 0 || filename.indexOf('widgets.') === 0){
-                    if(typeof eval(filename) !== "undefined"/* && (filename.substring(0, 4) === "apps" || filename.substring(0, 5) === "files")*/){
-                        if(this.launchedAs !== 'open'){
-                            apps.prompt.vars.confirm('You will lose all unsaved work. Continue?', ['No', 'Yes'], function(btn){
-                                if(btn){
-                                    getId("npScreen").value = eval(filename);
-                                    getId("npScreen").scrollTop = 0;
-                                }
-                            }, 'Text Editor');
-                            //if(confirm("You will lose all unsaved work. Continue?")){
-                            //    getId("npScreen").value = eval(filename);
-                            //    getId("npScreen").scrollTop = 0;
-                            //}
-                        }else{
-                            getId("npLoad").value = filename;
-                            getId("npScreen").value = eval(filename);
-                            getId("npScreen").scrollTop = 0;
-                        }
-                    }else{
-                        apps.prompt.vars.alert("File '" + filename + "' does not exist.", 'Oops.', function(){}, 'Text Editor');
-                    }
-                }else if(filename.indexOf('USERFILES.') === 0){
-                    if(typeof eval(filename) !== "undefined"){
-                        if(this.launchedAs !== 'open'){
-                            apps.prompt.vars.confirm('You will lose all unsaved work. Continue?', ['No', 'Yes'], function(btn){
-                                if(btn){
-                                    getId("npScreen").value = eval(filename);
-                                    getId("npScreen").scrollTop = 0;
-                                }
-                            }, 'Text Editor');
-                            //if(confirm("You will lose all unsaved work. Continue?")){
-                            //    getId("npScreen").value = eval("USERFILES." + filename);
-                            //    getId("npScreen").scrollTop = 0;
-                            //}
-                        }else{
-                            getId("npLoad").value = filename;
-                            getId("npScreen").value = eval(filename);
-                            getId("npScreen").scrollTop = 0;
-                        }
-                    }else{
-                        apps.prompt.vars.alert("File '" + filename + "' does not exist.", 'Oops.', function(){}, 'Text Editor');
-                    }
-                }else{
-                    if(typeof eval("USERFILES." + filename) !== "undefined"){
-                        if(this.launchedAs !== 'open'){
-                            apps.prompt.vars.confirm('You will lose all unsaved work. Continue?', ['No', 'Yes'], function(btn){
-                                if(btn){
-                                    getId("npScreen").value = eval("USERFILES." + filename);
-                                    getId("npScreen").scrollTop = 0;
-                                }
-                            }, 'Text Editor');
-                            //if(confirm("You will lose all unsaved work. Continue?")){
-                            //    getId("npScreen").value = eval("USERFILES." + filename);
-                            //    getId("npScreen").scrollTop = 0;
-                            //}
-                        }else{
-                            getId("npLoad").value = filename;
-                            getId("npScreen").value = eval("USERFILES." + filename);
-                            getId("npScreen").scrollTop = 0;
-                        }
-                    }else{
-                        apps.prompt.vars.alert("File '" + filename + "' does not exist.", 'Oops.', function(){}, 'Text Editor');
-                    }
-                }
-            },
-            saveFile: function(filename){
-                if(filename.indexOf('files.') === 0 || filename.indexOf('apps.') === 0 || filename.indexOf('widgets.') === 0){
-                    if(typeof eval(filename) !== "undefined"){
-                        //if(confirm("Overwrite existing file '" + filename + "'?")){
-                        //    files[filename.substring(7, filename.length - 1)] = getId("npScreen").value;
-                        //}
-                        apps.prompt.vars.confirm("Overwrite existing file '" + filename + "'?", ['No, Cancel', 'Yes, Overwrite'], function(btn){
-                            if(btn){
-                                files[filename.substring(7, filename.length - 1)] = getId("npScreen").value;
-                            }
-                        }, 'Text Editor');
-                    }else{
-                        files[filename.substring(7, filename.length - 1)] = getId("npScreen").value;
-                    }
-                    //files[filename.substring(6, filename.length)] = getId("npScreen").value;
-                }else if(filename.indexOf('USERFILES.') === 0){
-                    if(typeof eval(filename) !== "undefined"){
-                        //if(confirm("Overwrite existing file '" + filename + "'?")){
-                        //    USERFILES[filename] = getId("npScreen").value;
-                        //    apps.savemaster.vars.save(filename, getId("npScreen").value, 1);
-                        //}
-                        apps.prompt.vars.confirm("Overwrite existing user file '" + filename + "'?", ['No, Cancel', 'Yes, Overwrite'], function(btn){
-                            if(btn){
-                                eval(filename + ' = getId("npScreen").value');
-                                apps.savemaster.vars.save(filename, getId("npScreen").value, 1);
-                            }
-                        }, 'Text Editor');
-                    }else{
-                        eval(filename + ' = getId("npScreen").value');
-                        apps.savemaster.vars.save(filename, getId("npScreen").value, 1);
-                    }
-                }else{
-                    if(typeof eval("USERFILES." + filename) !== "undefined"){
-                        //if(confirm("Overwrite existing file '" + filename + "'?")){
-                        //    USERFILES[filename] = getId("npScreen").value;
-                        //    apps.savemaster.vars.save(filename, getId("npScreen").value, 1);
-                        //}
-                        apps.prompt.vars.confirm("Overwrite existing user file '" + filename + "'?", ['No, Cancel', 'Yes, Overwrite'], function(btn){
-                            if(btn){
-                                eval('USERFILES.' + filename + ' = getId("npScreen").value');
-                                apps.savemaster.vars.save(filename, getId("npScreen").value, 1);
-                            }
-                        }, 'Text Editor');
-                    }else{
-                        eval('USERFILES.' + filename + ' = getId("npScreen").value');
-                        apps.savemaster.vars.save(filename, getId("npScreen").value, 1);
-                    }
-                    //USERFILES[filename] = getId("npScreen").value;
-                }
-            }
-        }, 1, "notepad", "appicons/ds/TE.png"
-    );
-    getId('aOSloadingInfo').innerHTML = 'Text Editor 2';
-});
-c(function(){
-    m('init NP2');
-    apps.notepad2 = new Application(
-        "TE2",
-        "Text Editor 2",
-        1,
-        function(launchType){
-            this.appWindow.paddingMode(0);
-            this.vars.launchedAs = launchType;
-            if(launchType !== "tskbr"){
-                this.appWindow.setCaption("Text Editor 2");
                 if(!this.appWindow.appIcon){
                     this.appWindow.setDims("auto", "auto", 650, 400);
                 }
@@ -9921,7 +9675,7 @@ c(function(){
             "08/04/2019: B1.0.4.1\n : Fixed login screen not using the correct background image.\n\n" +
             "08/05/2019: B1.0.4.2\n : Fixed Minecraft Mode in minesweeper.\n\n" +
             "08/06/2019: B1.0.5.0\n + Added enchanced graphics to minesweeper.\n\n" +
-            "08/07/2019: B1.0.5.1\n + Added aosTools.js - embed the script file into your page for easy aOS app tools.\n - Minesweeper was removed.\n + Standalone version of Minesweeper added to the repository.\n + Minesweeper now themes itself to AaronOS.\n + Minesweeper now saves its settings.\n + Minesweeper now pre-caches shadow images.\n : Fixed caching issues on minesweeper.\n - Removed Dark Mode button from Minesweeper, as this is now controlled by aOS.\n : Music Player now uses aosTools.js, like Minesweeper does.\n localhost added to auto-trusted domains.\n\n" +
+            "08/07/2019: B1.0.5.1\n + Added aosTools.js - embed the script file into your page for easy aOS app tools.\n - Minesweeper was removed.\n + Standalone version of Minesweeper added to the repository.\n + Minesweeper now themes itself to AaronOS.\n + Minesweeper now saves its settings.\n + Minesweeper now pre-caches shadow images.\n : Fixed caching issues on minesweeper.\n - Removed Dark Mode button from Minesweeper, as this is now controlled by aOS.\n : Music Player now uses aosTools.js, like Minesweeper does.\n + localhost added to auto-trusted domains.\n\n" +
             "08/08/2019: B1.1.0.0\n + Added Developer Documentation app.\n + Extra logic added to prevent app updates from getting delayed by web browser caching.\n : Changed 'appWindow' permission to 'appwindow'\n + Added to appwindow permission: open_window, close_window, maximize, unmaximize, minimize, get_maximized, set_dims\n + Added manualOpen flag to web app json files to make app loading less ugly.\n : Fixed error message in Music Player each time a song is started.\n : Fixed error in aosTools whenever an unrecognized conversation is recieved.\n : Updated Web App Maker's documentation.\n\n" +
             "08/14/2019: B1.1.1.0\n + Style changes are now updated in realtime on web apps via aosTools.\n + Added search box to Developer Documentation.\n + Added prompt actions to aosTools.\n + aosTools can now recieve style updates as they occur on aOS.\n + Added shortcuts for window events to aosTools.\n + Added new documentation.\n\n" +
             "08/15/2019: B1.1.2.0\n + Added buttons to try certain actions to Developer Documentation.\n + Added new documentation.\n : Adjusted formatting in documentation.\n\n" +
@@ -9948,10 +9702,11 @@ c(function(){
             "06/22/2020: B1.2.5.0\n + AutoScroll for Guitar music writer.\n : Various spellchecks.\n : Various fixes.\n\n" +
             "09/22/2020: B1.2.6.0\n : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.\n : Rearranged Info tab in Settings.\n : Made copyright notices more accurate.\n : Numerous bug fixes the last few months didn't make it into the changelog.\n\n" +
             "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Fixed context menus breaking completely if the clipboard contains less slots than it thinks it should.\n : Modified a context menu icon.\n\n" +
-            "09/24/2020: B1.2.7.1\n : Fixed Settings not immediately responding to changes in Light / Dark theme.",
-            oldVersions: "aOS has undergone many stages of development. Here\'s all older versions I've been able to recover. (These links are dead; new links coming eventually)\nV0.9     https://aaron-os-mineandcraft12.c9.io/_old_index.php\nA1.2.5   https://aaron-os-mineandcraft12.c9.io/_backup/index.1.php\nA1.2.6   http://aos.epizy.com/aos.php\nA1.2.9.1 https://aaron-os-mineandcraft12.c9.io/_backup/index9_25_16.php\nA1.4     https://aaron-os-mineandcraft12.c9.io/_backup/"
+            "09/24/2020: B1.2.7.1\n : Fixed Settings not immediately responding to changes in Light / Dark theme.\n\n" +
+            "11/05/2020: B1.3.0.0\n + Brand new default Dashboard menu, which looks and functions much better.\n : Changed some of the quick options available in the Dashboard.\n + The File Manager can now open apps via right-click on their folder.\n : Changed the Messaging font, rearranged usernames and time/date info.\n : Apps Browser now has a shortened intro and now provides information that is actually useful.\n : Fixed the screen magnifier app.\n + The Custom Style Editor preview will now highlight the bounds of elements when hovered over.\n : Rearranged the Custom Style Editor preview menu.\n : The first message is no longer cut off by the status indicator.\n : Notifications no longer flash an annoying orange glow when attention is required, and instead flash their opacity.\n : File Manager 2 and Text Editor 2 have had the '2' removed from their names.\n : Custom apps are now saved in a directory rather than dumped directly into USERFILES.\n - Removed old Text Editor.\n - Removed old File Manager.\n - Removed Flash Cards app.\n - Removed useless Modding Tutorials app.\n - Removed unused Smart Icon Creator app.\n - Removed woefully outdated Help App.\n : Made a section of the Documentation simpler and fixed some typos.\n : House and Indycar games along with Text to Binary are moved to the repository.\n + The Savemaster app now gives you useful information rather than absolutely nothing when its window is open.\n : Task Manager no longer flashes annoyingly while displaying its content.\n : The Sticky Note app now opens in the top-right corner rather than top-left.\n : Reworded the intro to the psuedo-Bash terminal.\n : Reworded the intro to the Pet Cursors app.\n : Reworded some information in File Properties.\n : Windowblur Test Application is renamed to Transparent Window.\n : Chrome prompt is worded less annoyingly.\n : Renamed Boot Script to Boot Scripts\n : Changelog dates are moved to the left side, by their titles.\n : Changed the wording of some startup logs.\n - Removed annoying 'how did you do that?' popups when opening the dashboard and NORAA via unorthodox means.",
+            oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.2.7.1 (09/24/2020) r0';
+    window.aOSversion = 'B1.3.0.0 (11/05/2020) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -9991,7 +9746,7 @@ c(function(){
                 this.appWindow.setContent(
                     '<div style="font-family:aosProFont, monospace;font-size:12px; width:calc(100% - 3px); overflow:visible">' +
                     '<span style="font-size:36px;">' + fileName + '</span><br>' +
-                    '<span style="font-size:24px;">' + (typeof apps.bash.vars.getRealDir(fileToOpen)) + '</span><br><br><br>' +
+                    '<span style="font-size:24px;">' + apps.files2.vars.filetype(typeof apps.bash.vars.getRealDir(fileToOpen)) + ' / ' + (typeof apps.bash.vars.getRealDir(fileToOpen)) + '</span><br><br><br>' +
                     fileDescription + "<br><br>" +
                     'File Location: ' + fileToOpen + '<br><br>&nbsp;- ' + filePath.join('<br>&nbsp;- ') + '<br><br>' +
                     /*
@@ -10094,242 +9849,16 @@ c(function(){
 });
 c(function(){
     m('init FIL');
-    apps.files = new Application(
+    apps.files2 = new Application(
         "FIL",
         "File Manager",
         1,
         function(launchType){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims("auto", "auto", 700, 400, 1);
-            }
-            this.appWindow.setCaption("File Explorer");
-            this.appWindow.openWindow();
-            if(launchType === 'dsktp'){
-                this.vars.currLoc = '';
-                getId('win_files_html').style.background = "none";
-                this.appWindow.setContent(
-                    '<div id="FILtopdiv" style="width:694px; height:25px;">' +
-                    '<div class="cursorPointer" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files.vars.back()">&larr;&nbsp;</div>' +
-                    '<div class="cursorPointer" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files.vars.home()">H</div>' +
-                    '<div class="cursorPointer" style="width:24px; height:18px; padding-top:2px; right:6px; top:4px; background-color:' + darkSwitch('#FFF', '#000') + '; color:' + darkSwitch('#333', '#CCC') + '; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files.vars.update()">&#x21BB;</div>' +
-                    '</div>' +
-                    '<div style="width:694px; height:368px; top:25px; background-color:' + darkSwitch('#FFF', '#000') + '; overflow:scroll; background-repeat:no-repeat; background-position:center" id="FILcntn"></div>' +
-                    '<div id="FILpath" style="left:55px; background-color:' + darkSwitch('#FFF', '#000') + '; font-family:monospace; height:' + (25 + scrollHeight) + 'px; line-height:25px; vertical-align:middle; width:609px; border-top-left-radius:5px; border-top-right-radius:5px; overflow-x:scroll;"><div id="FILgreen" style="width:0;height:100%;"></div>this.is.a.file.path.example.for.the.thingy.and.it.is.very.useful.because.it.tells.you.where.you.are.in.the.thing</div>'
-                );
-            }
-            if(typeof this.appWindow.dimsSet !== 'function'){
-                this.appWindow.dimsSet = function(){
-                    getId('FILtopdiv').style.width = this.windowH - 6 + 'px';
-                    getId('FILcntn').style.width = this.windowH - 6 + 'px';
-                    getId('FILcntn').style.height = this.windowV - 32 + 'px';
-                    getId('FILpath').style.width = this.windowH - 91 + 'px';
-                    getId('FILtbl').style.width = this.windowH - 5 - scrollHeight + 'px';
-                };
-            }
-            this.vars.update();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    if(getId("FILgreen").style.backgroundColor !== "rgb(170, 255, 170)"){
-                        this.appWindow.closeWindow();
-                        setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                                this.appWindow.setContent("");
-                            }
-                        }.bind(this), 300);
-                    }else{
-                        apps.prompt.vars.alert('Please allow Files to finish searching the current folder.', 'Oops, I almost broke stuff.', function(){}, 'Files');
-                    }
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'The official AaronOS File Manager. Use it to manage your personal files and to view aOS code. At the moment, only plain-text userfiles are supported.',
-            currLoc: '',
-            back: function(){
-                this.currLoc = this.currLoc.split(".");
-                this.currLoc.pop();
-                this.currLoc = this.currLoc.join(".");
-                this.update();
-            },
-            home: function(){
-                this.currLoc = '';
-                this.update();
-            },
-            next: function(nextName){
-                if(getId("FILgreen").style.backgroundColor !== "rgb(170, 255, 170)"){
-                    if(this.currLoc === ''){
-                        this.currLoc = nextName;
-                    }else{
-                        this.currLoc += "." + nextName;
-                    }
-                    this.update();
-                }else{
-                    apps.prompt.vars.alert('Please allow Files to finish searching the current folder.', 'Oops, I almost broke stuff.', function(){}, 'Files');
-                }
-            },
-            filetype: function(type){
-                switch(type){
-                    case 'object':
-                        return 'folder';
-                    case 'string':
-                        return 'text';
-                    case 'function':
-                        return 'code';
-                    case 'boolean':
-                        return 'T/F';
-                    case 'undefined':
-                        return 'nothing';
-                    case 'number':
-                        return 'value';
-                    default:
-                        return type;
-                }
-            },
-            currTotal: 0,
-            currItem: 0,
-            currEffect: 0,
-            currContentStr: '',
-            update: function(){
-                this.currContentStr = '';
-                getId("FILgreen").style.backgroundColor = 'rgb(170, 255, 170)';
-                getId("FILgreen").style.width = "0";
-                getId("FILcntn").style.backgroundImage = 'url(/loadDark.gif)';
-                // getId("FILcntn").style.cursor = cursors.loadDark;
-                getId('FILcntn').classList.add('cursorLoadDark');
-                getId("FILcntn").innerHTML =
-                    '<table id="FILtbl" style="width:' + (apps.files.appWindow.windowH - 5 - scrollHeight) + 'px; position:absolute; top:' + scrollHeight + 'px; margin:auto; font-family:monospace;">' +
-                    '<tr>' +
-                    '<th>Filename</th>' +
-                    '<th>Filetype</th>' +
-                    '</tr>' +
-                    '</table>';
-                getId("FILtbl").style.marginTop = scrollHeight;
-                if(this.currLoc === ''){
-                    getId("FILpath").innerHTML = '<div id="FILgreen" style="height:100%;background-color:rgb(170, 255, 170)"></div>';
-                    getId("FILtbl").innerHTML +=
-                        '<tr class="cursorPointer" onClick="apps.files.vars.next(\'files\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'files\\\');toTop(apps.properties)\'])">' +
-                        '<td>files</td>' +
-                        '<td>folder</td>' +
-                        '</tr><tr class="cursorPointer" onClick="apps.files.vars.next(\'apps\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'apps\\\');toTop(apps.properties)\'])">' +
-                        '<td>apps</td>' +
-                        '<td>folder</td>' +
-                        '</tr><tr class="cursorPointer" onClick="apps.files.vars.next(\'widgets\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'widgets\\\');toTop(apps.properties)\'])">' +
-                        '<td>widgets</td>' +
-                        '<td>folder</td>' +
-                        '</tr><tr class="cursorPointer" onClick="apps.files.vars.next(\'USERFILES\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'USERFILES\\\');toTop(apps.properties)\'])">' +
-                        '<td>USERFILES</td>' +
-                        '<td>folder</td>' +
-                        function(){
-                            if(apps.settings.vars.FILcanWin){
-                                return '</tr><tr class="cursorPointer" onClick="apps.files.vars.next(\'window\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'window\\\');toTop(apps.properties)\'])">' +
-                                    '<td style="color:#F00">Everything</td>' +
-                                    '<td>Debug</td>';
-                            }else{
-                                return '';
-                            }
-                        }() +
-                        '</tr>';
-                }else{
-                    getId("FILpath").innerHTML = '<div id="FILgreen" class="liveElement" data-live-target="style.width" data-live-eval="apps.files.vars.currItem/apps.files.vars.currTotal*100+\'%\'" style="height:100%;background-color:rgb(170, 255, 170);box-shadow:0 0 20px 10px rgb(170, 255, 170)"></div><div>' + this.currLoc + '</div>';
-                    this.currTotal = objLength(eval(this.currLoc));
-                    this.currItem = 0;
-                    for(var findElem in eval(this.currLoc)){
-                        if(typeof(eval(this.currLoc)[findElem]) === "string" || typeof(eval(this.currLoc)[findElem]) === "number" || typeof(eval(this.currLoc)[findElem]) === "function" || typeof(eval(this.currLoc)[findElem]) === "boolean" || typeof(eval(this.currLoc)[findElem]) === "undefined"){
-                            if((this.currLoc + "." + findElem).substring(0, 20) !== "USERFILES.MOUSEDATA_"){
-                                if(this.currLoc === "USERFILES"){
-                                    c(function(arg){
-                                        //getId("FILtbl").innerHTML +=
-                                        apps.files.vars.currContentStr +=
-                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'+Delete\', \'ufdel(\\\'' + arg + '\\\');\'])">' +
-                                            '<td>' + arg + '</td>' +
-                                            '<td>' + apps.files.vars.filetype(typeof(eval(apps.files.vars.currLoc)[arg])) + '</td>' +
-                                            '</tr>';
-                                        apps.files.vars.currItem++;
-                                        //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
-                                    }, findElem);
-                                }else{
-                                    c(function(arg){
-                                        // getId("FILtbl").innerHTML +=
-                                        apps.files.vars.currContentStr +=
-                                            '<tr class="cursorPointer" onClick="openapp(apps.notepad, \'open\');apps.notepad.vars.openFile(\'' + apps.files.vars.currLoc + '.' + arg + '\');requestAnimationFrame(function(){toTop(apps.notepad)})" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                            '<td>' + arg + '</td>' +
-                                            '<td>' + apps.files.vars.filetype(typeof(eval(apps.files.vars.currLoc)[arg])) + '</td>' +
-                                            '</tr>';
-                                        apps.files.vars.currItem++;
-                                        //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
-                                    }, findElem);
-                                }
-                            }
-                        }else{
-                            if(this.currLoc === "apps"){
-                                c(function(arg){
-                                    // getId("FILtbl").innerHTML +=
-                                    apps.files.vars.currContentStr +=
-                                        '<tr class="cursorPointer" onClick="apps.files.vars.next(\'' + arg + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'\'], \' Launch App\', \'openapp(apps.' + arg + ', \\\'dsktp\\\')\', \'+Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\'])">' +
-                                        '<td>' + arg + '</td>' +
-                                        '<td>' + apps.files.vars.filetype(typeof(eval(apps.files.vars.currLoc)[arg])) + '</td>' +
-                                        '</tr>';
-                                    apps.files.vars.currItem++;
-                                    //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
-                                }, findElem);
-                            }else{
-                                c(function(arg){
-                                    // getId("FILtbl").innerHTML +=
-                                    apps.files.vars.currContentStr +=
-                                        '<tr class="cursorPointer" onClick="apps.files.vars.next(\'' + arg + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + apps.files.vars.currLoc + '.' + arg + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
-                                        '<td>' + arg + '</td>' +
-                                        '<td>' + apps.files.vars.filetype(typeof(eval(apps.files.vars.currLoc)[arg])) + '</td>' +
-                                        '</tr>';
-                                    apps.files.vars.currItem++;
-                                    //getId('FILgreen').style.width = Math.floor(apps.files.vars.currItem / apps.files.vars.currTotal * 100) + "%";
-                                }, findElem);
-                            }
-                        }
-                    }
-                }
-                c(function(){getId('FILtbl').innerHTML += apps.files.vars.currContentStr;getId("FILgreen").className = '';getId('FILgreen').style.backgroundColor = "#FFF";getId("FILgreen").style.display = "none";getId("FILcntn").style.backgroundImage="";getId('FILcntn').classList.remove('cursorLoadDark')});
-            }
-        }, 2, "files", "appicons/ds/FIL.png"
-    );
-    getId('aOSloadingInfo').innerHTML = 'Files 2';
-});
-c(function(){
-    m('init FIL');
-    apps.files2 = new Application(
-        "FIL",
-        "File Manager 2",
-        1,
-        function(launchType){
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 796, 400, 1);
             }
-            this.appWindow.setCaption("File Manager 2");
+            this.appWindow.setCaption("File Manager");
             this.appWindow.openWindow();
             if(launchType === 'dsktp'){
                 this.vars.currLoc = '/';
@@ -10788,13 +10317,13 @@ c(function(){
                                 if(this.currDirList[item]){
                                     // if item is a folder
                                     if(this.currDirList[item][this.currDirList[item].length - 1] === "/" && this.currDirList[item][this.currDirList[item].length - 2] !== "\\"){
-                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'+Delete\', \'\'])">' +
+                                        temphtml += '<div class="cursorPointer" onclick="apps.files2.vars.next(\'' + this.currDirList[item] + '\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Open App\', \'openapp(apps.' + this.currDirList[item].substring(0, this.currDirList[item].length - 1) + ', \\\'dsktp\\\')\', \'+Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]) + '\\\');toTop(apps.properties)\', \'_Delete\', \'\'])">' +
                                             //'<img class="FIL2aosAppIcon" src="' + (apps[this.currDirList[item].split('/')[0]].appWindow.appImg || "appicons/ds/redx.png") + '"> ' +
                                             buildSmartIcon(16, apps[this.currDirList[item].split('/')[0]].appWindow.appImg) + ' ' +
                                             this.currDirList[item].split('\\/').join('/') +
                                             '</div>';
                                     }else{
-                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\\\');toTop(apps.properties)\', \'+Delete\', \'\'])">' +
+                                        temphtml += '<div class="cursorPointer" onClick="apps.notepad2.vars.openFile(\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\');" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + (this.currLoc + this.currDirList[item]).split('\\').join('\\\\') + '\\\');toTop(apps.properties)\', \'-Delete\', \'\'])">' +
                                             '<img src="files2/small/' + this.icontype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '.png"> ' +
                                             this.currDirList[item].split('\\/').join('/') + '<span style="opacity:0.5;float:right;">' + this.filetype(typeof apps.bash.vars.getRealDir(this.currLoc + this.currDirList[item])) + '&nbsp;</span>' +
                                             '</div>';
@@ -10996,7 +10525,7 @@ c(function(){
                         }
                     }
                     this.vars.cLogHTML = this.vars.cLogGroup + this.vars.cLogHTML;
-                    this.vars.cLogHTML = '<p class="changeLogTitle">' + this.vars.cLogSplit[i][0].split(': ')[1] + '</p><p class="changeLogDate">' + this.vars.cLogSplit[i][0].split(': ')[0] + '</p>' + this.vars.cLogHTML;
+                    this.vars.cLogHTML = '<p class="changeLogTitle">' + this.vars.cLogSplit[i][0].split(': ')[1] + ' <span style="font-size:12px">' + this.vars.cLogSplit[i][0].split(': ')[0] + '</span></p>' + this.vars.cLogHTML;
                 }
                 getId('win_changelog_html').style.overflow = 'auto';
                 this.appWindow.setContent(this.vars.cLogHTML);
@@ -11048,149 +10577,13 @@ c(function(){
     getId('aOSloadingInfo').innerHTML = 'Flash Cards';
 });
 c(function(){
-    m('init FC');
-    apps.flashCards = new Application(
-        "FC",
-        "Flash Cards",
-        0,
-        function(){
-            if(!this.appWindow.appIcon){
-                this.appWindow.setDims("auto", "auto", 700, 400, 1);
-                this.appWindow.setCaption("Flash Cards");
-                this.appWindow.setContent(
-                    'Type the name of a flashcard set:<br>' +
-                    '<input id="appFCinput"> <button onclick="apps.flashCards.vars.chooseSet()">Start</button><hr>' +
-                    'How to create a flashcard set:<br>' +
-                    'Using text editor, save your set of flashcards as follows:<br>' +
-                    'Card 1, Answer 1, Image URL 1<br>Card 2, Answer 2, Image URL 2<br>etc...<br><br>' +
-                    'The filename you save it under is the one you use to access it in this app.'
-                );
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.vars.currGame = '';
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'This app lets you create sets of flash cards to be quizzed on.',
-            currentName: '',
-            currentCard: 0,
-            correct: 0,
-            chooseSet: function(){
-                this.currentName = getId('appFCinput').value;
-                this.buffer = [];
-                this.currentSet = [];
-                this.workingSet = [];
-                if(USERFILES[this.currentName]){
-                    this.buffer = USERFILES[this.currentName].split('\n');
-                    for(var i in this.buffer){
-                        this.currentSet.push(this.buffer[i].split(','));
-                    }
-                    apps.flashCards.appWindow.setContent(
-                        '<div id="appFCbg" style="text-align:center;font-family:aosProFont;font-size:24px;width:100%;height:100%;background-position:center;background-size:contain;background-repeat:no-repeat;">' +
-                        '<div id="appFCinfo" style="right:8px;top:8px;color:#7F7F7F;"></div>' +
-                        '<br><br><span id="appFCquestion"></span><br><br><input id="appFCanswer"><br>' +
-                        '<button onclick="apps.flashCards.vars.showAnswer()">Check Answer</button>' +
-                        '</div>'
-                    );
-                    this.startGame();
-                }else{
-                    apps.prompt.vars.alert('This file was not found.<br>Check that your flash card file name is correct.', 'Okay.', function(){}, 'Flash Cards');
-                }
-            },
-            startGame: function(){
-                try{
-                    /*
-                        before you ask what the hell this is --
-                        this line of code causes IE to reject the entire script
-                            even in a try-catch!
-                        so my workaround was to run this line of code in an eval statement
-                            and include the surrounding try-catch
-                        original line of code:
-                            this.workingSet = [...this.currentSet];
-                    */
-                    this.workingSet = eval("[...apps.flashCards.vars.currentSet]");
-                }catch(err){
-                    doLog('Browser does not support JS spread syntax', '#F00');
-                    this.workingSet = [];
-                    for(var i in this.currentSet){
-                        this.workingSet.push(this.currentSet[i]);
-                    }
-                }
-                this.correct = 0;
-                this.chooseCard(1);
-            },
-            chooseCard: function(start){
-                if(!start){
-                    apps.flashCards.vars.workingSet.splice(apps.flashCards.vars.currentCard, 1);
-                }
-                if(apps.flashCards.vars.workingSet.length > 0){
-                    apps.flashCards.vars.currentCard = Math.floor(Math.random() * apps.flashCards.vars.workingSet.length);
-                    getId('appFCanswer').value = '';
-                    getId('appFCquestion').innerHTML = apps.flashCards.vars.workingSet[apps.flashCards.vars.currentCard][0];
-                    getId('appFCinfo').innerHTML = 'Remaining: ' + apps.flashCards.vars.workingSet.length + ' / ' + apps.flashCards.vars.currentSet.length + '<br>Correct: ' + apps.flashCards.vars.correct + ' / ' + apps.flashCards.vars.currentSet.length;
-                    getId('appFCbg').style.backgroundImage = 'url(' + apps.flashCards.vars.workingSet[apps.flashCards.vars.currentCard][2] + ')';
-                }else{
-                    apps.prompt.vars.alert('Final score is ' + apps.flashCards.vars.correct + ' / ' + apps.flashCards.vars.currentSet.length + '.', 'Ok', function(){
-                        apps.flashCards.vars.startGame();
-                    }, 'Flash Cards');
-                }
-            },
-            showAnswer: function(){
-                if(getId('appFCanswer').value === this.workingSet[this.currentCard][1].trim()){
-                    getId('appFCquestion').innerHTML += '<br>Correct!<br>Next card in 5 seconds';
-                    setTimeout(this.chooseCard, 5000);
-                    this.correct++;
-                    getId('appFCinfo').innerHTML = 'Remaining: ' + this.workingSet.length + ' / ' + this.currentSet.length + '<br>Correct: ' + this.correct + ' / ' + this.currentSet.length;
-                }else{
-                    getId('appFCquestion').innerHTML += '<br>Wrong!<br>Next card in 5 seconds<br>Correct answer: ' + this.workingSet[this.currentCard][1];
-                    setTimeout(this.chooseCard, 5000);
-                }
-            }
-        }, 1, "flashCards"
-    );
-    getId('aOSloadingInfo').innerHTML = 'Windowblur Test';
-});
-c(function(){
-    m('init WbT');
+    m('init TW');
     apps.aerotest = new Application(
-        "WbT",
-        "Windowblur Test",
+        "TW",
+        "Transparent Window",
         0,
         function(){
-            this.appWindow.setCaption("Windowblur Performance Test Window");
+            this.appWindow.setCaption("Transparent Window");
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims("auto", "auto", 400, 300);
             }
@@ -11257,9 +10650,11 @@ c(function(){
         function(launchtype){
             this.appWindow.setCaption("SaveMaster");
             if(!this.appWindow.appIcon){
-                this.appWindow.setDims("auto", "auto", 600, 50);
+                this.appWindow.setDims("auto", "auto", 600, 500);
             }
-            this.appWindow.setContent("This app handles filesaving. It does nothing aside from that.");
+            this.appWindow.setContent(
+                'Here are the last ten save operations.<br>' + apps.savemaster.vars.buildSavesMenu()
+            );
             this.appWindow.openWindow();
         },
         function(signal){
@@ -11308,6 +10703,22 @@ c(function(){
             //xhttp: new XMLHttpRequest(),
             //fd: new FormData(),
             savePerf: 0,
+            buildSavesMenu: function(){
+                var tempHTML = "";
+                for(var i in apps.savemaster.vars.xf){
+                    if(i.indexOf("fd") === 0){
+                        var thisID = i.substring(2);
+                        var thisOperation = apps.savemaster.vars.xf["xhttp" + thisID].responseURL;
+                        if(thisOperation.indexOf("/filesavernew.php") > -1){
+                            thisOperation = "Write";
+                        }else if(thisOperation.indexOf("/filedeleter.php")){
+                            thisOperation = "Delete";
+                        }
+                        tempHTML = "<br><br>" + thisID + ": " + thisOperation + " <span style='font-family:monospace'>" + apps.savemaster.vars.xf["fd" + thisID].get("f") + "</span>" + tempHTML;
+                    }
+                }
+                return tempHTML;
+            },
             save: function(filepath, filecontent, newformat, errorreport, pass){
                 m('Saving File');
                 d(1, 'Saving File ' + filepath);
@@ -11530,175 +10941,6 @@ c(function(){
     getId('aOSloadingInfo').innerHTML = 'aOS API';
 });
 c(function(){
-    m('init API');
-    apps.appAPI = new Application(
-        "API",
-        "aOS API",
-        0,
-        function(){
-            this.appWindow.setCaption("aOS API Documentation");
-            this.appWindow.setContent('<div id="appAPIdiv"></div>');
-            if(!this.appWindow.appIcon){
-                this.appWindow.setDims("auto", "auto", 600, 400);
-            }
-            getId('win_appAPI_html').style.overflowY = 'scroll';
-            this.appWindow.openWindow();
-            this.vars.showDocumentation();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'This app attempts to document many aOS API features. However, a better API Documentation can be found in the Help App.',
-            newdoc: function(code, example, description){
-                getId('appAPIdiv').innerHTML += '<hr><span style="font-size:24px;font-family:aosProFont, monospace">' + code + '</span><p class="darkResponsive" style="margin-left:8px; border-radius:5px; padding:3px; border-left:1px solid;background:none; font-family:aosProFont, monospace;font-size:12px;">' + example + '</p>' + description;
-            },
-            showDocumentation: function(){
-                /*
-                c(function(){apps.appAPI.vars.newdoc(
-                    '',
-                    '',
-                    ''
-                );});
-                */
-                c(function(){apps.appAPI.vars.newdoc(
-                    'aOS function or variable',
-                    'Example of usage',
-                    'Description of its purpose and what it does'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'getId(target);',
-                    'getId("myDiv");<br>//returns element with ID "myDiv"',
-                    'All this does is return document.getElementById(target). Think of it as shorthand, as document.getElementById is a lot to type over and over again.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'formDate(dateString)',
-                    'formDate("d- M-/D-/y- h-:m-:S")<br>//returns (in this case) "' + formDate("d- M-/D-/y- h-:m-:S") + '"',
-                    'Sends a date and/or time in string format. All(?) of the supported time formats are accessed by using the lower- or upper-case version of its first letter.<br>To get minutes, use "m". To get months, use "M". This is because months are bigger than minutes and therefore uses a bigger letter.<br>Seconds uses "S" and milliseconds uses "s".<br>Some of them use the format of lowercase being a shorthand of the thing. For instance, "y" outputs ' + formDate("y") + ' and "Y" outputs ' + formDate("Y") +
-                    '.<br>One exception is days, where "d- D" outputs ' + formDate("d- D") + '.<br>You may use a "-" in the same way that a "\\" is used in JavaScript.<br>If you must include a space or slash or the actual letter "Y", without it being formatted into the year, make it look like "-Y" instead of just "Y".'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'this.vars // from main function or signal handler<br>this // from your app\'s vars<br>apps.YOURAPPCODENAME.vars',
-                    '[one of the vars above].YOURVARIABLE',
-                    'This is the object where the variables for your app are stored. There are several ways to access your apps variables.<br>When accessing app vars from inside your main function or signal handler, use <b>this.vars</b><br>When accessing app vars from inside one of your apps own variables (like a function), use <b>this</b><br>When accessing from outside of the target apps vars or from inside a timeout or interval, use <b>apps.YOURAPPCODENAME.vars</b><br>If you\'re unsure of where the code will be running from or want to be safe, <b>apps.YOURAPPCODENAME.vars will always work, no matter what.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'this.appWindow.setDims(x, y, w, h)<br>this.appWindow.setCaption(windowCaption)<br>this.appWindow.setContent(windowContent)<br>this.appWindow.openWindow()',
-                    'this.appWindow.setDims(20, 20, 500, 400) //sets app x/y location to (20, 20) and width/height to (500, 400)<br>this.appWindow.setCaption("awesome window") //sets the name of your window<br>this.appWindow.setContent("some awesome content") //sets content of your app window, in HTML<br>this.appWindow.openWindow() //opens window',
-                    'When setting dims, remember that the number you give INCLUDES the title bar and borders of the window. The width of the sides of the border are 6px total, and the width of the top and bottom border are 24px total.<br>If your window has an icon, it will always be displayed before your caption. If not, your app\'s text icon will.<br>this.appWindow.setContent("text") is the same as calling <b>getId("win_" + YOURAPPNAME + "_html").innerHTML = "text"</b><br>When opening your window, ensure the dims and caption were manually set. If they were not, then default settings will be used and things may break.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'requestAnimationFrameIntact<br>windowperformancenowIntact',
-                    'requestAnimationFrameIntact<br>windowperformancenowIntact',
-                    'Whether or not window.requestAnimationFrame or window.performance.now are supported by the browser, as true/false values.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'vartry(variableAsString)',
-                    'vartry(\'document.getElementById("notAnElement").style.display\');',
-                    'Useful for if theres a variable that may cause errors upon read. If the variable exists, it returns the variable. If an error is thrown, a safe error string is returned instead of a script-breaking error.<br>Example: -failed vartry(document.getElementById("notAnElement").style.display) TypeError: Cannot read property \'style\' of null-'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'numtf(zeroOrOne)',
-                    'numtf(1) // returns true<br>numtf(0) //returns false',
-                    'Useful for if you have true/false indicators of 1 or 0, but want to quickly display them as "true" or "false" to the user, or need an actual boolean.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'textspeech(message)',
-                    'textspeech("Hello World")',
-                    'Has NORAA speak some text, if supported by the browser. If not supported, it does not work.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'USERFILES',
-                    'USERFILES.persistentFile',
-                    'This is the home of the user\'s personal files. Simply setting something in here is not enough, as the next function will show...'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'apps.savemaster.vars.save(filename, filecontent, savetype)',
-                    'apps.savemaster.vars.save("persistentFile", "This is the files content as a string", 1)',
-                    'This is how we save persistent files on aOS. Keep in mind that a working internet connection must be available, and we <span style="text-decoration:line-through">CANNOT</span> can, as of aOS A1.2.8, save more than one file at once. <span style="text-decoration:line-through">You must wait some time before saving the next one to allow the previous to finish saving.</span> Ensure the name of the file does not break JavaScript variable naming rules, and that the third argument is ALWAYS the number 1. The only working savetype is 1 and if you forget to include it, your file will not be saved.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'apps.savemaster.vars.del(filename)',
-                    'apps.savemaster.vars.del("persistentFile")',
-                    'This will delete a file from the USERFILES folder. Keep in mind that the user will ALWAYS be asked for permission and, as such, it will take time to do. My recommendation is to include each separate file to delete as a separate button, as there is no telling how long the user will take.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'Live Elements',
-                    '&lt;span class="liveElement" data-live-eval="Date()"&gt;&lt;/span&gt; // => <span class="liveElement" data-live-eval="Date()"></span>',
-                    'A Live Element is any HTML element that will have its innerHTML constantly kept up-to-date with a given variable. Variables or expressions can be included within. class="liveElement" is what tells the LiveElement engine to watch your element and keep it up to date. data-live-eval="something" is the variable or expression that LiveElement will update the innerHTML of the element to. I recommend using &lt;span&gt; elements, but you can theoretically use any element that supports innerHTML.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'm(message);',
-                    'm("risky function")',
-                    'The Module system (the function called m) is an easy debug system. Because JavaScript tends to lose where you are in a script file, you can use m("message") just before a risky function, and the OS will report what module was last reported, should an error occour.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'perfStart(name)<br>perfCheck(name)',
-                    'perfStart("testPerformance") // returns, in this case, ' + perfStart("testPerformance") + '<br>perfCheck("testPerformance") // returns, in this case, ' + perfCheck("testPerformance"),
-                    'The Performance Checking system is an easy way to tell how long, in microseconds, some script takes to run. Give the check a test name to define/check for it to work properly. The above example started a performance check, and later in the example, checked it again. The values, in this case, were generated immediately after each other. perfStart will always return the current performance.now() value. perfCheck will always return the number of microseconds it took to get from perfStart to perfCheck.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'batteryLevel<br>batteryCharging',
-                    'batteryLevel // in this case ' + batteryLevel + '<br>batteryCharging // in this case ' + batteryCharging,
-                    'The level of battery left in the system, or the status of the battery charging. If batteryLevel is -1, then no battery was detected by aOS. Same with batteryLevel. (on some systems, this is a glitch and a simple restart of aOS can fix it) A batteryCharging of 1 means it is charging. 0 means it is not charging.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'c(someFunction, functionArgs)',
-                    'c(function(arg){<br>&nbsp; alert("Your arg is " + arg); // alerts 743 for us<br>}, 743);',
-                    'The c function is a useful tool in making an app that will take a long time to process some information. Instead of processing the information or performing a large action all at once and causing aOS to freeze, you can spread it out over more time easily, with the c function. Keep in mind that any function you put inside of c will run <i>after</i> the current function is done running. For instance, we can make x = 1, then tell c to alert(x), then make x = 2. We will get an alert of 2 because the c function runs <i>after the current function</i>'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'apps.prompt.vars. &darr;<br>&nbsp; .prompt(string, button, callback, name)<br>&nbsp; .alert(string, button, callback, name)<br>&nbsp; .confirm(string, buttons, callback, name)',
-                    'apps.prompt.vars.prompt("What is your name?", "Submit", function(text){alert("Your name is " + text)}, "Your App") // gives alert box from app called Your App, asking user for their name, with a button called Submit. When submitted, we get an alert of the users name.<br><br>apps.prompt.vars.alert("Whoa! Watch out for them viruses!", "Okay, I will!", function(){console.log("User clicked the button!")}, "My App") // same as above, but with different text and a different button, and does not ask for anything<br><br>apps.prompt.vars.confirm("Please choose a meal.", ["Cheese Sticks", "Pizza", "Chicken"], function(btn){alert("you picked button " + btn)}, "My App") // asks the user to pick a button. the btn variable will be the index of the button in your array that was picked, starting at 0, of course.',
-                    'Show prompt, alert, and confirm boxes using the aOS prompt system instead of your browser\'s system. Prevents the OS from freezing when you pop an alert or ask for info. Also looks pretty nice, too. The callback function is called when the user clicks on an option.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'toTop(aosApp)',
-                    'toTop(apps.settings) // bumps the Settings app window to the top',
-                    'You can bump an app window to the top if you need to for some reason. One way this is commonly used, is if an app is opened through some kind of menu. Sometimes the app will not go to the top, and you will need to do it manually via this function.'
-                );});
-                c(function(){apps.appAPI.vars.newdoc(
-                    'ctxMenu(setupArray)',
-                    'ctxMenu(<br>&nbsp;[<br>&nbsp; [event.pageX, event.pageY],<br>&nbsp; "Make an alert", "alert(\'hi\')",<br>&nbsp; "Do something else", "console.log(\'hey, it works\')"<br>&nbsp;]<br>)',
-                    'Makes a context menu. Most useful for the oncontextmenu event for buttons or other elements. You can set the oncontextmenu to create your own context menu, instead of the default. Make sure the first array item is always that array of mouse coords. The next item will be the name of an option on your context menu. The next will be the function run on click of that option. Every two items you include after that will serve the purpose of another option. Theoretically, you can have unlimited options in your context menu.'
-                );});
-            }
-        }, 1, "appAPI", "appicons/ds/API.png"
-    );
-    getId('aOSloadingInfo').innerHTML = 'App Maker';
-});
-c(function(){
     m('init APM');
     apps.appmaker = new Application(
         "APM",
@@ -11714,7 +10956,8 @@ c(function(){
                 this.vars.div.style.overflow = "auto";
                 this.vars.div.style.backgroundPosition = 'center';
                 this.vars.div.style.backgroundRepeat = 'no-repeat';
-                this.vars.div.innerHTML = '<h1>App Maker</h1>' +
+                this.vars.div.innerHTML = '<p style="color:red">This tool is OUTDATED. Use the <button onclick="openapp(apps.webAppMaker, \'dsktp\');apps.appmaker.signalHandler(\'close\')">Web App Maker</button> or <button onclick="openapp(apps.devDocumentation, \'dsktp\');apps.appmaker.signalHandler(\'close\')">Developer Documentation</button> instead.</p>' +
+                    '<h1>App Maker</h1>' +
                     '<p id="APMappsaving"></p>' +
                     '<p>If you need to leave and return later: <button onclick="apps.appmaker.vars.saveProj()">Save Project</button> <button onclick="apps.appmaker.vars.loadProj()">Load Project</button><br>' +
                     'Currently stored project: ' + function(){if(ufload("aos_system/apps/appmaker/project")){return '<span style="font-family:monospace">' + JSON.parse(ufload("aos_system/apps/appmaker/project")).name + '</span>'}else{return 'no project saved'}}() +
@@ -11739,7 +10982,7 @@ c(function(){
                     '<ul><li><span class="monoinput">dsktp</span>: Your app was opened via its desktop icon. Best to initialize app UI if this is the case.</li>' +
                     '<li><span class="monoinput">tskbr</span>: Your app was opened via its taskbar icon. Best to assume the app is already open and do not re-initialize the UI.</li></ul>' +
                     '<br><hr>' +
-                    '<p>Main application code: (here is some <button onclick="openapp(apps.appAPI, \'dsktp\');c(function(){toTop(apps.appAPI)})">API Documentation</button> that may help you)</p>' +
+                    '<p>Main application code:</p>' +
                     '<textarea id="APMappmaincode" style="width:98%;height:300px; font-family:aosProFont, monospace;white-space:no-wrap;">//here is the basic code to open a window and set its content.\nthis.appWindow.setCaption("Your app\'s name here!");\nthis.appWindow.setDims("auto", "auto", 500, 500);\nthis.appWindow.setContent("Hello world!");\nthis.appWindow.openWindow();</textarea>' +
                     '<br><hr>' +
                     '<p>App Variables:</p>' +
@@ -11948,7 +11191,7 @@ c(function(){
                 '<h2>Install App</h2>' +
                 '<p>This will add your app to your database. Next time you load aOS (or refresh the page), your app will be on the desktop.</p>' +
                 '<button onclick="apps.webAppMaker.vars.addApp()">Install</button>' +
-                '<p>To uninstall an app, you can delete its file in the file browser. Its file will start with "WAP_APPS_DATABASE_" and end with a number.</p>'
+                '<p>To uninstall an app, you can delete its file in the file browser. Its file will be located in "aos_system/wap_apps".</p>'
             );
             this.appWindow.openWindow();
         },
@@ -11981,20 +11224,18 @@ c(function(){
                     if(safeMode){
                         doLog("Failed initializing WAP apps because Safe Mode is enabled.", "#F00");
                     }else{
-                        for(var file in USERFILES){
-                            if(file.indexOf("WAP_APPS_DATABASE_") === 0){
-                                try{
-                                    apps.webAppMaker.vars.compileApp(USERFILES[file], file);
-                                }catch(err){
-                                    doLog("Failed initializing " + file + ":", "#F00");
-                                    doLog(err, "#F00");
-                                }
+                        for(var file in ufload("aos_system/wap_apps")){
+                            try{
+                                apps.webAppMaker.vars.compileApp(ufload("aos_system/wap_apps/" + file), file);
+                            }catch(err){
+                                doLog("Failed initializing " + file + ":", "#F00");
+                                doLog(err, "#F00");
                             }
                         }
                         // alphabetized array of apps
                         appsSorted = [];
                         for(var i in apps){
-                            appsSorted.push(apps[i].appDesc + "|WAP_apps_sort|" + i);
+                            appsSorted.push(apps[i].appDesc.toLowerCase() + "|WAP_apps_sort|" + i);
                         }
                         appsSorted.sort();
                         for(var i in appsSorted){
@@ -12812,7 +12053,9 @@ c(function(){
                     }
                 }
                 if(!invalid){
-                    apps.savemaster.vars.save('WAP_APPS_DATABASE_' + (new Date().getTime()), JSON.stringify(tempObj), 1);
+                    //apps.savemaster.vars.save('WAP_APPS_DATABASE_' + (new Date().getTime()), JSON.stringify(tempObj), 1);
+                    ufsave('aos_system/wap_apps/webApp' + apps.webAppMaker.vars.numberOfApps, JSON.stringify(tempObj));
+                    apps.webAppMaker.vars.numberOfApps++;
                     apps.prompt.vars.alert('Finished. Restart aOS to use your new app!', 'Okay', function(){}, 'Web App Maker');
                 }else{
                     apps.prompt.vars.alert('Failed! Your app\'s abbreviation is already in use on your system. Please choose a different one.', 'Okay', function(){}, 'Web App Maker');
@@ -12868,7 +12111,7 @@ c(function(){
                         }
                     },
                     {
-                        appInfo: 'This app was made using the Web App Maker app.<br><br>Home URL:<br>' + tempObj.url + '<br><br>File name in USERFILES:<br>' + appFileName + '<br><br>App object name:<br>apps.webApp' + apps.webAppMaker.vars.numberOfApps,
+                        appInfo: 'This app was made using the Web App Maker app.<br><br>Home URL:<br>' + tempObj.url + '<br><br>File path:<br>USERFILES/aos_system/wap_apps/' + appFileName + '<br><br>App object name:<br>apps.webApp' + apps.webAppMaker.vars.numberOfApps,
                         appURL: tempObj.url,
                         sizeX: tempObj.sizeX,
                         sizeY: tempObj.sizeY
@@ -12895,7 +12138,13 @@ c(function(){
             this.appWindow.setCaption('Messaging');
             getId('win_messaging_html').setAttribute('onclick', 'if(apps.messaging.vars.soundToPlay && apps.messaging.vars.canLookethOverThereSound){apps.messaging.vars.notifClick.play(); apps.messaging.vars.soundToPlay = 0;}');
             if(launchType === 'dsktp'){
-                this.appWindow.setContent('<div id="MSGdiv" style="width:100%;height:calc(100% - 24px);overflow-y:scroll;"></div><div style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div><button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button><button style="position:absolute;bottom:0;height:24px;width:10%;left:10%;" onclick="apps.messaging.vars.doFormatting()">Formatting</button><input id="MSGinput" style="position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:monospace"><button onclick="apps.messaging.vars.sendMessage()" style="position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>');
+                this.appWindow.setContent(
+                    '<div id="MSGdiv" style="width:100%;height:calc(100% - 52px);overflow-y:scroll;padding-top:32px;"></div>' +
+                    '<div style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div>' +
+                    '<button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button>' +
+                    '<button style="position:absolute;bottom:0;height:24px;width:10%;left:10%;" onclick="apps.messaging.vars.doFormatting()">Formatting</button>' +
+                    '<input id="MSGinput" style="position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:monospace">' +
+                    '<button onclick="apps.messaging.vars.sendMessage()" style="position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>');
                 this.vars.lastMsgRecieved = this.vars.lastMsgStart;
                 getId('MSGinput').setAttribute('onkeyup', 'if(event.keyCode === 13){apps.messaging.vars.sendMessage();}');
             }
@@ -12973,7 +12222,7 @@ c(function(){
                                 if(apps.messaging.vars.nameTemp.length > 30 && apps.messaging.vars.nameTemp.length < 3){
                                     apps.prompt.vars.alert('Your name cannot be more than 30 or less than 3 characters long.', 'Okay', function(){}, 'Messaging');
                                 }else if(apps.messaging.vars.nameTemp.toLowerCase().indexOf('mineandcraft12') > -1 || apps.messaging.vars.nameTemp.toUpperCase().indexOf('{ADMIN}') > -1){
-                                    apps.prompt.vars.prompt('REALITY CHECK<br>Please enter your hashed password, Aaron... or admin.', 'This user security agent again?', function(secretpass){
+                                    apps.prompt.vars.prompt('REALITY CHECK<br>Please enter your password, Aaron... or admin.', 'This user security agent again?', function(secretpass){
                                         //if(secretpass === navigator.userAgent){
                                             apps.messaging.vars.name = apps.messaging.vars.nameTemp; // = "";
                                             //for(var i in apps.messaging.vars.nameTemp){
@@ -13292,6 +12541,8 @@ c(function(){
                 }
                 return tempIn;
             },
+            lastRecievedDate: "",
+            lastRecievedTime: "",
             nextMessage: function(text){
                 m('reading from messaging server');
                 if(text[0] === '{'){
@@ -13302,29 +12553,64 @@ c(function(){
                     this.lastMsgRecieved = this.lastResponseObject.l;
                     this.needsScroll = (getId('MSGdiv').scrollTop + 600 >= getId('MSGdiv').scrollHeight);
                     if(this.lastResponseObject.t){
+                        var tempAddStr = "";
                         if(this.lastResponseObject.n !== this.lastUserRecieved){
                             if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
-                                getId('MSGdiv').innerHTML += '<div style="color:#0A0; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right"><span style="color:transparent">' + this.lastResponseObject.l + '</span> ' + this.parseBB(this.lastResponseObject.n, 1) + '</div>';
-                                getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
+                                tempAddStr += '<div style="color:#0A0; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace;">&nbsp;' + this.parseBB(this.lastResponseObject.n, 1) + ' <span style="color:transparent">' + this.lastResponseObject.l + '</span></div>';
+                                tempAddStr += '<div style="background-color:#CEA; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
+                                if(this.lastResponseObject.t !== this.lastRecievedTime){
+                                    tempAddStr += '<div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '&nbsp;</div>';
+                                }
+                                if(String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') !== this.lastRecievedDate){
+                                    tempAddStr += '<div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div>';
+                                }
+                                tempAddStr += this.parseBB(this.lastResponseObject.c) + '</div>';
+                                getId('MSGdiv').innerHTML += tempAddStr;
                             }else{
-                                getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right"><span style="color:transparent">' + this.lastResponseObject.l + '</span> ' + this.parseBB(this.lastResponseObject.n, 1) + '</div>';
-                                getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
+                                tempAddStr += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace;">&nbsp;' + this.parseBB(this.lastResponseObject.n, 1) + ' <span style="color:transparent">' + this.lastResponseObject.l + '</span></div>';
+                                tempAddStr += '<div style="background-color:#ACE; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
+                                if(this.lastResponseObject.t !== this.lastRecievedTime){
+                                    tempAddStr += '<div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '&nbsp;</div>';
+                                }
+                                if(String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') !== this.lastRecievedDate){
+                                    tempAddStr += '<div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div>';
+                                }
+                                tempAddStr += this.parseBB(this.lastResponseObject.c) + '</div>';
+                                getId("MSGdiv").innerHTML += tempAddStr;
                             }
                         }else{
                             getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:2px;"></div>';
                             if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
-                                getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
+                                tempAddStr += '<div style="background-color:#CEA; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
+                                if(this.lastResponseObject.t !== this.lastRecievedTime){
+                                    tempAddStr += '<div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '&nbsp;</div>';
+                                }
+                                if(String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') !== this.lastRecievedDate){
+                                    tempAddStr += '<div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div>';
+                                }
+                                tempAddStr += this.parseBB(this.lastResponseObject.c) + '</div>';
+                                getId("MSGdiv").innerHTML += tempAddStr;
                             }else{
-                                getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;"><div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div><div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '</div>' + this.parseBB(this.lastResponseObject.c) + '</div>';
+                                tempAddStr += '<div style="background-color:#ACE; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
+                                if(this.lastResponseObject.t !== this.lastRecievedTime){
+                                    tempAddStr += '<div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '&nbsp;</div>';
+                                }
+                                if(String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') !== this.lastRecievedDate){
+                                    tempAddStr += '<div style="width:10%;text-align:left;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace;margin-left:80%;">' + String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ') + '</div>';
+                                }
+                                tempAddStr += this.parseBB(this.lastResponseObject.c) + '</div>';
+                                getId("MSGdiv").innerHTML += tempAddStr;
                             }
                         }
+                        this.lastRecievedDate = String(new Date(this.lastResponseObject.t - 0)).split(' ').slice(1, 4).join(' ');
+                        this.lastRecievedTime = this.lastResponseObject.t;
                     }else{
                         if(this.lastResponseObject.n !== this.lastUserRecieved){
                             if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
-                                getId('MSGdiv').innerHTML += '<div style="color:#0A0; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right">' + this.lastResponseObject.n + '</div>';
+                                getId('MSGdiv').innerHTML += '<div style="color:#0A0; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace;">&nbsp;' + this.lastResponseObject.n + '</div>';
                                 getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
                             }else{
-                                getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace; text-align:right">' + this.lastResponseObject.n + '</div>';
+                                getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace;">&nbsp;' + this.lastResponseObject.n + '</div>';
                                 getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
                             }
                         }else{
@@ -13514,515 +12800,6 @@ c(function(){
     getId('aOSloadingInfo').innerHTML = 'Help App';
 });
 c(function(){
-    m('init HLP');
-    apps.help = new Application(
-        'HLP',
-        'aOS Help',
-        1,
-        function(launchtype){
-            if(!this.appWindow.appIcon){
-                this.appWindow.setDims("auto", "auto", 800, 500);
-                this.appWindow.setCaption('aOS Help');
-                getId('win_help_html').style.overflow = 'auto';
-                this.vars.populateList();
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'This app attempts to assist users with the basic functions of AaronOS. Note that some information needs to be updated and may be outdated.',
-            categories: {
-                '1': 'folder',
-                '2': 'Categories',
-                taskbar: {
-                    '1': 'folder',
-                    '2': 'Taskbar<br><img src="helpapp/taskbar/thumb.png">',
-                    appsList: {
-                        '1': 'land',
-                        '2': 'Applications List<br><img src="helpapp/taskbar/appsList/thumb.png">',
-                        helpPage:
-                            'This lists all applications properly installed in aOS\'s app directory, including those not displayed on the desktop, and allows you to open them.<br><br>' + 
-                            'Apps act as if opened through the desktop; even if already open. Clicking anywhere away from the apps list will close the apps list. If you cannot find an app in this list, then that means it was not properly installed.'
-                    },
-                    appIcons: {
-                        '1': 'land',
-                        '2': 'Application Icons<br><img src="helpapp/taskbar/appIcons/thumb.png">',
-                        helpPage:
-                            'These icons appear when any application is running. The icon displayed gives a quick indication to what is open, and allows you to find a single window if many are open.<br><br>' +
-                            'Click an icon to open the app to view, if it has been minimised.<br><img src="helpapp/taskbar/appIcons/rightclick.png"><br>Right click an app icon to get the options to open them or to close them; useful if an app has beem minimised and you want to close it without first opening it.'
-                    },
-                    statusIcons: {
-                        '1': 'land',
-                        '2': 'Status Icons<br><img src="helpapp/taskbar/statusIcons/thumb.png">',
-                        helpPage: 'The status icons show the state of many things; battery, network activity, time, even FPS. More information coming soon.'
-                    }
-                },
-                desktop: {
-                    '1': 'land',
-                    '2': 'Desktop',
-                    helpPage:
-                        'The desktop is the main work area of aOS; where all of your application icons and all of your windows reside.<br>' +
-                        'To move an icon on your desktop, simply right-click the icon, select Move Icon, then click elsewhere.'
-                },
-                windows: {
-                    '1': 'land',
-                    '2': 'Windows<br><img src="helpapp/windows/thumb.png">',
-                    helpPage:
-                        'The window is where most of your work will be shown. The top-left is where your app\'s icon and title reside.<br>' +
-                        'The three buttons in the top-right have special functions to control your windows. Some windows may have fewer than three buttons.<br>' +
-                        '<span style="color:#0F0">[-]</span> Button: Hides your window from view, to reduce clutter and CPU strain, without completely closing the app. Watch out, however, as some apps may incorrectly handle this action.<br>' +
-                        '<span style="color:#0F0">[O]</span> Button: Fits the window to the size of your desktop. It\'s much easier to use that button to get a bigger window than to move and drag the window manually.<br>' +
-                        '<span style="color:#F00">[X]</span> Button: Closes the window. Useful to lessen the strain on CPU and rendering system, especially if Windowblur is enabled. By closing the app, you can re-open it again and start fresh. Keep in mind that some apps may run background tasks and may "remember" where they last left off.<br><br>' +
-                        'To move a window, click on the top title bar of the window, and then click on another location on the screen.<br>' +
-                        'To resize a window, click on the bottom half of the window\'s border, then click elsewhere on the screen. The window always resizes by the bottom and right borders - the left and top border will not move.<br>' +
-                        'Apps can only have one app window.'
-                },
-                noraa: {
-                    '1': 'land',
-                    '2': 'NORAA<br><img src="helpapp/noraa/thumb.png">',
-                    helpPage: 'NORAA is the personal assistant designed for your operating system. More information coming soon.'
-                },
-                taskManager: {
-                    '1': 'land',
-                    '2': 'Task Manager',
-                    helpPage: 'This is the list of descriptions for values within task manager.<br><br>' +
-                        '<code>Script Performance Benchmark:</code> This is the time, in microseconds, that it takes your code to check the current time since boot in microseconds. It is used to measure how powerful your script engine is; a small number means more powerful, while a large number is less powerful. If aOS is run in the background, this number will be significantly higher. For comparison, my personal computer generally gets anywhere around 5 - 50 on idle.<br><br>' +
-                        '<code>Visual Performance Benchmark:</code> This is the time, in microseconds, that it takes your browser to render one frame of visual content. It is used to measure how well your graphics system is handling aOS; a small number means more powerful, while a large number is less powerful. If aOS is run in the background, this number will be extremely high, because web browsers put off rendering for frames that are not visible. Running at 60 FPS, a perfect score would be 16666, or 16 <sup>2</sup>/<sub>3</sub> milliseconds per render.<br><br>' +
-                        '<code>Code Pieces Waiting to Run:</code> This is the number of code pieces that your apps and aOS have put off to run over time, in order to increase framerate. If things like context menus, the apps list, or the filebrowser are freezing, check this number and see how large it is. If you can see it counting down from a very large number, then some app is dumping alot of code into the system.<br><br>' +
-                        '<code>Temp Speech Running:</code> This is a true/false value that tells you if NORAA is listening for you to say his activation phrase. If you do not want NORAA to listen, you can toggle this option in Settings -&gt; NORAA.<br><br>' +
-                        '<code>Temp Speech Storage:</code> This is the temporary storage of the above listening system. If temp speech is running, this is what NORAA can hear you saying. If it sees his activation phrase in what you have said, it will clear the storage and activate NORAA. This sstorage is required for the system to work, so I allow the user to see what it hears.<br><br>' +
-                        '<code>Live Elements Loaded:</code> This is the number of aOS Live Elements that are currently loaded and running. A Live Element is some field that automatically updates itself to a value. For instance, here is a Live Element that displays the number of microseconds since aOS launch: <span class="liveElement" data-live-eval="Math.round(performance.now() * 1000)">0</span><br><br>' +
-                        '<code>Modulelast, Module:</code> This is the current and latest module that aOS is running. Typically, these values will mostly be idle. When opening windows and other tasks such as these, the module will be updated. Remember that the OS and/or apps must manually set this value for it to appear... if you are performing a large task and it still says idle, then the developer probably did not implement their app into the module system.<br><br>' +
-                        'Blue tasks are code that has been scheduled to run repeatedly over time; the interval between runs, in milliseconds, is displayed on the right side.<br><br>Green tasks are tasks that are waiting to run at some point in time; the time that they were set for in milliseconds is displayed on the right side.'
-                },
-                devApi: {
-                    /* template for landing page
-                    : {
-                        '1': 'land',
-                        '2': '',
-                        helpPage: ''
-                    }
-                    */
-                    /* template for folder page
-                    : {
-                        '1': 'folder',
-                        '2': '',
-                        
-                    }
-                    */
-                    '1': 'folder',
-                    '2': 'Developer API<br>Useful for app developers only.<br>Intended to be full documentation in full detail of <i>all</i> useful aOS functions and variables.',
-                    navigatingDevApi: {
-                        '1': 'land',
-                        '2': 'Navigating the aOS Developer API',
-                        helpPage:
-                            'This is the help page for navigating this aOS Developer API doc.<br><br>' +
-                            'Help items that have the symbol <code>{</code> after them indicate an item with more options inside (i.e. an object or class that holds more objects). Note that these items will often have an item within them labeled after itself, which will be the help topic for that particular folder.<br><br>' +
-                            'This is set up as a directory of sorts. All objects contained in the top level of the API doc are assumed to be at the top level of JavaScript scope (meaning they are directly inside the window object)<br><br>' +
-                            'As of now, this documentation is very incomplete. It is a large-scale project that probably will not be finished anytime soon.'
-                    },
-                    apps: {
-                        '1': 'folder',
-                        '2': 'apps',
-                        prompt: {
-                            '1': 'folder',
-                            '2': 'apps.prompt',
-                            vars: {
-                                '1': 'folder',
-                                '2': 'apps.prompt.vars',
-                                pAlert: {
-                                    '1': 'land',
-                                    '2': 'apps.prompt.vars.alert(aText, aButton, aCallback(), aCaption)',
-                                    helpPage:
-                                        'Make an alert box similar to JavaScript\'s alert() command, but using an aOS window to prevent freezing the OS.<br><br>' +
-                                        'The function expects 3 mandatory arguments, <code>aText</code>, <code>aButton</code>, and <code>aCallback()</code>. It also expects 1 recommended but optional argument, <code>aCaption</code>.<br><br>' +
-                                        '<code>aText</code> is used as the text for the alert\'s body text. It can be any string-convertible data-type and supports HTML formatting.<br>' +
-                                        '<code>aButton</code> is used as the text for the alert\'s Close button text. It can be any string-convertible data-type.<br>' +
-                                        '<code>aCallback()</code> is the function called after the Close button has been clicked by the user. It must be a function.<br>' +
-                                        '<code>aCaption</code> is the optional name of the application that opened the alert box. It helps the user determine which app the alert came from. It can be any string-convertible data-type, though string is recommended.<br><br>' +
-                                        'Alerts, confirms, prompts, and notifications will all open one after the other. That is, if one app has opened an alert, your app\'s alert will open after the previous is closed.'
-                                },
-                                pConfirm: {
-                                    '1': 'land',
-                                    '2': 'apps.prompt.vars.confirm(cText, cButtons, cCallback(btn), cCaption)',
-                                    helpPage:
-                                        'Make a confirm box similar to JavaScript\'s confirm() command, but using an aOS window to prevent freezing the OS.<br><br>' +
-                                        'The function expects 3 mandatory arguments, <code>cText</code>, <code>cButtons</code>, and <code>cCallback(btn)</code>. It also expects 1 recommended but optional argument, <code>cCaption</code>.<br><br>' +
-                                        '<code>cText</code> is used as the text for the confirm\'s body text. It can be any string-convertible data-type and supports HTML formatting.<br>' +
-                                        '<code>cButtons</code> is used as the labels for the confirm\'s button texts. It must be an array consisting of strings. Each string within the array will be used as a separate button choice for the user to choose.<br>' +
-                                        '<code>cCallback(btn)</code> is the function called after the selection has been clicked by the user, and must accept one argument, recommended name is <code>btn</code>. It must be a function. The value passed to the function as argument btn will always be a number that will match the button pressed by the user to its index in <code>cButtons</code><br>' +
-                                        '<code>cCaption</code> is the optional name of the application that opened the confirm box. It helps the user determine which app the confirm came from. It can be any string-convertible data-type, though string is recommended.<br><br>' +
-                                        'Alerts, confirms, prompts, and notifications will all open one after the other. That is, if one app has opened a confirm, your app\'s confirm will open after the previous is closed.'
-                                },
-                                pPrompt: {
-                                    '1': 'land',
-                                    '2': 'apps.prompt.vars.prompt(pText, pButton, pCallback(text), pCaption)',
-                                    helpPage:
-                                        'Make a prompt box similar to JavaScript\'s prompt() command, but using an aOS window to prevent freezing the OS.<br><br>' +
-                                        'The function expects 3 mandatory arguments, <code>pText</code>, <code>pButton</code>, and <code>pCallback(text)</code>. It also expects 1 recommended but optional argument, <code>pCaption</code>.<br><br>' +
-                                        '<code>pText</code> is used as the text for the prompt\'s body text. It can be any string-convertible data-type and supports HTML formatting.<br>' +
-                                        '<code>pButton</code> is used as the text for the prompt\'s Submit button text. It can be any string-convertible data-type.<br>' +
-                                        '<code>pCallback(text)</code> is the function called after the Close button has been clicked by the user, and must accept one argument, recommended name is <code>text</code>. It must be a function. The value passed to the function as argument text will always be a string representing the user\'s input.<br>' +
-                                        '<code>pCaption</code> is the optional name of the application that opened the prompt box. It helps the user determine which app the prompt came from. It can be any string-convertible data-type, though string is recommended.<br><br>' +
-                                        'Alerts, confirms, prompts, and notifications will all open one after the other. That is, if one app has opened a prompt, your app\'s prompt will open after the previous is closed.'
-                                },
-                                pNotify: {
-                                    '1': 'land',
-                                    '2': 'apps.prompt.vars.notify(nText, nButtons, nCallback(btn), nCaption, nImage)',
-                                    helpPage:
-                                        'Show a notification to the user - less intrusive and comes across as less urgent.<br><br>' +
-                                        'The function expects 3 mandatory arguments, <code>nText</code>, <code>nButtons</code>, <code>nCallback(btn)</code>. It also expects 2 recommended but optional arguments, <code>nCaption</code>, <code>nImage</code>.<br><br>' +
-                                        '<code>nText</code> is used as the main body text of the Notification. It can be any string-convertible data-type and, though not recommended, supports HTML formatting.<br>' +
-                                        '<code>nButtons</code> is used as the labels of the button texts of the notification. It must be an array consisting of any number of strings, including 0 if you do not want buttons on the notification. Each string represents its own button.<br>' +
-                                        '<code>nCallback</code> is the function called after the Close button or a selection has been pressed by the user. It must accept one argument, recommended name it <code>btn</code>. It must be a function. The value passed to the function is the index of the user selection in the supplied array of button labels. If the notification was closed and no option was selected, it returns -1.<br>' +
-                                        '<code>nCaption</code> is the optional caption displayed on the top of the notification in bold. It helps the user determine what the notification is about, via a quick glance. It can be any string-convertible data-type, though string is recommended.<br>' +
-                                        '<code>nImage</code> is the optional image to be displayed on the side of the notification - typically used to show what app it came from. It must be a string containing the URL to an image.<br><br>' +
-                                        'Alerts, conforms, prompts, and notifications will all open one after the other. That is, if one app has opened a notificaiton, your app\'s notification will open after the previous is closed.'
-                                }
-                            }
-                        },
-                        savemaster: {
-                            '1': 'folder',
-                            '2': 'apps.savemaster',
-                            vars: {
-                                '1': 'folder',
-                                '2': 'apps.savemaster.vars',
-                                saving: {
-                                    '1': 'land',
-                                    '2': 'apps.savemaster.vars.saving',
-                                    helpPage:
-                                        'This is a lesser-known feature of aOS, so its help page is short. More help will be added over time, but only after more important help docs are finished.<br><br>' +
-                                        'This variable is used by the aOS taskbar to determine the network status to display to the user. 3rd-party support is mostly experimental. More details soon.'
-                                },
-                                save: {
-                                    '1': 'land',
-                                    '2': 'apps.savemaster.vars.save(filepath, filecontent, newformat, errorreport)',
-                                    helpPage:
-                                        'Save a <b>persistent</b> file to <code>USERFILES</code>. A network connection and connection to the aOS server is required, as no files are saved on the local machine.<br><br>' +
-                                        'The function expects 3 mandatory arguments, <code>filepath</code>, <code>filecontent</code>, and <code>newformat</code>. An optional argument, <code>errorreport</code>, is used only by aOS. If included, it must be set to 0 and does not actually do anything.<br><br>' +
-                                        '<code>filepath</code> is the name of the file that you will save. If a file with the same name is found, it is overwritten. It must be presented as a string and the string must follow JavaScript\'s variable naming syntax. No spaces.<br>' +
-                                        '<code>filecontent</code> is the content of the new file to be saved. If the file is 0 bytes long, it may not save. It must be a string-convertible data-type. Upon restart of the operating system, ALL contents of USERFILES that are properly saved will be converted to strings.<br>' +
-                                        '<code>newformat</code> tells the operating system wether to use protocol 0 (this protocol is depreceated and has since been deleted) or protocol 1. Always set this value to 1 or the file will not be saved correctly.<br>' +
-                                        '<code>errorreport</code> is not a recommended argument to include. For 3rd-party aOS developers, it does nothing.<br><br>' +
-                                        'As of aOS 1.2.8, multiple files can now be saved at the same time. All file saves since boot will be recorded to <code>apps.savemaster.vars.xf</code>. Each file-save request is saved as a pair of two variables, a set of FormData, and an XMLHttpRequest, and are designed for users to be able to retrieve a lost file version, should it have been saved over.'
-                                },
-                                sDelete: {
-                                    '1': 'land',
-                                    '2': 'apps.savemaster.vars.del(filepath)',
-                                    helpPage:
-                                        'Delete a persistent file from the USERFILES server. A network connection and connection to the aOS server is required.<br><br>' +
-                                        'The function expects 1 mandatory argument, <code>filepath</code>.<br><br>' +
-                                        '<code>filepath</code> is the name of the file that you will delete. It must be presented as a string and must follow JavaScript\'s variable naming syntax.<br><br>' +
-                                        'The user will ALWAYS be prompted to delete a file, even if you already have been given permission before. There are some known bugs, and sometimes it does not work.'
-                                }
-                            }
-                        }
-                    },
-                    application: {
-                        /* template for landing page
-                        : {
-                            '1': 'land',
-                            '2': '',
-                            helpPage: ''
-                        }
-                        */
-                        /* template for folder page
-                        : {
-                            '1': 'folder',
-                            '2': '',
-                            
-                        }
-                        */
-                        '1': 'folder',
-                        '2': 'Application( ... ) {',
-                        application: {
-                            '1': 'land',
-                            '2': 'Application(<br>&nbsp; appIcon, appDesc,<br>&nbsp; handlesLaunchTypes, mainFunction(launchType), signalHandlerFunction(signal),<br>&nbsp; appVariables, keepOffDesktop, appPath, appImg<br>)',
-                            helpPage:
-                                'Code used to initialize new apps, only works properly during OS boot. (This function is useless to developers; it is only used by aOS itself. I only included it because it is technically the class that holds all your app\'s variables.)<br><br>' +
-                                'The function expects 8 mandatory arguments, <code>appIcon</code>, <code>appDesc</code>, <code>handlesLaunchTypes</code>, <code>mainFunction(launchType)</code>, <code>signalHandlerFunction(signal)</code>, <code>appVariables</code>, <code>keepOffDesktop</code>, and <code>appPath</code>. It also accepts one optional argument, <code>appImg</code>.<br><br>' +
-                                'You shouldn\'t use this function, so no documentation for you!'
-                        },
-                        dsktpIcon: {
-                            '1': 'land',
-                            '2': 'Application.dsktpIcon',
-                            helpPage:
-                                'The variable that your app\'s three-letter ID code is stored in. Modifying this variable is sure to end in disaster within milliseconds, so don\'t do it.<br><br>' +
-                                'The code must be compatible with CSS ID-name rules, as it will be frequently used in combination with CSS, and will be accessed with JavaScript quite frequently.'
-                        },
-                        appDesc: {
-                            '1': 'land',
-                            '2': 'Application.appDesc',
-                            helpPage: 'The name of your application as it appears on the desktop and apps list. Recommended to be 3 words or less. Maybe four if theu are short words.'
-                        },
-                        main: {
-                            '1': 'land',
-                            '2': 'Application.main(launchTypes)',
-                            helpPage: 'The main function of your application. If you wish to programatically start an application, do not run this function. Instead, use the function openapp(appToOpen, launchTypeUsed). See its documentation in the API.'
-                        },
-                        signalHandler: {
-                            '1': 'land',
-                            '2': 'Application.signalHandler(string signal)',
-                            helpPage:
-                                'This is the function used by your application to process and respond to many signals that it may spontaneously be sent. It is recommended to be set up as a switch statement.<br><br>' +
-                                'Examples of common use of the signal system...<br>When the user closes your app, this is handled with a call to signalHandler called "close". This same idea is used for many other things, like shrinking.<br><br>' +
-                                'There are two calls that will ALWAYS be executed... one called "USERFILES_DONE" (called after the OS is loaded and ready to open to user interactivity) and another called "shutdown" (run just before the OS shuts down or restarts)'
-                        },
-                        vars: {
-                            '1': 'land',
-                            '2': 'Application.vars',
-                            helpPage: 'This is the home of your application\'s variables. That\'s... about it.'
-                        },
-                        appWindow: {
-                            '1': 'folder',
-                            '2': 'Application.appWindow {',
-                            /* template for landing page
-                            : {
-                                '1': 'land',
-                                '2': '',
-                                helpPage: ''
-                            }
-                            */
-                            /* template for folder page
-                            : {
-                                '1': 'folder',
-                                '2': '',
-                                
-                            }
-                            */
-                            appWindow: {
-                                '1': 'land',
-                                '2': 'Application.appWindow',
-                                helpPage: 'This object houses all variables and functions used  in association with your app\'s window, all wrapped up in a nice appWindow package.'
-                            },
-                            dsktpIcon: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.dsktpIcon',
-                                helpPage: 'See Application.dsktpIcon. Same value and purpose.'
-                            },
-                            appImg: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.appImg',
-                                helpPage: 'This is the variable that holds the URL to the image icon of your app. Recommended that you don\'t modify it.'
-                            },
-                            windowX: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.windowX',
-                                helpPage: 'Recommended not to be directly edited. The distance in pixels of your app window from the left edge of the screen.'
-                            },
-                            windowY: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.windowY',
-                                helpPage: 'Recommended not to be directly edited. The distance in pixels of your app window from the top edge of the screen.'
-                            },
-                            windowH: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.windowH',
-                                helpPage: 'Recommended not to be directly edited. The width in pixels of your app window, including its borders. To get the width of the window\'s content box, just take this value - 6.'
-                            },
-                            windowV: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.windowV',
-                                helpPage: 'Recommended not to be directly edited. The height in pixels of your app window, including its borders. To get the height of the window\'s content box, just take this value - 24.'
-                            },
-                            fullscreen: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.fullscreen',
-                                helpPage: 'Recommended not to be directly edited. Status of your app window in fullscreen mode... If the value is 1, your app has been toggled into fullscreen. If the value is 0, your app has been toggled out of fullscreen.'
-                            },
-                            appIcon: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.appIcon',
-                                helpPage: 'Recommended not to be directly edited. This value indicates if your app is "running", or in better terms, if its app icon is visible in the taskbar.'
-                            },
-                            dimsSet: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.dimsSet',
-                                helpPage: 'The function to be run when your app window is resized. By default, it is the number 0. But if you want to run some function when the window is resized (usually to modify the UI to fit the screen), this is how you can.'
-                            },
-                            onTop: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.onTop',
-                                helpPage: 'Recommended not to be directly edited. This is the status of your window\'s Always On Top flag. 0 is not, 1 is yes.'
-                            },
-                            alwaysOnTop: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.alwaysOnTop(setTo)',
-                                helpPage: 'Sets your window into or out of Always On Top mode. Passing a 0 takes it out of the mode. Passing a 1 puts it into On Top Mode.'
-                            },
-                            setDims: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.setDims(xOff, yOff, xSiz, ySiz, ignoreDimsSet)',
-                                helpPage: 'Sets the position and dimensions of your app window. xOff and yOff are the x and y position on the screen. xSiz and ySiz are the width and height of the window, borders included. The width and height of the borders are 6 x 24.'
-                            },
-                            openWindow: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.openWindow()',
-                                helpPage: 'Simply opens your window so the user can see it.'
-                            },
-                            closeWindow: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.closeWindow()',
-                                helpPage: 'Closes your window. However, recommended to use Application.signalHandler("close") instead of this.'
-                            },
-                            closeKeepTask: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.closeKeepTask()',
-                                helpPage: 'Hides your window but keeps it "running". However, recommended to use Application.signalHandler("shrink") instead.'
-                            },
-                            setCaption: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.setCaption(newCap)',
-                                helpPage: 'Sets the caption of your window. If your app has an image icon, that will always be displayed before your caption. If not, the 3-letter ID of your app will be.'
-                            },
-                            setContent: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.setContent(newHTML)',
-                                helpPage: 'Sets the content of your window, in HTML. You can alternatively use <code>getId("win_" + YOURAPPNAME + "_html").innerHTML = "new HTML content"</code>'
-                            },
-                            fullscreenTempVars: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.fullscreenTempVars',
-                                helpPage: 'Not helpful to you. Move along.'
-                            },
-                            toggleFullscreen: {
-                                '1': 'land',
-                                '2': 'Application.appWindow.toggleFullscreen()',
-                                helpPage: 'Welp. Toggles fullscreen. Not real fullscreen, just make your app\'s window fill the desktop.'
-                            }
-                        },
-                        keepOffDesktop: {
-                            '1': 'land',
-                            '2': 'Application.keepOffDesktop',
-                            helpPage: 'This is the stored value of wether or not an app is present on the desktop or apps list.<br><br>A value of 0 means it appears in both the desktop and apps list.<br>A value of 1 means it appears in the apps list but not the desktop.<br>A value of 2 means it does not appear in either location.'
-                        }
-                    },
-                    c: {
-                        '1': 'land',
-                        '2': 'c(code(arg), args)',
-                        helpPage:
-                            'Allows you to hold code back, and wait to run it. It works sort of like a line: the first apps to use c() will be first in line to be run. Each call after that will then be further down the list. Good for running code in a particular order, but not freezing the OS with it.<br><br>' +
-                            '<code>code</code> is the JS function to be run. It can optionally ask for parameter <code>arg</code>, which will be substituted with your <code>args</code> when the function finally runs.'
-                    },
-                    makeTimeout: {
-                        '1': 'land',
-                        '2': 'makeTimeout(appname, taskname, functionname, functiontime)',
-                        helpPage:
-                            'Same idea as <code>window.setTimeout()</code>, except your timeout is registered with task manager.<br><br>' +
-                            '<code>appname</code> is the three-letter codename of your app, for organisation purposes.<br>' +
-                            '<code>taskname</code> is a name for your task to take on. Think of it like a window caption, except it\'s on a task, in a list.<br>' +
-                            '<code>functionname</code> is the name of your function, <b><u>ENCODED AS A STRING!</u></b> It is recommended to be a reference to a function (try using the value "apps.YOURAPP.vars.importantFunction()").' +
-                            '<code>functiontime</code> is the number of milliseconds that JS waits to run your code, just like setTimeout().'
-                    },
-                    makeInterval: {
-                        '1': 'land',
-                        '2': 'makeInterval(appname, taskname, functionname, functiontime)',
-                        helpPage:
-                            'Same idea as <code>window.setInterval()</code>, except your interval is registered with task manager.<br><br>' +
-                            '<code>appname</code> is the three-letter codename of your app, for organisation purposes.<br>' +
-                            '<code>taskname</code> is a name for your task to take on. Think of it like a window caption, except it\'s on a task, in a list.<br>' +
-                            '<code>functionname</code> is the code to run for your function, <b><u>ENCODED AS A STRING!</u></b> It is recommended to be a reference to a function (try using the value "apps.YOURAPP.vars.importantFunction()").' +
-                            '<code>functiontime</code> is the number of milliseconds that JS waits to run your code, just like setInterval().'
-                    },
-                    removeTimeout: {
-                        '1': 'land',
-                        '2': 'removeTimeout(appname, taskname, cnfrm)',
-                        helpPage: 'Same as window.clearTimeout, except it removes a task registered with task manager. Use the same appname and taskname as you used to register it. <code>cnfrm</code> is a useless argument and does nothing.'
-                    },
-                    removeInterval: {
-                        '1': 'land',
-                        '2': 'removeInterval(appname, taskname, cnfrm)',
-                        helpPage: 'Same as window.clearInterval, except it removes a task registered with task manager. Use the same appname and taskname as you used to register it. <code>cnfrm</code> is a useless argument and does nothing.'
-                    },
-                    currentSelection: {
-                        '1': 'land',
-                        '2': 'currentSelection',
-                        helpPage: 'The current user text selection, automatically updated by aOS. It only works for text within inputs or textareas, so keep that in mind.'
-                    },
-                    doLog: {
-                        '1': 'land',
-                        '2': 'doLog(msg, color)',
-                        helpPage: 'Logs the msg to the aOS JS Console with the given color. If no given color, it is white. The message is also logged to the browser\'s console.'
-                    },
-                    toTop: {
-                        '1': 'land',
-                        '2': 'toTop(appToNudge, dsktpClick)',
-                        helpPage: 'Send an app to the top of the window stack. <code>appToNudge</code> is the location in <code>apps</code> that the app resides, i.e. <code>apps.settings</code> would be the input there.'
-                    },
-                    openapp: {
-                        '1': 'land',
-                        '2': 'openapp(appToOpen, launchTypeUsed)',
-                        helpPage:
-                            'Opens an app installed on aOS.<br><br>' +
-                            '<code>appToOpen</code> is the path to the app inside the <code>apps</code> object, i.e. <code>apps.settings</code><br>' +
-                            '<code>launchTypeUsed</code> is the launchType sent to the app. The launchtypes officially supported by aOS apps are "dsktp" and "tskbr", to determine how they open. However, you can make your own.'
-                     },
-                    ctxMenu: {
-                        '1': 'land',
-                        '2': 'ctxMenu(setupArray, version, event, args)',
-                        helpPage:
-                            'Opens a context menu at the user\'s cursor, depending on which ctxMenu type is used.<br><br>More help coming soon.'
-                    }
-                }
-            },
-            lastPath: '',
-            lastFolder: {},
-            populateList: function(menuPath){
-                if(menuPath){
-                    this.lastPath = menuPath;
-                }else{
-                    this.lastPath = '';
-                }
-                this.lastFolder = eval('apps.help.vars.categories' + this.lastPath);
-                if(this.lastFolder['1'] === 'folder'){
-                    apps.help.appWindow.setContent('<button onClick="apps.help.vars.populateList(\'\')">Home</button> aOS Help: ' + this.lastFolder['2'] + '<hr><ul id="HLPlist"></ul>');
-                    for(var i in this.lastFolder){
-                        if(i !== '1' && i !== '2'){
-                            getId('HLPlist').innerHTML += '<li class="cursorPointer" style="font-family:aosProFont, monospace; font-size:12px; margin-top:8px;" onClick="apps.help.vars.populateList(\'' + this.lastPath + '.' + i + '\')">' + this.lastFolder[i]['2'] + '</li>';
-                        }
-                    }
-                }else if(this.lastFolder['1'] === 'land'){
-                    apps.help.appWindow.setContent('<button onClick="apps.help.vars.populateList(\'\')">Home</button> aOS Help: ' + this.lastFolder['2'] + '<hr>' + this.lastFolder.helpPage);
-                }
-            }
-        }, 1, 'help', 'appicons/ds/HLP.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Music Player';
-});
-c(function(){
     m('init MSC');
     apps.musicPlayer = new Application(
         'MPl',
@@ -14125,7 +12902,12 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 400, 500);
                 this.appWindow.setCaption('Apps Browser');
-                this.appWindow.setContent('<div id="APBdiv" class="darkResponsive" style="width:100%;height:100%;overflow-y:auto;font-family:aosProFont;"><div style="overflow-y:auto;font-size:12px;width:100%;height:128px;border-bottom:1px solid;">This is a list of EVERY SINGLE APP installed on your copy of aOS, including those that are hidden from your desktop and dashboard.<br><br>WARNING - If an app is not available in the Dashboard, it\'s probably for a reason. Some apps not available in the Dashboard may break if you launch them.<br><br>Note - if nothing happens when you try to open a certain app, do not worry. A window is <b>not</b> a requirement for an app to work. It probably is not designed for you to access.</div></div>');
+                this.appWindow.setContent(
+                    '<div id="APBdiv" class="darkResponsive" style="width:100%;height:100%;overflow-y:auto;font-family:aosProFont;">' +
+                    '<div style="overflow-y:auto;font-size:12px;width:100%;height:40px;border-bottom:1px solid;">' +
+                    'This is a list of every app installed on your system. ' +
+                    'Certain apps in this list may not be available from the Dashboard; these are usually system apps.' +
+                    '</div></div>');
                 this.vars.appsListed = 1;
                 for(var appHandle in appsSorted){
                     var app = appsSorted[appHandle];
@@ -14142,42 +12924,44 @@ c(function(){
                     }else{
                         this.vars.currAppOnList = 'Not In Apps List';
                     }
-                    if(apps[app].launchTypes){
-                        this.vars.currAppLaunchTypes = 'Uses LaunchTypes';
-                    }else{
-                        this.vars.currAppLaunchTypes = 'No LaunchTypes';
-                    }
                     if(apps[app].appWindow.onTop){
                         this.vars.currAppOnTop = 'Always On Top<br>';
                     }else{
                         this.vars.currAppOnTop = '';
                     }
                     if(ufload('aos_system/apm_apps/app_' + app)){
-                        this.vars.currAppBuiltIn = 'User-Made APM App';
-                    }else if(app.indexOf('webApp') === 0){
-                        this.vars.currAppBuiltIn = 'User-Made WAP App';
+                        this.vars.currAppBuiltIn = 'User-Made App';
+                    }else if(ufload('aos_system/wap_apps/' + app)){
+                        this.vars.currAppBuiltIn = 'User-Made Web App';
+                    }else if(app.indexOf('webApp_') === 0){
+                        this.vars.currAppBuiltIn = 'Repository App from<br>' + app.substring(7).split('__')[0];
                     }else{
                         this.vars.currAppBuiltIn = 'Built-In aOS App';
                     }
                     //getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';"><img style="height:128px;width:128px;" src="' + this.vars.currAppImg + '" onerror="this.src=\'appicons/ds/redx.png\'"><div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
                     
-                    getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer darkResponsive" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid;">' + buildSmartIcon(128, this.vars.currAppImg) +
-                        '<div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div>' +
-                        '<div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div>' +
+                    getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer darkResponsive" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + (this.vars.appsListed * 129 - 88) + 'px;height:128px;width:100%;border-bottom:1px solid;">' + buildSmartIcon(128, this.vars.currAppImg) +
+                        //'<div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div>' +
+                        //'<div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div>' +
+                        '<div style="font-size:24px;left:132px;top:calc(66px - 1em);">' + this.vars.currAppName + '</div>' +
                         '<div class="darkResponsive" style="opacity:0.75;background:none;left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div>' +
-                        '<div class="darkResponsive" style="opacity:0.75;background:none;font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div>' +
-                        '<div class="darkResponsive"style="opacity:0.75;background:none;font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
+                        '<div class="darkResponsive" style="opacity:0.75;background:none;font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppBuiltIn + '</div>' +
+                        '<div class="darkResponsive"style="opacity:0.75;background:none;font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppIcon + '</div></div>';
 
-                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + this.vars.appsListed * 129 + 'px;font-size:12px;" ' +
+                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + (this.vars.appsListed * 129 - 88) + 'px;font-size:12px;" ' +
                         'onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], ' +
                         '\' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', ' +
                         '\' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', ' +
                         '\'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  ' +
-                        '\' View in Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/\\\');apps.files2.vars.next(\\\'' + app + '/\\\')})})\'' +
+                        '\' View Files\', \'c(function(){openapp(apps.files2, \\\'dsktp\\\');c(function(){apps.files2.vars.next(\\\'apps/\\\');apps.files2.vars.next(\\\'' + app + '/\\\')})})\'' +
                         function(appname, builtin){
-                            if(builtin === "User-Made APM App"){
+                            if(builtin === "User-Made App"){
                                 return ', \' Open Source File\', \'c(function(){openapp(apps.notepad2, \\\'open\\\');apps.notepad2.vars.openFile(\\\'aos_system/apm_apps/app_' + appname + '\\\')})\'';
-                            }else{return ''}
+                            }else if(builtin === "User-Made Web App"){
+                                return ', \' Open Source File\', \'c(function(){openapp(apps.notepad2, \\\'open\\\');apps.notepad2.vars.openFile(\\\'aos_system/wap_apps/' + appname + '\\\')})\'';
+                            }else{
+                                return ''
+                            }
                         }(app, this.vars.currAppBuiltIn) + '])})">v</button>';
                     
                     this.vars.appsListed++;
@@ -14234,124 +13018,6 @@ c(function(){
     getId('aOSloadingInfo').innerHTML = 'Indy Car';
 });
 c(function(){
-    apps.indycar = new Application(
-        'ICr',
-        'Indycar',
-        0,
-        function(){
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setDims("auto", "auto", 646, 502);
-                this.appWindow.setCaption('<span class="liveElement" data-live-eval="getId(\'ICrFrame\').contentDocument.title">');
-                this.appWindow.setContent('<iframe data-parent-app="indycar" id="ICrFrame" src="INDYCAR/index.html" style="border:none;width:640px;height:480px;overflow:hidden;"></iframe>');
-                apps.prompt.vars.alert("Controls:<br><br>Player 1: WASD for driving, X for brakes<br><br>Player 2: IJKL or &uarr;&larr;&darr;&rarr; for driving, M for brakes<br><br>Camera: Press T to change camera modes.", "Okay", function(){}, "Indycar");
-            }
-            blockScreensaver("apps.indycar");
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    unblockScreensaver("apps.indycar", 1);
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    unblockScreensaver("apps.indycar", 1);
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                            this.appWindow.setCaption("IndyCar");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'An IndyCar-based game made by the developer in GameMaker: Studio'
-        }, 1, "indycar", 'appicons/ICr.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'House Game';
-});
-c(function(){
-    apps.housegame = new Application(
-        'HsG',
-        'House Game',
-        0,
-        function(){
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setDims("auto", "auto", 1015, 633);
-                this.appWindow.setCaption('<span class="liveElement" data-live-eval="getId(\'HsGFrame\').contentDocument.title">');
-                this.appWindow.setContent('<iframe data-parent-app="housegame" id="HsGFrame" src="HOUSEGAME/index.html" style="border:none;width:1009px;height:609px;overflow:hidden;"></iframe>');
-                apps.prompt.vars.notify("Controls:<br>Up: W<br>Down: D<br>Shoot: Space<br>Reinforcements: T", ["Close"], function(){}, "House Game", "appicons/HsG.png");
-            }
-            blockScreensaver("apps.housegame");
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    unblockScreensaver("apps.housegame", 1);
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    unblockScreensaver("apps.housegame", 1);
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                            this.appWindow.setCaption("House Game");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'A house defense game made by the developer with GameMaker: Studio'
-        }, 1, "housegame", 'appicons/HsG.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Sticky Notes';
-});
-c(function(){
     apps.postit = new Application(
         'SNt',
         'Sticky Note',
@@ -14360,7 +13026,7 @@ c(function(){
             this.appWindow.setCaption('Sticky Note');
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setDims(10, 10, 200, 200);
+                this.appWindow.setDims(parseInt(getId("desktop").style.width) - 210, 10, 200, 200);
                 this.appWindow.setContent('<textarea id="stickyNotePad" onblur="apps.postit.vars.savePost()" style="padding:0;color:#000;font-family:Comic Sans MS;font-weight:bold;border:none;resize:none;display:block;width:100%;height:100%;background-color:#FF7;"></textarea>');
                 if(ufload("aos_system/apps/postit/saved_note")){
                     getId('stickyNotePad').value = ufload("aos_system/apps/postit/saved_note");
@@ -14566,10 +13232,10 @@ c(function(){
                         if(!ufload("aos_system/apps/bootScript").hasOwnProperty(cleanStr(str))){
                             apps.bootScript.vars.createScript(str);
                         }else{
-                            apps.prompt.vars.alert("There is already a boot script with that name.", "Okay", function(){}, "Boot Script");
+                            apps.prompt.vars.alert("There is already a boot script with that name.", "Okay", function(){}, "Boot Scripts");
                         }
                     }
-                }, "Boot Script");
+                }, "Boot Scripts");
             },
             createScript: function(name){
                 ufsave("aos_system/apps/bootScript/" + cleanStr(name), "// AaronOS Boot Script");
@@ -14614,7 +13280,12 @@ c(function(){
                 if(styleEditorTemplateMode){
                     this.appWindow.setDims("auto", "auto", 400, 500);
                     this.appWindow.setCaption("CSE Preview");
-                    this.appWindow.setContent('<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>Currently Highlighted Element:<br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateType">none</span><br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateID">none</span><br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateClass">none</span>');
+                    this.appWindow.setContent(
+                        '<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>' +
+                        '<hr>Hovered Element:<br>' +
+                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateType">none</span><br>' +
+                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateID">none</span><br>' +
+                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateClass">none</span>');
                     apps.prompt.vars.notify("Test Notification", ["Dismiss"], function(){}, "Style Editor", "appicons/ds/CSE.png");
                     window.addEventListener("mousemove", apps.styleEditor.vars.templateCheck);
                 }else{
@@ -14657,13 +13328,8 @@ c(function(){
                     break;
                 case "USERFILES_DONE":
                     if(styleEditorTemplateMode){
-                        this.appWindow.setDims("auto", "auto", 400, 500);
-                        this.appWindow.setCaption("CSE Preview");
-                        this.appWindow.setContent('<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea><br><br>Currently Highlighted Element:<br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateType">none</span><br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateID">none</span><br><span class="liveElement" data-live-eval="apps.styleEditor.vars.templateClass">none</span>');
-                        this.appWindow.openWindow();
-                        apps.prompt.vars.notify("Test Notification", ["Dismiss"], function(){}, "Style Editor", "appicons/ds/CSE.png");
+                        openapp(apps.styleEditor, "dsktp");
                         setTimeout(function(){toTop(apps.styleEditor);}, 1000);
-                        window.addEventListener("mousemove", apps.styleEditor.vars.templateCheck);
                     }
                     break;
                 case 'shutdown':
@@ -14690,6 +13356,12 @@ c(function(){
                 var elem = document.elementFromPoint(event.pageX, event.pageY);
                 if(elem.tagName){
                     apps.styleEditor.vars.templateType = '&lt;' + elem.tagName.toLowerCase() + '&gt;';
+                    var elemRect = elem.getBoundingClientRect();
+                    getId("windowFrameOverlay").style.display = "block";
+                    getId("windowFrameOverlay").style.left = elemRect.left + "px";
+                    getId("windowFrameOverlay").style.top = elemRect.top + "px";
+                    getId("windowFrameOverlay").style.width = elemRect.width + "px";
+                    getId("windowFrameOverlay").style.height = elemRect.height + "px";
                 }else{
                     apps.styleEditor.vars.templateType = 'no element';
                 }
@@ -14894,7 +13566,11 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims(10, 10, 300, 100);
                 this.appWindow.setCaption('Magnifier');
-                this.appWindow.setContent('<button onclick="apps.magnifier.vars.startMag(event)">Start</button><button onclick="apps.magnifier.vars.endMag()">Stop</button><br>Zoom: <input id="MAGpercent" value="2" size="3"><br><button onclick="apps.magnifier.vars.setMag()">Set Zoom</button>')
+                this.appWindow.setContent(
+                    '<button onclick="apps.magnifier.vars.startMag(event)">Start</button>' +
+                    '<button onclick="apps.magnifier.vars.endMag()">Stop</button><br>' +
+                    'Zoom: <input id="MAGpercent" value="2" size="3"><br>' +
+                    '<button onclick="apps.magnifier.vars.setMag()">Set Zoom</button>')
             }
             this.appWindow.openWindow();
         },
@@ -14939,17 +13615,17 @@ c(function(){
             startMag: function(event){
                 if(!this.running){
                     document.body.style.overflow = 'hidden';
-                    getId('monitor').style.transform = 'scale(' + this.currMag + ')';
-                    getId('monitor').style.transformOrigin = event.pageX + 'px ' + event.pageY + 'px';
+                    document.body.style.transform = 'scale(' + this.currMag + ')';
+                    document.body.style.transformOrigin = event.pageX + 'px ' + event.pageY + 'px';
                     document.body.addEventListener('mousemove', apps.magnifier.vars.setOrigin);
                     this.running = 1;
                 }
             },
             endMag: function(){
                 if(this.running){
-                    document.body.style.overflow = 'auto';
-                    getId('monitor').style.transform = '';
-                    getId('monitor').style.transformOrigin = '50% 50%';
+                    document.body.style.overflow = '';
+                    document.body.style.transform = '';
+                    document.body.style.transformOrigin = '';
                     document.body.removeEventListener('mousemove', apps.magnifier.vars.setOrigin);
                     this.running = 0;
                 }
@@ -14957,11 +13633,12 @@ c(function(){
             setMag: function(){
                 this.currMag = parseFloat(getId('MAGpercent').value);
                 if(this.running){
-                    getId('monitor').style.transform = 'scale(' + this.currMag + ')';
+                    document.body.style.transform = 'scale(' + this.currMag + ')';
                 }
             },
             setOrigin: function(event){
-                getId('monitor').style.transformOrigin = event.pageX + 'px ' + event.pageY + 'px';
+                //getId('monitor').style.transform = 'scale(' + this.currMag + ')';
+                document.body.style.transformOrigin = event.pageX + 'px ' + event.pageY + 'px';
             }
         }, 1, "magnifier", 'appicons/ds/Mag.png'
     );
@@ -15028,431 +13705,6 @@ c(function(){
     getId('aOSloadingInfo').innerHTML = 'Text to Binary';
 });
 c(function(){
-    apps.textBinary = new Application(
-        'BIN',
-        'Text to Binary',
-        0,
-        function(){
-            if(!this.appIcon){
-                this.appWindow.setDims("auto", "auto", 800, 500);
-                this.appWindow.setCaption('Text to Binary');
-                getId('win_textBinary_html').style.overflow = 'auto';
-                this.appWindow.setContent('Use this tool to convert text into either binary text or a binary image. (WORK IN PROGRESS)<br><br><button onclick="apps.textBinary.vars.textToBW(0)">BW Image (large)</button> <button onclick="apps.textBinary.vars.textToGS(0)">GS Image (medium)</button> <button onclick="apps.textBinary.vars.textToRGB(0)">RGB Image (small)</button><br><button onclick="apps.textBinary.vars.textToBW(1)">BW Image (invert)</button> <button onclick="apps.textBinary.vars.textToGS(255)">GS Image (invert)</button> <button onclick="apps.textBinary.vars.textToRGB(255)">RGB Image (invert)</button><br><button onclick="apps.textBinary.vars.textToBin(1)">Plain Binary</button> <button onclick="apps.textBinary.vars.textToBin(0)">Plain Binary (no spaces)</button><br><textarea id="textToBinInput" placeholder="Type or paste text here"></textarea> <div style="position:relative;display:inline-block"><label><input type="checkbox" id="textToBinAlign">Align images to binary</label><label><input type="checkbox" id="textToBinDecode">Decode PNG</label> <input type="file" id="textToBinDecodeImg" accept="image/x-png"><br><label><input type="checkbox" id="textToBinLineAlign">Align images to newlines</label></div><hr><div id="textToBinOutput"></div>');
-            }
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'Convert text into binary or an image.',
-            textToBin: function(useSpaces){
-                var binFile = getId('textToBinInput').value;
-                var binFinal = '';
-                for(var byte in binFile){
-                    binStr = binFile.charCodeAt(byte).toString(2);
-                    while(binStr.length < 8){
-                        binStr = '0' + binStr;
-                    }
-                    if(useSpaces){
-                        binFinal += binStr + ' ';
-                    }else{
-                        binFinal += binStr;
-                    }
-                }
-                getId('textToBinOutput').innerHTML = '<textarea style="width:750px;height:300px;" display="block">' + binFinal + '</textarea>';
-            },
-            textToBW: function(invert){
-                if(getId('textToBinDecode').checked && getId('textToBinDecodeImg').files.length !== 0){
-                    this.bwToText(invert);
-                }else{
-                    var alignBin = getId('textToBinAlign').checked;
-                    var alignLines = getId('textToBinLineAlign').checked;
-                    var binFile = getId('textToBinInput').value;
-                    var binFinal = [];
-                    var binLength = 0;
-                    for(var byte in binFile){
-                        var binStr = binFile.charCodeAt(byte);
-                        binFinal.push(binStr);
-                        binLength++;
-                    } // using decimals, not binary!
-                    getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
-                    var bincnv = getId('textToBinCanvas');
-                    var binctx = bincnv.getContext('2d');
-                    if(alignLines){
-                        var imageSize = [0,0];
-                        var lastNewline = 0;
-                        for(var i = 0; i < binFinal.length; i++){
-                            if(binFinal[i] === 10){
-                                imageSize[1]++;
-                                if(i - lastNewline > imageSize[0]){
-                                    imageSize[0] = i - lastNewline;
-                                }
-                                lastNewline = i;
-                            }
-                        }
-                        imageSize[0]++;
-                        imageSize[1]++;
-                        
-                        imageSize[0] *= 8;
-                    }else{
-                        var imageSize = Math.floor(Math.sqrt(binLength * 8) + 1);
-                        imageSize = [imageSize,imageSize];
-                        if(alignBin && imageSize[0] % 8 !== 0){
-                            imageSize[1] += imageSize[0] % 8;
-                            imageSize[0] -= imageSize[0] % 8;
-                        }
-                    }
-                    getId('textToBinImgSize').innerHTML = imageSize[0] + 'x' + imageSize[1];
-                    bincnv.width = imageSize[0];
-                    bincnv.height = imageSize[1];
-                    bincnv.style.width = imageSize[0] + "px";
-                    bincnv.style.height = imageSize[1] + "px";
-                    // for each pixel (increment through bytes of string by 3)
-                    // make pixel on image equal to the 3 current byte items as rgb
-                    var imgRow = 0;
-                    var imgColumn = 0;
-                    var dontGoDown = 0;
-                    for(var byte = 0; byte < binLength; byte++){
-                        var currByte = (binFinal[byte] || 0).toString(2);
-                        while(currByte.length < 8){
-                            currByte = '0' + currByte;
-                        }
-                        var brightness = 0;
-                        for(var i = 0; i < 8; i++){
-                            if(invert){
-                                brightness = (1 - parseInt(currByte[i])) * 255;
-                            }else{
-                                brightness = (parseInt(currByte[i])) * 255;
-                            }
-                            binctx.fillStyle = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
-                            binctx.fillRect(imgColumn, imgRow, 1, 1);
-                            imgColumn++;
-                            dontGoDown = 0;
-                            if(imgColumn >= imageSize[0]){
-                                dontGoDown = 1;
-                                imgColumn = 0;
-                                imgRow++;
-                            }
-                        }
-                        if(alignLines && !dontGoDown){
-                            if(binFinal[byte] === 10){
-                                imgColumn = 0;
-                                imgRow++;
-                            }
-                        }else if(imgColumn >= imageSize[0] && !dontGoDown){
-                            imgColumn = 0;
-                            imgRow++;
-                        }
-                    }
-                }
-            },
-            textToGS: function(invert){
-                if(getId('textToBinDecode').checked && getId('textToBinDecodeImg').files.length !== 0){
-                    this.gsToText(invert);
-                }else{
-                    var alignBin = getId('textToBinAlign').checked;
-                    var alignLines = getId('textToBinLineAlign').checked;
-                    var binFile = getId('textToBinInput').value;
-                    var binFinal = [];
-                    var binLength = 0;
-                    for(var byte in binFile){
-                        var binStr = binFile.charCodeAt(byte);
-                        binFinal.push(binStr);
-                        binLength++;
-                    } // using decimals, not binary!
-                    getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
-                    var bincnv = getId('textToBinCanvas');
-                    var binctx = bincnv.getContext('2d');
-                    if(alignLines){
-                        var imageSize = [0,0];
-                        var lastNewline = 0;
-                        for(var i = 0; i < binFinal.length; i++){
-                            if(binFinal[i] === 10){
-                                imageSize[1]++;
-                                if(i - lastNewline > imageSize[0]){
-                                    imageSize[0] = i - lastNewline;
-                                }
-                                lastNewline = i;
-                            }
-                        }
-                        imageSize[0]++;
-                        imageSize[1]++;
-                    }else{
-                        var imageSize = Math.floor(Math.sqrt(binLength) + 1);
-                        imageSize = [imageSize,imageSize];
-                    }
-                    getId('textToBinImgSize').innerHTML = imageSize[0] + 'x' + imageSize[1];
-                    bincnv.width = imageSize[0];
-                    bincnv.height = imageSize[1];
-                    bincnv.style.width = imageSize[0] + "px";
-                    bincnv.style.height = imageSize[1] + "px";
-                    // for each pixel (increment through bytes of string by 3)
-                    // make pixel on image equal to the 3 current byte items as rgb
-                    var imgRow = 0;
-                    var imgColumn = 0;
-                    for(var byte = 0; byte < binLength; byte++){
-                        if(invert){
-                            var brightness = 255 - (binFinal[byte] || 0);
-                        }else{
-                            var brightness = (binFinal[byte] || 0);
-                        }
-                        binctx.fillStyle = 'rgb(' + brightness + ',' + brightness + ',' + brightness + ')';
-                        binctx.fillRect(imgColumn, imgRow, 1, 1);
-                        imgColumn++;
-                        if(alignLines){
-                            if(binFinal[byte] === 10){
-                                imgColumn = 0;
-                                imgRow++;
-                            }
-                        }else if(imgColumn >= imageSize[0]){
-                            imgColumn = 0;
-                            imgRow++;
-                        }
-                    }
-                }
-            },
-            textToRGB: function(invert){
-                if(getId('textToBinDecode').checked && getId('textToBinDecodeImg').files.length !== 0){
-                    this.rgbToText(invert);
-                }else{
-                    var alignBin = getId('textToBinAlign').checked;
-                    var alignLines = getId('textToBinLineAlign').checked;
-                    var binFile = getId('textToBinInput').value;
-                    var binFinal = [];
-                    var binLength = 0;
-                    for(var byte in binFile){
-                        var binStr = binFile.charCodeAt(byte);
-                        binFinal.push(binStr);
-                        binLength++;
-                    } // using decimals, not binary!
-                    getId('textToBinOutput').innerHTML = '(<span id="textToBinImgSize"></span>) Right Click to Copy or Save Image<br><canvas id="textToBinCanvas" oncontextmenu="event.stopPropagation();return true;"></canvas>';
-                    var bincnv = getId('textToBinCanvas');
-                    var binctx = bincnv.getContext('2d');
-                    if(alignLines){
-                        var imageSize = [0,0];
-                        var lastNewline = 0;
-                        for(var i = 0; i < binFinal.length; i++){
-                            if(binFinal[i] === 10){
-                                imageSize[1]++;
-                                if(i - lastNewline > imageSize[0]){
-                                    imageSize[0] = i - lastNewline;
-                                }
-                                lastNewline = i;
-                            }
-                        }
-                        imageSize[0]++;
-                        imageSize[1]++;
-                        
-                        imageSize[0] = Math.floor(imageSize[0] * 0.3) + 1;
-                    }else{
-                        var imageSize = Math.floor(Math.sqrt(binLength / 3) + 1);
-                        imageSize = [imageSize,imageSize];
-                    }
-                    if(alignBin && imageSize[0] % 3 !== 0){
-                        imageSize[1] += imageSize[0] % 3;
-                        imageSize[0] -= imageSize[0] % 3;
-                    }
-                    getId('textToBinImgSize').innerHTML = imageSize[0] + 'x' + imageSize[1];
-                    bincnv.width = imageSize[0];
-                    bincnv.height = imageSize[1];
-                    bincnv.style.width = imageSize[0] + "px";
-                    bincnv.style.height = imageSize[1] + "px";
-                    // for each pixel (increment through bytes of string by 3)
-                    // make pixel on image equal to the 3 current byte items as rgb
-                    var imgRow = 0;
-                    var imgColumn = 0;
-                    for(var byte = 0; byte < binLength; byte += 3){
-                        if(invert){
-                            binctx.fillStyle = 'rgb(' + (255 - (binFinal[byte] || 0)) + ',' + (255 - (binFinal[byte + 1] || 0)) + ',' + (255 - (binFinal[byte + 2] || 0)) + ')';
-                        }else{
-                            binctx.fillStyle = 'rgb(' + (binFinal[byte] || 0) + ',' + (binFinal[byte + 1] || 0) + ',' + (binFinal[byte + 2] || 0) + ')';
-                        }
-                        binctx.fillRect(imgColumn, imgRow, 1, 1);
-                        imgColumn++;
-                        if(alignLines){
-                            if(binFinal[byte] === 10){
-                                imgColumn = 0;
-                                imgRow++;
-                            }else if(binFinal[byte + 1] === 10){
-                                imgColumn = 0;
-                                imgRow++;
-                            }else if(binFinal[byte + 2] === 10){
-                                imgColumn = 0;
-                                imgRow++;
-                            }
-                        }else if(imgColumn >= imageSize[0]){
-                            imgColumn = 0;
-                            imgRow++;
-                        }
-                    }
-                }
-            },
-            bwToText: function(invert){
-                var binFile = getId('textToBinDecodeImg').files[0];
-                var binUrl = URL.createObjectURL(binFile);
-                var binElement = new Image();
-                binElement.src = binUrl;
-                binElement.onload = function(){
-                    var bincnv = document.createElement('canvas');
-                    var binctx = bincnv.getContext('2d');
-                    bincnv.width = this.width;
-                    bincnv.height = this.height;
-                    binctx.drawImage(binElement, 0, 0);
-                    var binData = binctx.getImageData(0, 0, bincnv.width, bincnv.height);
-                    var binFinal = binData.data;
-                    var binStr = "";
-                    for(var i = 0; i < binFinal.length; i += 32){
-                        if(binFinal[i + 3] === 255){
-                            var binValue = 0;
-                            for(var j = i; j < i + 32; j += 4){
-                                if(invert){
-                                    var brightness = Math.round((255 - (binFinal[j] + binFinal[j + 1] + binFinal[j + 2]) / 3) / 255);
-                                }else{
-                                    var brightness = Math.round((binFinal[j] + binFinal[j + 1] + binFinal[j + 2]) / 3 / 255);
-                                }
-                                binValue += brightness * Math.pow(2, 7 - ((j - i) / 4));
-                            }
-                            if(binValue > 0 && binValue < 256){
-                                binStr += String.fromCharCode(binValue);
-                            }
-                        }
-                    }
-                    getId('textToBinOutput').innerHTML = '<textarea style="width:750px;height:300px;" id="binToTextOutput" display="block"></textarea>';
-                    getId('binToTextOutput').value = binStr;
-                    /*
-                    binFinal = null;
-                    binData = null;
-                    binctx = null;
-                    bincnv = null;
-                    binElement = null;
-                    URL.revokeObjectURL(binUrl);
-                    binUrl = null;
-                    binFile = null;
-                    */
-                    URL.revokeObjectURL(this.src);
-                }
-            },
-            gsToText: function(invert){
-                var binFile = getId('textToBinDecodeImg').files[0];
-                var binUrl = URL.createObjectURL(binFile);
-                var binElement = new Image();
-                binElement.src = binUrl;
-                binElement.onload = function(){
-                    var bincnv = document.createElement('canvas');
-                    var binctx = bincnv.getContext('2d');
-                    bincnv.width = this.width;
-                    bincnv.height = this.height;
-                    binctx.drawImage(binElement, 0, 0);
-                    var binData = binctx.getImageData(0, 0, bincnv.width, bincnv.height);
-                    var binFinal = binData.data;
-                    var binStr = "";
-                    for(var i = 0; i < binFinal.length; i += 4){
-                        if(binFinal[i + 3] === 255){
-                            if(invert){
-                                var brightness = 255 - (binFinal[i] + binFinal[i + 1] + binFinal[i + 2]) / 3;
-                            }else{
-                                var brightness =  (binFinal[i] + binFinal[i + 1] + binFinal[i + 2]) / 3;
-                            }
-                            if(brightness > 0 && brightness < 256){
-                                binStr += String.fromCharCode(brightness);
-                            }
-                        }
-                    }
-                    getId('textToBinOutput').innerHTML = '<textarea style="width:750px;height:300px;" id="binToTextOutput" display="block"></textarea>';
-                    getId('binToTextOutput').value = binStr;
-                    /*
-                    binFinal = null;
-                    binData = null;
-                    binctx = null;
-                    bincnv = null;
-                    binElement = null;
-                    URL.revokeObjectURL(binUrl);
-                    binUrl = null;
-                    binFile = null;
-                    */
-                    URL.revokeObjectURL(this.src);
-                }
-            },
-            rgbToText: function(invert){
-                var binFile = getId('textToBinDecodeImg').files[0];
-                var binUrl = URL.createObjectURL(binFile);
-                var binElement = new Image();
-                binElement.src = binUrl;
-                binElement.onload = function(){
-                    var bincnv = document.createElement('canvas');
-                    var binctx = bincnv.getContext('2d');
-                    bincnv.width = this.width;
-                    bincnv.height = this.height;
-                    binctx.drawImage(binElement, 0, 0);
-                    var binData = binctx.getImageData(0, 0, bincnv.width, bincnv.height);
-                    var binFinal = binData.data;
-                    var binStr = "";
-                    for(var i = 0; i < binFinal.length; i += 4){
-                        if(binFinal[i + 3] === 255){
-                            for(var j = 0; j < 3; j++){
-                                if(invert){
-                                    var brightness = 255 - binFinal[i + j];
-                                }else{
-                                    var brightness = binFinal[i + j];
-                                }
-                                if(brightness > 0 && brightness < 256){
-                                    binStr += String.fromCharCode(brightness);
-                                }
-                            }
-                        }
-                    }
-                    getId('textToBinOutput').innerHTML = '<textarea style="width:750px;height:300px;" id="binToTextOutput" display="block"></textarea>';
-                    getId('binToTextOutput').value = binStr;
-                    /*
-                    binFinal = null;
-                    binData = null;
-                    binctx = null;
-                    bincnv = null;
-                    binElement = null;
-                    URL.revokeObjectURL(binUrl);
-                    binUrl = null;
-                    binFile = null;
-                    */
-                    URL.revokeObjectURL(this.src);
-                }
-            }
-        }, 1, 'textBinary', 'appicons/ds/CAM.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Pet Cursors';
-});
-c(function(){
     apps.petCursors = new Application(
         'PC',
         'Pet Cursors',
@@ -15463,8 +13715,7 @@ c(function(){
                 this.appWindow.setDims("auto", "auto", 800, 500);
                 this.appWindow.setCaption('Pet Cursors');
                 this.appWindow.setContent(
-                    '<h1>Pet Cursors!</h1>' +
-                    '<p>This app is used to make extra cursors that follow your mouse around the screen like pets.</p>' +
+                    '<p>Use this app to make extra cursor "pets" that follow your mouse around the screen like, well, pets.</p>' +
                     '<hr>' +
                     'Use this button to turn the app on and off: <button onclick="apps.petCursors.vars.toggleApp()">Toggle</button><br><br>' +
                     'Add new cursors:' +
@@ -15857,7 +14108,7 @@ c(function(){
                         // alphabetized array of apps
                         appsSorted = [];
                         for(var i in apps){
-                            appsSorted.push(apps[i].appDesc + "|AC_apps_sort|" + i);
+                            appsSorted.push(apps[i].appDesc.toLowerCase() + "|AC_apps_sort|" + i);
                         }
                         appsSorted.sort();
                         for(var i in appsSorted){
@@ -17512,14 +15763,14 @@ c(function(){
     //    doLog('NORAA search service ping: ' + text[0] + ' &micro;s with status ' + text[1]);
     //});
     if(window.navigator.vendor !== "Google Inc."){
-        doLog('Looks like you are not using Google Chrome. Make sure you use Google Chrome to access aOS. Otherwise, certain features will be missing or broken.', '#F00;text-decoration:underline');
+        doLog('AaronOS works best on Chrome. Some features may act strangely.', '#F00;text-decoration:underline');
         try{
             if(localStorage.getItem('notifyChrome') !== "1"){
                 localStorage.setItem('notifyChrome', "1");
-                apps.prompt.vars.notify('It appears that you\'re not using Google Chrome. Make sure you use Chrome to access aOS. Otherwise, certain features will be missing or broken.', [], function(){}, 'Google Chrome', 'appicons/ds/aOS.png');
+                apps.prompt.vars.notify('AaronOS works best on Chrome. Some features may act strangely.', [], function(){}, 'AaronOS', 'appicons/ds/aOS.png');
             }
         }catch(localStorageNotSupported){
-            apps.prompt.vars.notify('It appears that you\'re not using Google Chrome. Make sure you use Chrome to access aOS. Otherwise, certain features will be missing or broken.', [], function(){}, 'Google Chrome', 'appicons/ds/aOS.png');
+            apps.prompt.vars.notify('AaronOS works best on Chrome. Some features may act strangely.', [], function(){}, 'AaronOS', 'appicons/ds/aOS.png');
         }
     }
     
@@ -17561,7 +15812,7 @@ bootFileHTTP.onreadystatechange = function(){
             
         }
         requestAnimationFrame(function(){bootFileHTTP = null;});
-        doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to exec USERFILES_DONE.');
+        doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to run startup apps.');
         doLog('Took ' + Math.round(performance.now() * 10) / 10 + 'ms grand total to reach desktop.');
         console.log("Load successful, apps alerted, and bootFileHTTP deleted.");
     }
@@ -17625,3 +15876,8 @@ totalWaitingCodes = codeToRun.length;
 // 12736 lines of code! 6/2/2017
 // 11145 lines of code! 2/13/2018
 // 15023 lines of code! 4/3/2019
+/*
+    feels weird to see line of code landmarks down here after how i've been moving things lately...
+    i wish i'd taken a count before i started moving apps into the repository
+    reguardless, 15904 lines of code on 11/5/2020
+*/

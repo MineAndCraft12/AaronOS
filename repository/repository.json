@@ -2,7 +2,7 @@
     "repoName": "AaronOS Official",
     "repoID": "aaronos_official",
     "repoAliases": ["aaronos", "aos", "official"],
-    "repoVersion": "1.0.1",
+    "repoVersion": "1.1.0",
     "packages": {
         "guitartab": {
             "packageName": "Guitar Tab",
@@ -63,7 +63,31 @@
                 "foreground": "repository/webApps/blast.png",
                 "backgroundColor": "#000"
             },
-            "description": "AaronOS Blast, with AI ships and a player ship shooting lasers at each other. The game is yet unfinished and more is coming soon."
+            "description": "AaronOS Blast, with AI ships and a player ship shooting lasers at each other."
+        },
+        "indycar": {
+            "packageName": "Indycar Game",
+            "packageID": "indycar",
+            "packageAliases": ["game", "race", "racing", "cars"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/indycar.json",
+            "icon": {
+                "foreground": "appicons/ICr.png"
+            },
+            "description": "A small two-player racing game with some little indycars in it. WASD/X and IJKL/M control the cars."
+        },
+        "housegame": {
+            "packageName": "House Game",
+            "packageID": "housegame",
+            "packageAliases": ["game", "defend", "battle", "fight", "shoot"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/housegame.json",
+            "icon": {
+                "foreground": "appicons/HSG.png"
+            },
+            "description": "A top-down defense game where you are tasked with defending a house from invaders. (it's a bit loud)"
         },
         "calculator": {
             "packageName": "Calculator",
@@ -100,6 +124,18 @@
                 "foreground": "appicons/ds/CSE.png"
             },
             "description": "JS Paint was developed by Isaiah Odhner and embedded into an aOS app with his permission.\n\nFull site at https://jspaint.app"
+        },
+        "textToBin": {
+            "packageName": "Text to Binary",
+            "packageID": "textToBin",
+            "packageAliases": [],
+            "version": "1.1",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/textToBin.json",
+            "icon": {
+                "foreground": "appicons/ds/CAM.png"
+            },
+            "description": "Convert text to / from binary code and images."
         },
         "aaronscustomfunctions": {
             "packageName": "Aarons Custom Functions",

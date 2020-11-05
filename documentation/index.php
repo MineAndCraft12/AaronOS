@@ -73,16 +73,12 @@
     </p>
     <p>
         First we need to test if your host allows AaronOS to load it in a frame.
-        Load up AaronOS (if not already), open up the JavaScript Console app, paste the following code, and then run it.
+        Load up AaronOS (if not already), open up the Web App Maker app, and go to the "Getting Started" section.
     </p>
-    <pre><code>
-        openapp(apps.iFrameBrowser, "dsktp");
-    </code></pre>
     <p>
-        That code should open the hidden iFrame Browser app.
-        Once the app is open, enter the URL to your website into the address field (make sure to include <code>https://</code> at the beginning) and click Go.
+        Once you're there, enter the URL to your website into the address field near the iFrame (make sure to include <code>https://</code> at the beginning) and click Test.
         If your website successfully loads into the frame, then we should be all set.
-        If not, then your website or your browser are blocking AaronOS from loading your site. It's more likely to be the website.
+        If not, then your website or your browser are blocking AaronOS from loading your site.
         If this is the case, then you need to figure out with your host (or, if you personally run the server, your server configuration) a way to allow AaronOS to load your site.
     </p>
     <div class="img">
@@ -406,7 +402,7 @@
         Whenever you update your app's JSON file, remember to increment the version number there and here.
     </p>
     <p>
-        <code>packageType</code>: This is again the type of package that is being represented. For web apps, always make this "webApps".
+        <code>packageType</code>: This is again the type of package that is being represented. For web apps, always make this "webApp".
     </p>
     <p>
         <code>installURL</code>: This will be the URL to your web app's package JSON file; the file that we wrote up a few moments before this one.

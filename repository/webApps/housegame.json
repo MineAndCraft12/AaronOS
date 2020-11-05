@@ -1,0 +1,12 @@
+{
+    "name": "House Game",
+    "id": "housegame",
+    "version": "1.0",
+    "abbreviation": "HSG",
+    "appType": "webApp",
+    "homeURL": "HOUSEGAME/",
+    "icon": {
+        "foreground": "appicons/HSG.png"
+    },
+    "windowSize": [1015, 633]
+}

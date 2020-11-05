@@ -1,0 +1,13 @@
+{
+    "name": "Text to Binary",
+    "id": "textToBin",
+    "version": "1.1",
+    "abbreviation": "BIN",
+    "appType": "webApp",
+    "homeURL": "textbin/",
+    "icon": {
+        "foreground": "appicons/ds/CAM.png"
+    },
+    "windowSize": [800, 500],
+    "manualOpen": 1
+}

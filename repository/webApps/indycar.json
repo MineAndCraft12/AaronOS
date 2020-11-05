@@ -1,0 +1,12 @@
+{
+    "name": "Indycar Game",
+    "id": "indycar",
+    "version": "1.0",
+    "abbreviation": "ICr",
+    "appType": "webApp",
+    "homeURL": "INDYCAR/",
+    "icon": {
+        "foreground": "appicons/ICr.png"
+    },
+    "windowSize": [646, 502]
+}
