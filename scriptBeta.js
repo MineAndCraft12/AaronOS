@@ -660,7 +660,7 @@ var langContent = { // LANGUAGES
             mouserecord: "Mouse Recorder",
             ti: "TI-83+ Simulator",
             appAPI: "aOS API",
-            appmaker: "App Maker",
+            appmaker: "Legacy App Maker",
             calculator: "Calculator",
             search: "Search",
             image: "aOSimg Editor",
@@ -5109,7 +5109,7 @@ c(function(){
             appInfo: 'This app is used to show information and help pages for AaronOS apps.'
         }, 2, 'appInfo', 'appicons/ds/systemApp.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Mod Tutorials app...'; 
+    getId('aOSloadingInfo').innerHTML = 'Task Manager...'; 
 });
 c(function(){
     m('init tMg');
@@ -8681,10 +8681,9 @@ c(function(){
             }, "AaronOS", "appicons/ds/aOS.png");
         }
     }
-    getId('aOSloadingInfo').innerHTML = 'Smart Icon Creator';
+    getId('aOSloadingInfo').innerHTML = 'Smart Icon Settings';
 });
 c(function(){
-    m('init smart icon maker');
     apps.smartIconSettings = new Application(
         'SIS',
         'Smart Icon Settings',
@@ -8823,7 +8822,7 @@ c(function(){
         	}
         }
     );
-    getId('aOSloadingInfo').innerHTML = 'Icon Maker';
+    getId('aOSloadingInfo').innerHTML = 'Desktop Icon Maker';
 })
 c(function(){
     m('init icon maker');
@@ -9703,7 +9702,7 @@ c(function(){
             "09/22/2020: B1.2.6.0\n : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.\n : Rearranged Info tab in Settings.\n : Made copyright notices more accurate.\n : Numerous bug fixes the last few months didn't make it into the changelog.\n\n" +
             "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Fixed context menus breaking completely if the clipboard contains less slots than it thinks it should.\n : Modified a context menu icon.\n\n" +
             "09/24/2020: B1.2.7.1\n : Fixed Settings not immediately responding to changes in Light / Dark theme.\n\n" +
-            "11/05/2020: B1.3.0.0\n + Brand new default Dashboard menu, which looks and functions much better.\n : Changed some of the quick options available in the Dashboard.\n + The File Manager can now open apps via right-click on their folder.\n : Changed the Messaging font, rearranged usernames and time/date info.\n : Apps Browser now has a shortened intro and now provides information that is actually useful.\n : Fixed the screen magnifier app.\n + The Custom Style Editor preview will now highlight the bounds of elements when hovered over.\n : Rearranged the Custom Style Editor preview menu.\n : The first message is no longer cut off by the status indicator.\n : Notifications no longer flash an annoying orange glow when attention is required, and instead flash their opacity.\n : File Manager 2 and Text Editor 2 have had the '2' removed from their names.\n : Custom apps are now saved in a directory rather than dumped directly into USERFILES.\n - Removed old Text Editor.\n - Removed old File Manager.\n - Removed Flash Cards app.\n - Removed useless Modding Tutorials app.\n - Removed unused Smart Icon Creator app.\n - Removed woefully outdated Help App.\n : Made a section of the Documentation simpler and fixed some typos.\n : House and Indycar games along with Text to Binary are moved to the repository.\n + The Savemaster app now gives you useful information rather than absolutely nothing when its window is open.\n : Task Manager no longer flashes annoyingly while displaying its content.\n : The Sticky Note app now opens in the top-right corner rather than top-left.\n : Reworded the intro to the psuedo-Bash terminal.\n : Reworded the intro to the Pet Cursors app.\n : Reworded some information in File Properties.\n : Windowblur Test Application is renamed to Transparent Window.\n : Chrome prompt is worded less annoyingly.\n : Renamed Boot Script to Boot Scripts\n : Changelog dates are moved to the left side, by their titles.\n : Changed the wording of some startup logs.\n - Removed annoying 'how did you do that?' popups when opening the dashboard and NORAA via unorthodox means.",
+            "11/05/2020: B1.3.0.0\n + Brand new default Dashboard menu, which looks and functions much better.\n : Changed some of the quick options available in the Dashboard.\n + The File Manager can now open apps via right-click on their folder.\n : Changed the Messaging font, rearranged usernames and time/date info.\n : Apps Browser now has a shortened intro and now provides information that is actually useful.\n : Fixed the screen magnifier app.\n + The Custom Style Editor preview will now highlight the bounds of elements when hovered over.\n : Rearranged the Custom Style Editor preview menu.\n : The first message is no longer cut off by the status indicator.\n : Notifications no longer flash an annoying orange glow when attention is required, and instead flash their opacity.\n : File Manager 2 and Text Editor 2 have had the '2' removed from their names.\n : Renamed the old App Maker to Legacy App Maker.\n : Custom apps are now saved in a directory rather than dumped directly into USERFILES.\n - Removed old Text Editor.\n - Removed old File Manager.\n - Removed Flash Cards app.\n - Removed useless Modding Tutorials app.\n - Removed unused Smart Icon Creator app.\n - Removed woefully outdated Help App.\n : Made a section of the Documentation simpler and fixed some typos.\n : House and Indycar games along with Text to Binary are moved to the repository.\n + The Savemaster app now gives you useful information rather than absolutely nothing when its window is open.\n : Task Manager no longer flashes annoyingly while displaying its content.\n : The Sticky Note app now opens in the top-right corner rather than top-left.\n : Reworded the intro to the psuedo-Bash terminal.\n : Reworded the intro to the Pet Cursors app.\n : Reworded some information in File Properties.\n : Windowblur Test Application is renamed to Transparent Window.\n : Chrome prompt is worded less annoyingly.\n : Renamed Boot Script to Boot Scripts\n : Changelog dates are moved to the left side, by their titles.\n : Changed the wording of some startup logs.\n - Removed annoying 'how did you do that?' popups when opening the dashboard and NORAA via unorthodox means.",
             oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
     window.aOSversion = 'B1.3.0.0 (11/05/2020) r0';
@@ -10574,7 +10573,7 @@ c(function(){
             cLogGroup: ''
         }, 1, "changelog", "appicons/ds/CLg.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Flash Cards';
+    getId('aOSloadingInfo').innerHTML = 'Window Test';
 });
 c(function(){
     m('init TW');
@@ -10938,17 +10937,17 @@ c(function(){
             return null;
         }
     };
-    getId('aOSloadingInfo').innerHTML = 'aOS API';
+    getId('aOSloadingInfo').innerHTML = 'Legacy App Maker';
 });
 c(function(){
     m('init APM');
     apps.appmaker = new Application(
         "APM",
-        "App Maker",
+        "Legacy App Maker",
         1,
         function(launchtype){
             if(launchtype === "dsktp"){
-                this.appWindow.setCaption("App Maker");
+                this.appWindow.setCaption("Legacy App Maker");
                 if(!this.appWindow.appIcon){
                     this.appWindow.setDims("auto", "auto", 1000, 600);
                 }
@@ -10957,7 +10956,7 @@ c(function(){
                 this.vars.div.style.backgroundPosition = 'center';
                 this.vars.div.style.backgroundRepeat = 'no-repeat';
                 this.vars.div.innerHTML = '<p style="color:red">This tool is OUTDATED. Use the <button onclick="openapp(apps.webAppMaker, \'dsktp\');apps.appmaker.signalHandler(\'close\')">Web App Maker</button> or <button onclick="openapp(apps.devDocumentation, \'dsktp\');apps.appmaker.signalHandler(\'close\')">Developer Documentation</button> instead.</p>' +
-                    '<h1>App Maker</h1>' +
+                    '<h1>Legacy App Maker</h1>' +
                     '<p id="APMappsaving"></p>' +
                     '<p>If you need to leave and return later: <button onclick="apps.appmaker.vars.saveProj()">Save Project</button> <button onclick="apps.appmaker.vars.loadProj()">Load Project</button><br>' +
                     'Currently stored project: ' + function(){if(ufload("aos_system/apps/appmaker/project")){return '<span style="font-family:monospace">' + JSON.parse(ufload("aos_system/apps/appmaker/project")).name + '</span>'}else{return 'no project saved'}}() +
@@ -11114,7 +11113,7 @@ c(function(){
                         // getId('winAPMh').style.cursor = '';
                         getId('win_appMaker_html').classList.remove('cursorLoadLight');
                     }
-                }, 'App Maker');
+                }, 'Legacy App Maker');
             },
             loadProj: function(){
                 apps.prompt.vars.confirm('Overwrite all unsaved work?', ['No', 'Yes'], function(btn){
@@ -11131,7 +11130,7 @@ c(function(){
                         getId('APMappcode').value = proj.code;
                         getId('APMappiconimage').value = proj.iconimage;
                     }
-                }, 'App Maker');
+                }, 'Legacy App Maker');
             }
         }, 1, "appmaker", "appicons/ds/APM.png"
     );
@@ -12797,7 +12796,7 @@ c(function(){
             }
         }, 1, "camera", "appicons/ds/CAM.png"
     );
-    getId('aOSloadingInfo').innerHTML = 'Help App';
+    getId('aOSloadingInfo').innerHTML = 'Music Player';
 });
 c(function(){
     m('init MSC');
@@ -13015,7 +13014,7 @@ c(function(){
             currAppBuiltIn: ''
         }, 1, 'appsbrowser', 'appicons/ds/APB.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Indy Car';
+    getId('aOSloadingInfo').innerHTML = 'Sticky Note';
 });
 c(function(){
     apps.postit = new Application(
@@ -13702,7 +13701,7 @@ c(function(){
             }
         }, 2, 'iFrameBrowser', 'appicons/ds/systemApp.png'
     );
-    getId('aOSloadingInfo').innerHTML = 'Text to Binary';
+    getId('aOSloadingInfo').innerHTML = 'Pet Cursors';
 });
 c(function(){
     apps.petCursors = new Application(
