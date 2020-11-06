@@ -7557,7 +7557,7 @@ c(function(){
             },
             togDirtyLoad: function(){
                 dirtyLoadingEnabled = -1 * dirtyLoadingEnabled + 1;
-                apps.savemaster.vars.save('aos_system/apps/settings/ugly_boot', dirtyLoadingEnabled);
+                apps.savemaster.vars.save('aos_system/apps/settings/ugly_boot', dirtyLoadingEnabled, 1);
             },
             resetOS: function(){
                 apps.prompt.vars.confirm('<h1>STOP</h1><br><br>Please confirm with absolute certainty that you wish to RESET AaronOS.', ['<h1>CANCEL</h1>', '<h1 style="color:#F00">RESET</h1>'], function(btn){if(btn){
