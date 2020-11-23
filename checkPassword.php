@@ -17,7 +17,7 @@
             
             if(password_verify($_POST['pass'], $currPassword)){
                 // SET LOGIN TOKEN AND SAVE IT
-                $tokenlettertypes = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#%&*+-.^_`|~';
+                $tokenlettertypes = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#%&*-.^_`|~';
                 $newtoken = '';
                 for($i = 0; $i < 30; $i++){
                     $newtoken = $newtoken.$tokenlettertypes[rand(0, strlen($tokenlettertypes) - 1)];
