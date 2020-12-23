@@ -206,40 +206,47 @@ function cleanStr(str){
 }
 
 // i got bored
+var lsdTimeout = -1;
 function lsd(){
-    doLog('duuuuuude');
-    setInterval(function(){
-        var divs = document.getElementsByTagName('div');
-        var tds = document.getElementsByTagName('td');
-        var lis = document.getElementsByTagName('li');
-        var ps = document.getElementsByTagName('p');
-        var buttons = document.getElementsByTagName('button');
-        var inputs = document.getElementsByTagName('input');
-        try{
-            divs[Math.floor(Math.random() * divs.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
-            divs[Math.floor(Math.random() * divs.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
-        }catch(err){}
-        try{
-            tds[Math.floor(Math.random() * tds.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
-            tds[Math.floor(Math.random() * tds.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
-        }catch(err){}
-        try{
-            lis[Math.floor(Math.random() * lis.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
-            lis[Math.floor(Math.random() * lis.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
-        }catch(err){}
-        try{
-            ps[Math.floor(Math.random() * ps.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
-            ps[Math.floor(Math.random() * ps.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
-        }catch(err){}
-        try{
-            buttons[Math.floor(Math.random() * buttons.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
-            buttonps[Math.floor(Math.random() * buttons.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
-        }catch(err){}
-        try{
-            inputs[Math.floor(Math.random() * inputs.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
-            inputs[Math.floor(Math.random() * inputs.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
-        }catch(err){}
-    }, 16);
+    doLog('Hey! If you suffer from a photosensitivity, please use lsdCancel() in the next 20 seconds!')
+    lsdTimeout = setTimeout(function(){
+        doLog('duuuuuude');
+        setInterval(function(){
+            var divs = document.getElementsByTagName('div');
+            var tds = document.getElementsByTagName('td');
+            var lis = document.getElementsByTagName('li');
+            var ps = document.getElementsByTagName('p');
+            var buttons = document.getElementsByTagName('button');
+            var inputs = document.getElementsByTagName('input');
+            try{
+                divs[Math.floor(Math.random() * divs.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
+                divs[Math.floor(Math.random() * divs.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+            }catch(err){}
+            try{
+                tds[Math.floor(Math.random() * tds.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
+                tds[Math.floor(Math.random() * tds.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+            }catch(err){}
+            try{
+                lis[Math.floor(Math.random() * lis.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
+                lis[Math.floor(Math.random() * lis.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+            }catch(err){}
+            try{
+                ps[Math.floor(Math.random() * ps.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
+                ps[Math.floor(Math.random() * ps.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+            }catch(err){}
+            try{
+                buttons[Math.floor(Math.random() * buttons.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
+                buttonps[Math.floor(Math.random() * buttons.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+            }catch(err){}
+            try{
+                inputs[Math.floor(Math.random() * inputs.length)].style.backgroundColor = 'rgba(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.random() + ')';
+                inputs[Math.floor(Math.random() * inputs.length)].style.color = 'rgb(' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ',' + Math.floor(Math.random() * 255) + ')';
+            }catch(err){}
+        }, 16);
+    }, 20000);
+}
+function lsdCancel(){
+    clearTimeout(lsdTimeout);
 }
 
 // make sure monitor doesnt get scrolled away
@@ -1125,7 +1132,7 @@ function countFPS(){
         lastFPStime = thisFPStime;
         maxFPS = Math.max(maxFPS, parseInt(stringFPS, 10));
         maxVFPS = Math.max(maxVFPS, parseInt(stringVFPS, 10));
-        stringFPSload = Math.round(100 - Math.min((parseInt(stringFPS, 10) / maxFPS), (parseInt(stringVFPS, 10) / maxVFPS)) * 100) + '%' + lang('aOS', 'cpuUsage');
+        stringFPSload = Math.round(100 - Math.min((parseInt(stringFPS, 10) / maxFPS), (parseInt(stringVFPS, 10) / maxVFPS)) * 100) + '% ' + lang('aOS', 'cpuUsage');
         numbFPS = 0;
     }
     window.setTimeout(countFPS, 0);
@@ -2804,7 +2811,7 @@ widgets.fps = new Widget(
     function(){ // start function
         widgets.fps.vars.running = 1;
         //widgets.time.setWidth('58px');
-        getId('widget_fps').innerHTML = '<div id="compactFPS"></div><div id="postCompactFPS" style="position:static;margin-left:26px;margin-right:6px;margin-top:-25px;font-family:Courier,monospace;font-size:21px">' + lang('aOS', 'framesPerSecond') + '</div>';
+        getId('widget_fps').innerHTML = '<div id="compactFPS"></div><div id="postCompactFPS" style="position:static;margin-left:26px;margin-right:6px;margin-top:-21px;font-family:Consolas,monospace;font-size:12px">&nbsp;' + lang('aOS', 'framesPerSecond') + '</div>';
         widgets.fps.frame();
     },
     function(){ // frame function (this.vars.frame())
@@ -2834,7 +2841,7 @@ widgets.battery = new Widget(
     },
     function(){
         widgets.battery.vars.running = 1;
-        widgets.battery.vars.styles[USERFILES.WGT_BATTERY_STYLE || "def"][0]();
+        widgets.battery.vars.styles[ufload('aos_system/widgets/battery/style') || "def"][0]();
         /*
         widgets.battery.vars.previousAmount = batteryLevel;
         widgets.battery.vars.previousAmountChange = 0;
@@ -2846,7 +2853,7 @@ widgets.battery = new Widget(
     function(){
         if(widgets.battery.vars.running){
             if(batteryLevel !== -1){
-                widgets.battery.vars.styles[USERFILES.WGT_BATTERY_STYLE || "def"][1]();
+                widgets.battery.vars.styles[ufload('aos_system/widgets/battery/style') || "def"][1]();
                 /*
                 if(perfCheck('batteryWidget') > 120000000){
                     widgets.battery.vars.amountChange = widgets.battery.vars.previousAmountChange;
@@ -2880,13 +2887,13 @@ widgets.battery = new Widget(
             ],
             text: [
                 function(){
-                    getId('widget_battery').innerHTML = '[???]';
+                    getId('widget_battery').innerHTML = '<div style="pointer-events:none;line-height:32px;position:relative;padding-left:3px;padding-right:3px;font-family:aosProFont, monospace;font-size:12px;">{' + taskbarBatteryStr.substring(0, 3) + '}</div>';
                 },
                 function(){
                     if(cpuBattery.charging){
-                        getId('widget_battery').innerHTML = '<div style="pointer-events:none;line-height:150%;position:relative;padding-left:3px;padding-right:3px">{' + taskbarBatteryStr.substring(0, 3) + '}</div>';
+                        getId('widget_battery').innerHTML = '<div style="pointer-events:none;line-height:32px;position:relative;padding-left:3px;padding-right:3px;font-family:aosProFont, monospace;font-size:12px;">{' + taskbarBatteryStr.substring(0, 3) + '}</div>';
                     }else{
-                        getId('widget_battery').innerHTML = '<div style="pointer-events:none;line-height:150%;position:relative;padding-left:3px;padding-right:3px">[' + taskbarBatteryStr.substring(0, 3) + ']</div>';
+                        getId('widget_battery').innerHTML = '<div style="pointer-events:none;line-height:32px;position:relative;padding-left:3px;padding-right:3px;font-family:aosProFont, monospace;font-size:12px;">[' + taskbarBatteryStr.substring(0, 3) + ']</div>';
                     }
                 }
             ],
@@ -2900,7 +2907,7 @@ widgets.battery = new Widget(
             ]
         },
         changeStyle: function(newStyle){
-            ufsave("WGT_BATTERY_STYLE", newStyle);
+            ufsave("aos_system/widgets/battery/style", newStyle);
             widgets.battery.vars.styles[newStyle][0]();
         },
         generateMenu: function(){
@@ -2920,21 +2927,39 @@ widgets.network = new Widget(
     'Network',
     'network',
     function(){
-        widgetMenu('Network Widget', 'How to read the Network Widget:<br><br>&nbsp;] [ means the network is connected but not marked as active.<br><br>&nbsp;}-[ means aOS is saving information to the aOS server.<br><br>&nbsp;]-{ means aOS is loading information from the aOS server.<br><br>&nbsp;}-{ means that either both incoming and outgoing connections, or another connection that doesn\'t match those descriptions.<br><br>&nbsp;]X[ means your browser reports that the network is disconnected.');
+        widgetMenu('Network Widget',
+            'This widget displays your connection status to AaronOS. Additionally, it will show when you are sending / recieving data from AaronOS.<br><br>' +
+            '<button onclick="widgets.network.vars.setDisplayType(\'new\')">New Display</button> ' +
+            '<button onclick="widgets.network.vars.setDisplayType(\'old\')">Old Display</button>'
+        );
     },
     function(){
         widgets.network.vars.running = 1;
-        getId('widget_network').style.lineHeight = '150%';
+        getId('widget_network').style.lineHeight = '26px';
         getId('widget_network').style.paddingLeft = '6px';
         getId('widget_network').style.paddingRight = '6px';
+        if(ufload('aos_system/widgets/network/style')){
+            widgets.network.vars.displayType = ufload('aos_system/widgets/network/style');
+        }
         widgets.network.frame();
     },
     function(){
         if(widgets.network.vars.running){
-            if(!mobileMode){
-                getId('widget_network').innerHTML = taskbarOnlineStr;
+            var displayStr = '';
+            if(widgets.network.vars.displayType === "new"){
+                getId('widget_network').style.lineHeight = '26px';
+                if(widgets.network.vars.onlinestrConvert[taskbarOnlineStr]){
+                    displayStr = '<img style="width:10px;filter:invert(1) brightness(1.5) drop-shadow(0px 0px 1px #000);" src="ctxMenu/beta/' + widgets.network.vars.onlinestrConvert[taskbarOnlineStr] + '.png">';
+                }else{
+                    displayStr = '<img style="width:10px;filter:invert(1) brightness(1.5) drop-shadow(0px 0px 1px #000);" src="ctxMenu/beta/networkBad.png">';
+                }
             }else{
-                getId('widget_network').innerHTML = '';
+                getId('widget_network').style.lineHeight = '150%';
+                displayStr = taskbarOnlineStr;
+            }
+            if(displayStr !== widgets.network.vars.lastDisplayStr){
+                getId('widget_network').innerHTML = displayStr;
+                widgets.network.vars.lastDisplayStr = displayStr;
             }
             requestAnimationFrame(widgets.network.frame);
         }
@@ -2943,7 +2968,20 @@ widgets.network = new Widget(
         widgets.network.vars.running = 0;
     },
     {
-        running: 0
+        running: 0,
+        onlinestrConvert: {
+            '] [': 'network',
+            '}-[': 'networkUp',
+            ']-{': 'networkDown',
+            '}-{': 'networkBoth',
+            ']X[': 'networkBad'
+        },
+        lastDisplayStr: '',
+        displayType: "new",
+        setDisplayType: function(dispType){
+            widgets.network.vars.displayType = dispType;
+            ufsave('aos_system/widgets/network/style', dispType);
+        }
     }
 );
 widgets.cpu = new Widget(
@@ -2954,9 +2992,11 @@ widgets.cpu = new Widget(
     },
     function(){
         widgets.cpu.vars.running = 1;
-        getId('widget_cpu').style.lineHeight = '150%';
         getId('widget_cpu').style.paddingLeft = "6px";
         getId('widget_cpu').style.paddingRight = "6px";
+        getId('widget_cpu').style.fontFamily = 'Consolas, monospace;';
+        getId('widget_cpu').style.fontSize = '12px';
+        getId('widget_cpu').style.lineHeight = '31px';
         widgets.cpu.frame();
     },
     function(){
@@ -2980,7 +3020,7 @@ widgets.users = new Widget(
     'Online Users',
     'users',
     function(){
-        widgetMenu('Online Users Widget', 'The list will update every 30 seconds.<br><br>Number of online users: ' + makeLiveElement('widgets.users.vars.numberUsers') + '<br><br>' + makeLiveElement("widgets.users.vars.usersNames.join('<br>')"));
+        widgetMenu('Online Users Widget', 'The list will update every 30 seconds.<br><br>Number of online users with this widget enabled: ' + makeLiveElement('widgets.users.vars.numberUsers') + '<br><br>' + makeLiveElement("widgets.users.vars.usersNames.join('<br>')"));
     },
     function(){
         widgets.users.vars.running = 1;
@@ -3054,6 +3094,54 @@ widgets.flow = new Widget(
     },
     {
         
+    }
+);
+widgets.notifications = new Widget(
+    'Notifications',
+    'notifications',
+    function(){
+        if(apps.prompt.vars.notifsVisible){
+            apps.prompt.vars.hideNotifs();
+        }else{
+            apps.prompt.vars.checkNotifs();
+        }
+        if(apps.prompt.vars.lastNotifsFound.length === 0){
+            widgetMenu('Notifications', 'You have no notifications waiting.<br><br>New notifications will show automatically.');
+        }
+    },
+    function(){
+        // startup func
+        widgets.notifications.running = 1;
+        getId('widget_notifications').style.paddingLeft = "6px";
+        getId('widget_notifications').style.paddingRight = "6px";
+        getId('widget_notifications').style.lineHeight = '26px';
+        widgets.notifications.frame();
+    },
+    function(){
+        // frame func
+        if(widgets.notifications.running){
+            requestAnimationFrame(widgets.notifications.frame);
+            var notifCount = apps.prompt.vars.lastNotifsFound.length;
+            if(notifCount + ":" + apps.prompt.vars.notifsVisible !== widgets.notifications.vars.lastDisplay){
+                if(notifCount === 0){
+                    getId('widget_notifications').innerHTML = '<img style="width:10px;filter:invert(1) brightness(1.5) drop-shadow(0px 0px 1px #000);" src="ctxMenu/beta/popup.png">';
+                }else if(apps.prompt.vars.notifsVisible){
+                    getId('widget_notifications').innerHTML = '<img style="width:10px;filter:invert(1) brightness(1.5) drop-shadow(0px 0px 1px #000);" src="ctxMenu/beta/message.png">';
+                }else{
+                    getId('widget_notifications').innerHTML = '<img style="width:10px;filter:invert(1) brightness(1.5) drop-shadow(0px 0px 1px #000);" src="ctxMenu/beta/notification.png">';
+                }
+                widgets.notifications.vars.lastDisplay = notifCount + ":" + apps.prompt.vars.notifsVisible;
+            }
+        }
+    },
+    function(){
+        // disable func
+        widgets.notifications.vars.running = 0;
+    },
+    {
+        // vars
+        running: 0,
+        lastDisplay: []
     }
 );
 
@@ -3614,7 +3702,8 @@ c(function(){
                         addWidget('fps', 1);
                         addWidget('network', 1);
                         addWidget('battery', 1);
-                        addWidget('users', 1);
+                        //addWidget('users', 1);  (this is now an opt-in feature)
+                        addWidget('notifications', 1);
                         addWidget('time', 1);
                         addWidget('flow', 1);
                     }
@@ -6456,15 +6545,14 @@ c(function(){
         function(launchtype){
             if(launchtype === 'dsktp'){
                 if(!this.appWindow.appIcon){
-                    this.appWindow.setDims("auto", "auto", parseInt(getId('desktop').style.width, 10) / 2, parseInt(getId('desktop').style.height, 10) / 2);
+                    this.appWindow.setDims("auto", "auto", 500, 300);
                 }
-                this.appWindow.setCaption('Application Prompt');
-                this.appWindow.setContent('<div id="PMTdescription" style="text-align:center;width:100%;height:calc(100% - 4em);padding-top:16px;font-family:monospace;overflow-y:auto">This app is used for alerts and prompts in aOS apps.</div><div id="PMTbuttons" style="font-family:monospace;padding-bottom:16px;text-align:center;width:100%;bottom:0;"><button onClick="apps.prompt.signalHandler(\'close\')">OK</button></div></div>');
+                this.appWindow.setCaption('Modal Dialogue');
                 getId("win_prompt_big").style.display = "none";
                 getId("win_prompt_exit").style.display = "none";
-                getId("win_prompt_shrink").style.display = "none";
+                //getId("win_prompt_shrink").style.display = "none";
                 this.appWindow.alwaysOnTop(1);
-                this.appWindow.openWindow();
+                this.vars.checkNotifs();
             }
         },
         function(signal){
@@ -6476,7 +6564,10 @@ c(function(){
                     break;
                 case "close":
                     this.appWindow.closeWindow();
-                    window.setTimeout(function(){apps.prompt.vars.checkPrompts();}, 0);
+                    window.setTimeout(function(){
+                        /*apps.prompt.vars.hideNotifs();*/
+                        apps.prompt.vars.checkPrompts();
+                    }, 0);
                     setTimeout(function(){
                         if(getId("win_" + this.objName + "_top").style.opacity === "0"){
                             this.appWindow.setContent("");
@@ -6496,6 +6587,7 @@ c(function(){
                     if(safeMode){
                         apps.prompt.vars.alert('Safe mode is enabled. Most of your settings will be ignored, so that you can fix something you may have recently broken. Your files are still in place.<br><br>To exit safe mode, simply remove the "?safe=true" from the URL.', 'Okay', function(){}, 'AaronOS');
                     }
+                    /*
                     if(typeof USERFILES.CONFIRM_ADMIN_MESSAGE === 'string'){
                         if(USERFILES.CONFIRM_ADMIN_MESSAGE.length > 1){
                             this.vars.confirm('Personal message from admin:<br>' + USERFILES.CONFIRM_ADMIN_MESSAGE, ['OK, Delete Message', 'OK, Keep Message'], function(button){
@@ -6506,8 +6598,9 @@ c(function(){
                             }, 'aOS');
                         }
                     }
+                    */
                     this.appWindow.alwaysOnTop(1);
-                    this.appWindow.paddingMode(0);
+                    this.appWindow.paddingMode(1);
                     break;
                 case 'shutdown':
                         
@@ -6520,129 +6613,287 @@ c(function(){
             appInfo: 'This is a prompt or alert box used for applications to create simple messages or get simple input from the user.',
             prompts: [],
             currprompt: [],
-            checkPrompts: function(){
-                //type is [0], text is [1], buttons are [2], callback is [3]
-                if(!apps.prompt.appWindow.appIcon && getId('notifWindow').style.pointerEvents === 'none'){
-                    if(this.prompts.length !== 0){
-                        d(1, 'showing prompt');
-                        this.currprompt = this.prompts.shift();
-                        if(this.currprompt[0] !== 4){
-                            apps.prompt.appWindow.setContent('<div id="PMTdescription" style="text-align:center;width:100%;height:calc(100% - 4em);padding-top:16px;font-family:monospace;overflow-y:auto"></div><div id="PMTbuttons" style="font-family:monospace;padding-bottom:16px;text-align:center;width:100%;bottom:0;"></div></div>');
-                            getId('PMTdescription').innerHTML = this.currprompt[1];
-                        }
-                        switch(this.currprompt[0]){
-                            case 1:
-                                if(this.currprompt[4]){
-                                    apps.prompt.appWindow.setCaption(this.currprompt[4] + ' wants to tell you:');
-                                }else{
-                                    apps.prompt.appWindow.setCaption('Alert from an anonymous app:');
-                                }
-                                getId('PMTbuttons').innerHTML = '<button id="PMTalertButton" onClick="apps.prompt.signalHandler(\'close\');apps.prompt.vars.currprompt[3]()">' + this.currprompt[2] + '</button>';
-                                c(function(){getId('PMTalertButton').focus()});
-                                break;
-                            case 2:
-                                if(this.currprompt[4]){
-                                    apps.prompt.appWindow.setCaption(this.currprompt[4] + ' wants a choice from you:');
-                                }else{
-                                    apps.prompt.appWindow.setCaption('Pick a choice for an anonymous app:');
-                                }
-                                getId('PMTbuttons').innerHTML = '';
-                                for(var button in this.currprompt[2]){
-                                    getId('PMTbuttons').innerHTML += '<button class="PMTbtngroup" onClick="apps.prompt.signalHandler(\'close\');apps.prompt.vars.currprompt[3](' + button + ');">' + this.currprompt[2][button] + '</button> ';
-                                }
-                                c(function(){document.getElementsByClassName('PMTbtngroup')[0].focus()});
-                                break;
-                            case 3:
-                                if(this.currprompt[4]){
-                                    apps.prompt.appWindow.setCaption(this.currprompt[4] + ' wants some info from you:');
-                                }else{
-                                    apps.prompt.appWindow.setCaption('Enter some info for an anonymous app:');
-                                }
-                                var isPassword = '';
-                                if(this.currprompt[5]){
-                                    isPassword = ' type="password"';
-                                }
-                                getId('PMTbuttons').innerHTML = '<input id="PMTtextIn"' + isPassword + '> <button id="PMTalertButton" onClick="apps.prompt.signalHandler(\'close\');apps.prompt.vars.currprompt[3](getId(\'PMTtextIn\').value)">' + this.currprompt[2] + '</button>';
-                                c(function(){
-                                    getId('PMTtextIn').focus();
-                                    getId('PMTtextIn').addEventListener('keydown', function(event){
-                                        if(event.keyCode === 13){
-                                            getId('PMTalertButton').click();
-                                        }
-                                    });
-                                });
-                                break;
-                            case 4:
-                                if(this.currprompt[4]){
-                                    getId('notifTitle').innerHTML = this.currprompt[4];
-                                }else{
-                                    getId('notifTitle').innerHTML = 'Notification';
-                                }
-                                if(this.currprompt[5]){
-                                    getId('notifImage').src = this.currprompt[5];
-                                }else{
-                                    getId('notifImage').src = 'images/EMPTY.png';
-                                }
-                                getId('notifContent').innerHTML = this.currprompt[1];
-                                getId('notifButtons').innerHTML = '';
-                                for(var button in this.currprompt[2]){
-                                    getId('notifButtons').innerHTML += ' <button onClick="getId(\'notifWindow\').style.opacity=\'0\';getId(\'notifWindow\').style.pointerEvents=\'none\';getId(\'notifWindow\').style.right = \'-350px\';window.setTimeout(function(){apps.prompt.vars.checkPrompts();}, 0);apps.prompt.vars.currprompt[3](' + button + ');">' + this.currprompt[2][button] + '</button>';
-                                }
-                                getId('notifWindow').style.opacity = '';
-                                getId('notifWindow').style.pointerEvents = '';
-                                getId('notifWindow').style.right = '';
-                                break;
-                            default:
-                                doLog(this.currprompt[0] + ' is not a valid prompt window.', '#ACE');
-                        }
-                        if(this.currprompt[0] !== 4){
-                            apps.prompt.appWindow.setDims("auto", "auto", parseInt(getId('desktop').style.width, 10) / 2, parseInt(getId('desktop').style.height, 10) / 2);
-                            apps.prompt.appWindow.openWindow();
-                            window.setTimeout(function(){
-                                apps.prompt.appWindow.alwaysOnTop(1);
-                                toTop(apps.prompt);
-                            }, 0);
+            totalNotifs: 0,
+            notifs: {},
+            alert: function(aText, aButton, aCallback, aCaption){
+                if(typeof aText === "object"){
+                    this.notifs["notif_" + this.totalNotifs] = {
+                        notifType: "alert",
+                        notifDate: formDate("D/M/y h:m"),
+                        caption: aText.caption,
+                        content: aText.content,
+                        button: aText.button,
+                        callback: aText.callback
+                    }
+                }else{
+                    this.notifs["notif_" + this.totalNotifs] = {
+                        notifType: "alert",
+                        notifDate: formDate("D/M/y h:m"),
+                        caption: aCaption,
+                        content: aText,
+                        button: aButton,
+                        callback: aCallback
+                    }
+                }
+                this.totalNotifs++;
+                this.checkNotifs();
+            },
+            confirm: function(cText, cButtons, cCallback, cCaption){
+                if(typeof cText === "object"){
+                    this.notifs["notif_" + this.totalNotifs] = {
+                        notifType: "confirm",
+                        notifDate: formDate("D/M/y h:m"),
+                        caption: cText.caption,
+                        content: cText.content,
+                        buttons: cText.buttons,
+                        callback: cText.callback
+                    }
+                }else{
+                    this.notifs["notif_" + this.totalNotifs] = {
+                        notifType: "confirm",
+                        notifDate: formDate("D/M/y h:m"),
+                        caption: cCaption,
+                        content: cText,
+                        buttons: cButtons,
+                        callback: cCallback
+                    }
+                }
+                this.totalNotifs++;
+                this.checkNotifs();
+            },
+            prompt: function(pText, pButton, pCallback, pCaption, isPassword){
+                if(typeof pText === "object"){
+                    this.notifs["notif_" + this.totalNotifs] = {
+                        notifType: "prompt",
+                        notifDate: formDate("D/M/y h:m"),
+                        caption: pText.caption,
+                        content: pText.content,
+                        button: pText.button,
+                        callback: pText.callback,
+                        isPassword: pText.isPassword
+                    }
+                }else{
+                    this.notifs["notif_" + this.totalNotifs] = {
+                        notifType: "prompt",
+                        notifDate: formDate("D/M/y h:m"),
+                        caption: pCaption,
+                        content: pText,
+                        button: pButton,
+                        callback: pCallback,
+                        isPassword: isPassword
+                    }
+                }
+                this.totalNotifs++;
+                this.checkNotifs();
+            },
+            notify: function(nText, nButtons, nCallback ,nCaption, nImage){
+                if(typeof nText === "object"){
+                    this.notifs["notif_" + this.totalNotifs] = {
+                        notifType: "notify",
+                        notifDate: formDate("D/M/y h:m"),
+                        caption: nText.caption,
+                        content: nText.content,
+                        image: nText.image,
+                        buttons: nText.buttons,
+                        callback: nText.callback
+                    }
+                }else{
+                    this.notifs["notif_" + this.totalNotifs] = {
+                        notifType: "notify",
+                        notifDate: formDate("D/M/y h:m"),
+                        caption: nCaption,
+                        content: nText,
+                        image: nImage,
+                        buttons: nButtons,
+                        callback: nCallback
+                    }
+                }
+                this.totalNotifs++;
+                this.checkNotifs();
+            },
+            lastModalsFound: [],
+            lastNotifsFound: [],
+            checkNotifs: function(){
+                var modalsFound = [];
+                var notifsFound = [];
+                for(var i in this.notifs){
+                    if(this.notifs[i].notifType === "notify"){
+                        notifsFound.push(i);
+                    }else if(
+                        this.notifs[i].notifType === "alert" ||
+                        this.notifs[i].notifType === "prompt" ||
+                        this.notifs[i].notifType === "confirm"
+                    ){
+                        modalsFound.push(i);
+                    }
+                }
+                if(modalsFound.length > 0){
+                    apps.prompt.vars.showModals();
+                    if(modalsFound !== this.lastModalsFound){
+                        // TODO: MODAL DIALOGUES
+                        // present a list of all active modals in the window
+                        // user can scroll through the list and react to them at their own pace
+                        // window can be minimized
+                        var modalText = '';
+                        for(var i of modalsFound){
+                            modalText += '<div style="position:relative" data-modal="' + i + '">';
+                            switch(this.notifs[i].notifType){
+                                case 'alert':
+                                    modalText += '<p><b>' + cleanStr(this.notifs[i].caption) + ' has a message:</b></p>' +
+                                        '<p>' + this.notifs[i].content + '</p>' +
+                                        '<button onclick="apps.prompt.vars.modalSubmit(this.parentNode, 0)">' + (this.notifs[i].button || "Okay") + '</button>';
+                                    break;
+                                case 'confirm':
+                                    modalText += '<p><b>' + cleanStr(this.notifs[i].caption) + ' wants you to choose:</b></p>' +
+                                        '<p>' + this.notifs[i].content + '</p>';
+                                    for(var j in this.notifs[i].buttons){
+                                        modalText += '<button onclick="apps.prompt.vars.modalSubmit(this.parentNode, ' + j + ')">' + (this.notifs[i].buttons[j] || "Option" + j) + '</button> ';
+                                    }
+                                    break;
+                                case 'prompt':
+                                    modalText += '<p><b>' + cleanStr(this.notifs[i].caption) + ' wants some info:</b></p>' +
+                                        '<p>' + this.notifs[i].content + '</p>' +
+                                        '<input style="width:60%" class="modalDialogueInput" onkeypress="if(event.keyCode === 13){apps.prompt.vars.modalSubmit(this.parentNode, 0)}"> ' +
+                                        '<button onclick="apps.prompt.vars.modalSubmit(this.parentNode, 0)">' + (this.notifs[i].button || "Sumbit") + '</button>';
+                                    break;
+                                default:
+                                    // nothing, this notification is weird
+                            }
+                            modalText += '</div>';
+                            apps.prompt.appWindow.setContent(modalText);
                         }
                     }
                 }else{
-                    if(getId('notifWindow').style.pointerEvents !== 'none'){
-                        apps.prompt.vars.flashNotification(3);
+                    apps.prompt.vars.hideModals();
+                }
+                /*  this is the html of a notification
+                    <div id="notifWindow" class="darkResponsive" style="opacity:0;pointer-events:none;right:-350px">
+                        <div id="notifTitle">Notification</div>
+                        <div id="notifContent">Content</div>
+                        <div id="notifButtons"><button>Button 1</button> <button>Button 2</button></div>
+                        <img id="notifImage" src="appicons/aOS.png">
+                        <div class="winExit cursorPointer" onClick="getId('notifWindow').style.opacity='0';getId('notifWindow').style.pointerEvents='none';getId('notifWindow').style.right = '-350px';window.setTimeout(function(){apps.prompt.vars.checkPrompts();}, 300);apps.prompt.vars.currprompt[3](-1);">x</div>
+                    </div>
+                */
+                if(notifsFound.length > 0){
+                    apps.prompt.vars.showNotifs();
+                    if(notifsFound !== this.lastNotifsFound){
+                        var notifText = "";
+                        for(var i of notifsFound){
+                            notifText += '<div class="notifWindow darkResponsive" data-notif="' + i + '">' +
+                                '<div class="notifTitle">' + cleanStr(this.notifs[i].caption) + '</div>' +
+                                '<div class="notifContent">' + cleanStr(this.notifs[i].content).split("&lt;br&gt;").join("<br>") + '</div>' +
+                                '<div class="notifButtons">';
+                            for(var j in this.notifs[i].buttons){
+                                notifText += '<button onclick="apps.prompt.vars.notifClick(this.parentNode.parentNode, ' + j + ')">' + this.notifs[i].buttons[j] + '</button>';
+                            }
+                            notifText += '</div>' +
+                                '<img class="notifImage" src="' + this.notifs[i].image + '" onerror="this.src=\'\'">' +
+                                '<div class="winExit cursorPointer" onclick="apps.prompt.vars.notifClick(this.parentNode, -1)">x</div>' +
+                                '</div><br>';
+                        }
+                        getId("notifications").innerHTML = notifText;
+                    }
+                }else{
+                    apps.prompt.vars.hideNotifs();
+                }
+                this.lastModalsFound = modalsFound;
+                this.lastNotifsFound = notifsFound;
+            },
+            modalSubmit: function(modalElem, choice){
+                if(typeof modalElem === "object"){
+                    if(modalElem.getAttribute("data-modal")){
+                        var modalID = modalElem.getAttribute("data-modal");
+                        var modalType = this.notifs[modalID].notifType;
+                        switch(modalType){
+                            case 'alert':
+                                this.notifs[modalID].callback();
+                                break;
+                            case 'confirm':
+                                this.notifs[modalID].callback(choice);
+                                break;
+                            case 'prompt':
+                                this.notifs[modalID].callback(modalElem.getElementsByClassName("modalDialogueInput")[0].value);
+                                break;
+                            default:
+                                // something is odd with this notification
+                                doLog("Modal " + modalID + " has no type.");
+                        }
+                        delete this.notifs[modalID];
+                        requestAnimationFrame(this.checkNotifs);
                     }
                 }
             },
-            alert: function(aText, aButton, aCallback, aCaption){ //test script: apps.prompt.vars.alert('test caption', 'test button', function(){doLog('clicked')})
-                this.prompts.push([1, aText, aButton, aCallback, aCaption]);
-                this.checkPrompts();
+            notifClick: function(notifID, choice){
+                if(typeof notifID === "string"){
+                    this.notifs[notifID].callback(choice);
+                    delete this.notifs[notifID];
+                }else if(typeof notifID === "number"){
+                    this.notifs["notif_" + notifID].callback(choice);
+                    delete this.notifs["notif_" + notifID];
+                }else if(typeof notifID === "object"){
+                    if(notifID.getAttribute("data-notif")){
+                        this.notifs[notifID.getAttribute("data-notif")].callback(choice);
+                        delete this.notifs[notifID.getAttribute("data-notif")];
+                    }else{
+                        doLog("Strange notification, doesn't identify itself?");
+                        doLog(notifID);
+                    }
+                }
+                this.checkNotifs();
             },
-            confirm: function(cText, cButtons, cCallback, cCaption){  //test script: apps.prompt.vars.confirm('test caption', ['btn0', 'btn1', 'btn2', 'btn3'], function(button){doLog(button)})
-                this.prompts.push([2, cText, cButtons, cCallback, cCaption]);
-                this.checkPrompts();
+            showModals: function(){
+                if(!apps.prompt.appWindow.appIcon){
+                    apps.prompt.appWindow.paddingMode(1);
+                    apps.prompt.appWindow.setDims("auto", "auto", 600, 400);
+                    apps.prompt.appWindow.setCaption("Modal Dialogue");
+                    getId("win_prompt_html").style.overflowY = "auto";
+                }
+                apps.prompt.appWindow.openWindow();
             },
-            prompt: function(pText, pButton, pCallback, pCaption, isPassword){    //test script: apps.prompt.vars.prompt('test caption', 'test button', function(text){doLog(text)})
-                this.prompts.push([3, pText, pButton, pCallback, pCaption, isPassword]);
-                this.checkPrompts();
+            hideModals: function(){
+                if(apps.prompt.appWindow.appIcon){
+                    apps.prompt.signalHandler("close");
+                }
             },
-            notify: function(nText, nButtons, nCallback ,nCaption, nImage){
-                this.prompts.push([4, nText, nButtons, nCallback, nCaption, nImage]);
-                this.checkPrompts();
+            notifsVisible: 0,
+            showNotifs: function(){
+                if(!this.notifsVisible){
+                    getId("notifContainer").style.opacity = "1";
+                    getId("notifContainer").style.pointerEvents = "";
+                    getId("notifContainer").style.right = "16px";
+                    this.notifsVisible = 1;
+                }
+            },
+            hideNotifs: function(){
+                if(this.notifsVisible){
+                    getId("notifContainer").style.opacity = "0";
+                    getId("notifContainer").style.pointerEvents = "none";
+                    getId("notifContainer").style.right = "-350px";
+                    this.notifsVisible = 0;
+                }
             },
             flashNotification: function(nTimes){
+                this.showNotifs();
                 if(nTimes){ // if number of flashes defined
-                    getId('notifWindow').style.opacity = '0.2';
+                    getId('notifContainer').style.opacity = '0.2';
                     setTimeout(function(){
-                        getId('notifWindow').style.opacity = '';
+                        getId('notifContainer').style.opacity = '';
                     }, 300);
                     for(var i = 1; i < nTimes; i++){
                         setTimeout(function(){
-                            getId('notifWindow').style.opacity = '0.2';
+                            getId('notifContainer').style.opacity = '0.2';
                         }, i * 600);
                         setTimeout(function(){
-                            getId('notifWindow').style.opacity = '';
+                            getId('notifContainer').style.opacity = '';
                         }, i * 600 + 300);
                     }
                 }else{ // otherwise just 3 flashes
                     apps.prompt.vars.flashNotification(3);
                 }
+            },
+            checkPrompts: function(){
+                this.checkNotifs();
             }
         }, 2, "prompt", "appicons/ds/PMT.png"
     );
@@ -9702,10 +9953,11 @@ c(function(){
             "09/22/2020: B1.2.6.0\n : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.\n : Rearranged Info tab in Settings.\n : Made copyright notices more accurate.\n : Numerous bug fixes the last few months didn't make it into the changelog.\n\n" +
             "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Fixed context menus breaking completely if the clipboard contains less slots than it thinks it should.\n : Modified a context menu icon.\n\n" +
             "09/24/2020: B1.2.7.1\n : Fixed Settings not immediately responding to changes in Light / Dark theme.\n\n" +
-            "11/05/2020: B1.3.0.0\n + Brand new default Dashboard menu, which looks and functions much better.\n : Changed some of the quick options available in the Dashboard.\n + The File Manager can now open apps via right-click on their folder.\n : Changed the Messaging font, rearranged usernames and time/date info.\n : Apps Browser now has a shortened intro and now provides information that is actually useful.\n : Fixed the screen magnifier app.\n + The Custom Style Editor preview will now highlight the bounds of elements when hovered over.\n : Rearranged the Custom Style Editor preview menu.\n : The first message is no longer cut off by the status indicator.\n : Notifications no longer flash an annoying orange glow when attention is required, and instead flash their opacity.\n : File Manager 2 and Text Editor 2 have had the '2' removed from their names.\n : Renamed the old App Maker to Legacy App Maker.\n : Custom apps are now saved in a directory rather than dumped directly into USERFILES.\n - Removed old Text Editor.\n - Removed old File Manager.\n - Removed Flash Cards app.\n - Removed useless Modding Tutorials app.\n - Removed unused Smart Icon Creator app.\n - Removed woefully outdated Help App.\n : Made a section of the Documentation simpler and fixed some typos.\n : House and Indycar games along with Text to Binary are moved to the repository.\n + The Savemaster app now gives you useful information rather than absolutely nothing when its window is open.\n : Task Manager no longer flashes annoyingly while displaying its content.\n : The Sticky Note app now opens in the top-right corner rather than top-left.\n : Reworded the intro to the psuedo-Bash terminal.\n : Reworded the intro to the Pet Cursors app.\n : Reworded some information in File Properties.\n : Windowblur Test Application is renamed to Transparent Window.\n : Chrome prompt is worded less annoyingly.\n : Renamed Boot Script to Boot Scripts\n : Changelog dates are moved to the left side, by their titles.\n : Changed the wording of some startup logs.\n - Removed annoying 'how did you do that?' popups when opening the dashboard and NORAA via unorthodox means.",
+            "11/05/2020: B1.3.0.0\n + Brand new default Dashboard menu, which looks and functions much better.\n : Changed some of the quick options available in the Dashboard.\n + The File Manager can now open apps via right-click on their folder.\n : Changed the Messaging font, rearranged usernames and time/date info.\n : Apps Browser now has a shortened intro and now provides information that is actually useful.\n : Fixed the screen magnifier app.\n + The Custom Style Editor preview will now highlight the bounds of elements when hovered over.\n : Rearranged the Custom Style Editor preview menu.\n : The first message is no longer cut off by the status indicator.\n : Notifications no longer flash an annoying orange glow when attention is required, and instead flash their opacity.\n : File Manager 2 and Text Editor 2 have had the '2' removed from their names.\n : Renamed the old App Maker to Legacy App Maker.\n : Custom apps are now saved in a directory rather than dumped directly into USERFILES.\n - Removed old Text Editor.\n - Removed old File Manager.\n - Removed Flash Cards app.\n - Removed useless Modding Tutorials app.\n - Removed unused Smart Icon Creator app.\n - Removed woefully outdated Help App.\n : Made a section of the Documentation simpler and fixed some typos.\n : House and Indycar games along with Text to Binary are moved to the repository.\n + The Savemaster app now gives you useful information rather than absolutely nothing when its window is open.\n : Task Manager no longer flashes annoyingly while displaying its content.\n : The Sticky Note app now opens in the top-right corner rather than top-left.\n : Reworded the intro to the psuedo-Bash terminal.\n : Reworded the intro to the Pet Cursors app.\n : Reworded some information in File Properties.\n : Windowblur Test Application is renamed to Transparent Window.\n : Chrome prompt is worded less annoyingly.\n : Renamed Boot Script to Boot Scripts\n : Changelog dates are moved to the left side, by their titles.\n : Changed the wording of some startup logs.\n - Removed annoying 'how did you do that?' popups when opening the dashboard and NORAA via unorthodox means.\n\n" +
+            "12/08/2020: B1.4.0.0\n + Notifications and modal dialogues can now be visible at the same time.\n + Multiple notifications can be visible at a time.\n + Multiple modal dialogues can be shown at a time.\n : Modal dialogues can now be minimized.\n : Notifications can now be hidden without destroying them.\n : Changed default font of the taskbar widgets.\n : Modified the look of several widgets for consistency.\n + New notification widget.\n + New icons for network widget.\n : Messaging input font now matches the messages.\n : Online Users widget is now disabled by default.\n : Battery widget now stores its settings in the proper folder.\n + Added photosensitivity warning to an easter egg.",
             oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.3.0.0 (11/05/2020) r0';
+    window.aOSversion = 'B1.4.0.0 (11/05/2020) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -12142,7 +12394,7 @@ c(function(){
                     '<div style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div>' +
                     '<button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button>' +
                     '<button style="position:absolute;bottom:0;height:24px;width:10%;left:10%;" onclick="apps.messaging.vars.doFormatting()">Formatting</button>' +
-                    '<input id="MSGinput" style="position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:monospace">' +
+                    '<input id="MSGinput" style="position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:sans-serif">' +
                     '<button onclick="apps.messaging.vars.sendMessage()" style="position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>');
                 this.vars.lastMsgRecieved = this.vars.lastMsgStart;
                 getId('MSGinput').setAttribute('onkeyup', 'if(event.keyCode === 13){apps.messaging.vars.sendMessage();}');
@@ -12207,7 +12459,7 @@ c(function(){
             doFormatting: function(){
                 tempStr = '';
                 for(var i in apps.messaging.vars.objTypes){
-                    tempStr += '<hr><span style="background:#CCC;padding:3px;border-radius:3px;">[' + i + ']</span><br><br>' + (apps.messaging.vars.objDesc[i] || 'No description.') + '<br><br>Example:<br><br><span style="background:#CCC;padding:3px;border-radius:3px;">' + (apps.messaging.vars.objExamp[i] || 'No examples.') + '</span><br><br>' + apps.messaging.vars.parseBB(apps.messaging.vars.objExamp[i] || '');
+                    tempStr += '<br><br><br><br><span style="background:#CCC;padding:3px;border-radius:3px;">[' + i + ']</span><br><br>' + (apps.messaging.vars.objDesc[i] || 'No description.') + '<br><br>Example:<br><br><span style="background:#CCC;padding:3px;border-radius:3px;">' + (apps.messaging.vars.objExamp[i] || 'No examples.') + '</span><br><br>' + apps.messaging.vars.parseBB(apps.messaging.vars.objExamp[i] || '');
                 }
                 apps.prompt.vars.alert('Here are all the installed formatting tools:' + tempStr, 'Okay', function(){}, 'Messaging');
             },

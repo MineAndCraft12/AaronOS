@@ -937,7 +937,8 @@ div{
 	    height:32px;
 		right:2px;
 		top:0;
-		text-align:right;
+        text-align:right;
+        font-family:Consolas, monospace;
 		/*width:90%;*/
 		/*pointer-events: none;*/
 	}
@@ -1261,6 +1262,7 @@ div{
     display:inline-block;
     background:rgba(255, 255, 255, 0);
     transition:background-color 0.3s;
+    font-family:Consolas, monospace;
 }
 .widget:hover{
     background:rgba(255, 255, 255, 0.25);
@@ -1308,9 +1310,30 @@ div{
     overflow:auto;
 }
 
-#notifWindow{
+#notifContainer{
     right:16px;
     bottom:16px;
+    text-align:right;
+    z-index:110;
+    overflow:visible;
+    max-height:100%;
+    min-height:100px;
+    min-width:300px;
+    overflow-y:auto;
+    padding-left:16px;
+    padding-top:16px;
+    transition:0.3s;
+}
+#notifications{
+    position:relative;
+    max-height:90%;
+    overflow:visible;
+}
+.notifWindow{
+    text-align:left;
+    display:inline-block;
+    position:relative;
+    margin-top:16px;
     min-height:100px;
     min-width:300px;
     border-radius:5px;
@@ -1319,38 +1342,37 @@ div{
     /*color:#000;*/
     font-family:aosProFont, monospace;
     font-size:12px;
-    box-shadow:0 0 20px #000;
+    box-shadow:0 0 16px #000;
     opacity:0.8;
     transition:0.3s;
-    z-index:110;
 }
-    /*.darkMode #notifWindow{
+    /*.darkMode .notifWindow{
         background-color:#000;
         border:2px solid #FFF;
         color:#FFF;
     }*/
-#notifWindow:hover{
+.notifWindow:hover{
     opacity:1;
 }
-#notifTitle{
+.notifTitle{
     font-size:24px;
     left:2px;
     top:2px;
     width:calc(100% - 4px);
     height:1em;
 }
-#notifContent{
+.notifContent{
     bottom:calc(10px + 1em);
     left:2px;
     width:calc(100% - 56px);
     height:calc(100% - 3em - 12px);
     overflow:auto;
 }
-#notifButtons{
+.notifButtons{
     right:2px;
     bottom:2px;
 }
-#notifImage{
+.notifImage{
     position:absolute;
     display:block;
     right:2px;
@@ -1406,12 +1428,12 @@ div{
     opacity:1 !important;
 }
 
-#widgetMenu .winExit, #notifWindow .winExit{
+#widgetMenu .winExit, .notifWindow .winExit{
     color:#000;
     border-color:#000;
     top:3px;
 }
-.darkMode #widgetMenu .winExit, .darkMode #notifWindow .winExit{
+.darkMode #widgetMenu .winExit, .darkMode .notifWindow .winExit{
     color:#FFF;
     border-color:#FFF;
 }

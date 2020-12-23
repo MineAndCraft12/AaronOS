@@ -50,6 +50,12 @@
                 <div id="widgetContent"></div>
                 <div class="winExit cursorPointer" onClick="closeWidgetMenu()">x</div>
             </div>
+            <div id="notifContainer" style="opacity:0;pointer-events:none;right:-350px;">
+                <div id="notifications">
+
+                </div>
+            </div>
+            <!--
             <div id="notifWindow" class="darkResponsive" style="opacity:0;pointer-events:none;right:-350px">
                 <div id="notifTitle">Notification</div>
                 <div id="notifContent">Content</div>
@@ -57,6 +63,7 @@
                 <img id="notifImage" src="appicons/aOS.png">
                 <div class="winExit cursorPointer" onClick="getId('notifWindow').style.opacity='0';getId('notifWindow').style.pointerEvents='none';getId('notifWindow').style.right = '-350px';window.setTimeout(function(){apps.prompt.vars.checkPrompts();}, 300);apps.prompt.vars.currprompt[3](-1);">x</div>
             </div>
+            -->
         </div>
         <div id="winmove" class="cursorOpenHand" onmouseup="winmove(event)" onmousemove="winmoving(event)"></div>
         <div id="icomove" class="cursorOpenHand" onclick="icomove(event)" onmousemove="icomoving(event)"></div>
