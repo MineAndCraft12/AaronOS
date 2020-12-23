@@ -6848,9 +6848,11 @@ c(function(){
                     apps.prompt.appWindow.setDims("auto", "auto", 600, 400);
                     apps.prompt.appWindow.setCaption("Modal Dialogue");
                     getId("win_prompt_html").style.overflowY = "auto";
-                    getId("win_prompt_html").scrollTop = 0;
                 }
                 apps.prompt.appWindow.openWindow();
+                requestAnimationFrame(function(){
+                    getId("win_prompt_html").scrollTop = 0;
+                });
             },
             hideModals: function(){
                 if(apps.prompt.appWindow.appIcon){
