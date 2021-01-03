@@ -67,6 +67,9 @@ There is a copyright notice in the Settings application's Information menu that 
 AaronOS is (c) 2015-2021 Aaron Adams
 By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server
     for your convenience (and, mostly, for technical reasons).
+This software is provided FREE OF CHARGE.
+If you were charged for the use of this software, please contact mineandcraft12@gmail.com
+Original AaronOS source-code provided as-is at Github
 This project is a fork of AaronOS. The official AaronOS project is hosted at https://aaronos.dev/
 The above copyright notice applies to all code and original resources carried over from Aaron Adams' original, official AaronOS project.
 --- END QUOTE ---
