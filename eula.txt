@@ -47,10 +47,10 @@ What you are allowed to charge users for, if you wish, is for code or resources 
 Note that the aforementioned charging shall not pertain to code or resources that Aaron created or owns. Aaron's work may not be locked behind a paywall of any kind,
     users must not be required to pay to access my work, you may not accept payment pertaining to my work, and my work must be provided free of charge to all of your users.
 
-There is a copyright notice in the Settings application's Information menu that reads as following:
+There is a copyright notice in the Settings application's Information menu that reads as following (the year may differ based on date of reading):
 
 --- QUOTE ---
-AaronOS is (c) 2016 Aaron Adams
+AaronOS is (c) 2015-2021 Aaron Adams
 By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server
     for your convenience (and, mostly, for technical reasons).
 This project is a fork of AaronOS. The official AaronOS project is hosted at https://aaronos.dev/
@@ -100,4 +100,4 @@ The AaronOS project's code and resources are provided as-is, and Aaron is not in
     otherwise changed by people or services beyond Aaron himself.
 
 
-Document last updated 2020-06-19 at 12:38pm
+Document last updated 2021-01-02 at 7:20pm

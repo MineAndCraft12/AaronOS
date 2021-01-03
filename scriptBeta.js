@@ -2289,7 +2289,49 @@ function repoUpgradeInstall(targetPackage, packageData){
             repoJSON.hasOwnProperty("appType")
         ){
             installedPackages[targetPackage[0]][targetPackage[1]] = repoJSON;
-            requireRestart();
+            // INSTALL HERE IF LIVE INSTALL BECOMES POSSIBLE
+            // REQUIRE RESTART ONLY FOR UNSUPPORTED TYPES
+            switch(repoJSON.appType){
+                case 'stylesheet':
+                    if(getId("customstyle_appcenter_" + targetPackage[0] + "_" + targetPackage[1])){
+                        document.head.removeChild(getId("customstyle_appcenter_" + targetPackage[0] + "_" + targetPackage[1]));
+                    }
+                    if(repoJSON.hasOwnProperty("styleContent")){
+                        var customCSS = document.createElement("style");
+                        customCSS.classList.add("customstyle_appcenter");
+                        customCSS.id = "customstyle_appcenter_" + targetPackage[0] + "_" + targetPackage[1];
+                        customCSS.innerHTML = repoJSON.styleContent;
+                        document.head.appendChild(customCSS);
+                    }else{
+                        var customCSS = document.createElement("link");
+                        customCSS.setAttribute("rel", "stylesheet");
+                        customCSS.href = repoJSON.styleLink;
+                        customCSS.classList.add("customstyle_appcenter");
+                        customCSS.id = "customstyle_appcenter_" + targetPackage[0] + "_" + targetPackage[1];
+                        document.head.appendChild(customCSS);
+                    }
+                    break;
+                case 'webApp':
+                    if(apps.hasOwnProperty('webApp_' + targetPackage[0] + '__' + targetPackage[1])){
+                        requireRestart();
+                        repoUpgradeCallback("Restart required: web app is already installed: " + targetPackage.join('.'));
+                    }else{
+                        apps.appCenter.vars.compileWebApp(repoJSON, targetPackage[0] + '__' + targetPackage[1]);
+                        appsSorted = [];
+                        for(var i in apps){
+                            appsSorted.push(apps[i].appDesc.toLowerCase() + "|WAP_apps_sort|" + i);
+                        }
+                        appsSorted.sort();
+                        for(var i in appsSorted){
+                            var tempStr = appsSorted[i].split("|WAP_apps_sort|");
+                            tempStr = tempStr[tempStr.length - 1];
+                            appsSorted[i] = tempStr;
+                        }
+                    }
+                    break;
+                default:
+                    requireRestart();
+            }
             repoUpgradeCallback("Success: " + targetPackage.join('.'));
         }else{
             repoUpgradeCallback("Error: response is not a valid package: " + targetPackage.join('.'));
@@ -2469,6 +2511,19 @@ function repoRemovePackage(query, callback){
         (callback || doLog)('No matching packages found.');
         return false;
     }else if(repoMatches.length === 1){
+        // UNINSTALL HERE IF LIVE UNINSTALL IS SUPPORTED
+        var liveUninstall = 1;
+        switch(installedPackages[repoMatches[0][0]][repoMatches[0][1]].appType){
+            case 'stylesheet':
+                if(getId("customstyle_appcenter_" + repoMatches[0][0] + "_" + repoMatches[0][1])){
+                    document.head.removeChild(getId("customstyle_appcenter_" + repoMatches[0][0] + "_" + repoMatches[0][1]));
+                }else{
+                    liveUninstall = 0;
+                }
+                break;
+            default:
+                liveUninstall = 0;
+        }
         delete installedPackages[repoMatches[0][0]][repoMatches[0][1]];
         var repoLength = 0;
         for(var i in installedPackages[repoMatches[0][0]]){
@@ -2479,8 +2534,12 @@ function repoRemovePackage(query, callback){
             delete installedPackages[repoMatches[0][0]];
         }
         repoSave();
-        (callback || doLog)('Package ' + repoMatches[0].join('.') + ' uninstalled.');
-        requireRestart();
+        if(liveUninstall){
+            (callback || doLog)('Package ' + repoMatches[0].join('.') + ' uninstalled. No restart required.');
+        }else{
+            (callback || doLog)('Package ' + repoMatches[0].join('.') + ' uninstalled. Restart required to complete.');
+            requireRestart();
+        }
         return true;
     }else{
         repoMatches.splice(0, 0, ['More than one package with that name. Try again with a more specific name:']);
@@ -6933,7 +6992,7 @@ c(function(){
                     langOld('settings', 'perfModeTog') + ' <button onClick="apps.settings.vars.togPerformanceMode()">Performance Mode</button><br>' +
                     '<i>' + langOld('settings', 'perfModeDesc') + '</i><hr>' +
                     '<b>' + langOld('settings', 'info') + '</b><br>' +
-                    '&nbsp;<b>&copy;</b> <i>2015-2020 Aaron Adams</i><br>' + //          <= COPYRIGHT NOTICE
+                    '&nbsp;<b>&copy;</b> <i>2015-2021 Aaron Adams</i><br>' + //          <= COPYRIGHT NOTICE
                     '<i>' + langOld('settings', 'cookies') + '</i><br>' +
                     'Anonymous data collection: ' + this.vars.collectData + ' <button onclick="apps.settings.vars.collectData = -1 * apps.settings.vars.collectData + 1">Toggle</button><br><br>' +
                     'If you have suggestions, please email <a href="mailto:mineandcraft12@gmail.com">mineandcraft12@gmail.com</a>!<br><br>' +
@@ -7387,7 +7446,7 @@ c(function(){
                     },
                     copyright: {
                         option: 'Copyright Notice',
-                        description: function(){return 'AaronOS is &copy; 2015-2020 Aaron Adams<br><br>This software is provided FREE OF CHARGE.<br>If you were charged for the use of this software, please contact mineandcraft12@gmail.com<br><br>Original AaronOS source-code provided as-is at <a target="_blank" href="https://github.com/MineAndCraft12/AaronOS">Github</a>'}, //         <-- COPYRIGHT NOTICE
+                        description: function(){return 'AaronOS is &copy; 2015-2021 Aaron Adams<br><br>This software is provided FREE OF CHARGE.<br>If you were charged for the use of this software, please contact mineandcraft12@gmail.com<br><br>Original AaronOS source-code provided as-is at <a target="_blank" href="https://github.com/MineAndCraft12/AaronOS">Github</a>'}, //         <-- COPYRIGHT NOTICE
                         buttons: function(){return 'By using this site you are accepting the small cookie the filesystem relies on and that all files you or your aOS apps generate will be saved on the aOS server for your convenience (and, mostly, for technical reasons).' +
                             function(){
                                 if(window.location.href.indexOf('https://aaronos.dev/AaronOS/') !== 0){
@@ -9957,10 +10016,11 @@ c(function(){
             "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Fixed context menus breaking completely if the clipboard contains less slots than it thinks it should.\n : Modified a context menu icon.\n\n" +
             "09/24/2020: B1.2.7.1\n : Fixed Settings not immediately responding to changes in Light / Dark theme.\n\n" +
             "11/05/2020: B1.3.0.0\n + Brand new default Dashboard menu, which looks and functions much better.\n : Changed some of the quick options available in the Dashboard.\n + The File Manager can now open apps via right-click on their folder.\n : Changed the Messaging font, rearranged usernames and time/date info.\n : Apps Browser now has a shortened intro and now provides information that is actually useful.\n : Fixed the screen magnifier app.\n + The Custom Style Editor preview will now highlight the bounds of elements when hovered over.\n : Rearranged the Custom Style Editor preview menu.\n : The first message is no longer cut off by the status indicator.\n : Notifications no longer flash an annoying orange glow when attention is required, and instead flash their opacity.\n : File Manager 2 and Text Editor 2 have had the '2' removed from their names.\n : Renamed the old App Maker to Legacy App Maker.\n : Custom apps are now saved in a directory rather than dumped directly into USERFILES.\n - Removed old Text Editor.\n - Removed old File Manager.\n - Removed Flash Cards app.\n - Removed useless Modding Tutorials app.\n - Removed unused Smart Icon Creator app.\n - Removed woefully outdated Help App.\n : Made a section of the Documentation simpler and fixed some typos.\n : House and Indycar games along with Text to Binary are moved to the repository.\n + The Savemaster app now gives you useful information rather than absolutely nothing when its window is open.\n : Task Manager no longer flashes annoyingly while displaying its content.\n : The Sticky Note app now opens in the top-right corner rather than top-left.\n : Reworded the intro to the psuedo-Bash terminal.\n : Reworded the intro to the Pet Cursors app.\n : Reworded some information in File Properties.\n : Windowblur Test Application is renamed to Transparent Window.\n : Chrome prompt is worded less annoyingly.\n : Renamed Boot Script to Boot Scripts\n : Changelog dates are moved to the left side, by their titles.\n : Changed the wording of some startup logs.\n - Removed annoying 'how did you do that?' popups when opening the dashboard and NORAA via unorthodox means.\n\n" +
-            "12/23/2020: B1.4.0.0\n + Notifications and modal dialogues can now be visible at the same time.\n + Multiple notifications can be visible at a time.\n + Multiple modal dialogues can be shown at a time.\n : Modal dialogues can now be minimized.\n : Notifications can now be hidden without destroying them.\n : Changed default font of the taskbar widgets.\n : Modified the look of several widgets for consistency.\n + New notification widget.\n + New icons for network widget.\n : Messaging input font now matches the messages.\n : Online Users widget is now disabled by default.\n : Battery widget now stores its settings in the proper folder.\n + Added photosensitivity warning to an easter egg.",
+            "12/23/2020: B1.4.0.0\n + Notifications and modal dialogues can now be visible at the same time.\n + Multiple notifications can be visible at a time.\n + Multiple modal dialogues can be shown at a time.\n : Modal dialogues can now be minimized.\n : Notifications can now be hidden without destroying them.\n : Changed default font of the taskbar widgets.\n : Modified the look of several widgets for consistency.\n + New notification widget.\n + New icons for network widget.\n : Messaging input font now matches the messages.\n : Online Users widget is now disabled by default.\n : Battery widget now stores its settings in the proper folder.\n + Added photosensitivity warning to an easter egg.\n\n" +
+            "01/02/2021: B1.5.0.0\n + Repository system can now install and uninstall various package types on-the-fly without requiring a restart.\n + Packages of Web Apps and Stylesheets can now be installed on-the-fly.\n + Packages of Stylesheets can now be uninstalled on-the-fly.\n : aOS Hub now properly updates its buttons after actions, and no longer asks the user to launch apps that aren't installed yet.\n : Fixed an issue in aOS Hub causing the Refresh button to be impossible to click.\n : aOS Hub retains its scroll position after actions.\n : Minor fixes in testing repository.",
             oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.4.0.0 (12/23/2020) r0';
+    window.aOSversion = 'B1.5.0.0 (01/02/2020) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14278,7 +14338,7 @@ c(function(){
                     "<button onclick='apps.appCenter.vars.listRepos()'>Repositories</button><br>" +
                     "<button onclick='apps.appCenter.vars.checkUpdates()'>Refresh</button>" +
                     "</div>" +
-                    "<div style='position:relative;text-align:center;' id='APPCENTER_categories'></div>" +
+                    "<div style='position:relative;text-align:center;margin-top:12px' id='APPCENTER_categories'></div>" +
                     "<div style='position:relative;width:100%;min-height:20px;' id='APPCENTER_packages'></div>" +
                     "</div>"
                 );
@@ -14381,12 +14441,15 @@ c(function(){
         },
         {
             appInfo: 'aOS Hub is a GUI front-end for the aOS repository and package system.',
+            previousScrollPoint: 0,
             displayUpdates: function(updateScreen){
+                //apps.appCenter.vars.previousScrollPoint = getId("win_appCenter_html").scrollTop;
                 getId("APPCENTER_updates").innerHTML = repoGetUpgradeable().length;
-                if(!updateScreen){
+                if(!updateScreen || typeof updateScreen === "string"){
                     apps.appCenter.vars.listAll();
                 }
                 apps.appCenter.vars.doSearch(getId("APPCENTER_SEARCH").value);
+                getId("win_appCenter_html").scrollTop = apps.appCenter.vars.previousScrollPoint;
             },
             listCategories: function(){
                 var currHTML = "";
@@ -14438,11 +14501,13 @@ c(function(){
                 repoUpgrade(null, this.showUpdates);
             },
             install: function(buttonElement){
+                apps.appCenter.vars.previousScrollPoint = getId("win_appCenter_html").scrollTop;
                 repoAddPackage(buttonElement.getAttribute("data-appcenter-repo") + "." + buttonElement.getAttribute("data-appcenter-package"), null, apps.appCenter.vars.displayUpdates);
                 //getId("APPCENTER_NOTICE_" + buttonElement.getAttribute("data-appcenter-repo") + "_" + buttonElement.getAttribute("data-appcenter-package")).innerHTML = "Restart to apply changes.";
                 //getId("APPCENTER_NOTICE").innerHTML = "Restart to apply changes.";
             },
             uninstall: function(buttonElement){
+                apps.appCenter.vars.previousScrollPoint = getId("win_appCenter_html").scrollTop;
                 repoRemovePackage(buttonElement.getAttribute("data-appcenter-repo") + "." + buttonElement.getAttribute("data-appcenter-package"), apps.appCenter.vars.displayUpdates);
                 //getId("APPCENTER_NOTICE_" + buttonElement.getAttribute("data-appcenter-repo") + "_" + buttonElement.getAttribute("data-appcenter-package")).innerHTML = "Restart to apply changes.";
                 //getId("APPCENTER_NOTICE").innerHTML = "Restart to apply changes.";
@@ -14476,7 +14541,9 @@ c(function(){
                         if(installedPackages.hasOwnProperty(repositories[packageList[i][1]].repoID)){
                             if(installedPackages[repositories[packageList[i][1]].repoID].hasOwnProperty(selectedPackage.packageID)){
                                 if(selectedPackage.packageType === "webApp"){
-                                    finalhtml += "<button onclick='c(function(){openapp(apps.webApp_" + repositories[packageList[i][1]].repoID + "__" + selectedPackage.packageID + ", \"dsktp\");});'>Launch</button> ";
+                                    if(apps.hasOwnProperty("webApp_" + repositories[packageList[i][1]].repoID + "__" + selectedPackage.packageID)){
+                                        finalhtml += "<button onclick='c(function(){openapp(apps.webApp_" + repositories[packageList[i][1]].repoID + "__" + selectedPackage.packageID + ", \"dsktp\");});'>Launch</button> ";
+                                    }
                                 }
                                 finalhtml += "<button data-appcenter-repo='" + repositories[packageList[i][1]].repoID + "' data-appcenter-package='" + packageList[i][2] + "' onclick='apps.appCenter.vars.uninstall(this)'>Uninstall</button>";
                             }else{
@@ -14489,6 +14556,7 @@ c(function(){
                     }
                 }
                 getId("APPCENTER_packages").innerHTML = finalhtml;
+                getId("win_appCenter_html").scrollTop = apps.appCenter.vars.previousScrollPoint;
             },
             listRepos: function(){
                 try{
