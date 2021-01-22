@@ -9,7 +9,7 @@
     }
     $totalLogs = json_decode(file_get_contents('errors/issues.json'), true);
     if(!property_exists($totalLogs['hrefs'], $_POST['href'])){
-        $totalLogs['hrefs'][$_POST['href']] = (object)[];
+        $totalLogs['hrefs'][$_POST['href']] = array();
         $totalLogs['hrefs'][$_POST['href']]['timestamps'] = [];
         $totalLogs['hrefs'][$_POST['href']]['blasts'] = [];
         $totalLogs['hrefs'][$_POST['href']]['loadingElements'] = [];
