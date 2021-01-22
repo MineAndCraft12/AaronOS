@@ -7,7 +7,7 @@
     if(!file_exists('errors/issues.json')){
         file_put_contents('errors/issues.json', '{"hrefs": {}}');
     }
-    $totalLogs = json_decode(file_get_contents('errors/issues.json'));
+    $totalLogs = json_decode(file_get_contents('errors/issues.json'), true);
     if(!property_exists($totalLogs['hrefs'], $_POST['href'])){
         $totalLogs['hrefs'][$_POST['href']] = (object)[];
         $totalLogs['hrefs'][$_POST['href']]['timestamps'] = [];
