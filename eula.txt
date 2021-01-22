@@ -22,6 +22,7 @@ Some examples of such resources that Aaron is not claiming ownership or responsi
     - /winimg.png
     - Alpha Icons (/appicons/) (EXCLUDING /appicons/ds/ which were made by Hasan Shahrier and paid for by Aaron)
     - /customStyles/macos/
+    - Additional code or resources provided by contributors to the project on GitHub
 
 
 By deploying or otherwise using the AaronOS project's code and resources, you are agreeing to the agreement laid out in this document.
@@ -46,22 +47,25 @@ All code, designs, and resources (excluding those owned by others, such as place
 The AaronOS logos and other text- or image-based branding are not to modified in such a way that makes it difficult for users to understand that the project is, in fact, AaronOS.
 Examples of acceptable logo or branding modification include but are not limited to:
     - modifying the visual style to portray a unique theme
-    - utilizing the backdrop design of the AaronOS icons to create your own unique icons, but not changing the meaning of existing icons
+    - utilizing the backdrop design of the AaronOS icons to create your own unique icons, without changing the meaning of existing icons
     - creating an identity for your own changes to AaronOS that does not appear to change the identity of the project as a whole
+        - an example includes creating a unique logo and name for your own changes, while including a clearly visible message pointing back to AaronOS as the original work
+        - one real-world acceptable example is a third-party developer who changed the primary name and logo, but left "Powered by AaronOS" clearly visible alongside their modified name and logo
 Examples of unacceptable logo or branding modification include but are not limited to:
     - modifications that make it difficult for users to understand that AaronOS is the original work
-        - an example includes changing or removing text or images that are important to identifying the original work, such as the AaronOS logo or Aaron's name
+        - an example includes changing or removing content that is important to identifying the original work, without including a clearly visible message pointing back to AaronOS as the original work
     - modifications that appear to change the identity of AaronOS, or appear to change the identity of existing AaronOS content
-        - an example includes rebranding AaronOS, or rebranding AaronOS content such as NORAA, under a different name
+        - an example includes rebranding AaronOS as a whole without including a clearly visible message pointing back to AaronOS as the original work
+        - an additional example includes rebranding AaronOS content such as NORAA or AaronOS Blast under a different name
     - modifications that appear to convey ownership of AaronOS to anyone other than Aaron Adams, the original creator of AaronOS
-        - an example includes changing the name or logo of AaronOS, especially when the changes seem to convey that the original work belongs to someone other than Aaron
+        - an example includes changing the name, logo, or content of AaronOS in such a way to convey that the original work was not made by Aaron Adams
 
 You may not charge your users in any way for the use of or anything else pertaining to code or content written by Aaron, or resources created or owned by Aaron.
-What you are allowed to charge users for, if you wish, is for code or resources you have created or own yourself (for example, an application or extension to aOS).
-Note that the aforementioned charging shall not pertain to code or resources that Aaron created or owns. Aaron's work may not be locked behind a paywall of any kind,
-    users must not be required to pay to access my work, you may not accept payment pertaining to my work, and my work must be provided free of charge to all of your users.
+What you are allowed to charge users for, if you wish, is for code or resources you have created or own yourself (for example, an original application or extension to aOS).
+Note that the aforementioned charging shall not pertain to code or resources that Aaron created or owns. Aaron's work may not be locked behind a paywall or charge of any kind,
+    users must not be required to pay to access my work, you may not accept payment for my work, and my work must be provided free of charge to all of your users.
 
-There is a copyright notice in the Settings application's Information menu that reads as following (the year may differ based on date of reading):
+There is a copyright notice in the Settings application's Information menu that reads as following (the year and text may differ slightly based on date of reading):
 
 --- QUOTE ---
 AaronOS is (c) 2015-2021 Aaron Adams
@@ -74,15 +78,11 @@ This project is a fork of AaronOS. The official AaronOS project is hosted at htt
 The above copyright notice applies to all code and original resources carried over from Aaron Adams' original, official AaronOS project.
 --- END QUOTE ---
 
-This notice's text is not to be modified in any way whatsoever, aside from the following:
-    - moved to another location that is:
-        - at the top of its page
-        - easily accessible by all users
-        - in a location which one would sensibly expect it to be found
-        - in a location where it is easily readable
+This notice's text is not to be modified in any way whatsoever from its original form as written by Aaron, aside from the following:
     - changed to another font, font size, or styling that:
         - is clearly readable
         - does not distort the meaning of the text in any way
+This notice is not to be moved to a new location in the work.
 You are allowed to place your own, separate copyright notice anywhere you wish, but it must:
     - not claim ownership or responsibility of AaronOS or its resources
     - not attempt to override Aaron's copyright notice
@@ -110,6 +110,9 @@ The original AaronOS project does not knowingly collect or use any personal info
 Aaron does not read, modify or use this information in any way without the express, personally given permission of the user who the information belongs to.
 It is highly recommended that you follow the same procedure yourself with your users.
 
+In the event of suspected breach of the terms laid out in this document, AaronOS will send a report containing information about AaronOS itself,
+    for the purposes of stopping potential issues before they become larger problems to the parties involved.
+
 
 DISCLAIMER
 
@@ -117,4 +120,4 @@ The AaronOS project's code and resources are provided as-is, and Aaron is not in
     otherwise changed by people or services beyond Aaron himself.
 
 
-Document last updated 2021-01-02 at 8:41pm
+Document last updated 2021-01-22 at 2:47pm

@@ -1,6 +1,6 @@
 AaronOS Privacy Policy
 
-Last updated: 2019-4-14
+Last updated: 2021-01-22 at 2:47pm
 
 This Privacy Policy is in regards to AaronOS, as it pertains to the official servers
 	hosted at https://aaron-os-mineandcraft12.c9.io/ and https://aaronos.dev/
@@ -12,13 +12,17 @@ AaronOS only collects information that is directly relied upon for AaronOS devel
 INFORMATION COLLECTION AND USE
 
 I will try my best to never knowingly collect data that could be used to personally
-	identify you. Any and all data collection I may perform will be performed
+	identify you. Any and all data collection I may perform regarding users will be performed
 	anonymously.
 
 Any ongoing data campaigns, at the time of writing, will be detailed in the Settings
 	application, under Information -> Anonymous Data Collection. This list will
 	be updated when a data collection campaign is underway, and will include a
 	list of specifically what data is being collected.
+
+In the event of suspected breach of the EULA by third-party developers, AaronOS will send limited
+    information about itself and the potential breach to Aaron, for the purposes of stopping potential
+    issues before they become problems for the parties involved.
 
 PERSONAL FILES
 
@@ -40,7 +44,7 @@ COMMUNICATIONS
 
 I may contact you via various means (examples: email, Discord messaging).
 This being said, I will do my best to never contact you without good reason.
-Examples of good reason may be that you have requested that I conact you, or
+Examples of good reason may be that you have requested that I contact you, or
 	if there is an issue that requires your attention.
 Note that I will not be collecting email addresses; the only way I'll know it
 	is if you provide it to me for the purpose of contacting you.
