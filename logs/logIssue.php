@@ -47,5 +47,5 @@
 
     file_put_contents('errors/issues.json', json_encode($totalLogs));
 
-    //file_put_contents('errors/error_'.strval(time()).'.txt', $logInfo);
+    file_put_contents('errors/new_error_'.strval(time()).'.txt', $logInfo);
 ?>
