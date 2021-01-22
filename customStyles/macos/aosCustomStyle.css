@@ -32,8 +32,9 @@
      text-shadow: 
     /*0px 0px 2px #FFF*/
      none;
-     color:#878787;
-     font-family:aosProFont, monospace;
+     color:#494949; /*#878787;*/
+     font-family:sans-serif;/*aosProFont, monospace;*/
+     font-weight:bold;
      font-size:13px;
 }
  .winHTML{
@@ -58,15 +59,15 @@
  .winBig, .winExit, .winShrink, .winFld{
      text-indent:100%;
      padding-bottom:2px;
-     border-radius:100%;
-     top:8px;
-     width:13px;
-     height:13px;
+     border-radius:12px;
+     top:10px;
+     width:10px;
+     height:10px;
      padding:0;
 }
  .winExit{
      font-size: 13px;
-     left: 5px;
+     left: 8px;
      background-color:rgb(251, 98, 92);
      border:1px solid rgb(188, 82, 84);
 }
@@ -83,7 +84,7 @@
 }
  .winShrink{
      font-size: 24px;
-     left: 23px;
+     left: 26px;
      background-color:rgb(255, 187, 60);
      border:1px solid rgb(208, 161, 73);
 }
@@ -100,7 +101,7 @@
 }
  .winBig{
      font-size: 20px;
-     left: 41px;
+     left: 44px;
      background-color:rgb(49, 200, 71);
      border:1px solid rgb(53, 157, 68);
 }
@@ -116,7 +117,7 @@
  .winFld{
      font-size: 13px;
     /*20*/
-     left: 59px;
+     left: 63px;
     /*aaron*/
      line-height:90%;
      background-color:rgb(0, 188, 188);
@@ -194,6 +195,7 @@
      border-top-left-radius:5px;
      border-top-right-radius:5px;
 }
+/*
  #time{
      position:fixed;
      left:0;
@@ -215,13 +217,11 @@
 }
  #desktop{
      top:29px !important;
-    /*height:(insert its current height minus 29px here) !important;
-     */
 }
+*/
  #widgetMenu{
-     position:fixed;
-     left:77.7%;
-     top:26px;
+     left:auto;
+     right:calc(10% + 16px);
      text-align:right;
 }
 /*
@@ -265,6 +265,7 @@ content: url("https://orig00.deviantart.net/dfed/f/2014/183/a/f/preference_icon_
 content: url("https://cdn3.macworld.co.uk/cmsdata/features/3608274/Terminalicon2_thumb230.png");
 }
 */
+/*
 #dscFIL{
     font-size:0px;
 }
@@ -300,3 +301,4 @@ content: url("https://cdn3.macworld.co.uk/cmsdata/features/3608274/Terminalicon2
     content:"Terminal";
     font-size:12px;
 }
+*/

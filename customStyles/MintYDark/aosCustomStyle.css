@@ -103,14 +103,21 @@ button:active{
  color:#FF2F2F !important;
 }
 .winCap{
- box-shadow:inset 0 1px 0 0 #EEE;
  border-radius:4px;
  margin-left:-3px;
  padding-left:26px;
  padding-right:3px;
-}
+}/*
  .darkMode .winCap{
-  box-shadow:inset 0 1px 0 0 #373737;
+  
+ }*/
+.winRes{
+    box-shadow:inset 0 1px 0 0 #EEE;
+    border-radius:3px;
+}
+ .darkMode .winRes{
+    box-shadow:inset 0 1px 0 0 #373737;
+    border-radius:3px;
  }
 #FILcntn{
  background-color:#FFF !important;

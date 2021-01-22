@@ -16,7 +16,7 @@
         }
         rmdir($dirPath);
     }
-    if(strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== FALSE || explode(':', $_SERVER['HTTP_HOST'])[0] === "localhost"){ //aaron-os-mineandcraft12.c9.io'){
+    if(strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== FALSE || explode(':', $_SERVER['HTTP_HOST'])[0] === "localhost" || $_SERVER['SERVER_NAME'] === '0.0.0.0'){ //aaron-os-mineandcraft12.c9.io'){
         function error($errid, $errstr, $errfile, $errno){
             echo "Error - [" + $errno + '] ' + $errstr;
         }
