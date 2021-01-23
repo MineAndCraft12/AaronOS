@@ -9740,288 +9740,1451 @@ c(function(){
             "    :)  Added stylish battery\n" +
             ">       Optimise many functions for performance mode (Application.setDims)\n" +
             ">       Languages (The language that is the language that the United States of America currently speaks, Anglish,)",
-        changelog:
-            "01/26/2016: A1.2.0.0\n + Changelog Added.\n : Windowblur fixed when dims not set.\n + Search app added.\n : RD no longer brings aOS to its knees.\n + System to allow apps to have code wait its turn to avoid OS-crippling lag.\n + App Maker can now give apps image-based icons.\n\n" +
-            "01/30/2016: A1.2.1.0\n + Right-click menu for desktop icons, allows re-arrangement of icons.\n : Text Editor app no longer uses word-wrap.\n\n" +
-            "02/04/2016: A1.2.2.0\n + Text-to-speech added to right-click menu, credits to creator are in the Settings app.\n + Experimental image editor began development.\n\n" +
-            "02/23/2016: A1.2.3.0\n + Copyright notice added to Settings application - (c) 2016 Aaron Adams\n + Waiting Code system modified to allow args in functions.\n : Resizing of the aOS monitor is now manual - reduces strain on CPU.\n + Ability to send error reports if the filesaving service is intact.\n + aOS replaces requestAnimationFrame with a custom function if requestAnimationFrame is unsupported in your browser.\n + True fullscreen support - remember to use Chrome.\n\n" +
-            "04/04/2016: A1.2.4.0\n : Window Rotation changed to Window Scaling.\n + Windows can now fit to the size of the desktop - just hit the 'O' button and watch what it does.\n + Change calulating app, ChC.\n : Various bug fixes - this one is spread between the last few updates, just forgot to mention it.\n : aOS version format changed from 'V_._._' to 'A_._._', 'A' meaning alpha. When in beta form, it will be changed to 'B_._._', and on full release will be changed back to 'V_._._'.\n + RemoveTimeout is added to task manager.\n : File manager can no longer cripple the system.\n + Replaces performance.now with custom function if not supported by your browser.\n + Added messaging app, lets you message all other aOS users with Messaging app currently open.\n + Added performance-checking features, see an example in the initialization-time log in the console.\n + Ability to switch between OS accounts.\n + Built-in apps now fully support variable window sizes.\n + Network status now shown on taskbar.\n + NORAA added.\n : TTS uses Googles built-in TTS.\n + NORAA can hear the user, if given permission.\n\n" +
-            "06/06/2016: A1.2.5.0\n + Bing app added for quick bing search (google wont let me).\n + NORAA can now tell you what nearly anything is.\n : Improvements to formDate to help with CPU load.\n + Files can view window object.\n : Context menus better to create and faster.\n + Files now can show properties of a file.\n + New font called aosProFont i think, credits to its creator, not me.\n : Settings app rewritten.\n + NORAA can listen for you to speak to him, and now referrs to himself as 'me' instead of 'NORAA'.\n : filesaving optimised.\n + Help App.\n + Music Visualiser (add /unrelated/keyfingers/visual.php to the URL to get non-laggy version).\n + Taskmanager can close tasks.\n : More optimised for mobile FPS on performance mode.\n + New prompt system that does not freeze browser.\n : Messaging more safe but breaks on mobile still.\n + More icons added.\n + Mobile can double-tap to context menu, but only on some objects.\n : When ctxmenu opens using that method, drag both fingers out of the OS window before lifting them, or the menu will close.\n : Files is safer to use.\n : Probably many other changes but forgotten what as I keep forgetting to log them.\n\n" +
-            "08/17/2016: A1.2.6.0\n + Properties now displays the size of functions.\n + When needed, Properties now shows KB, MB, and GB so values are easier to count.\n : Battery no longer has blue background, and instead gives the foreground a blue tint when charging.\n + Performance Monitor app shows CPU usage stats.\n : Changelog is easier to read.\n : Properties app shows shorter description for file sizes.\n + Windows now have texture to their borders, looks good if you can find a glassy texture like Windows has (i wont steal theirs) or if your device cant run windowblur.\n + Right-click menu lets you open an app from its icon.\n + App controls are now accessible from the app's window caption.\n : Camera app now resizes correctly.\n : Music Visualizer now waits for the song to load before trying to play it.\n - Application List can no longer be moved or resized.\n + If JavaScript is disabled or unsupported, the loading page will nag you to enable it.\n + Alerts, confirms, and prompts can now tell you where they came from.\n + Music Visualizer now shows loading progress and song playtime progress.\n + New simple version of Music Visualizer, uses a canvas (thus looks worse), and runs on one color only: black (with a green screen behind it), which achieves 60fps instead of 15.\n + New Ringtone for Messaging.\n + New Looketh Over There ringtone for Messaging.\n + Fix for double quotes in Messaging.\n + Apps can now stay Always On Top.\n : Notepad reworked.\n : Fixed NORAA looking up definitions.\n + Copy/Paste added.\n : Fixed Fullscreen Dimensions.\n\n" +
-            "09/23/2016: A1.2.7.0\n + Mathway app Added.\n : Developers can now keep their app out of the apps list, in case it acts as a utility of sorts..\n + Icon added to music visualizer.\n + Apps can now be opened by Files browser.\n + Files can now be deleted in File Browser.\n + New AppBrowser, for opening any app installed on the system.\n : Task Manager is now capitalized in application list.\n + Simon Says App.\n : Updated the appearance of apps on the desktop; two-word names no longer overlap the icon, and it looks a bit cleaner and easier to read with bright and dark backgrounds alike.\n + Smoother animations in desktop icons and window borders and buttons.\n + Taskbar now shows which app is active.\n : Stylish Battery icon now looks like a AA battery rather than just a box.\n : OS loads your files more cautiously, notifies you of errors.\n : Fixed inconsitency in desktop icon ctxMenus.\n : Changelog is a little better.\n : Apps can no longer interrup each others saving processes.\n : Deleting now works properly again.\n + Shut down and restart are now a feature; lets apps save their progress if you do it while they running.\n + Large additions to aOS API documentation.\n + Complete aOS API Documentation started in the aOS Help App.\n + Raw battery information is now stored outside of an anonymous function.\n : aOS now tries up to three times to set up the battery.\n + Bug Central app, to track and document known bugs.\n + Donation button added.\n + Indycar app added; the first app not written 100% by hand.\n + Added Dont-Save argument to most settings.\n\n" +
-            "09/23/2016: A1.2.8.0\n + New changelog mechanic - Because aOS is updated live, it's harder to keep one version number on everything. Updates will be tracked in more detail, adding a fourth update number, and dates will be closer together so you can tell exactly when each visible change was made.\n : Controls changed in House game.\n + New sprites in House game, explosion animation and soldiers now shoot at an angle.\n + Experimental RDP system. No, it's not perfect, but it's a start.\n\n" +
-            "09/24/2016: A1.2.8.1\n : Complete rewrite of render system for music visualizer, you now get max fps instead of 10.\n : Along with this new render system, by clicking on the visualization it will resize to fit its window. Theoretically, it will work for any width 2048 pixels or less, and for any height physically possible.\n + You can access Visualizer as its own separate browser window! Visit https://aaronos.dev/AaronOS/unrelated/keyfingers/cnv.php, and that way the OS itself wont slow down the visualizer and you can also put it into true fullscreen.\n\n" +
-            "09/25/2016: A1.2.8.2\n : New look for the Settings app.\n + Context menus can now have disabled options.\n\n" +
-            "09/30/2016: A1.2.9.3\n + New Mouse Control app; purely experimental.\n + Added function grapher, to help with math students.\n + Added external debug window for if you have trouble clicking on aOS.\n\n" +
-            "10/01/2016: A1.3.0.0\n : User can now drag to move windows instead of having to click several times.\n\n" +
-            "10/04/2016: A1.3.1.0\n + User can now create their own desktop icons.\n\n" +
-            "10/04/2016: A1.3.2.0\n + Remote Debugging Menu for debugging another user's computer.\n\n" +
-            "10/06/2016: A1.3.3.0\n + Added binary file viewer... because it's cool, I guess.\n\n" +
-            "10/07/2016: A1.4.0.0\n + Context Menus can now have 10x10 images to represent their options.\n : Context Menu options are now left-aligned instead of center-aligned.\n\n" +
-            "10/12/2016: A1.4.0.1\n : Fixed Saving of FPS Status settings on taskbar.\n\n" +
-            "10/13/2016: A1.4.1.0\n + Added compact settings for FPS and Time on taskbar.\n + Added Custom Stylesheet feature - check Settings -> Advanced for more info.\n\n" +
-            "10/18/2016: A1.4.2.0\n + Added Magnifier App; lets you magnify aOS, focusing on your mouse.\n\n" +
-            "10/20/2016: A1.5.0.0\n + Added a new type of context menu; it is the same visually but is easier to edit, can be added to on the fly, and can safely perform more actions.\n\n" +
-            "10/21/2016: A1.5.0.1\n : Fixed fatal error when taskbar is the first right-clicked element since launch.\n : Changed context menus for app icons, taskbar icons, and Applications List to the new version.\n\n" +
-            "10/22/2016: A1.5.1.0\n : Fixed fatal error when right-clicking window border after toggling performance mode.\n : Changed Task Manager to display more important information and added entry to aOS Help app to describe what they mean.\n\n" +
-            "10/24/2016: A1.5.2.0\n + LiveElements can now target their element attributes.\n\n" +
-            "10/25/2016: A1.6.0.0\n + Clipboard is now saved between sessions and restarts.\n + Emergency Clear Clipboard button in Settings.\n : Network Status is less distracting.\n : Fixed blurry buttons, font sized changed to 12px, native for font.\n + Added crash tester and force-boot option on boot menu.\n : Fixed graphics bug where power-down screen appeared suddenly instead of fading.\n + New animation, start menu slides up from bottom.\n\n" +
-            "10/27/2016: A1.6.1.0\n + You can now copy text from any window in the OS instead of only in text boxes.\n + Experimental support for Safari's backdrop-filter CSS property in Settings to blur windows.\n + Added Current Selection to task manager.\n : Applications List only updates its data at system start, as it is only needed then. Saves on FPS and makes Apps List faster.\n + Loading icons added in Apps List, Files Browser, Loading Screen, and Shutdown Screen.\n\n" +
-            "10/28/2016: A1.6.2.0\n : Applications List now slides in from the left... looks a bit better.\n + New Tampermonkey script to get aOS on any tab!\n\n" +
-            "10/19/2016: A1.6.2.1\n + Added cookie image for use in context menus, not actually being used yet though.\n\n" +
-            "10/30/2016: A1.6.3.0\n : Desktop Icons now position themselves correctly. About time!\n\n" +
-            "11/02/2016: A1.7.0.0\n : Taskbar no longer has occasional positioning issue.\n + Custom Style Gallery in Settings, with Win98, Win8, and Win10 options so far.\n + Screensaver support - default is after 5 mins, cycle color hues on screen.\n\n" +
-            "11/07/2016: A1.7.0.1\n + aOS now attempts to adapt to Google Play by automatically enabling performance mode.\n\n" +
-            "11/09/2016: A1.7.1.0\n + aOS Calculator App.\n - Custom Math App.\n\n" +
-            "11/10/2016: A1.7.1.1\n + Button added to calculator so user can undo clearing the display.\n\n" +
-            "11/15/2016: A1.7.1.2\n : Disabled rendering of elements that are always hidden, to save on performance.\n\n" +
-            "11/21/2016: A1.7.2.0\n + Files location bar now shows loading progress.\n\n" +
-            "12/01/2016: A1.7.2.1\n + Added new screensaver: Color Randomization.\n\n" +
-            "12/02/2016: A1.7.3.0\n + Added new PNG file saver for saving base-64 images to aOS.\n\n" +
-            "12/07/2016: A1.7.3.1\n + Added desktop background to loading screen.\n + Added new screensavers: blank and Random Wikipedia Page.\n\n" +
-            "12/08/2016: A1.7.3.2\n + Added configurability to screensavers (currently only the wikipedia one though).\n : Fixed Random Color screensaver.\n : Fixed Force Boot.\n\n" +
-            "12/13/2016: A1.7.4.0\n + Added 60fps Ultra setting to music visualizer... absolutely stunning on 15px mode.\n\n" +
-            "12/15/2016: A1.7.4.1\n : aOS checks for battery 10 times instead of 3, just in case.\n\n" +
-            "12/16/2016: A1.7.4.2\n : Fixed error on startup for new users.\n\n" +
-            "12/17/2016: A1.7.5.0\n + Added CPU Monitor Graphing app.\n : Changed some text in Applications List.\n\n" +
-            "01/05/2017: A1.7.5.1\n : Fixed maximized windows.\n + Added links to old versions in files.oldVersions.\n\n" +
-            "01/07/2017: A1.7.5.2\n : Fixed key generation for new users.\n\n" +
-            "01/10/2017: A1.7.6.0\n + Began development on experimental bash console.\n\n" +
-            "01/23/2017: A1.7.7.0\n + Added commands cp, mv, del, su, and sudo to bash console.\n : Revised commands cd and ls in bash console.\n + Bash console now shows current directory in command prompt.\n\n" +
-            "01/24/2017: A1.7.7.1\n : Fixed .. directory selections in bash console.\n + Added alias support in bash console (try 'alias please=sudo').\n + Added mkdir in bash console.\n : Changed del to rm in bash console (oops, this isnt MS-DOS!)\n : Made ls calculate dir all at once instead of separately, now takes < 1 second to calculate 'ls -s /' as opposed to 10 minutes and does not interrupt system processes.\n\n" +
-            "01/25/2017: A1.7.8.0\n + Begun commenting all necessary code (11,000 lines, ugh) in aOS, as right now its just a huge mess.\n\n" +
-            "02/02/2017: A1.8.0.0\n : aOS now boots modularly, so if one app initializes incorrectly, other apps still have a chance to start and the os will not lock you out.\n\n" +
-            "02/03/2017: A1.8.0.1\n : Boots much faster, but still slower than 1.7.8, especially for Google Play version.\n\n" +
-            "02/06/2017: A1.8.1.0\n + Automatically adjusts screen resolution when window is resized. Much more efficient mechanism than the early days of aOS.\n\n" +
-            "02/08/2017: A1.8.2.0\n + Taskbar can now be repositioned; bottom, top, left, and right are the options.\n + Version number on page title now shows date of last update.\n : Context menu on taskbar now directs user to taskbar settings page instead of directly changing them.\n\n" +
-            "02/18/2017: A1.8.3.0\n + Windows can now 'fold'; hides body so you can more easily sort through them.\n\n" +
-            "02/19/2017: A1.8.3.1\n + Windows can now be hidden via taskbar buttons right-click.\n\n" +
-            "03/01/2017: A1.8.3.2\n + Added Search app to the top of Apps List.\n + Beginning aDE (aDesktopEnvironment) framework development, plan is to serve similar purpose to the xServer of Linux.\n\n" +
-            "03/22/2017: A1.8.3.3\n + Added setting to allow user to watch aOS build itself at startup.\n\n" +
-            "03/28/2017: A1.8.4.0\n + Merged aOS and my friend's JAos into the same workspace, for his ease of building.\n + Added psuedo-GRUB to startup to choose between Operating Systems.\n : Shutdown screen slightly different.\n\n" +
-            "04/25/2017: A1.8.4.1\n + Added Windows XP (plain and colorable) themes to CustomStyles.\n + Added (extremely buggy) pipe logic to bash console.\n + Added grep command to bash console, currently case-sensitive, will fix.\n\n" +
-            "04/26/2017: A1.8.5.0\n + Windows will now be 'highlighted' when their icon in the taskbar is hovered over.\n: Instead of making windows move slowly, Performance Mode draws a border of the window instead of having the window follow the cursor - great for FPS.\n\n" +
-            "04/27/2017: A1.8.5.1\n + Added background to window highlighting to make it more visible; normally it looks sleek but in performance mode it is easier to render.\n : Default window blur is now 2 instead of 5 - helps the FPS and looks a bit better.\n : The experimental Backdrop Filter blur now uses the blur strength setting instead of always 5.\n+ aOS now remembers Performance Mode settings - a very useful setting for many low- to medium-power devices.\n\n" +
-            "04/28/2017: A1.8.5.2\n : Window highlight looks a bit better.\n + Apps Browser can now open apps from the context of the taskbar, however this tends to break things, notably with the Files app.\n\n" +
-            "05/04/2017: A1.8.6.0\n : Cursors are now controlled by class, not by direct style overrides - this allows customStyles to change cursor theme.\n : Loading cursors changed to hourglass shape that was originally intended - i forgot that was there.\n\n" +
-            "05/09/2017: A1.8.6.1\n : Fixed Google Play version of aOS.\n - Removed aDE framework for now.\n : File Browser now opens folders much faster, even loads the window object super quickly.\n\n" +
-            "05/10/2017: A1.8.6.2\n + Added Changelog app - the changelog is much easier to read this way.\n\n" +
-            "05/11/2017: A1.9.0.0\n + Added Notification system, for non-urgent notifications. Current bug however means that only one notif/alert can be open at a time.\n + Added sweet animations to opening and closing windows, sadly though this means cutting support for pretty much everything but Chrome as it uses Fat-Arrow notation.\n\n" +
-            "05/12/2017: A1.9.0.1\n + Windows now have opacity-change when opening/closing.\n : Windows only scale halfway instead of all the way when closing\n\n" +
-            "05/15/2017: A1.9.0.2\n : Fixed Serverside Error [2] Cannot modify header information\n : Fixed certain windows not animating correctly\n\n" +
-            "05/16/2017: A1.9.0.3\n + Added framework for new, better language system\n\n" +
-            "05/18/2017: A1.9.0.4\n : Modified the behavior of the ls command in the bash console.\n : Messaging is now MUCH faster than before - major speed improvement.\n : Fixed bug in messenger where username would sometimes not appear when opening the app\n\n" +
-            "05/19/2017: A1.9.1.0\n + Added more content to Chinese language.\n + Context menus, app names, and apps list are now programmed to reflect language selection if translation available.\n + Re-added Ultra Verbose as a joke language.\n\n" +
-            "05/21/2017: A1.9.2.0\n : Changed around some icons, I think they look a bit better now. Credit to Elme Delos Santos\n + Added 42 new backgrounds.\n + Notification that tells what the latest update was.\n : Made JavaScript Console, Prompts, and Text Editor translatable.\n : Messaging now loads 10 messages by default instead of 5.\n\n" +
-            "05/23/2017: A1.9.2.1\n - Removed security hole from Messaging\n + Messaging now highlights real admins green.\n : Suppressed a bug in Camera.\n\n" +
-            "05/24/2017: A1.9.2.2\n + Added custom style by Elme Delos Santos.\n\n" +
-            "05/28/2017: A1.9.2.3\n : Messaging app is a bit more secure.\n + If a notification is already open, additional dialogs will flash the notification to attract attention.\n + Added 'Into Your Arms' and 'Live For The Drop' to Music Visualizer. Both songs are by Capital Kings and I claim no rights to them.\n\n" +
-            "05/29/2017: A1.9.2.4\n : Notification for latest update only happens if the latest update is new.\n : Fixed Messaging encoding names incorrectly since the 1.9.2.3 update.\n\n" +
-            "05/30/2017: A1.9.2.5\n : Messaging app is, once again, more secure. One side effect of this update is that all messaging usernames were reset. Just re-enter your name again to get it back.\n\n" +
-            "06/01/2017: A1.9.3.0\n + Added Style Editor app to more easily edit Custom Styles. \n : Moved Boot Script into the Applications List.\n : Reboot now correctly reboots to aOS.\n + Version of aOS is now included in error reports. Chrome cache sucks for debugging.\n : Even easier to tell admins in messaging now.\n\n" +
-            "06/02/2017: A1.9.3.1\n + Images can now be sent in messaging. [IMG]http://URL.HERE/image.png[/IMG]\n - Fixed error in Google Play version where aOS attempts to determine its last version via localStorage.\n - Fixed error in Google Play where, when loading a desktop previously loaded on a PC, NORAA throws an error at boot and fails to initialize.\n\n" +
-            "06/03/2017: A1.9.3.2\n + Windows now minimize to the correct position on the taskbar.\n\n" +
-            "06/05/2017: A1.9.3.3\n : Fixed backslash error with names in Messaging.\n\n" +
-            "06/06/2017: A1.9.4.0\n + Added App Search functionality to Dashboard\n + Added new types of Dashboard, Windows 7 and Whisker Dashboards, they can be found in settings.\n : Renamed Apps List to Dashboard.\n\n" +
-            "06/13/2017: A1.9.4.1\n : Fixed error in psuedo-GRUB that prevents aOS from loading in Google Play app and older browsers\n : Forced Chrome to ignore cached version of script and style on reboot/refresh. Take that, Chrome!\n\n" +
-            "06/18/2017: A1.9.5.0\n + Added Windows 7 theme to Custom Styles in Settings.\n + Added new Android-like Dashboard setting.\n + aOS will now try to keep your device awake while in use.\n\n" +
-            "06/19/2017: A1.9.5.1\n : Fixed error when attempting to change Dashboard in settings.\n\n" +
-            "06/22/2017: A1.9.6.0\n + Added timestamps to Messaging\n + Added Discussion Topics in Messaging.\n\n" +
-            "06/29/2017: A1.9.6.1\n + Made timestamps in messaging easier to read.\n\n" +
-            "07/10/2017: B0.1.0.0\n + AaronOS Beta has finally begun development!\n - Removed apps that are abandoned or bloatware: Window Test Application, Test App 2, RD, PNG Saver, Canvas Video Games, The Internet, Mouse Recorder, TI-83+ Simulator, aOSimg Editor, Change Calculator, Performance Monitor, Simon, Bug Central, Remote Desktop Host, Remote Desktop Viewer, External Debug, Alternate Mouse Control, Online Debug Connection, File Binary, Jana, and Dark Room.\n : Files app renamed to File Manager to avoid confusion.\n : All filesaving is now local.\n + Support for apps to add folders to USERFILES has been added.\n : Saving files is now different programmatically - just save the file in USERFILES, then invoke apps.savemaster.vars.save() with no arguments to save.\n\n" +
-            "07/11/2017: B0.1.1.0\n : Changed UI from using ugly purplish colors to sleek black-and-white and inputs, with subtle hints for hovering, clicking, and focus. Affected are buttons, inputs, and textareas.\n : Changed horizontal dividers to look better - works best on white or black backgrounds.\n : Changed the look of the context menu - now looks less ugly and gray, now has sleek feel to it.\n : Changed the display size of most icons - they are now evenly powers of two (16, 32, 64, 128, etc).\n\n" +
-            "07/12/2017: B0.1.1.1\n + Added application to help me test the UI of the beta.\n : Changed window title bars back to normal, as they were huge before.\n : Changed window caption icons to 32x32 instead of 20x20. The icons now scale cleanly.\n\n" +
-            "07/16/2017: B0.1.2.0\n : Settings background is now truly black.\n : Fixed color of shadow for context menu.\n : Changed context menu icons.\n\n" +
-            "07/17/2017: B0.1.2.1\n - Removed local file saving, as it caused issues.\n + Re-added cloud file-saving, as removing it broke the original vision for aOS - a desktop that lives in the Cloud.\n\n" +
-            "07/23/2017: B0.1.3.0\n + Added rudimentary GTK theme support - use the GTK Conversion app to turn a GTK theme into a compatible aOS theme.\n\n" +
-            "07/24/2017: B0.1.3.1\n + GTK Theme Converter now removes some lag sources (wildcards ftw) and supports inputs and textareas, as well as selection colors.\n\n" +
-            "07/31/2017: B0.1.4.0\n + 15 new icons from Nightmare Sphere developer Hasan Shahrier - great job, Hasan! More icons on the way.\n\n" +
-            "08/05/2017: B0.1.4.1\n + 16 new icons from Nightmare Sphere developer Hasan Shahrier - great job again!\n : Default window background changed - cleaner now.\n - Removed many desktop icons, as at the moment, built-in icons cannot be removed, and it made the screen look cluttered.\n\n" +
-            "08/07/2017: B0.1.4.2\n + Changed cursor set to KDE Breeze and added open/closed hand for moving and resizing windows.\n : Changed Window Background Image to one that is much more subtle and doesn't distract from content.\n\n" +
-            "08/08/2017: B0.1.5.0\n + Added new ScreenSaver, Bouncy Ball, which bounces a ball around the screen with realistic(ish) physics.\n : Fixed Settings icon color.\n : Changed default screensaver to Bouncy Ball.\n\n" +
-            "08/14/2017: B0.1.6.0\n + Added new Modding Tutorials app and a tutorial for making your own NORAA apps.\n : Changed default screensaver back to Hue, as Bouncy Ball had some locking problems. Still have no idea what happened.\n : Changed error message to be a bit less intimidating.\n\n" +
-            "08/15/2017: B0.1.7.0\n + Added App Information Viewer that allows you to see the full app icon and a help page for an app.\n + Added Help Pages for all built-in apps on the App Information Viewer.\n\n" +
-            "08/21/2017: B0.1.8.0\n : Changed symbols used in window control buttons, they are now all the same size and are more consistent\n : Fixed setting names in Messaging\n : Fixed Bouncy Ball screensaver and set as default again.\n : Changed default Window Fade Distance to 0.8 from 0.5, it is smoother and less distracting \n + Added password setting in Settings - Information.\n\n" +
-            "08/22/2017: B0.1.8.1\n + Added support for HiDPI displays in Settings - Screen Resolution\n : Changed CORS proxy to https://cors-anywhere.herokuapp.com/ and NORAA can now answer 'what is' questions again.\n\n" +
-            "08/23/2017: B0.1.8.2\n : Fixed cutoff of icons on window titlebar\n + Added funny error messages\n : Fixed File Manager UI\n : Fixed JavaScript Console UI\n : Fixed crash in Firefox when typing into alert box\n\n" +
-            "08/24/2017: B0.1.8.3\n + Added Phosphor screensaver from Linux XScreenSaver and set as default.\n : Fixed screensavers freezing aOS when deactivated by keypress.\n\n" +
-            "09/08/2017: B0.1.8.4\n : Window titlebar buttons look much cleaner now; font is consistent across devices and looks less like text than a button.\n\n" +
-            "09/09/2017: B0.1.8.5\n : Fixed close button on notifications\n\n" +
-            "09/12/2017: B0.1.9.0\n : Updated mobile app to the Beta version of aOS.\n : Updated mobile adaptations to work better. Someone please give feedback if it works right!\n\n" +
-            "09/21/2017: B0.1.9.1\n + Added touch and clear to Bash Console.\n\n" +
-            "09/23/2017: B0.1.9.2\n : Fixed Phosphor screensaver.\n\n" +
-            "10/05/2017: B0.2.0.0\n + Taskbar Widgets! All right-side content of taskbar is now Widgets. This is a major update and a major improvement over the old style.\n\n" +
-            "10/06/2017: B0.2.1.0\n + Added Network Widget\n : Fixed positioning of context menu when screen is scaled\n : Fixed position of moving windows when screen is scaled.\n + Added new folder to File Explorer for the new taskbar widgets, so their source can be explored just like apps.\n : Fixed cursor style issues in Files Explorer.\n : Fixed some horribly inefficient code in text editor.\n\n" +
-            "10/07/2017: B0.2.2.0\n + Added CPU load widget; every piece of the original taskbar is now available again.\n\n" +
-            "10/21/2017: B0.2.2.1\n : Fixed a bug with moving windows caused by screen scaling.\n\n" +
-            "11/11/2017: B0.2.2.2\n - Removed annoying false error prompt from music visualizer.\n\n" +
-            "11/16/2017: B0.2.2.3\n : Easier to use notifications, when closing notification and another is waiting, it slides out and back in so you can tell there are more.\n + Minor spam protection in Messaging.\n\n" +
-            "01/01/2018: B0.2.2.4\n : Images added to Messaging now have 3px padding around them.\n\n" +
-            "01/10/2018: B0.2.2.5\n : Changed description in GRUB from Unstable to Current.\n\n" +
-            "01/20/2018: B0.2.2.6\n : Made the method of forcing https more efficient.\n\n" +
-            "01/24/2018: B0.2.3.0\n + Added menu for Battery Widget.\n : Finally fixed bug where windows disappear if you click on other windows too many times. It should be impossible now.\n + Laid groundwork for new Mobile Mode. Very unstable so far, so disabled.\n\n" +
-            "01/26/2018: B0.2.3.1\n : Fixed size of icons in Android, Aero, and Wisker dashboards so that they are readable with the new icons.\n : Fixed the scrollbar in the Dashboard so it does not disappear if the list gets too short during a search.\n\n" +
-            "02/05/2018: B0.2.3.2\n + Added [b], [i], and [u] to Messaging. Along with [img], all are now case insensitive.\n\n" +
-            "02/06/2018: B0.2.3.3\n : Fixed password-setting error in Settings.\n\n" +
-            "02/07/2018: B0.2.3.4\n : Actually fixed Messaging, the last fix didnt work.\n - Removed notification bell from Messaging when window is focused and Messaging is not minimised.\n + You can open the system context menu by right-clicking on the border or an empty space on the aOS context menu.\n : Fixed NORAA barrel roll and aileron roll.\n + Added psychedelic secret command.\n - Removed varsOriginal from all apps since it was completely unused and took up a lot of memory.\n\n" +
-            "02/08/2018: B0.2.4.0\n : Made the loading screen easier to read.\n : Changed several ugly loading icons into the aOS logo.\n + Added a web manifest for if you add the site to your homescreen.\n + aOS will now keep itself from being scrolled out place.\n : Fixed a performance issue.\n : Fixed some security issues.\n\n" +
-            "02/09/2018: B0.3.0.0\n + Added taskbar widget that shows the number of online users!\n + New icons in Settings.\n + Added a Safe Mode accessible by adding '?safe=true' to the URL.\n : Windowblur now works properly when windows are defocused.\n : Made the Messaging settings window a bit less horrible.\n + Added notifications for Messaging when the app is minimised.\n : File shortcuts have been replaced with JavaScript shortcuts.\n : Made the desktop background menu far less demanding and added a new background.\n + AaronOS can now be reset.\n\n" +
-            "02/10/2018: B0.3.0.1\n : The BootScript itself is no longer ignored by Safe Mode, but instead the user must manually make the bootscript ignore Safe Mode.\n\n" +
-            "02/11/2018: B0.4.0.0\n + Serious security enhancements reguarding passwords. This is a major improvement.\n : BootScripts are now forced to obey Safe Mode again.\n - Removed accidental double-stacking of the same element within itself in the taskbar, should help performace.\n : Updated the preview page for the Custom Style Editor to the Beta.\n - Removed test for the WakeLock API as no devices support it and it was generating a cryptic error.\n\n" +
-            "02/12/2018: B0.4.1.0\n + Added Glass Windows to the Custom Styles gallery.\n : NORAA now uses DuckDuckGo instead of Bing. It makes his life much easier.\n : The CORS proxy ping at aOS launch will now ping DuckDuckGo instead of Bing. Goodbye, Bing!\n - Bing has finally been completely removed from AaronOS.\n\n" +
-            "02/13/2018: B0.4.1.1\n + The file saver system will now alert on errors.\n : Major network performance fix. aOS now uses almost exactly half of the network data it used to.\n : Major security issue with file saving was addressed.\n\n" +
-            "02/15/2018: B0.4.2.0\n : The Changelog is now displayed Newest-First.\n + The password checking page now auto-focuses and responds to the enter key.\n : Messaging requires you to be logged in, but only if you had manually set a password.\n : Fixed security issue with passwords.\n + Added official File API for external servers. Details in Settings - Advanced.\n : Fixed issue with files not persisting for new users.\n : Fixed issue with ending script tag in files crashing aOS.\n\n" +
-            "03/01/2018: B0.5.0.0\n + Flow Mode - Squiggly line on right side of task bar. Compare to Win10's Task View.\n\n" +
-            "03/03/2018: B0.5.0.1\n + More verbose error messages in Messaging.\n : The password field is now a proper password field.\n : Fixed some spam issues in Messaging.\n\n" +
-            "03/06/2018: B0.5.0.2\n : Fixed issue where some windows would bug out if opened right after closing them.\n\n" +
-            "03/20/2018: B0.5.1.0\n : Made the default Dashboard look a bit better.\n\n" +
-            "03/24/2018: B0.6.0.0\n : Boot should be slightly faster on desktop, and at least 5x faster on mobile.\n : Default Windowblur Radius is default to 5 again.\n : Made the password screen and loading screen far more user friendly, and now looks somewhat like a real login screen now.\n : Tweaked the Dashboard again.\n\n" +
-            "04/09/2018: B0.6.0.1\n : Fixed auto-scroll in Messaging.\n\n" +
-            "04/11/2018: B0.7.0.0\n : The App Maker has recieved a serious makeover! It should now be far easier to use.\n + The current state of Windowblur and BackdropFilter Blur are now correctly shown in Settings.\n : Fixed minor error in NORAA.\n\n" +
-            "04/15/2018: B0.7.1.0\n + The music visualizer now accepts local files! Play any song you like in the Music Visualizer!\n : Music Visualizer default sensitivity adjusted.\n - Music is no longer stored on the server.\n\n" +
-            "04/16/2018: B0.7.1.1\n : Audio delay in music visualizer is raised from 150ms to 200ms. The audio and visualizer should be better synced now.\n\n" +
-            "04/18/2018: B0.7.1.2\n : Fixed a major issue in Messaging.\n + Online Users Widget now displays an 'X' when it can't connect to aOS.\n\n" +
-            "04/19/2018: B0.7.1.3\n + Images in messaging can be expanded by clicking on them. They don't take up more space than necessary, otherwise.\n\n" +
-            "04/25/2018: B0.7.1.4\n : Fixed Windows 98 and XP custom styles.\n : Changed the way CustomStyles works; this decreased the download size for aOS.\n : Fixed issue where Windowblur would incorrectly set its position.\n\n" +
-            "04/26/2018: B0.7.1.5\n + Added Linux Mint Y Dark theme in Settings -> Custom Styles.\n\n" +
-            "04/27/2018: B0.7.1.6\n + Minor debug feature added to Messaging.\n\n" +
-            "05/29/2018: B0.7.2.0\n + Added Live Background option for using a website as a desktop background.\n + Added optional Dark Mode that can be toggled in Settings -> Windows\n : To make the UI more consistent, NORAA, Bash, and the Javascript Console all use themes that match the current light/dark mode.\n : Desktop icons now correctly align to the grid when placed by the user.\n\n" +
-            "06/12/2018: B0.8.0.0\n + Added Web App Maker, which lets you turn any compatible webpage into an aOS app!\n : Changed the scrollbar and made it Dark Mode compatible.\n : Made a minor change to the code for Messaging.\n\n" +
-            "06/13/2018: B0.8.0.1\n : Fixed an issue in the backend with filesaving.\n\n" +
-            "06/14/2018: B0.8.1.0\n : Serious rework of Desktop Icon Maker.\n : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.\n - Removed super annoying and cryptic file deletion alert.\n\n" +
-            "06/15/2018: B0.8.2.0\n : Cleaned up the desktop a little.\n + Added Controls popups for IndyCar and House Game\n\n" +
-            "06/20/2018: B0.8.3.0\n + Added red color to music visualizer.\n\n" +
-            "06/21/2018: B0.8.3.1\n + Added padding that is enabled by default in all apps, however apps with special UI's are allowed to turn off the padding.\n : Tweaked green cutoff at red in music visualizer.\n\n" +
-            "06/26/2018: B0.8.3.2\n : Not really an update, but the Music Visualizer icon is now displayed on the desktop.\n\n" +
-            "07/11/2018: B0.8.4.0\n + Added [url] support to Messaging.\n : Rewrote the entire BBCode system in Messaging, is far more reliable and flexible. It can also support extension by developers now.\n\n" +
-            "07/20/2018: B0.8.5.0\n : Modified the way that aOS names window, taskbar, and desktop elements. No longer are three-letter ID's required to be unique, and there should be no more conflicts in HTML IDs.\n : Updated necessary apps, to work correctly with this change. Please ensure that your own custom-made apps and scripts reflect the change as well.\n\n" +
-            "07/24/2018: B0.8.6.0\n + Added [color], [glow], [outline] to Messaging.\n + Messaging usernames can now use BBCode tags that are marked as safe.\n + Added formatting list to Messaging.\n : Fixed issue with resizing windows and moving app icons.\n\n" +
-            "07/25/2018: B0.8.6.1\n + Added [font] to Messaging.\n : Fixed BBCode rendering of usernames in Online Users widget and the Messaging notifications.\n\n" +
-            "08/01/2018: B0.8.6.2\n : Made Glass Windows theme compatible with dark mode.\n : Fixed disappearing scrollbars in some Dashboard menus.\n : Fixed redundant scrollbar in some Dashboard menus.\n\n" +
-            "08/24/2018: B0.8.6.3\n + Apps can now temporarily block the screensaver. Useful for games, videos, etc.\n : Fixed size and positioning of logo on Wikipedia screensaver.\n : Camera, Music Visualizer, IndyCar game, and House Game now block the screensaver.\n\n" +
-            "09/27/2018: B0.8.6.4\n : Slightly modified API for Messaging.\n\n" +
-            "10/06/2018: B0.8.7.0\n + Added [site] to messaging.\n\n" +
-            "10/11/2018: B0.8.7.1\n : Fixed an issue that recently came up, where any files with newlines would crash aOS on boot.\n\n" +
-            "10/12/2018: B0.8.8.0\n + New default wallpaper and window color!\n + New Parallax Background option in Settings -> Background. Your wallpaper scrolls around when you move your mouse!\n : Fixed issues with CustomStyles.\n\n" +
-            "11/07/2018: B0.8.8.1\n + New custom style preset, Terminal!\n\n" +
-            "11/08/2018: B0.8.9.0\n + Added new Minesweeper clone for aOS!\n + The Linux Mint custom style now obeys light / dark mode settings!\n\n" +
-            "11/09/2018: B0.8.9.1\n + Added new settings to Minesweeper - Omnipresent Grid, Automatic Clearing, and Safe First Move.\n + Added a new feature to Minesweeper - Easy Clear!\n : Adjusted placement of text in Minesweeper.\n : Fixed issue in Minesweeper where empty regions wouldn't clear all the way.\n\n" +
-            "11/10/2018: B0.8.9.2\n : Updated the Camera app to use newer API.\n : aOS only nags you to download Chrome once, instead of every time it loads.\n : Fixed bug with Easy Clear in Minesweeper that lets you place flags on broken blocks.\n : Various fixes in Minesweeper\n - Removed automatic win in Minesweeper if all blocks are cleared, was causing bugs\n : Settings can now be changed in standalone Minesweeper.\n\n" +
-            "11/18/2018: B0.8.9.3\n : Made the login screens a bit smoother.\n + aOS will prompt users to set a password after five minutes on brand new accounts.\n\n" +
-            "11/20/2018: B0.8.9.4\n + Added [br] and [hr] in Messaging.\n : Adapted bbcode parser to accept [tag=param] to give parameters to a tag.\n : Adapted bbcode parser to properly handle unclosed tags.\n : Fixed a vulnerability in Messaging.\n\n" +
-            "11/21/2018: B0.8.9.5\n + Almost any text field in the system supports Copy/Paste now. Developers no longer have to manually register their text field for copy-paste tools.\n : Fixed XSS vulnerability in Copy-Paste menu.\n\n" +
-            "11/25/2018: B0.9.0.0\n + Added system that allows embedded Web Apps to communicate with aOS.\n\n" +
-            "11/26/2018: B0.9.0.1\n + Added API documentation to Web App Maker.\n : Fixed a crash in App Maker.\n\n" +
-            "11/27/2018: B0.9.0.2\n + Pasting from the aOS clipboard will now replace text correctly based on selection.\n\n" +
-            "11/28/2018: B0.9.1.0\n + JS Paint by Isaiah Odhner\n + Pipes Screensaver by Isaiah Odhner\n + Window controls can be moved to the left side.\n\n" +
-            "11/29/2018: B0.9.1.1\n + Widget Menu now correctly positions itself on non-bottom taskbar position.\n : Window hover frame correctly positions itself on non-bottom taskbar position.\n - Removed clutter, useless or abandoned options from Settings.\n : Rearranged some Settings items, more important options at the top.\n + JSPaint loading is opaque.\n\n" +
-            "12/01/2018: B0.9.1.2\n + Log Out option added to power menu.\n : Shut Down option now logs you out.\n\n" +
-            "12/03/2018: B0.9.1.3\n + exit command in Bash.\n : Fixed HTML Entities in Messaging names.\n\n" +
-            "12/08/2018: B0.9.1.4\n : Fixed WindowBlur rendering the wrong part of the background when custom taskbar positions are selected.\n : Fixed windows minimize animation going to wrong place when custom taskbar position is set.\n\n" +
-            "12/13/2018: B0.9.1.5\n - Removed Beta Testing App, Search App (implemented elsewhere), Mathway App\n\n" +
-            "12/17/2018: B0.9.1.6\n : Dashboard and Apps Browser are now alphabetized. How did I miss that?\n\n" +
-            "12/20/2018: B0.9.1.7\n : aOS now checks that requests come from the actual current server, rather than checking specifically for the aOS official server. This means aOS should now, in theory, be portable.\n : aOS now checks for images in the folder (if any) that it resides in, instead of automatically picking the root folder.\n\n" +
-            "12/22/2018: B0.9.1.8\n : IE11 no longer rejects aOS for containing spread notation (...) in its source code.\n + On Internet Explorer, Windowblur defaults to off.\n : Fixed double prompts appearing on non-Chrome browsers; should only appear once now.\n\n"  +
-            "12/23/2018: B0.9.1.9\n : Fixed issue that caused portability to not actually work.\n\n" +
-            "12/24/2018: B0.9.1.10\n + Begun work on experimental replacement file manager.\n\n" +
-            "01/01/2019: B0.9.1.11\n + AaronOS now has an EULA for those who wish to deploy aOS on their own server or otherwise use its code, available at /eula.txt\n + If the code is hosted on an unofficial server, a note will be dynamically added next to the Copyright Notice in Settings -> Information, with a link to the official AaronOS server. AaronOS deployers - this note is not under any circumstances to be removed or its text altered in any way, with the exception of being moved to another location at the top of an easily-accessible menu in Settings, alongside its Copyright Notice.\n + Apps can now be pinned to the taskbar.\n : Fixed Camera app.\n : Changed question mark in File Manager to refresh symbol.\n : Adjusted Mint-Y theme.\n : Google Play prompt now only occurs once.\n\n" +
-            "01/02/2019: B0.9.2.0\n + Added Text To Binary app.\n\n" +
-            "01/04/2019: B0.9.3.0\n + Text To Binary app can now decode images.\n\n" +
-            "01/05/2019: B0.9.3.1\n : Minor memory fixes in Text To Binary\n + Text To Binary now has a standalone page at binary.php\n\n" +
-            "01/07/2019: B0.9.3.2\n : Battery widget is hidden on devices/browsers that don't support it.\n\n" +
-            "01/17/2019: B0.9.4.0\n + New experimental Mobile Mode\n : Windows can now be correctly resized by any edge.\n + Two new battery widget modes, Text and Old.\n + JS Console now sanitizes input and catches errors.\n : App taskbar icons are now above taskbar widgets, instead of vice-versa.\n\n" +
-            "01/20/2019: B0.9.5.0\n : The Psuedo-Bash Console has had a complete rewrite!\n + Apps can now run psuedo-bash code on their own with apps.bash.vars.execute()\n : Pipes now work correctly in Bash.\n : grep is now case insensitive\n\n" +
-            "01/26/2019: B0.9.5.1\n : Mutiple windows are now fit onscreen in Flow Mode with Mobile Mode.\n : Caption bars are no longer semitransparent in Flow Mode\n : Data Collection is now false by default, oops.\n\n" +
-            "01/27/2019: B0.9.5.2\n + Added some polyfills, extended browser support back just a little bit further.\n\n" +
-            "02/01/2019: B0.9.6.0\n + Users can now set a custom Window Border Width.\n\n" +
-            "02/02/2019: B0.9.6.1\n : Renamed variables for window resizing from winRot* to winRes* (was leftover from old window rotation).\n\n" +
-            "02/03/2019: B0.9.6.2\n : All built-in apps now use the \"auto\" flag when centering their windows, and now consistently center on the same point.\n\n" +
-            "02/04/2019: B0.9.7.0\n + Approximate loading percentage bar on boot.\n : Loading messages are shorter.\n : Fixed error that occurred when using the touchscreen during boot.\n\n" +
-            "02/05/2019: B0.9.8.0\n + Begun work on rewriting the new replacement file manager.\n\n" +
-            "02/06/2019: B0.9.9.0\n + Added view modes to experimental file manager.\n + Added file icons to experimental file manager.\n\n" +
-            "02/08/2019: B0.9.9.1\n + Added experimental subpixel antialiasing to icons in Files 2\n\n" +
-            "02/09/2019: B0.9.9.2\n : Function Grapher no longer requires 'Math.'\n : Function Grapher informs user of ^ operator.\n : Your USERFILES are now loaded separately from the page source, and are initialized in a better way. In some ways this is faster, in other ways it's slower. But in all ways it appears to be more stable than before.\n : Fixed USERFILES sometimes being set to null when your folder is empty.\n\n" +
-            "02/10/2019: B0.9.9.3\n : Function Grapher only notifies on ^ once.\n\n" +
-            "02/11/2019: B0.9.9.4\n + Source Code Line of the Day in JS Console.\n + More detailed loading performance info in JS Console.\n - Removed unnecessary logs from JS Console.\n : Files 2 no longer accidentally sends the wrong name to Text Editor for USERFILES entries.\n : Files 2 is much more stable when encountering 'invalid' filenames.\n\n" +
-            "02/12/2019: B0.9.10.0\n + File Manager has been replaced File Manager 2.\n + File Manager 2 uses bash for most of its file operations.\n + File Manager 2 has multiple view modes.\n + File Manager 2 has much faster performance.\n + File Manager 2 has file icons.\n + File Manager 2 is compatible with mobile mode and custom border width.\n + File Manager 2 is far more stable.\n + Begun work on replacement text editor.\n + TE2 can now edit and save functions.\n\n" +
-            "02/13/2019: B0.9.10.1\n + Users can now type a path into Files 2\n : Files 2 handles empty and null directories better.\n : TE2 handles bad input better.\n : Fixed some copy/paste icons\n\n" +
-            "02/14/2019: B0.9.10.2\n + Desktop icons will rearrange to fit the size of the desktop if it changes.\n : Deleting files actually works now.\n + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()\n + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).\n - Removed 'unfinished' message from Bash Console.\n - Notification content no longer pushes into button row.\n : LOTS of backend code fixes.\n\n" +
-            "02/20/2019: B0.9.10.3\n + Some backend support for subdirectories in USERFILES, courtesy of SkyeEverest.\n + Included fallbacks for CSS var(), for IE.\n : Automatically sets a darker, opaque background color for IE.\n : Serverside error reports now report the correct line number.\n\n" +
-            "02/25/2019: B0.10.0.0\n + USERFILES now supports psuedo file extensions.\n + Full backend and frontend support for folders in USERFILES.\n : Text Editor 2 now assumes USERFILES, instead of the other way around.\n + Files 2 and Text Editor 2 now properly handle folders in USERFILES.\n - aOSpassword cannot be modified except for setting a new password.\n - aOSpassword cannot be viewed.\n + Added some padding on the boot loading bar.\n : Clipboard now uses JSON for storage.\n\n" +
-            "02/26/2019: B0.10.1.0\n + Added search bar and new folder / new file buttons to the File Manager.\n - Removed backend messaging dependency on setting.txt\n + System admins can now just straight-up delete messages instead of editing their content and erasing it.\n\n" +
-            "02/27/2019: B0.10.2.0\n + Pet Cursors app! Users can create custom cursors that follow their mouse around. Each has their own, specialized personality.\n\n" +
-            "02/28/2019: B0.10.3.0\n : Changed window caption font from Courier to Consolas\n + Added a small shadow to caption buttons.\n : Numerous fixes for Pet Cursors\n\n" +
-            "03/25/2019: B0.11.0.0\n + Added Foxxo pet cursor.\n : Misc updates that I forgot to include in the log. But mostly the fox cursor.\n\n" +
-            "03/26/2019: B0.11.0.1\n : Fixed Terminal stylesheet.\n\n" +
-            "03/28/2019: B0.11.0.2\n : Fixed Help App crashing on launch.\n\n" +
-            "03/30/2019: B0.11.1.0\n + Custom Style Editor now uses a live preview of a real AaronOS instance to test your stylesheets in real-time.\n - Fake AaronOS desktop for use with Style Editor has been removed.\n : Errors now show in notifications instead of JavaScript alerts which hang aOS.\n\n" +
-            "03/31/2019: B0.11.1.1\n : Cleaned up many of the CustomStyles themes.\n\n" +
-            "04/03/2019: B0.11.1.2\n : Fixed Fullscreen button in Settings (thank you CerebralDatabank)\n : Modified filetype description positioning in File Manager 2.\n\n" +
-            "04/04/2019: B0.11.2.0\n : Apps now wait until the window closing animation is finished before clearing their content, looks way better now.\n : Fixed error when right clicking a file with a period in its name in FIL2.\n : Properties app now uses bash file paths instead of JS object paths.\n : Fixed window titles overlapping buttons on right side.\n : Fixed some apps not clearing their window content after being closed.\n : Fixed the LiveElement system erroring out in its error handler.\n\n" +
-            "04/05/2019: B0.11.3.0\n + Sidebar in the File Manager including the new Home, Favorites and Navigation features.\n : The main page of the File Manager is now called Home\n + Favorites list in File Manager, to save important locations.\n + Navigation list in File Manager, to jump around in the current path.\n : Buttons for touch and mkdir in File Manager moved to the right side.\n + Add Favorite button added to left side of File Manager's toolbar.\n + Descriptions for the File Manager's toolbar buttons will now appear when hovered over.\n + Rounded corners on the top edge of the File Manager's content.\n : The left edge of the File Manager's Location and Search boxes are now lined up with the left edge of the main content.\n : Fixed caption bars in the Windows 98 theme.\n\n" +
-            "04/07/2019: B0.11.3.1\n + Progress bar for shutdown.\n : Fixed shutdown screen.\n\n" +
-            "04/10/2019: B0.12.0.0\n : Context Menu has recieved a visual overhaul.\n + LOCALFILES, a place to save files locally instead of online.\n + New aos_system folder in USERFILES\n - system files are no longer dumped into the root directory of USERFILES >.<\n : All system files moved into the aos_system folder.\n : All system files given new, more sensible names\n + File Browser Debug is now persistent.\n : Added missing icon for File Browser Debug.\n : Fixed Minesweeper Easy Clear setting not saving.\n : Fixed APM using old text editor.\n : Boot should be slightly faster, as several slow functions were sped up.\n\n" +
-            "04/12/2019: B0.13.0.0\n + Added Music Player\n\n" +
-            "04/14/2019: B0.13.0.1\n + Added aaronos.dev as the new official AaronOS server.\n : Updated README, EULA, and privacy policy to reflect the new server address.\n : Fixed several serverside issues.\n\n" +
-            "04/15/2019: B0.13.0.2\n + Unlocked rotation on PWA.\n : Fixed password screen using old background instead of new one.\n - Removed accidental debug logging to console on arranging icons.\n\n" +
-            "04/17/2019: B0.13.0.3\n + Hidden iFrame Browser app for debugging.\n\n" +
-            "04/18/2019: B0.14.0.0\n + Background image fit settings (cover, center, etc)\n + Added data-parent-app attribute for iframes, will bring the specified app to top if the iframe has focus.\n + The currently focused app is displayed on the window's title.\n\n" +
-            "04/19/2019: B0.15.0.0\n : Window captions are now 32px high to fit the whole icon.\n : Window caption buttons are now whole instead of hanging on to the top of the window.\n + Begun work on Smart Icons.\n + Smart Icons Settings.\n + Smart Icon Creator.\n + Smart Icon Template Files.\n\n" +
-            "04/21/2019: B0.15.0.1\n : All app icons are now treated as Smart Icons. Any legacy icons are converted.\n : Made JSConsole colors readable.\n\n" +
-            "04/23/2019: B0.15.0.2\n : Fixed CustomStyles\n : Fixed Task Manager trying to update its content when its window is closed.\n\n" +
-            "04/27/2019: B0.15.0.3\n + Testing more Smart Icons\n : Fixed CSE's text editor focusing its window on click, making the context menu unusable.\n : Fixed constantly bringing iframe owner to top unnecessarily, breaking context menus and such.\n\n" +
-            "05/09/2019: B0.15.0.4\n : Fixed security in login system.\n\n" +
-            "05/11/2019: B0.16.0.0\n + Music Player recieves a huge upgrade, with visualizations and color schemes. This is work-in-progress.\n : The Music Visualizer app will be assimilated into Music Player and removed in a future update.\n\n" +
-            "05/12/2019: B0.16.1.0\n + Added Smoke effect to Music Player.\n + Added Eclipse and various color schemes to Music Player.\n\n" +
-            "05/14/2019: B0.16.2.0\n + Added Obelisk and Smoke Rings to music Player.\n + Added Pride colors to Music Player.\n : Renamed several colors in visualizer.\n : Drastic performance improvements in most of Music Player's visualizers. (typically double framerate in the really bad ones)\n : Reorganized visualizer and color menus in music player.\n\n" +
-            "05/14/2019: B0.16.2.1\n + Added Window Color to Music Player (colors aOS windows to the beat)\n + Added Spikes 1:1 to Music Player (spikes, but not distorted)\n + Added microphone option to Music Player.\n : Music Player's Monstercat and Obelisk bars are now sitting on a slightly reflective surface in Smoke mode.\n\n" +
-            "05/18/2019: B0.16.2.2\n + Added buildMarquee(text), to create a custom marquee.\n : Changed all custom attributes to use data- names.\n\n" +
-            "05/25/2019: B0.16.3.0\n + Yet another huge music player update. Too much content / fixes over several days to list everything.\n\n" +
-            "07/13/2019: B1.0.0.0\n + Added the aOS Hub, where users can search for apps, scripts, etc.\n + Repository and package system added.\n : Apps moved to repository: Cookie Clicker, Calculator, GTK2aOS, JS Paint.\n : Fixed filenames and directories containing the / character breaking bash.\n - Removed old music visualizer.\n + Restored ability to delete files in USERFILES.\n + Boot Script editor now supports multiple boot scripts.\n : List of Custom Styles is moved to repository.\n + Custom Style system can now handle multiple 3rd-party stylesheets as well as the user's style.\n + Settings menu for Smart Icons.\n + Added Accumulative Spikes to Music Player.\n : Bash prompt uses first four characters of ID rather than the whole thing.\n + New default desktop background.\n + Lots of new icons.\n - Window titles no longer become transparent when defocused.\n + Apps can now tell aOS to prompt the user if a restart is required.\n : PostMessage system now uses JSON instead of strings.\n + Major upgrade to PostMessage.\n : Fixed file deletion.\n : Cropped cursor set to avoid deprecation of larger size.\n : Fixed error on displaying a notification with no preview image.\n : Fixed NORAA always listening if the setting was modified rather than if it was enabled.\n : Fixed Files 2 sometimes opening the old text editor instead of the new one.\n : Fixed bash cd not returning to current workdir on failure.\n\n" +
-            "07/16/2019: B1.0.1.0\n + Added Smart Icon Settings to the Settings app.\n + Clicking on the progress bar in the Music Player lets you skip to a point in the song.\n + Added Average Pitch visualizer to Music Player.\n + Added marker on progress bar in Music Player to help with transparent color themes.\n : Moved Music Player title to front of caption rather than the end.\n\n" +
-            "07/18/2019: B1.0.2.0\n + New custom menu with graphics for selecting visualizers and colors in Music Player.\n + Added static gradient color themes to Music Player.\n + Added Queen color theme to Music Player.\n + Added High Frequency Range to Music Player; requires devconsole to activate the flag (highFreqRange).\n\n" +
-            "07/24/2019: B1.0.2.1\n : Fixed issue where aOS would incorrectly state that there was a failure setting a new password.\n : Fixed aOS ignoring correct passwords if their internet is too fast for itself.\n\n" +
-            "07/27/2019: B1.0.3.0\n + Music Player has four new visualizers; Curved Lines, Centered Lines, Cave Lines, and Circle Lines. Thanks &Scaron;tefan Schindler for the designs.\n + Music Player has three new color schemes; Rainbow, Rainbow Active, and Pride Blocky.\n : Music Player's Pride color schemes now use HSL instead of RGB, and look much better.\n : In Music Player, fixed Monstercat's bars stretching half a pixel through its floor.\n : Music Player now alerts visualizers when smoke is toggled to prevent canvases forgetting their settings.\n\n" +
-            "07/29/2019: B1.0.3.1\n + Added Fast Mode to Music Player, reduces resolution to increase FPS.\n : Fixed login issues related to login tokens.\n : Fixed swapping between aOS instances.\n : Fixed smoke being too intense in Lines-derived visualizers in Music Player.\n : Fixed missing images in music player.\n : Fixed Music Player visualizer menu being open when using non-standard loading methods.\n\n" +
-            "08/01/2019: B1.0.4.0\n : Total dark theme revamp; changed dark theme from full-black to dark gray.\n + Style Editor now tells you the ID and class of any element that you hover over in the preview.\n : File Manager, Text Editor now respond to Dark Mode when switched while the app is open.\n + Function Grapher and Dashboard now respond to Dark Mode.\n : Dashboard loads much faster.\n + Dashboard refreshes itself each time it's opened.\n + Added a new class, .darkResponsive, which makes an element automatically set its background-color, color, and border-color for dark or light mode.\n\n" +
-            "08/04/2019: B1.0.4.1\n : Fixed login screen not using the correct background image.\n\n" +
-            "08/05/2019: B1.0.4.2\n : Fixed Minecraft Mode in minesweeper.\n\n" +
-            "08/06/2019: B1.0.5.0\n + Added enchanced graphics to minesweeper.\n\n" +
-            "08/07/2019: B1.0.5.1\n + Added aosTools.js - embed the script file into your page for easy aOS app tools.\n - Minesweeper was removed.\n + Standalone version of Minesweeper added to the repository.\n + Minesweeper now themes itself to AaronOS.\n + Minesweeper now saves its settings.\n + Minesweeper now pre-caches shadow images.\n : Fixed caching issues on minesweeper.\n - Removed Dark Mode button from Minesweeper, as this is now controlled by aOS.\n : Music Player now uses aosTools.js, like Minesweeper does.\n + localhost added to auto-trusted domains.\n\n" +
-            "08/08/2019: B1.1.0.0\n + Added Developer Documentation app.\n + Extra logic added to prevent app updates from getting delayed by web browser caching.\n : Changed 'appWindow' permission to 'appwindow'\n + Added to appwindow permission: open_window, close_window, maximize, unmaximize, minimize, get_maximized, set_dims\n + Added manualOpen flag to web app json files to make app loading less ugly.\n : Fixed error message in Music Player each time a song is started.\n : Fixed error in aosTools whenever an unrecognized conversation is recieved.\n : Updated Web App Maker's documentation.\n\n" +
-            "08/14/2019: B1.1.1.0\n + Style changes are now updated in realtime on web apps via aosTools.\n + Added search box to Developer Documentation.\n + Added prompt actions to aosTools.\n + aosTools can now recieve style updates as they occur on aOS.\n + Added shortcuts for window events to aosTools.\n + Added new documentation.\n\n" +
-            "08/15/2019: B1.1.2.0\n + Added buttons to try certain actions to Developer Documentation.\n + Added new documentation.\n : Adjusted formatting in documentation.\n\n" +
-            "08/21/2019: B1.1.3.0\n : Changed the default screensaver to Bouncy Ball because it's less intrusive, should it activate when unwanted.\n + Added images to Documentation.\n : Fixed incorrect title on a page in Documentation.\n\n" +
-            "09/19/2019: B1.1.4.0\n + Added WIP Weather app to the Hub.\n : Fixed aosTools being unable to make requests cross-domain (basically not working at all)\n\n" +
-            "09/20/2019: B1.1.5.0\n + Web Apps can now have services running in the background. Example is weather app will check for alerts for you.\n + Weather app now checks for weather alerts for your area in the background.\n\n" +
-            "09/27/2019: B1.1.6.0\n + Added Bass Spectrum to Music Player.\n\n" +
-            "09/29/2019: B1.1.7.0\n + Added aOS Blast to the Hub app! It's a simple game where you can watch some AI duke it out with lasers or play it yourself.\n : Changed default screensaver to aOS Blast.\n\n" +
-            "09/30/2019: B1.1.7.1\n : Adjusted Blast screensaver.\n + Added configuration in Blast for zoom, AI battle comfort, ship size, ammo labels, and scoreboard.\n\n" +
-            "10/08/2019: B1.1.8.0\n + Added Blast visualizer to Music Player\n + Added Featured list to Music Player visualizers for easy access to main visualizers.\n : Replaced inaccurate images for solid colors in Music Player.\n\n" +
-            "10/09/2019: B1.1.9.0\n + Added Seismograph and Barsmograph to music player.\n + Blast can now use arrow keys.\n + Added #debug flag to Music Player.\n + Blast in Music Player now shows its debug screen when #bebug is specified.\n + Blast now avoids Chrome's caching.\n\n" +
-            "10/12/2019: B1.1.10.0\n + Blast AI has been upgraded; AI can decide to rush their target if they have high health, and will seek distance if their health is low.\n + Added lowFpsLasers flag to Blast - for recording 30fps video from 60fps source.\n\n" +
-            "10/30/2019: B1.2.0.0\n : Mobile Mode is set to Automatic by default.\n + Open windows now have a glow on their taskbar button.\n + Enabled Backdrop Filter Blur for the new default window glass effect, making windows visible behind other windows.\n + Context menu will have a blurry background if blurry windows is enabled.\n : Changed hover effect on taskbar buttons.\n : Changed hover and click effect on window buttons.\n : Changed default window color from rgba(190, 190, 255, 0.3) to rgba(150, 150, 200, 0.5)\n : Increased shadow on taskbar text.\n + The type of blur on window borders is now automatically set based on browser support.\n : Moved Mobile Mode option to Screen Resolution category.\n : Moved the Home button in Settings to the right side.\n - Removed button for the pre-alpha Settings menu.\n\n" +
-            "11/07/2019: B1.2.1.0\n + Added data mods for Music Player - modifies how visualizers see music data.\n + Added RGB color to Music Player for use with Spikes Classic to find cool patterns.\n : Rearranged UI for Music Player.\n\n" +
-            "11/09/2019: B1.2.2.0\n + Added Taskbar Mode to Music Player.\n + Added appwindow:get_borders and appwindow:get_screen_dims to aosTools.\n : Fixed Spectrum and Bass Spectrum visualizers not filling the whole screen in MPl.\n : In theory, fixed Chrome's caching of JS and CSS.\n\n" +
-            "11/15/2019: B1.2.2.1\n + Added Window Glass Distortion effect, distorts the background by the glass texture. It's experimental and disabled by default.\n : Fixed Window Glass Blur setting not working.\n : Fixed Live Desktop Background always being enabled if the setting was ever changed.\n\n" +
-            "11/23/2019: B1.2.2.2\n : Fixed Glass Distortion preference not saving properly.\n\n" +
-            "11/26/2019: B1.2.2.3\n : Fixed Glass Distortion texture not lining up with Window Border texture. (texture was anchored to top, shader was anchored to bottom. both are now bottom)\n + New Smart Icon for window glass test app.\n + New Smart Icon for Blast in the Hub.\n + New icon for Glass Windows style in the Hub.\n\n" +
-            "12/14/2019: B1.2.2.4\n + Added FPS compensation to the Blast game. Ships and lasers now run the correct speed regardless of the FPS.\n\n" +
-            "12/17/2019: B1.2.2.5\n : Introduction screen to Music Player is far more user-friendly.\n + Added Tiles visualizer to Music player.\n + Improved smoke effect in Music Player. Looks like actual smoke rather than a scrolling image.\n + Added FPS compensation to Music Player (MPl). Allows things to move the correct speed at high/low FPS.\n + FPS compensation for Smoke effect in MPl.\n + FPS compensation in Blast for MPl.\n + Better beat detection in Blast for MPl, velocity-based.\n : Slightly raised sensitivity for Blast in MPl.\n + Added FPS compensation to Rings and Ghost Rings in MPl.\n\n" +
-            "12/18/2019: B1.2.3.0\n + Desktop icons can now be quickly created from the Dashboard, and from the taskbar.\n : Completely redid the main menu for Settings.\n + Built-in desktop icons can now be deleted.\n : Changed the look of the 'add desktop icon' feature.\n : Modified the menu for 'About This App'.\n : Completely rewrote the system for desktop icons. They are now more robust and consistent, and easier to program.\n : Adjusted ground reflection effect in Monstercat and Obelisks for MPl.\n : Fixed multiple issues pertaining to desktop icons.\n\n" +
-            "12/22/2019: B1.2.4.0\n : Revamped the rest of the Settings UI and reworded most of the setting descriptions.\n : Fixed bug in Aero dashboard.\n : The default Trusted Apps file now dynamically sets itself to trust the current domain, instead of requiring a manual edit on non-official hosts.\n + New icons for Messaging and Sticky Note.\n - Removed some useless setting options.\n : Fixed mislabeled buttons in Files.\n\n" +
-            "02/18/2020: B1.2.4.1\n : Fixed reflection of bars in Monstercat and Obelisk music visualizers.\n\n" +
-            "06/22/2020: B1.2.5.0\n + AutoScroll for Guitar music writer.\n : Various spellchecks.\n : Various fixes.\n\n" +
-            "09/22/2020: B1.2.6.0\n : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.\n : Rearranged Info tab in Settings.\n : Made copyright notices more accurate.\n : Numerous bug fixes the last few months didn't make it into the changelog.\n\n" +
-            "09/23/2020: B1.2.7.0\n + Added Context Menus to Developer Documentation.\n + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.\n + Clicking inside a Web App's window now properly focuses it immediately.\n : Rearranged some articles in Developer Documentation.\n : Fixed context menus breaking completely if the clipboard contains less slots than it thinks it should.\n : Modified a context menu icon.\n\n" +
-            "09/24/2020: B1.2.7.1\n : Fixed Settings not immediately responding to changes in Light / Dark theme.\n\n" +
-            "11/05/2020: B1.3.0.0\n + Brand new default Dashboard menu, which looks and functions much better.\n : Changed some of the quick options available in the Dashboard.\n + The File Manager can now open apps via right-click on their folder.\n : Changed the Messaging font, rearranged usernames and time/date info.\n : Apps Browser now has a shortened intro and now provides information that is actually useful.\n : Fixed the screen magnifier app.\n + The Custom Style Editor preview will now highlight the bounds of elements when hovered over.\n : Rearranged the Custom Style Editor preview menu.\n : The first message is no longer cut off by the status indicator.\n : Notifications no longer flash an annoying orange glow when attention is required, and instead flash their opacity.\n : File Manager 2 and Text Editor 2 have had the '2' removed from their names.\n : Renamed the old App Maker to Legacy App Maker.\n : Custom apps are now saved in a directory rather than dumped directly into USERFILES.\n - Removed old Text Editor.\n - Removed old File Manager.\n - Removed Flash Cards app.\n - Removed useless Modding Tutorials app.\n - Removed unused Smart Icon Creator app.\n - Removed woefully outdated Help App.\n : Made a section of the Documentation simpler and fixed some typos.\n : House and Indycar games along with Text to Binary are moved to the repository.\n + The Savemaster app now gives you useful information rather than absolutely nothing when its window is open.\n : Task Manager no longer flashes annoyingly while displaying its content.\n : The Sticky Note app now opens in the top-right corner rather than top-left.\n : Reworded the intro to the psuedo-Bash terminal.\n : Reworded the intro to the Pet Cursors app.\n : Reworded some information in File Properties.\n : Windowblur Test Application is renamed to Transparent Window.\n : Chrome prompt is worded less annoyingly.\n : Renamed Boot Script to Boot Scripts\n : Changelog dates are moved to the left side, by their titles.\n : Changed the wording of some startup logs.\n - Removed annoying 'how did you do that?' popups when opening the dashboard and NORAA via unorthodox means.\n\n" +
-            "12/23/2020: B1.4.0.0\n + Notifications and modal dialogues can now be visible at the same time.\n + Multiple notifications can be visible at a time.\n + Multiple modal dialogues can be shown at a time.\n : Modal dialogues can now be minimized.\n : Notifications can now be hidden without destroying them.\n : Changed default font of the taskbar widgets.\n : Modified the look of several widgets for consistency.\n + New notification widget.\n + New icons for network widget.\n : Messaging input font now matches the messages.\n : Online Users widget is now disabled by default.\n : Battery widget now stores its settings in the proper folder.\n + Added photosensitivity warning to an easter egg.\n\n" +
-            "01/02/2021: B1.5.0.0\n + Repository system can now install and uninstall various package types on-the-fly without requiring a restart.\n + Packages of Web Apps and Stylesheets can now be installed on-the-fly.\n + Packages of Stylesheets can now be uninstalled on-the-fly.\n : aOS Hub now properly updates its buttons after actions, and no longer asks the user to launch apps that aren't installed yet.\n : Fixed an issue in aOS Hub causing the Refresh button to be impossible to click.\n : aOS Hub retains its scroll position after actions.\n : Minor fixes in testing repository.\n\n" +
-            "01/22/2021: B1.5.1.0\n : Numerous fixes and changes to the MacOS theme.\n : Fixed a rare case where AaronOS installations would not recognize their own server, causing its own commands to be rejected.\n : Fixed some issue reporting and the hex test.",
-            oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
+        changelog: {
+            "01/26/2016: A1.2.0.0": [
+                " + Changelog Added.",
+                " : Windowblur fixed when dims not set.",
+                " + Search app added.",
+                " : RD no longer brings aOS to its knees.",
+                " + System to allow apps to have code wait its turn to avoid OS-crippling lag.",
+                " + App Maker can now give apps image-based icons."
+            ],
+            "01/30/2016: A1.2.1.0": [
+                " + Right-click menu for desktop icons, allows re-arrangement of icons.",
+                " : Text Editor app no longer uses word-wrap."
+            ],
+            "02/04/2016: A1.2.2.0": [
+                " + Text-to-speech added to right-click menu, credits to creator are in the Settings app.",
+                " + Experimental image editor began development."
+            ],
+            "02/23/2016: A1.2.3.0": [
+                " + Copyright notice added to Settings application - (c) 2016 Aaron Adams",
+                " + Waiting Code system modified to allow args in functions.",
+                " : Resizing of the aOS monitor is now manual - reduces strain on CPU.",
+                " + Ability to send error reports if the filesaving service is intact.",
+                " + aOS replaces requestAnimationFrame with a custom function if requestAnimationFrame is unsupported in your browser.",
+                " + True fullscreen support - remember to use Chrome."
+            ],
+            "04/04/2016: A1.2.4.0": [
+                " : Window Rotation changed to Window Scaling.",
+                " + Windows can now fit to the size of the desktop - just hit the 'O' button and watch what it does.",
+                " + Change calulating app, ChC.",
+                " : Various bug fixes - this one is spread between the last few updates, just forgot to mention it.",
+                " : aOS version format changed from 'V_._._' to 'A_._._', 'A' meaning alpha. When in beta form, it will be changed to 'B_._._', and on full release will be changed back to 'V_._._'.",
+                " + RemoveTimeout is added to task manager.",
+                " : File manager can no longer cripple the system.",
+                " + Replaces performance.now with custom function if not supported by your browser.",
+                " + Added messaging app, lets you message all other aOS users with Messaging app currently open.",
+                " + Added performance-checking features, see an example in the initialization-time log in the console.",
+                " + Ability to switch between OS accounts.",
+                " + Built-in apps now fully support variable window sizes.",
+                " + Network status now shown on taskbar.",
+                " + NORAA added.",
+                " : TTS uses Googles built-in TTS.",
+                " + NORAA can hear the user, if given permission."
+            ],
+            "06/06/2016: A1.2.5.0": [
+                " + Bing app added for quick bing search (google wont let me).",
+                " + NORAA can now tell you what nearly anything is.",
+                " : Improvements to formDate to help with CPU load.",
+                " + Files can view window object.",
+                " : Context menus better to create and faster.",
+                " + Files now can show properties of a file.",
+                " + New font called aosProFont i think, credits to its creator, not me.",
+                " : Settings app rewritten.",
+                " + NORAA can listen for you to speak to him, and now referrs to himself as 'me' instead of 'NORAA'.",
+                " : filesaving optimised.",
+                " + Help App.",
+                " + Music Visualiser (add /unrelated/keyfingers/visual.php to the URL to get non-laggy version).",
+                " + Taskmanager can close tasks.",
+                " : More optimised for mobile FPS on performance mode.",
+                " + New prompt system that does not freeze browser.",
+                " : Messaging more safe but breaks on mobile still.",
+                " + More icons added.",
+                " + Mobile can double-tap to context menu, but only on some objects.",
+                " : When ctxmenu opens using that method, drag both fingers out of the OS window before lifting them, or the menu will close.",
+                " : Files is safer to use.",
+                " : Probably many other changes but forgotten what as I keep forgetting to log them."
+            ],
+            "08/17/2016: A1.2.6.0": [
+                " + Properties now displays the size of functions.",
+                " + When needed, Properties now shows KB, MB, and GB so values are easier to count.",
+                " : Battery no longer has blue background, and instead gives the foreground a blue tint when charging.",
+                " + Performance Monitor app shows CPU usage stats.",
+                " : Changelog is easier to read.",
+                " : Properties app shows shorter description for file sizes.",
+                " + Windows now have texture to their borders, looks good if you can find a glassy texture like Windows has (i wont steal theirs) or if your device cant run windowblur.",
+                " + Right-click menu lets you open an app from its icon.",
+                " + App controls are now accessible from the app's window caption.",
+                " : Camera app now resizes correctly.",
+                " : Music Visualizer now waits for the song to load before trying to play it.",
+                " - Application List can no longer be moved or resized.",
+                " + If JavaScript is disabled or unsupported, the loading page will nag you to enable it.",
+                " + Alerts, confirms, and prompts can now tell you where they came from.",
+                " + Music Visualizer now shows loading progress and song playtime progress.",
+                " + New simple version of Music Visualizer, uses a canvas (thus looks worse), and runs on one color only: black (with a green screen behind it), which achieves 60fps instead of 15.",
+                " + New Ringtone for Messaging.",
+                " + New Looketh Over There ringtone for Messaging.",
+                " + Fix for double quotes in Messaging.",
+                " + Apps can now stay Always On Top.",
+                " : Notepad reworked.",
+                " : Fixed NORAA looking up definitions.",
+                " + Copy/Paste added.",
+                " : Fixed Fullscreen Dimensions."
+            ],
+            "09/23/2016: A1.2.7.0": [
+                " + Mathway app Added.",
+                " : Developers can now keep their app out of the apps list, in case it acts as a utility of sorts..",
+                " + Icon added to music visualizer.",
+                " + Apps can now be opened by Files browser.",
+                " + Files can now be deleted in File Browser.",
+                " + New AppBrowser, for opening any app installed on the system.",
+                " : Task Manager is now capitalized in application list.",
+                " + Simon Says App.",
+                " : Updated the appearance of apps on the desktop; two-word names no longer overlap the icon, and it looks a bit cleaner and easier to read with bright and dark backgrounds alike.",
+                " + Smoother animations in desktop icons and window borders and buttons.",
+                " + Taskbar now shows which app is active.",
+                " : Stylish Battery icon now looks like a AA battery rather than just a box.",
+                " : OS loads your files more cautiously, notifies you of errors.",
+                " : Fixed inconsitency in desktop icon ctxMenus.",
+                " : Changelog is a little better.",
+                " : Apps can no longer interrup each others saving processes.",
+                " : Deleting now works properly again.",
+                " + Shut down and restart are now a feature; lets apps save their progress if you do it while they running.",
+                " + Large additions to aOS API documentation.",
+                " + Complete aOS API Documentation started in the aOS Help App.",
+                " + Raw battery information is now stored outside of an anonymous function.",
+                " : aOS now tries up to three times to set up the battery.",
+                " + Bug Central app, to track and document known bugs.",
+                " + Donation button added.",
+                " + Indycar app added; the first app not written 100% by hand.",
+                " + Added Dont-Save argument to most settings."
+            ],
+            "09/23/2016: A1.2.8.0": [
+                " + New changelog mechanic - Because aOS is updated live, it's harder to keep one version number on everything. Updates will be tracked in more detail, adding a fourth update number, and dates will be closer together so you can tell exactly when each visible change was made.",
+                " : Controls changed in House game.",
+                " + New sprites in House game, explosion animation and soldiers now shoot at an angle.",
+                " + Experimental RDP system. No, it's not perfect, but it's a start."
+            ],
+            "09/24/2016: A1.2.8.1": [
+                " : Complete rewrite of render system for music visualizer, you now get max fps instead of 10.",
+                " : Along with this new render system, by clicking on the visualization it will resize to fit its window. Theoretically, it will work for any width 2048 pixels or less, and for any height physically possible.",
+                " + You can access Visualizer as its own separate browser window! Visit https://aaronos.dev/AaronOS/unrelated/keyfingers/cnv.php, and that way the OS itself wont slow down the visualizer and you can also put it into true fullscreen."
+            ],
+            "09/25/2016: A1.2.8.2": [
+                " : New look for the Settings app.",
+                " + Context menus can now have disabled options."
+            ],
+            "09/30/2016: A1.2.9.3": [
+                " + New Mouse Control app; purely experimental.",
+                " + Added function grapher, to help with math students.",
+                " + Added external debug window for if you have trouble clicking on aOS."
+            ],
+            "10/01/2016: A1.3.0.0": [
+                " : User can now drag to move windows instead of having to click several times."
+            ],
+            "10/04/2016: A1.3.1.0": [
+                " + User can now create their own desktop icons."
+            ],
+            "10/04/2016: A1.3.2.0": [
+                " + Remote Debugging Menu for debugging another user's computer."
+            ],
+            "10/06/2016: A1.3.3.0": [
+                " + Added binary file viewer... because it's cool, I guess."
+            ],
+            "10/07/2016: A1.4.0.0": [
+                " + Context Menus can now have 10x10 images to represent their options.",
+                " : Context Menu options are now left-aligned instead of center-aligned."
+            ],
+            "10/12/2016: A1.4.0.1": [
+                " : Fixed Saving of FPS Status settings on taskbar."
+            ],
+            "10/13/2016: A1.4.1.0": [
+                " + Added compact settings for FPS and Time on taskbar.",
+                " + Added Custom Stylesheet feature - check Settings -> Advanced for more info."
+            ],
+            "10/18/2016: A1.4.2.0": [
+                " + Added Magnifier App; lets you magnify aOS, focusing on your mouse."
+            ],
+            "10/20/2016: A1.5.0.0": [
+                " + Added a new type of context menu; it is the same visually but is easier to edit, can be added to on the fly, and can safely perform more actions."
+            ],
+            "10/21/2016: A1.5.0.1": [
+                " : Fixed fatal error when taskbar is the first right-clicked element since launch.",
+                " : Changed context menus for app icons, taskbar icons, and Applications List to the new version."
+            ],
+            "10/22/2016: A1.5.1.0": [
+                " : Fixed fatal error when right-clicking window border after toggling performance mode.",
+                " : Changed Task Manager to display more important information and added entry to aOS Help app to describe what they mean."
+            ],
+            "10/24/2016: A1.5.2.0": [
+                " + LiveElements can now target their element attributes."
+            ],
+            "10/25/2016: A1.6.0.0": [
+                " + Clipboard is now saved between sessions and restarts.",
+                " + Emergency Clear Clipboard button in Settings.",
+                " : Network Status is less distracting.",
+                " : Fixed blurry buttons, font sized changed to 12px, native for font.",
+                " + Added crash tester and force-boot option on boot menu.",
+                " : Fixed graphics bug where power-down screen appeared suddenly instead of fading.",
+                " + New animation, start menu slides up from bottom."
+            ],
+            "10/27/2016: A1.6.1.0": [
+                " + You can now copy text from any window in the OS instead of only in text boxes.",
+                " + Experimental support for Safari's backdrop-filter CSS property in Settings to blur windows.",
+                " + Added Current Selection to task manager.",
+                " : Applications List only updates its data at system start, as it is only needed then. Saves on FPS and makes Apps List faster.",
+                " + Loading icons added in Apps List, Files Browser, Loading Screen, and Shutdown Screen."
+            ],
+            "10/28/2016: A1.6.2.0": [
+                " : Applications List now slides in from the left... looks a bit better.",
+                " + New Tampermonkey script to get aOS on any tab!"
+            ],
+            "10/19/2016: A1.6.2.1": [
+                " + Added cookie image for use in context menus, not actually being used yet though."
+            ],
+            "10/30/2016: A1.6.3.0": [
+                " : Desktop Icons now position themselves correctly. About time!"
+            ],
+            "11/02/2016: A1.7.0.0": [
+                " : Taskbar no longer has occasional positioning issue.",
+                " + Custom Style Gallery in Settings, with Win98, Win8, and Win10 options so far.",
+                " + Screensaver support - default is after 5 mins, cycle color hues on screen."
+            ],
+            "11/07/2016: A1.7.0.1": [
+                " + aOS now attempts to adapt to Google Play by automatically enabling performance mode."
+            ],
+            "11/09/2016: A1.7.1.0": [
+                " + aOS Calculator App.",
+                " - Custom Math App."
+            ],
+            "11/10/2016: A1.7.1.1": [
+                " + Button added to calculator so user can undo clearing the display."
+            ],
+            "11/15/2016: A1.7.1.2": [
+                " : Disabled rendering of elements that are always hidden, to save on performance."
+            ],
+            "11/21/2016: A1.7.2.0": [
+                " + Files location bar now shows loading progress."
+            ],
+            "12/01/2016: A1.7.2.1": [
+                " + Added new screensaver: Color Randomization."
+            ],
+            "12/02/2016: A1.7.3.0": [
+                " + Added new PNG file saver for saving base-64 images to aOS."
+            ],
+            "12/07/2016: A1.7.3.1": [
+                " + Added desktop background to loading screen.",
+                " + Added new screensavers: blank and Random Wikipedia Page."
+            ],
+            "12/08/2016: A1.7.3.2": [
+                " + Added configurability to screensavers (currently only the wikipedia one though).",
+                " : Fixed Random Color screensaver.",
+                " : Fixed Force Boot."
+            ],
+            "12/13/2016: A1.7.4.0": [
+                " + Added 60fps Ultra setting to music visualizer... absolutely stunning on 15px mode."
+            ],
+            "12/15/2016: A1.7.4.1": [
+                " : aOS checks for battery 10 times instead of 3, just in case."
+            ],
+            "12/16/2016: A1.7.4.2": [
+                " : Fixed error on startup for new users."
+            ],
+            "12/17/2016: A1.7.5.0": [
+                " + Added CPU Monitor Graphing app.",
+                " : Changed some text in Applications List."
+            ],
+            "01/05/2017: A1.7.5.1": [
+                " : Fixed maximized windows.",
+                " + Added links to old versions in files.oldVersions."
+            ],
+            "01/07/2017: A1.7.5.2": [
+                " : Fixed key generation for new users."
+            ],
+            "01/10/2017: A1.7.6.0": [
+                " + Began development on experimental bash console."
+            ],
+            "01/23/2017: A1.7.7.0": [
+                " + Added commands cp, mv, del, su, and sudo to bash console.",
+                " : Revised commands cd and ls in bash console.",
+                " + Bash console now shows current directory in command prompt."
+            ],
+            "01/24/2017: A1.7.7.1": [
+                " : Fixed .. directory selections in bash console.",
+                " + Added alias support in bash console (try 'alias please=sudo').",
+                " + Added mkdir in bash console.",
+                " : Changed del to rm in bash console (oops, this isnt MS-DOS!)",
+                " : Made ls calculate dir all at once instead of separately, now takes < 1 second to calculate 'ls -s /' as opposed to 10 minutes and does not interrupt system processes."
+            ],
+            "01/25/2017: A1.7.8.0": [
+                " + Begun commenting all necessary code (11,000 lines, ugh) in aOS, as right now its just a huge mess."
+            ],
+            "02/02/2017: A1.8.0.0": [
+                " : aOS now boots modularly, so if one app initializes incorrectly, other apps still have a chance to start and the os will not lock you out."
+            ],
+            "02/03/2017: A1.8.0.1": [
+                " : Boots much faster, but still slower than 1.7.8, especially for Google Play version."
+            ],
+            "02/06/2017: A1.8.1.0": [
+                " + Automatically adjusts screen resolution when window is resized. Much more efficient mechanism than the early days of aOS."
+            ],
+            "02/08/2017: A1.8.2.0": [
+                " + Taskbar can now be repositioned; bottom, top, left, and right are the options.",
+                " + Version number on page title now shows date of last update.",
+                " : Context menu on taskbar now directs user to taskbar settings page instead of directly changing them."
+            ],
+            "02/18/2017: A1.8.3.0": [
+                " + Windows can now 'fold'; hides body so you can more easily sort through them."
+            ],
+            "02/19/2017: A1.8.3.1": [
+                " + Windows can now be hidden via taskbar buttons right-click."
+            ],
+            "03/01/2017: A1.8.3.2": [
+                " + Added Search app to the top of Apps List.",
+                " + Beginning aDE (aDesktopEnvironment) framework development, plan is to serve similar purpose to the xServer of Linux."
+            ],
+            "03/22/2017: A1.8.3.3": [
+                " + Added setting to allow user to watch aOS build itself at startup."
+            ],
+            "03/28/2017: A1.8.4.0": [
+                " + Merged aOS and my friend's JAos into the same workspace, for his ease of building.",
+                " + Added psuedo-GRUB to startup to choose between Operating Systems.",
+                " : Shutdown screen slightly different."
+            ],
+            "04/25/2017: A1.8.4.1": [
+                " + Added Windows XP (plain and colorable) themes to CustomStyles.",
+                " + Added (extremely buggy) pipe logic to bash console.",
+                " + Added grep command to bash console, currently case-sensitive, will fix."
+            ],
+            "04/26/2017: A1.8.5.0": [
+                " + Windows will now be 'highlighted' when their icon in the taskbar is hovered over.",
+                ": Instead of making windows move slowly, Performance Mode draws a border of the window instead of having the window follow the cursor - great for FPS."
+            ],
+            "04/27/2017: A1.8.5.1": [
+                " + Added background to window highlighting to make it more visible; normally it looks sleek but in performance mode it is easier to render.",
+                " : Default window blur is now 2 instead of 5 - helps the FPS and looks a bit better.",
+                " : The experimental Backdrop Filter blur now uses the blur strength setting instead of always 5.",
+                "+ aOS now remembers Performance Mode settings - a very useful setting for many low- to medium-power devices."
+            ],
+            "04/28/2017: A1.8.5.2": [
+                " : Window highlight looks a bit better.",
+                " + Apps Browser can now open apps from the context of the taskbar, however this tends to break things, notably with the Files app."
+            ],
+            "05/04/2017: A1.8.6.0": [
+                " : Cursors are now controlled by class, not by direct style overrides - this allows customStyles to change cursor theme.",
+                " : Loading cursors changed to hourglass shape that was originally intended - i forgot that was there."
+            ],
+            "05/09/2017: A1.8.6.1": [
+                " : Fixed Google Play version of aOS.",
+                " - Removed aDE framework for now.",
+                " : File Browser now opens folders much faster, even loads the window object super quickly."
+            ],
+            "05/10/2017: A1.8.6.2": [
+                " + Added Changelog app - the changelog is much easier to read this way."
+            ],
+            "05/11/2017: A1.9.0.0": [
+                " + Added Notification system, for non-urgent notifications. Current bug however means that only one notif/alert can be open at a time.",
+                " + Added sweet animations to opening and closing windows, sadly though this means cutting support for pretty much everything but Chrome as it uses Fat-Arrow notation."
+            ],
+            "05/12/2017: A1.9.0.1": [
+                " + Windows now have opacity-change when opening/closing.",
+                " : Windows only scale halfway instead of all the way when closing"
+            ],
+            "05/15/2017: A1.9.0.2": [
+                " : Fixed Serverside Error [2] Cannot modify header information",
+                " : Fixed certain windows not animating correctly"
+            ],
+            "05/16/2017: A1.9.0.3": [
+                " + Added framework for new, better language system"
+            ],
+            "05/18/2017: A1.9.0.4": [
+                " : Modified the behavior of the ls command in the bash console.",
+                " : Messaging is now MUCH faster than before - major speed improvement.",
+                " : Fixed bug in messenger where username would sometimes not appear when opening the app"
+            ],
+            "05/19/2017: A1.9.1.0": [
+                " + Added more content to Chinese language.",
+                " + Context menus, app names, and apps list are now programmed to reflect language selection if translation available.",
+                " + Re-added Ultra Verbose as a joke language."
+            ],
+            "05/21/2017: A1.9.2.0": [
+                " : Changed around some icons, I think they look a bit better now. Credit to Elme Delos Santos",
+                " + Added 42 new backgrounds.",
+                " + Notification that tells what the latest update was.",
+                " : Made JavaScript Console, Prompts, and Text Editor translatable.",
+                " : Messaging now loads 10 messages by default instead of 5."
+            ],
+            "05/23/2017: A1.9.2.1": [
+                " - Removed security hole from Messaging",
+                " + Messaging now highlights real admins green.",
+                " : Suppressed a bug in Camera."
+            ],
+            "05/24/2017: A1.9.2.2": [
+                " + Added custom style by Elme Delos Santos."
+            ],
+            "05/28/2017: A1.9.2.3": [
+                " : Messaging app is a bit more secure.",
+                " + If a notification is already open, additional dialogs will flash the notification to attract attention.",
+                " + Added 'Into Your Arms' and 'Live For The Drop' to Music Visualizer. Both songs are by Capital Kings and I claim no rights to them."
+            ],
+            "05/29/2017: A1.9.2.4": [
+                " : Notification for latest update only happens if the latest update is new.",
+                " : Fixed Messaging encoding names incorrectly since the 1.9.2.3 update."
+            ],
+            "05/30/2017: A1.9.2.5": [
+                " : Messaging app is, once again, more secure. One side effect of this update is that all messaging usernames were reset. Just re-enter your name again to get it back."
+            ],
+            "06/01/2017: A1.9.3.0": [
+                " + Added Style Editor app to more easily edit Custom Styles. ",
+                " : Moved Boot Script into the Applications List.",
+                " : Reboot now correctly reboots to aOS.",
+                " + Version of aOS is now included in error reports. Chrome cache sucks for debugging.",
+                " : Even easier to tell admins in messaging now."
+            ],
+            "06/02/2017: A1.9.3.1": [
+                " + Images can now be sent in messaging. [IMG]http://URL.HERE/image.png[/IMG]",
+                " - Fixed error in Google Play version where aOS attempts to determine its last version via localStorage.",
+                " - Fixed error in Google Play where, when loading a desktop previously loaded on a PC, NORAA throws an error at boot and fails to initialize."
+            ],
+            "06/03/2017: A1.9.3.2": [
+                " + Windows now minimize to the correct position on the taskbar."
+            ],
+            "06/05/2017: A1.9.3.3": [
+                " : Fixed backslash error with names in Messaging."
+            ],
+            "06/06/2017: A1.9.4.0": [
+                " + Added App Search functionality to Dashboard",
+                " + Added new types of Dashboard, Windows 7 and Whisker Dashboards, they can be found in settings.",
+                " : Renamed Apps List to Dashboard."
+            ],
+            "06/13/2017: A1.9.4.1": [
+                " : Fixed error in psuedo-GRUB that prevents aOS from loading in Google Play app and older browsers",
+                " : Forced Chrome to ignore cached version of script and style on reboot/refresh. Take that, Chrome!"
+            ],
+            "06/18/2017: A1.9.5.0": [
+                " + Added Windows 7 theme to Custom Styles in Settings.",
+                " + Added new Android-like Dashboard setting.",
+                " + aOS will now try to keep your device awake while in use."
+            ],
+            "06/19/2017: A1.9.5.1": [
+                " : Fixed error when attempting to change Dashboard in settings."
+            ],
+            "06/22/2017: A1.9.6.0": [
+                " + Added timestamps to Messaging",
+                " + Added Discussion Topics in Messaging."
+            ],
+            "06/29/2017: A1.9.6.1": [
+                " + Made timestamps in messaging easier to read."
+            ],
+            "07/10/2017: B0.1.0.0": [
+                " + AaronOS Beta has finally begun development!",
+                " - Removed apps that are abandoned or bloatware: Window Test Application, Test App 2, RD, PNG Saver, Canvas Video Games, The Internet, Mouse Recorder, TI-83+ Simulator, aOSimg Editor, Change Calculator, Performance Monitor, Simon, Bug Central, Remote Desktop Host, Remote Desktop Viewer, External Debug, Alternate Mouse Control, Online Debug Connection, File Binary, Jana, and Dark Room.",
+                " : Files app renamed to File Manager to avoid confusion.",
+                " : All filesaving is now local.",
+                " + Support for apps to add folders to USERFILES has been added.",
+                " : Saving files is now different programmatically - just save the file in USERFILES, then invoke apps.savemaster.vars.save() with no arguments to save."
+            ],
+            "07/11/2017: B0.1.1.0": [
+                " : Changed UI from using ugly purplish colors to sleek black-and-white and inputs, with subtle hints for hovering, clicking, and focus. Affected are buttons, inputs, and textareas.",
+                " : Changed horizontal dividers to look better - works best on white or black backgrounds.",
+                " : Changed the look of the context menu - now looks less ugly and gray, now has sleek feel to it.",
+                " : Changed the display size of most icons - they are now evenly powers of two (16, 32, 64, 128, etc)."
+            ],
+            "07/12/2017: B0.1.1.1": [
+                " + Added application to help me test the UI of the beta.",
+                " : Changed window title bars back to normal, as they were huge before.",
+                " : Changed window caption icons to 32x32 instead of 20x20. The icons now scale cleanly."
+            ],
+            "07/16/2017: B0.1.2.0": [
+                " : Settings background is now truly black.",
+                " : Fixed color of shadow for context menu.",
+                " : Changed context menu icons."
+            ],
+            "07/17/2017: B0.1.2.1": [
+                " - Removed local file saving, as it caused issues.",
+                " + Re-added cloud file-saving, as removing it broke the original vision for aOS - a desktop that lives in the Cloud."
+            ],
+            "07/23/2017: B0.1.3.0": [
+                " + Added rudimentary GTK theme support - use the GTK Conversion app to turn a GTK theme into a compatible aOS theme."
+            ],
+            "07/24/2017: B0.1.3.1": [
+                " + GTK Theme Converter now removes some lag sources (wildcards ftw) and supports inputs and textareas, as well as selection colors."
+            ],
+            "07/31/2017: B0.1.4.0": [
+                " + 15 new icons from Nightmare Sphere developer Hasan Shahrier - great job, Hasan! More icons on the way."
+            ],
+            "08/05/2017: B0.1.4.1": [
+                " + 16 new icons from Nightmare Sphere developer Hasan Shahrier - great job again!",
+                " : Default window background changed - cleaner now.",
+                " - Removed many desktop icons, as at the moment, built-in icons cannot be removed, and it made the screen look cluttered."
+            ],
+            "08/07/2017: B0.1.4.2": [
+                " + Changed cursor set to KDE Breeze and added open/closed hand for moving and resizing windows.",
+                " : Changed Window Background Image to one that is much more subtle and doesn't distract from content."
+            ],
+            "08/08/2017: B0.1.5.0": [
+                " + Added new ScreenSaver, Bouncy Ball, which bounces a ball around the screen with realistic(ish) physics.",
+                " : Fixed Settings icon color.",
+                " : Changed default screensaver to Bouncy Ball."
+            ],
+            "08/14/2017: B0.1.6.0": [
+                " + Added new Modding Tutorials app and a tutorial for making your own NORAA apps.",
+                " : Changed default screensaver back to Hue, as Bouncy Ball had some locking problems. Still have no idea what happened.",
+                " : Changed error message to be a bit less intimidating."
+            ],
+            "08/15/2017: B0.1.7.0": [
+                " + Added App Information Viewer that allows you to see the full app icon and a help page for an app.",
+                " + Added Help Pages for all built-in apps on the App Information Viewer."
+            ],
+            "08/21/2017: B0.1.8.0": [
+                " : Changed symbols used in window control buttons, they are now all the same size and are more consistent",
+                " : Fixed setting names in Messaging",
+                " : Fixed Bouncy Ball screensaver and set as default again.",
+                " : Changed default Window Fade Distance to 0.8 from 0.5, it is smoother and less distracting ",
+                " + Added password setting in Settings - Information."
+            ],
+            "08/22/2017: B0.1.8.1": [
+                " + Added support for HiDPI displays in Settings - Screen Resolution",
+                " : Changed CORS proxy to https://cors-anywhere.herokuapp.com/ and NORAA can now answer 'what is' questions again."
+            ],
+            "08/23/2017: B0.1.8.2": [
+                " : Fixed cutoff of icons on window titlebar",
+                " + Added funny error messages",
+                " : Fixed File Manager UI",
+                " : Fixed JavaScript Console UI",
+                " : Fixed crash in Firefox when typing into alert box"
+            ],
+            "08/24/2017: B0.1.8.3": [
+                " + Added Phosphor screensaver from Linux XScreenSaver and set as default.",
+                " : Fixed screensavers freezing aOS when deactivated by keypress."
+            ],
+            "09/08/2017: B0.1.8.4": [
+                " : Window titlebar buttons look much cleaner now; font is consistent across devices and looks less like text than a button."
+            ],
+            "09/09/2017: B0.1.8.5": [
+                " : Fixed close button on notifications"
+            ],
+            "09/12/2017: B0.1.9.0": [
+                " : Updated mobile app to the Beta version of aOS.",
+                " : Updated mobile adaptations to work better. Someone please give feedback if it works right!"
+            ],
+            "09/21/2017: B0.1.9.1": [
+                " + Added touch and clear to Bash Console."
+            ],
+            "09/23/2017: B0.1.9.2": [
+                " : Fixed Phosphor screensaver."
+            ],
+            "10/05/2017: B0.2.0.0": [
+                " + Taskbar Widgets! All right-side content of taskbar is now Widgets. This is a major update and a major improvement over the old style."
+            ],
+            "10/06/2017: B0.2.1.0": [
+                " + Added Network Widget",
+                " : Fixed positioning of context menu when screen is scaled",
+                " : Fixed position of moving windows when screen is scaled.",
+                " + Added new folder to File Explorer for the new taskbar widgets, so their source can be explored just like apps.",
+                " : Fixed cursor style issues in Files Explorer.",
+                " : Fixed some horribly inefficient code in text editor."
+            ],
+            "10/07/2017: B0.2.2.0": [
+                " + Added CPU load widget; every piece of the original taskbar is now available again."
+            ],
+            "10/21/2017: B0.2.2.1": [
+                " : Fixed a bug with moving windows caused by screen scaling."
+            ],
+            "11/11/2017: B0.2.2.2": [
+                " - Removed annoying false error prompt from music visualizer."
+            ],
+            "11/16/2017: B0.2.2.3": [
+                " : Easier to use notifications, when closing notification and another is waiting, it slides out and back in so you can tell there are more.",
+                " + Minor spam protection in Messaging."
+            ],
+            "01/01/2018: B0.2.2.4": [
+                " : Images added to Messaging now have 3px padding around them."
+            ],
+            "01/10/2018: B0.2.2.5": [
+                " : Changed description in GRUB from Unstable to Current."
+            ],
+            "01/20/2018: B0.2.2.6": [
+                " : Made the method of forcing https more efficient."
+            ],
+            "01/24/2018: B0.2.3.0": [
+                " + Added menu for Battery Widget.",
+                " : Finally fixed bug where windows disappear if you click on other windows too many times. It should be impossible now.",
+                " + Laid groundwork for new Mobile Mode. Very unstable so far, so disabled."
+            ],
+            "01/26/2018: B0.2.3.1": [
+                " : Fixed size of icons in Android, Aero, and Wisker dashboards so that they are readable with the new icons.",
+                " : Fixed the scrollbar in the Dashboard so it does not disappear if the list gets too short during a search."
+            ],
+            "02/05/2018: B0.2.3.2": [
+                " + Added [b], [i], and [u] to Messaging. Along with [img], all are now case insensitive."
+            ],
+            "02/06/2018: B0.2.3.3": [
+                " : Fixed password-setting error in Settings."
+            ],
+            "02/07/2018: B0.2.3.4": [
+                " : Actually fixed Messaging, the last fix didnt work.",
+                " - Removed notification bell from Messaging when window is focused and Messaging is not minimised.",
+                " + You can open the system context menu by right-clicking on the border or an empty space on the aOS context menu.",
+                " : Fixed NORAA barrel roll and aileron roll.",
+                " + Added psychedelic secret command.",
+                " - Removed varsOriginal from all apps since it was completely unused and took up a lot of memory."
+            ],
+            "02/08/2018: B0.2.4.0": [
+                " : Made the loading screen easier to read.",
+                " : Changed several ugly loading icons into the aOS logo.",
+                " + Added a web manifest for if you add the site to your homescreen.",
+                " + aOS will now keep itself from being scrolled out place.",
+                " : Fixed a performance issue.",
+                " : Fixed some security issues."
+            ],
+            "02/09/2018: B0.3.0.0": [
+                " + Added taskbar widget that shows the number of online users!",
+                " + New icons in Settings.",
+                " + Added a Safe Mode accessible by adding '?safe=true' to the URL.",
+                " : Windowblur now works properly when windows are defocused.",
+                " : Made the Messaging settings window a bit less horrible.",
+                " + Added notifications for Messaging when the app is minimised.",
+                " : File shortcuts have been replaced with JavaScript shortcuts.",
+                " : Made the desktop background menu far less demanding and added a new background.",
+                " + AaronOS can now be reset."
+            ],
+            "02/10/2018: B0.3.0.1": [
+                " : The BootScript itself is no longer ignored by Safe Mode, but instead the user must manually make the bootscript ignore Safe Mode."
+            ],
+            "02/11/2018: B0.4.0.0": [
+                " + Serious security enhancements reguarding passwords. This is a major improvement.",
+                " : BootScripts are now forced to obey Safe Mode again.",
+                " - Removed accidental double-stacking of the same element within itself in the taskbar, should help performace.",
+                " : Updated the preview page for the Custom Style Editor to the Beta.",
+                " - Removed test for the WakeLock API as no devices support it and it was generating a cryptic error."
+            ],
+            "02/12/2018: B0.4.1.0": [
+                " + Added Glass Windows to the Custom Styles gallery.",
+                " : NORAA now uses DuckDuckGo instead of Bing. It makes his life much easier.",
+                " : The CORS proxy ping at aOS launch will now ping DuckDuckGo instead of Bing. Goodbye, Bing!",
+                " - Bing has finally been completely removed from AaronOS."
+            ],
+            "02/13/2018: B0.4.1.1": [
+                " + The file saver system will now alert on errors.",
+                " : Major network performance fix. aOS now uses almost exactly half of the network data it used to.",
+                " : Major security issue with file saving was addressed."
+            ],
+            "02/15/2018: B0.4.2.0": [
+                " : The Changelog is now displayed Newest-First.",
+                " + The password checking page now auto-focuses and responds to the enter key.",
+                " : Messaging requires you to be logged in, but only if you had manually set a password.",
+                " : Fixed security issue with passwords.",
+                " + Added official File API for external servers. Details in Settings - Advanced.",
+                " : Fixed issue with files not persisting for new users.",
+                " : Fixed issue with ending script tag in files crashing aOS."
+            ],
+            "03/01/2018: B0.5.0.0": [
+                " + Flow Mode - Squiggly line on right side of task bar. Compare to Win10's Task View."
+            ],
+            "03/03/2018: B0.5.0.1": [
+                " + More verbose error messages in Messaging.",
+                " : The password field is now a proper password field.",
+                " : Fixed some spam issues in Messaging."
+            ],
+            "03/06/2018: B0.5.0.2": [
+                " : Fixed issue where some windows would bug out if opened right after closing them."
+            ],
+            "03/20/2018: B0.5.1.0": [
+                " : Made the default Dashboard look a bit better."
+            ],
+            "03/24/2018: B0.6.0.0": [
+                " : Boot should be slightly faster on desktop, and at least 5x faster on mobile.",
+                " : Default Windowblur Radius is default to 5 again.",
+                " : Made the password screen and loading screen far more user friendly, and now looks somewhat like a real login screen now.",
+                " : Tweaked the Dashboard again."
+            ],
+            "04/09/2018: B0.6.0.1": [
+                " : Fixed auto-scroll in Messaging."
+            ],
+            "04/11/2018: B0.7.0.0": [
+                " : The App Maker has recieved a serious makeover! It should now be far easier to use.",
+                " + The current state of Windowblur and BackdropFilter Blur are now correctly shown in Settings.",
+                " : Fixed minor error in NORAA."
+            ],
+            "04/15/2018: B0.7.1.0": [
+                " + The music visualizer now accepts local files! Play any song you like in the Music Visualizer!",
+                " : Music Visualizer default sensitivity adjusted.",
+                " - Music is no longer stored on the server."
+            ],
+            "04/16/2018: B0.7.1.1": [
+                " : Audio delay in music visualizer is raised from 150ms to 200ms. The audio and visualizer should be better synced now."
+            ],
+            "04/18/2018: B0.7.1.2": [
+                " : Fixed a major issue in Messaging.",
+                " + Online Users Widget now displays an 'X' when it can't connect to aOS."
+            ],
+            "04/19/2018: B0.7.1.3": [
+                " + Images in messaging can be expanded by clicking on them. They don't take up more space than necessary, otherwise."
+            ],
+            "04/25/2018: B0.7.1.4": [
+                " : Fixed Windows 98 and XP custom styles.",
+                " : Changed the way CustomStyles works; this decreased the download size for aOS.",
+                " : Fixed issue where Windowblur would incorrectly set its position."
+            ],
+            "04/26/2018: B0.7.1.5": [
+                " + Added Linux Mint Y Dark theme in Settings -> Custom Styles."
+            ],
+            "04/27/2018: B0.7.1.6": [
+                " + Minor debug feature added to Messaging."
+            ],
+            "05/29/2018: B0.7.2.0": [
+                " + Added Live Background option for using a website as a desktop background.",
+                " + Added optional Dark Mode that can be toggled in Settings -> Windows",
+                " : To make the UI more consistent, NORAA, Bash, and the Javascript Console all use themes that match the current light/dark mode.",
+                " : Desktop icons now correctly align to the grid when placed by the user."
+            ],
+            "06/12/2018: B0.8.0.0": [
+                " + Added Web App Maker, which lets you turn any compatible webpage into an aOS app!",
+                " : Changed the scrollbar and made it Dark Mode compatible.",
+                " : Made a minor change to the code for Messaging."
+            ],
+            "06/13/2018: B0.8.0.1": [
+                " : Fixed an issue in the backend with filesaving."
+            ],
+            "06/14/2018: B0.8.1.0": [
+                " : Serious rework of Desktop Icon Maker.",
+                " : Fixed NORAA, JS Console, and Bash Terminal theme compatibility - they no longer ignore Custom Styles.",
+                " - Removed super annoying and cryptic file deletion alert."
+            ],
+            "06/15/2018: B0.8.2.0": [
+                " : Cleaned up the desktop a little.",
+                " + Added Controls popups for IndyCar and House Game"
+            ],
+            "06/20/2018: B0.8.3.0": [
+                " + Added red color to music visualizer."
+            ],
+            "06/21/2018: B0.8.3.1": [
+                " + Added padding that is enabled by default in all apps, however apps with special UI's are allowed to turn off the padding.",
+                " : Tweaked green cutoff at red in music visualizer."
+            ],
+            "06/26/2018: B0.8.3.2": [
+                " : Not really an update, but the Music Visualizer icon is now displayed on the desktop."
+            ],
+            "07/11/2018: B0.8.4.0": [
+                " + Added [url] support to Messaging.",
+                " : Rewrote the entire BBCode system in Messaging, is far more reliable and flexible. It can also support extension by developers now."
+            ],
+            "07/20/2018: B0.8.5.0": [
+                " : Modified the way that aOS names window, taskbar, and desktop elements. No longer are three-letter ID's required to be unique, and there should be no more conflicts in HTML IDs.",
+                " : Updated necessary apps, to work correctly with this change. Please ensure that your own custom-made apps and scripts reflect the change as well."
+            ],
+            "07/24/2018: B0.8.6.0": [
+                " + Added [color], [glow], [outline] to Messaging.",
+                " + Messaging usernames can now use BBCode tags that are marked as safe.",
+                " + Added formatting list to Messaging.",
+                " : Fixed issue with resizing windows and moving app icons."
+            ],
+            "07/25/2018: B0.8.6.1": [
+                " + Added [font] to Messaging.",
+                " : Fixed BBCode rendering of usernames in Online Users widget and the Messaging notifications."
+            ],
+            "08/01/2018: B0.8.6.2": [
+                " : Made Glass Windows theme compatible with dark mode.",
+                " : Fixed disappearing scrollbars in some Dashboard menus.",
+                " : Fixed redundant scrollbar in some Dashboard menus."
+            ],
+            "08/24/2018: B0.8.6.3": [
+                " + Apps can now temporarily block the screensaver. Useful for games, videos, etc.",
+                " : Fixed size and positioning of logo on Wikipedia screensaver.",
+                " : Camera, Music Visualizer, IndyCar game, and House Game now block the screensaver."
+            ],
+            "09/27/2018: B0.8.6.4": [
+                " : Slightly modified API for Messaging."
+            ],
+            "10/06/2018: B0.8.7.0": [
+                " + Added [site] to messaging."
+            ],
+            "10/11/2018: B0.8.7.1": [
+                " : Fixed an issue that recently came up, where any files with newlines would crash aOS on boot."
+            ],
+            "10/12/2018: B0.8.8.0": [
+                " + New default wallpaper and window color!",
+                " + New Parallax Background option in Settings -> Background. Your wallpaper scrolls around when you move your mouse!",
+                " : Fixed issues with CustomStyles."
+            ],
+            "11/07/2018: B0.8.8.1": [
+                " + New custom style preset, Terminal!"
+            ],
+            "11/08/2018: B0.8.9.0": [
+                " + Added new Minesweeper clone for aOS!",
+                " + The Linux Mint custom style now obeys light / dark mode settings!"
+            ],
+            "11/09/2018: B0.8.9.1": [
+                " + Added new settings to Minesweeper - Omnipresent Grid, Automatic Clearing, and Safe First Move.",
+                " + Added a new feature to Minesweeper - Easy Clear!",
+                " : Adjusted placement of text in Minesweeper.",
+                " : Fixed issue in Minesweeper where empty regions wouldn't clear all the way."
+            ],
+            "11/10/2018: B0.8.9.2": [
+                " : Updated the Camera app to use newer API.",
+                " : aOS only nags you to download Chrome once, instead of every time it loads.",
+                " : Fixed bug with Easy Clear in Minesweeper that lets you place flags on broken blocks.",
+                " : Various fixes in Minesweeper",
+                " - Removed automatic win in Minesweeper if all blocks are cleared, was causing bugs",
+                " : Settings can now be changed in standalone Minesweeper."
+            ],
+            "11/18/2018: B0.8.9.3": [
+                " : Made the login screens a bit smoother.",
+                " + aOS will prompt users to set a password after five minutes on brand new accounts."
+            ],
+            "11/20/2018: B0.8.9.4": [
+                " + Added [br] and [hr] in Messaging.",
+                " : Adapted bbcode parser to accept [tag=param] to give parameters to a tag.",
+                " : Adapted bbcode parser to properly handle unclosed tags.",
+                " : Fixed a vulnerability in Messaging."
+            ],
+            "11/21/2018: B0.8.9.5": [
+                " + Almost any text field in the system supports Copy/Paste now. Developers no longer have to manually register their text field for copy-paste tools.",
+                " : Fixed XSS vulnerability in Copy-Paste menu."
+            ],
+            "11/25/2018: B0.9.0.0": [
+                " + Added system that allows embedded Web Apps to communicate with aOS."
+            ],
+            "11/26/2018: B0.9.0.1": [
+                " + Added API documentation to Web App Maker.",
+                " : Fixed a crash in App Maker."
+            ],
+            "11/27/2018: B0.9.0.2": [
+                " + Pasting from the aOS clipboard will now replace text correctly based on selection."
+            ],
+            "11/28/2018: B0.9.1.0": [
+                " + JS Paint by Isaiah Odhner",
+                " + Pipes Screensaver by Isaiah Odhner",
+                " + Window controls can be moved to the left side."
+            ],
+            "11/29/2018: B0.9.1.1": [
+                " + Widget Menu now correctly positions itself on non-bottom taskbar position.",
+                " : Window hover frame correctly positions itself on non-bottom taskbar position.",
+                " - Removed clutter, useless or abandoned options from Settings.",
+                " : Rearranged some Settings items, more important options at the top.",
+                " + JSPaint loading is opaque."
+            ],
+            "12/01/2018: B0.9.1.2": [
+                " + Log Out option added to power menu.",
+                " : Shut Down option now logs you out."
+            ],
+            "12/03/2018: B0.9.1.3": [
+                " + exit command in Bash.",
+                " : Fixed HTML Entities in Messaging names."
+            ],
+            "12/08/2018: B0.9.1.4": [
+                " : Fixed WindowBlur rendering the wrong part of the background when custom taskbar positions are selected.",
+                " : Fixed windows minimize animation going to wrong place when custom taskbar position is set."
+            ],
+            "12/13/2018: B0.9.1.5": [
+                " - Removed Beta Testing App, Search App (implemented elsewhere), Mathway App"
+            ],
+            "12/17/2018: B0.9.1.6": [
+                " : Dashboard and Apps Browser are now alphabetized. How did I miss that?"
+            ],
+            "12/20/2018: B0.9.1.7": [
+                " : aOS now checks that requests come from the actual current server, rather than checking specifically for the aOS official server. This means aOS should now, in theory, be portable.",
+                " : aOS now checks for images in the folder (if any) that it resides in, instead of automatically picking the root folder."
+            ],
+            "12/22/2018: B0.9.1.8": [
+                " : IE11 no longer rejects aOS for containing spread notation (...) in its source code.",
+                " + On Internet Explorer, Windowblur defaults to off.",
+                " : Fixed double prompts appearing on non-Chrome browsers; should only appear once now."
+            ],
+            "12/23/2018: B0.9.1.9": [
+                " : Fixed issue that caused portability to not actually work."
+            ],
+            "12/24/2018: B0.9.1.10": [
+                " + Begun work on experimental replacement file manager."
+            ],
+            "01/01/2019: B0.9.1.11": [
+                " + AaronOS now has an EULA for those who wish to deploy aOS on their own server or otherwise use its code, available at /eula.txt",
+                " + If the code is hosted on an unofficial server, a note will be dynamically added next to the Copyright Notice in Settings -> Information, with a link to the official AaronOS server. AaronOS deployers - this note is not under any circumstances to be removed or its text altered in any way, with the exception of being moved to another location at the top of an easily-accessible menu in Settings, alongside its Copyright Notice.",
+                " + Apps can now be pinned to the taskbar.",
+                " : Fixed Camera app.",
+                " : Changed question mark in File Manager to refresh symbol.",
+                " : Adjusted Mint-Y theme.",
+                " : Google Play prompt now only occurs once."
+            ],
+            "01/02/2019: B0.9.2.0": [
+                " + Added Text To Binary app."
+            ],
+            "01/04/2019: B0.9.3.0": [
+                " + Text To Binary app can now decode images."
+            ],
+            "01/05/2019: B0.9.3.1": [
+                " : Minor memory fixes in Text To Binary",
+                " + Text To Binary now has a standalone page at binary.php"
+            ],
+            "01/07/2019: B0.9.3.2": [
+                " : Battery widget is hidden on devices/browsers that don't support it."
+            ],
+            "01/17/2019: B0.9.4.0": [
+                " + New experimental Mobile Mode",
+                " : Windows can now be correctly resized by any edge.",
+                " + Two new battery widget modes, Text and Old.",
+                " + JS Console now sanitizes input and catches errors.",
+                " : App taskbar icons are now above taskbar widgets, instead of vice-versa."
+            ],
+            "01/20/2019: B0.9.5.0": [
+                " : The Psuedo-Bash Console has had a complete rewrite!",
+                " + Apps can now run psuedo-bash code on their own with apps.bash.vars.execute()",
+                " : Pipes now work correctly in Bash.",
+                " : grep is now case insensitive"
+            ],
+            "01/26/2019: B0.9.5.1": [
+                " : Mutiple windows are now fit onscreen in Flow Mode with Mobile Mode.",
+                " : Caption bars are no longer semitransparent in Flow Mode",
+                " : Data Collection is now false by default, oops."
+            ],
+            "01/27/2019: B0.9.5.2": [
+                " + Added some polyfills, extended browser support back just a little bit further."
+            ],
+            "02/01/2019: B0.9.6.0": [
+                " + Users can now set a custom Window Border Width."
+            ],
+            "02/02/2019: B0.9.6.1": [
+                " : Renamed variables for window resizing from winRot* to winRes* (was leftover from old window rotation)."
+            ],
+            "02/03/2019: B0.9.6.2": [
+                " : All built-in apps now use the \"auto\" flag when centering their windows, and now consistently center on the same point."
+            ],
+            "02/04/2019: B0.9.7.0": [
+                " + Approximate loading percentage bar on boot.",
+                " : Loading messages are shorter.",
+                " : Fixed error that occurred when using the touchscreen during boot."
+            ],
+            "02/05/2019: B0.9.8.0": [
+                " + Begun work on rewriting the new replacement file manager."
+            ],
+            "02/06/2019: B0.9.9.0": [
+                " + Added view modes to experimental file manager.",
+                " + Added file icons to experimental file manager."
+            ],
+            "02/08/2019: B0.9.9.1": [
+                " + Added experimental subpixel antialiasing to icons in Files 2"
+            ],
+            "02/09/2019: B0.9.9.2": [
+                " : Function Grapher no longer requires 'Math.'",
+                " : Function Grapher informs user of ^ operator.",
+                " : Your USERFILES are now loaded separately from the page source, and are initialized in a better way. In some ways this is faster, in other ways it's slower. But in all ways it appears to be more stable than before.",
+                " : Fixed USERFILES sometimes being set to null when your folder is empty."
+            ],
+            "02/10/2019: B0.9.9.3": [
+                " : Function Grapher only notifies on ^ once."
+            ],
+            "02/11/2019: B0.9.9.4": [
+                " + Source Code Line of the Day in JS Console.",
+                " + More detailed loading performance info in JS Console.",
+                " - Removed unnecessary logs from JS Console.",
+                " : Files 2 no longer accidentally sends the wrong name to Text Editor for USERFILES entries.",
+                " : Files 2 is much more stable when encountering 'invalid' filenames."
+            ],
+            "02/12/2019: B0.9.10.0": [
+                " + File Manager has been replaced File Manager 2.",
+                " + File Manager 2 uses bash for most of its file operations.",
+                " + File Manager 2 has multiple view modes.",
+                " + File Manager 2 has much faster performance.",
+                " + File Manager 2 has file icons.",
+                " + File Manager 2 is compatible with mobile mode and custom border width.",
+                " + File Manager 2 is far more stable.",
+                " + Begun work on replacement text editor.",
+                " + TE2 can now edit and save functions."
+            ],
+            "02/13/2019: B0.9.10.1": [
+                " + Users can now type a path into Files 2",
+                " : Files 2 handles empty and null directories better.",
+                " : TE2 handles bad input better.",
+                " : Fixed some copy/paste icons"
+            ],
+            "02/14/2019: B0.9.10.2": [
+                " + Desktop icons will rearrange to fit the size of the desktop if it changes.",
+                " : Deleting files actually works now.",
+                " + Any function calling the sh() command will get its own personal workdir for working in Bash. Note that this only applies to the specific function that called sh()",
+                " + Three new commands - sh(bashCommand), ufsave(userfile, content), and ufdel(userfile).",
+                " - Removed 'unfinished' message from Bash Console.",
+                " - Notification content no longer pushes into button row.",
+                " : LOTS of backend code fixes."
+            ],
+            "02/20/2019: B0.9.10.3": [
+                " + Some backend support for subdirectories in USERFILES, courtesy of SkyeEverest.",
+                " + Included fallbacks for CSS var(), for IE.",
+                " : Automatically sets a darker, opaque background color for IE.",
+                " : Serverside error reports now report the correct line number."
+            ],
+            "02/25/2019: B0.10.0.0": [
+                " + USERFILES now supports psuedo file extensions.",
+                " + Full backend and frontend support for folders in USERFILES.",
+                " : Text Editor 2 now assumes USERFILES, instead of the other way around.",
+                " + Files 2 and Text Editor 2 now properly handle folders in USERFILES.",
+                " - aOSpassword cannot be modified except for setting a new password.",
+                " - aOSpassword cannot be viewed.",
+                " + Added some padding on the boot loading bar.",
+                " : Clipboard now uses JSON for storage."
+            ],
+            "02/26/2019: B0.10.1.0": [
+                " + Added search bar and new folder / new file buttons to the File Manager.",
+                " - Removed backend messaging dependency on setting.txt",
+                " + System admins can now just straight-up delete messages instead of editing their content and erasing it."
+            ],
+            "02/27/2019: B0.10.2.0": [
+                " + Pet Cursors app! Users can create custom cursors that follow their mouse around. Each has their own, specialized personality."
+            ],
+            "02/28/2019: B0.10.3.0": [
+                " : Changed window caption font from Courier to Consolas",
+                " + Added a small shadow to caption buttons.",
+                " : Numerous fixes for Pet Cursors"
+            ],
+            "03/25/2019: B0.11.0.0": [
+                " + Added Foxxo pet cursor.",
+                " : Misc updates that I forgot to include in the log. But mostly the fox cursor."
+            ],
+            "03/26/2019: B0.11.0.1": [
+                " : Fixed Terminal stylesheet."
+            ],
+            "03/28/2019: B0.11.0.2": [
+                " : Fixed Help App crashing on launch."
+            ],
+            "03/30/2019: B0.11.1.0": [
+                " + Custom Style Editor now uses a live preview of a real AaronOS instance to test your stylesheets in real-time.",
+                " - Fake AaronOS desktop for use with Style Editor has been removed.",
+                " : Errors now show in notifications instead of JavaScript alerts which hang aOS."
+            ],
+            "03/31/2019: B0.11.1.1": [
+                " : Cleaned up many of the CustomStyles themes."
+            ],
+            "04/03/2019: B0.11.1.2": [
+                " : Fixed Fullscreen button in Settings (thank you CerebralDatabank)",
+                " : Modified filetype description positioning in File Manager 2."
+            ],
+            "04/04/2019: B0.11.2.0": [
+                " : Apps now wait until the window closing animation is finished before clearing their content, looks way better now.",
+                " : Fixed error when right clicking a file with a period in its name in FIL2.",
+                " : Properties app now uses bash file paths instead of JS object paths.",
+                " : Fixed window titles overlapping buttons on right side.",
+                " : Fixed some apps not clearing their window content after being closed.",
+                " : Fixed the LiveElement system erroring out in its error handler."
+            ],
+            "04/05/2019: B0.11.3.0": [
+                " + Sidebar in the File Manager including the new Home, Favorites and Navigation features.",
+                " : The main page of the File Manager is now called Home",
+                " + Favorites list in File Manager, to save important locations.",
+                " + Navigation list in File Manager, to jump around in the current path.",
+                " : Buttons for touch and mkdir in File Manager moved to the right side.",
+                " + Add Favorite button added to left side of File Manager's toolbar.",
+                " + Descriptions for the File Manager's toolbar buttons will now appear when hovered over.",
+                " + Rounded corners on the top edge of the File Manager's content.",
+                " : The left edge of the File Manager's Location and Search boxes are now lined up with the left edge of the main content.",
+                " : Fixed caption bars in the Windows 98 theme."
+            ],
+            "04/07/2019: B0.11.3.1": [
+                " + Progress bar for shutdown.",
+                " : Fixed shutdown screen."
+            ],
+            "04/10/2019: B0.12.0.0": [
+                " : Context Menu has recieved a visual overhaul.",
+                " + LOCALFILES, a place to save files locally instead of online.",
+                " + New aos_system folder in USERFILES",
+                " - system files are no longer dumped into the root directory of USERFILES >.<",
+                " : All system files moved into the aos_system folder.",
+                " : All system files given new, more sensible names",
+                " + File Browser Debug is now persistent.",
+                " : Added missing icon for File Browser Debug.",
+                " : Fixed Minesweeper Easy Clear setting not saving.",
+                " : Fixed APM using old text editor.",
+                " : Boot should be slightly faster, as several slow functions were sped up."
+            ],
+            "04/12/2019: B0.13.0.0": [
+                " + Added Music Player"
+            ],
+            "04/14/2019: B0.13.0.1": [
+                " + Added aaronos.dev as the new official AaronOS server.",
+                " : Updated README, EULA, and privacy policy to reflect the new server address.",
+                " : Fixed several serverside issues."
+            ],
+            "04/15/2019: B0.13.0.2": [
+                " + Unlocked rotation on PWA.",
+                " : Fixed password screen using old background instead of new one.",
+                " - Removed accidental debug logging to console on arranging icons."
+            ],
+            "04/17/2019: B0.13.0.3": [
+                " + Hidden iFrame Browser app for debugging."
+            ],
+            "04/18/2019: B0.14.0.0": [
+                " + Background image fit settings (cover, center, etc)",
+                " + Added data-parent-app attribute for iframes, will bring the specified app to top if the iframe has focus.",
+                " + The currently focused app is displayed on the window's title."
+            ],
+            "04/19/2019: B0.15.0.0": [
+                " : Window captions are now 32px high to fit the whole icon.",
+                " : Window caption buttons are now whole instead of hanging on to the top of the window.",
+                " + Begun work on Smart Icons.",
+                " + Smart Icons Settings.",
+                " + Smart Icon Creator.",
+                " + Smart Icon Template Files."
+            ],
+            "04/21/2019: B0.15.0.1": [
+                " : All app icons are now treated as Smart Icons. Any legacy icons are converted.",
+                " : Made JSConsole colors readable."
+            ],
+            "04/23/2019: B0.15.0.2": [
+                " : Fixed CustomStyles",
+                " : Fixed Task Manager trying to update its content when its window is closed."
+            ],
+            "04/27/2019: B0.15.0.3": [
+                " + Testing more Smart Icons",
+                " : Fixed CSE's text editor focusing its window on click, making the context menu unusable.",
+                " : Fixed constantly bringing iframe owner to top unnecessarily, breaking context menus and such."
+            ],
+            "05/09/2019: B0.15.0.4": [
+                " : Fixed security in login system."
+            ],
+            "05/11/2019: B0.16.0.0": [
+                " + Music Player recieves a huge upgrade, with visualizations and color schemes. This is work-in-progress.",
+                " : The Music Visualizer app will be assimilated into Music Player and removed in a future update."
+            ],
+            "05/12/2019: B0.16.1.0": [
+                " + Added Smoke effect to Music Player.",
+                " + Added Eclipse and various color schemes to Music Player."
+            ],
+            "05/14/2019: B0.16.2.0": [
+                " + Added Obelisk and Smoke Rings to music Player.",
+                " + Added Pride colors to Music Player.",
+                " : Renamed several colors in visualizer.",
+                " : Drastic performance improvements in most of Music Player's visualizers. (typically double framerate in the really bad ones)",
+                " : Reorganized visualizer and color menus in music player."
+            ],
+            "05/14/2019: B0.16.2.1": [
+                " + Added Window Color to Music Player (colors aOS windows to the beat)",
+                " + Added Spikes 1:1 to Music Player (spikes, but not distorted)",
+                " + Added microphone option to Music Player.",
+                " : Music Player's Monstercat and Obelisk bars are now sitting on a slightly reflective surface in Smoke mode."
+            ],
+            "05/18/2019: B0.16.2.2": [
+                " + Added buildMarquee(text), to create a custom marquee.",
+                " : Changed all custom attributes to use data- names."
+            ],
+            "05/25/2019: B0.16.3.0": [
+                " + Yet another huge music player update. Too much content / fixes over several days to list everything."
+            ],
+            "07/13/2019: B1.0.0.0": [
+                " + Added the aOS Hub, where users can search for apps, scripts, etc.",
+                " + Repository and package system added.",
+                " : Apps moved to repository: Cookie Clicker, Calculator, GTK2aOS, JS Paint.",
+                " : Fixed filenames and directories containing the / character breaking bash.",
+                " - Removed old music visualizer.",
+                " + Restored ability to delete files in USERFILES.",
+                " + Boot Script editor now supports multiple boot scripts.",
+                " : List of Custom Styles is moved to repository.",
+                " + Custom Style system can now handle multiple 3rd-party stylesheets as well as the user's style.",
+                " + Settings menu for Smart Icons.",
+                " + Added Accumulative Spikes to Music Player.",
+                " : Bash prompt uses first four characters of ID rather than the whole thing.",
+                " + New default desktop background.",
+                " + Lots of new icons.",
+                " - Window titles no longer become transparent when defocused.",
+                " + Apps can now tell aOS to prompt the user if a restart is required.",
+                " : PostMessage system now uses JSON instead of strings.",
+                " + Major upgrade to PostMessage.",
+                " : Fixed file deletion.",
+                " : Cropped cursor set to avoid deprecation of larger size.",
+                " : Fixed error on displaying a notification with no preview image.",
+                " : Fixed NORAA always listening if the setting was modified rather than if it was enabled.",
+                " : Fixed Files 2 sometimes opening the old text editor instead of the new one.",
+                " : Fixed bash cd not returning to current workdir on failure."
+            ],
+            "07/16/2019: B1.0.1.0": [
+                " + Added Smart Icon Settings to the Settings app.",
+                " + Clicking on the progress bar in the Music Player lets you skip to a point in the song.",
+                " + Added Average Pitch visualizer to Music Player.",
+                " + Added marker on progress bar in Music Player to help with transparent color themes.",
+                " : Moved Music Player title to front of caption rather than the end."
+            ],
+            "07/18/2019: B1.0.2.0": [
+                " + New custom menu with graphics for selecting visualizers and colors in Music Player.",
+                " + Added static gradient color themes to Music Player.",
+                " + Added Queen color theme to Music Player.",
+                " + Added High Frequency Range to Music Player; requires devconsole to activate the flag (highFreqRange)."
+            ],
+            "07/24/2019: B1.0.2.1": [
+                " : Fixed issue where aOS would incorrectly state that there was a failure setting a new password.",
+                " : Fixed aOS ignoring correct passwords if their internet is too fast for itself."
+            ],
+            "07/27/2019: B1.0.3.0": [
+                " + Music Player has four new visualizers; Curved Lines, Centered Lines, Cave Lines, and Circle Lines. Thanks &Scaron;tefan Schindler for the designs.",
+                " + Music Player has three new color schemes; Rainbow, Rainbow Active, and Pride Blocky.",
+                " : Music Player's Pride color schemes now use HSL instead of RGB, and look much better.",
+                " : In Music Player, fixed Monstercat's bars stretching half a pixel through its floor.",
+                " : Music Player now alerts visualizers when smoke is toggled to prevent canvases forgetting their settings."
+            ],
+            "07/29/2019: B1.0.3.1": [
+                " + Added Fast Mode to Music Player, reduces resolution to increase FPS.",
+                " : Fixed login issues related to login tokens.",
+                " : Fixed swapping between aOS instances.",
+                " : Fixed smoke being too intense in Lines-derived visualizers in Music Player.",
+                " : Fixed missing images in music player.",
+                " : Fixed Music Player visualizer menu being open when using non-standard loading methods."
+            ],
+            "08/01/2019: B1.0.4.0": [
+                " : Total dark theme revamp; changed dark theme from full-black to dark gray.",
+                " + Style Editor now tells you the ID and class of any element that you hover over in the preview.",
+                " : File Manager, Text Editor now respond to Dark Mode when switched while the app is open.",
+                " + Function Grapher and Dashboard now respond to Dark Mode.",
+                " : Dashboard loads much faster.",
+                " + Dashboard refreshes itself each time it's opened.",
+                " + Added a new class, .darkResponsive, which makes an element automatically set its background-color, color, and border-color for dark or light mode."
+            ],
+            "08/04/2019: B1.0.4.1": [
+                " : Fixed login screen not using the correct background image."
+            ],
+            "08/05/2019: B1.0.4.2": [
+                " : Fixed Minecraft Mode in minesweeper."
+            ],
+            "08/06/2019: B1.0.5.0": [
+                " + Added enchanced graphics to minesweeper."
+            ],
+            "08/07/2019: B1.0.5.1": [
+                " + Added aosTools.js - embed the script file into your page for easy aOS app tools.",
+                " - Minesweeper was removed.",
+                " + Standalone version of Minesweeper added to the repository.",
+                " + Minesweeper now themes itself to AaronOS.",
+                " + Minesweeper now saves its settings.",
+                " + Minesweeper now pre-caches shadow images.",
+                " : Fixed caching issues on minesweeper.",
+                " - Removed Dark Mode button from Minesweeper, as this is now controlled by aOS.",
+                " : Music Player now uses aosTools.js, like Minesweeper does.",
+                " + localhost added to auto-trusted domains."
+            ],
+            "08/08/2019: B1.1.0.0": [
+                " + Added Developer Documentation app.",
+                " + Extra logic added to prevent app updates from getting delayed by web browser caching.",
+                " : Changed 'appWindow' permission to 'appwindow'",
+                " + Added to appwindow permission: open_window, close_window, maximize, unmaximize, minimize, get_maximized, set_dims",
+                " + Added manualOpen flag to web app json files to make app loading less ugly.",
+                " : Fixed error message in Music Player each time a song is started.",
+                " : Fixed error in aosTools whenever an unrecognized conversation is recieved.",
+                " : Updated Web App Maker's documentation."
+            ],
+            "08/14/2019: B1.1.1.0": [
+                " + Style changes are now updated in realtime on web apps via aosTools.",
+                " + Added search box to Developer Documentation.",
+                " + Added prompt actions to aosTools.",
+                " + aosTools can now recieve style updates as they occur on aOS.",
+                " + Added shortcuts for window events to aosTools.",
+                " + Added new documentation."
+            ],
+            "08/15/2019: B1.1.2.0": [
+                " + Added buttons to try certain actions to Developer Documentation.",
+                " + Added new documentation.",
+                " : Adjusted formatting in documentation."
+            ],
+            "08/21/2019: B1.1.3.0": [
+                " : Changed the default screensaver to Bouncy Ball because it's less intrusive, should it activate when unwanted.",
+                " + Added images to Documentation.",
+                " : Fixed incorrect title on a page in Documentation."
+            ],
+            "09/19/2019: B1.1.4.0": [
+                " + Added WIP Weather app to the Hub.",
+                " : Fixed aosTools being unable to make requests cross-domain (basically not working at all)"
+            ],
+            "09/20/2019: B1.1.5.0": [
+                " + Web Apps can now have services running in the background. Example is weather app will check for alerts for you.",
+                " + Weather app now checks for weather alerts for your area in the background."
+            ],
+            "09/27/2019: B1.1.6.0": [
+                " + Added Bass Spectrum to Music Player."
+            ],
+            "09/29/2019: B1.1.7.0": [
+                " + Added aOS Blast to the Hub app! It's a simple game where you can watch some AI duke it out with lasers or play it yourself.",
+                " : Changed default screensaver to aOS Blast."
+            ],
+            "09/30/2019: B1.1.7.1": [
+                " : Adjusted Blast screensaver.",
+                " + Added configuration in Blast for zoom, AI battle comfort, ship size, ammo labels, and scoreboard."
+            ],
+            "10/08/2019: B1.1.8.0": [
+                " + Added Blast visualizer to Music Player",
+                " + Added Featured list to Music Player visualizers for easy access to main visualizers.",
+                " : Replaced inaccurate images for solid colors in Music Player."
+            ],
+            "10/09/2019: B1.1.9.0": [
+                " + Added Seismograph and Barsmograph to music player.",
+                " + Blast can now use arrow keys.",
+                " + Added #debug flag to Music Player.",
+                " + Blast in Music Player now shows its debug screen when #bebug is specified.",
+                " + Blast now avoids Chrome's caching."
+            ],
+            "10/12/2019: B1.1.10.0": [
+                " + Blast AI has been upgraded; AI can decide to rush their target if they have high health, and will seek distance if their health is low.",
+                " + Added lowFpsLasers flag to Blast - for recording 30fps video from 60fps source."
+            ],
+            "10/30/2019: B1.2.0.0": [
+                " : Mobile Mode is set to Automatic by default.",
+                " + Open windows now have a glow on their taskbar button.",
+                " + Enabled Backdrop Filter Blur for the new default window glass effect, making windows visible behind other windows.",
+                " + Context menu will have a blurry background if blurry windows is enabled.",
+                " : Changed hover effect on taskbar buttons.",
+                " : Changed hover and click effect on window buttons.",
+                " : Changed default window color from rgba(190, 190, 255, 0.3) to rgba(150, 150, 200, 0.5)",
+                " : Increased shadow on taskbar text.",
+                " + The type of blur on window borders is now automatically set based on browser support.",
+                " : Moved Mobile Mode option to Screen Resolution category.",
+                " : Moved the Home button in Settings to the right side.",
+                " - Removed button for the pre-alpha Settings menu."
+            ],
+            "11/07/2019: B1.2.1.0": [
+                " + Added data mods for Music Player - modifies how visualizers see music data.",
+                " + Added RGB color to Music Player for use with Spikes Classic to find cool patterns.",
+                " : Rearranged UI for Music Player."
+            ],
+            "11/09/2019: B1.2.2.0": [
+                " + Added Taskbar Mode to Music Player.",
+                " + Added appwindow:get_borders and appwindow:get_screen_dims to aosTools.",
+                " : Fixed Spectrum and Bass Spectrum visualizers not filling the whole screen in MPl.",
+                " : In theory, fixed Chrome's caching of JS and CSS."
+            ],
+            "11/15/2019: B1.2.2.1": [
+                " + Added Window Glass Distortion effect, distorts the background by the glass texture. It's experimental and disabled by default.",
+                " : Fixed Window Glass Blur setting not working.",
+                " : Fixed Live Desktop Background always being enabled if the setting was ever changed."
+            ],
+            "11/23/2019: B1.2.2.2": [
+                " : Fixed Glass Distortion preference not saving properly."
+            ],
+            "11/26/2019: B1.2.2.3": [
+                " : Fixed Glass Distortion texture not lining up with Window Border texture. (texture was anchored to top, shader was anchored to bottom. both are now bottom)",
+                " + New Smart Icon for window glass test app.",
+                " + New Smart Icon for Blast in the Hub.",
+                " + New icon for Glass Windows style in the Hub."
+            ],
+            "12/14/2019: B1.2.2.4": [
+                " + Added FPS compensation to the Blast game. Ships and lasers now run the correct speed regardless of the FPS."
+            ],
+            "12/17/2019: B1.2.2.5": [
+                " : Introduction screen to Music Player is far more user-friendly.",
+                " + Added Tiles visualizer to Music player.",
+                " + Improved smoke effect in Music Player. Looks like actual smoke rather than a scrolling image.",
+                " + Added FPS compensation to Music Player (MPl). Allows things to move the correct speed at high/low FPS.",
+                " + FPS compensation for Smoke effect in MPl.",
+                " + FPS compensation in Blast for MPl.",
+                " + Better beat detection in Blast for MPl, velocity-based.",
+                " : Slightly raised sensitivity for Blast in MPl.",
+                " + Added FPS compensation to Rings and Ghost Rings in MPl."
+            ],
+            "12/18/2019: B1.2.3.0": [
+                " + Desktop icons can now be quickly created from the Dashboard, and from the taskbar.",
+                " : Completely redid the main menu for Settings.",
+                " + Built-in desktop icons can now be deleted.",
+                " : Changed the look of the 'add desktop icon' feature.",
+                " : Modified the menu for 'About This App'.",
+                " : Completely rewrote the system for desktop icons. They are now more robust and consistent, and easier to program.",
+                " : Adjusted ground reflection effect in Monstercat and Obelisks for MPl.",
+                " : Fixed multiple issues pertaining to desktop icons."
+            ],
+            "12/22/2019: B1.2.4.0": [
+                " : Revamped the rest of the Settings UI and reworded most of the setting descriptions.",
+                " : Fixed bug in Aero dashboard.",
+                " : The default Trusted Apps file now dynamically sets itself to trust the current domain, instead of requiring a manual edit on non-official hosts.",
+                " + New icons for Messaging and Sticky Note.",
+                " - Removed some useless setting options.",
+                " : Fixed mislabeled buttons in Files."
+            ],
+            "02/18/2020: B1.2.4.1": [
+                " : Fixed reflection of bars in Monstercat and Obelisk music visualizers."
+            ],
+            "06/22/2020: B1.2.5.0": [
+                " + AutoScroll for Guitar music writer.",
+                " : Various spellchecks.",
+                " : Various fixes."
+            ],
+            "09/22/2020: B1.2.6.0": [
+                " : Moved most image assets out of root project dir, this caused the location of the backgrounds and other assets to change.",
+                " : Rearranged Info tab in Settings.",
+                " : Made copyright notices more accurate.",
+                " : Numerous bug fixes the last few months didn't make it into the changelog."
+            ],
+            "09/23/2020: B1.2.7.0": [
+                " + Added Context Menus to Developer Documentation.",
+                " + Added context menus to aosTools; existing Web Apps now allow copy-paste operations, and aosTools allows future Web Apps to create custom context menus.",
+                " + Clicking inside a Web App's window now properly focuses it immediately.",
+                " : Rearranged some articles in Developer Documentation.",
+                " : Fixed context menus breaking completely if the clipboard contains less slots than it thinks it should.",
+                " : Modified a context menu icon."
+            ],
+            "09/24/2020: B1.2.7.1": [
+                " : Fixed Settings not immediately responding to changes in Light / Dark theme."
+            ],
+            "11/05/2020: B1.3.0.0": [
+                " + Brand new default Dashboard menu, which looks and functions much better.",
+                " : Changed some of the quick options available in the Dashboard.",
+                " + The File Manager can now open apps via right-click on their folder.",
+                " : Changed the Messaging font, rearranged usernames and time/date info.",
+                " : Apps Browser now has a shortened intro and now provides information that is actually useful.",
+                " : Fixed the screen magnifier app.",
+                " + The Custom Style Editor preview will now highlight the bounds of elements when hovered over.",
+                " : Rearranged the Custom Style Editor preview menu.",
+                " : The first message is no longer cut off by the status indicator.",
+                " : Notifications no longer flash an annoying orange glow when attention is required, and instead flash their opacity.",
+                " : File Manager 2 and Text Editor 2 have had the '2' removed from their names.",
+                " : Renamed the old App Maker to Legacy App Maker.",
+                " : Custom apps are now saved in a directory rather than dumped directly into USERFILES.",
+                " - Removed old Text Editor.",
+                " - Removed old File Manager.",
+                " - Removed Flash Cards app.",
+                " - Removed useless Modding Tutorials app.",
+                " - Removed unused Smart Icon Creator app.",
+                " - Removed woefully outdated Help App.",
+                " : Made a section of the Documentation simpler and fixed some typos.",
+                " : House and Indycar games along with Text to Binary are moved to the repository.",
+                " + The Savemaster app now gives you useful information rather than absolutely nothing when its window is open.",
+                " : Task Manager no longer flashes annoyingly while displaying its content.",
+                " : The Sticky Note app now opens in the top-right corner rather than top-left.",
+                " : Reworded the intro to the psuedo-Bash terminal.",
+                " : Reworded the intro to the Pet Cursors app.",
+                " : Reworded some information in File Properties.",
+                " : Windowblur Test Application is renamed to Transparent Window.",
+                " : Chrome prompt is worded less annoyingly.",
+                " : Renamed Boot Script to Boot Scripts",
+                " : Changelog dates are moved to the left side, by their titles.",
+                " : Changed the wording of some startup logs.",
+                " - Removed annoying 'how did you do that?' popups when opening the dashboard and NORAA via unorthodox means."
+            ],
+            "12/23/2020: B1.4.0.0": [
+                " + Notifications and modal dialogues can now be visible at the same time.",
+                " + Multiple notifications can be visible at a time.",
+                " + Multiple modal dialogues can be shown at a time.",
+                " : Modal dialogues can now be minimized.",
+                " : Notifications can now be hidden without destroying them.",
+                " : Changed default font of the taskbar widgets.",
+                " : Modified the look of several widgets for consistency.",
+                " + New notification widget.",
+                " + New icons for network widget.",
+                " : Messaging input font now matches the messages.",
+                " : Online Users widget is now disabled by default.",
+                " : Battery widget now stores its settings in the proper folder.",
+                " + Added photosensitivity warning to an easter egg."
+            ],
+            "01/02/2021: B1.5.0.0": [
+                " + Repository system can now install and uninstall various package types on-the-fly without requiring a restart.",
+                " + Packages of Web Apps and Stylesheets can now be installed on-the-fly.",
+                " + Packages of Stylesheets can now be uninstalled on-the-fly.",
+                " : aOS Hub now properly updates its buttons after actions, and no longer asks the user to launch apps that aren't installed yet.",
+                " : Fixed an issue in aOS Hub causing the Refresh button to be impossible to click.",
+                " : aOS Hub retains its scroll position after actions.",
+                " : Minor fixes in testing repository."
+            ],
+            "01/22/2021: B1.5.0.1": [
+                " : Numerous fixes and changes to the MacOS theme.",
+                " : Changed the format of the changelog variable.",
+                " : Fixed a rare case where AaronOS installations would not recognize their own server, causing its own commands to be rejected.",
+                " : Fixed some issue reporting and the hex test."
+            ]
+        },
+        oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.1.0 (01/22/2020) r0';
+    window.aOSversion = 'B1.5.0.1 (01/22/2020) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -10821,26 +11984,28 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 700, 400, 1);
                 this.appWindow.setCaption("Changelog");
+                /*
                 this.vars.cLogSplit = files.changelog.split('\n\n');
                 for(var i in this.vars.cLogSplit){
                     this.vars.cLogSplit[i] = this.vars.cLogSplit[i].split('\n ');
                 }
+                */
                 this.vars.cLogHTML = '';
-                for(var i in this.vars.cLogSplit){
+                for(var i in files.changelog){
                     this.vars.cLogGroup = '';
-                    for(var j = 1; j < this.vars.cLogSplit[i].length; j++){
-                        if(this.vars.cLogSplit[i][j][0] === '+'){
-                            this.vars.cLogGroup += '<p class="changeLogAddition">' + this.vars.cLogSplit[i][j].substring(2, this.vars.cLogSplit[i][j].length) + '</p>';
-                        }else if(this.vars.cLogSplit[i][j][0] === ':'){
-                            this.vars.cLogGroup += '<p class="changeLogTweak">' + this.vars.cLogSplit[i][j].substring(2, this.vars.cLogSplit[i][j].length) + '</p>';
-                        }else if(this.vars.cLogSplit[i][j][0] === '-'){
-                            this.vars.cLogGroup += '<p class="changeLogRemoval">' + this.vars.cLogSplit[i][j].substring(2, this.vars.cLogSplit[i][j].length) + '</p>';
+                    for(var j = 0; j < files.changelog[i].length; j++){
+                        if(files.changelog[i][j][1] === '+'){
+                            this.vars.cLogGroup += '<p class="changeLogAddition">' + files.changelog[i][j].substring(2, files.changelog[i][j].length) + '</p>';
+                        }else if(files.changelog[i][j][1] === ':'){
+                            this.vars.cLogGroup += '<p class="changeLogTweak">' + files.changelog[i][j].substring(2, files.changelog[i][j].length) + '</p>';
+                        }else if(files.changelog[i][j][1] === '-'){
+                            this.vars.cLogGroup += '<p class="changeLogRemoval">' + files.changelog[i][j].substring(2, files.changelog[i][j].length) + '</p>';
                         }else{
-                            this.vars.cLogGroup += '<p class="changeLogUnknown">' + this.vars.cLogSplit[i][j].substring(2, this.vars.cLogSplit[i][j].length) + '</p>';
+                            this.vars.cLogGroup += '<p class="changeLogUnknown">' + files.changelog[i][j].substring(2, files.changelog[i][j].length) + '</p>';
                         }
                     }
                     this.vars.cLogHTML = this.vars.cLogGroup + this.vars.cLogHTML;
-                    this.vars.cLogHTML = '<p class="changeLogTitle">' + this.vars.cLogSplit[i][0].split(': ')[1] + ' <span style="font-size:12px">' + this.vars.cLogSplit[i][0].split(': ')[0] + '</span></p>' + this.vars.cLogHTML;
+                    this.vars.cLogHTML = '<p class="changeLogTitle">' + i.split(': ')[1] + ' <span style="font-size:12px">' + i.split(': ')[0] + '</span></p>' + this.vars.cLogHTML;
                 }
                 getId('win_changelog_html').style.overflow = 'auto';
                 this.appWindow.setContent(this.vars.cLogHTML);
@@ -16100,7 +17265,8 @@ c(function(){
     
     if(localStorageSupported){
         if(localStorage.getItem('latestVersion') !== aOSversion){
-            apps.prompt.vars.notify(files.changelog.split('\n\n')[files.changelog.split('\n\n').length - 1].split('\n').join('<br>'), ['Changelog'], function(btn){if(btn === 0){openapp(apps.changelog);}}, 'New Update!', 'appicons/ds/CLg.png')
+            var newestChange = Object.keys(files.changelog)[Object.keys(files.changelog).length - 1];
+            apps.prompt.vars.notify(newestChange + '<br>' + files.changelog[newestChange].join('<br>'), ['Changelog'], function(btn){if(btn === 0){openapp(apps.changelog);}}, 'New Update!', 'appicons/ds/CLg.png')
             localStorage.setItem('latestVersion', aOSversion);
         }
     }
