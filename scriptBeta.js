@@ -6845,9 +6845,13 @@ c(function(){
                             for(var j in this.notifs[i].buttons){
                                 notifText += '<button onclick="apps.prompt.vars.notifClick(this.parentNode.parentNode, ' + j + ')">' + this.notifs[i].buttons[j] + '</button>';
                             }
-                            notifText += '</div>' +
-                                '<img class="notifImage" src="' + this.notifs[i].image + '" onerror="this.src=\'\'">' +
-                                '<div class="winExit cursorPointer" onclick="apps.prompt.vars.notifClick(this.parentNode, -1)">x</div>' +
+                            notifText += '</div>';
+                            if(typeof this.notifs[i].image === "string"){
+                                notifText += '<img class="notifImage" src="' + this.notifs[i].image + '" onerror="this.src=\'\'">';
+                            }else if(typeof this.notifs[i].image === "object"){
+                                notifText += buildSmartIcon(50, this.notifs[i].image, "display:block;position:absolute;right:2px;top:calc(50% - 25px);");
+                            }
+                            notifText += '<div class="winExit cursorPointer" onclick="apps.prompt.vars.notifClick(this.parentNode, -1)">x</div>' +
                                 '</div><br>';
                         }
                         getId("notifications").innerHTML = notifText;
@@ -6956,7 +6960,14 @@ c(function(){
             checkPrompts: function(){
                 this.checkNotifs();
             }
-        }, 2, "prompt", "appicons/ds/PMT.png"
+        }, 2, "prompt", {
+            backgroundColor: "#303947",
+            foreground: "smarticons/prompt/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
     openapp(apps.prompt, 'dsktp');
     requestAnimationFrame(function(){
@@ -9751,84 +9762,86 @@ c(function(){
 c(function(){
     m('init files');
     files = {
-        changelog_old:
-            "OLD CHANGELOG AND PLANNING SHEET\nThis could be found in a very large comment at the very top of the main script file before this file addition.\n\n" +
-            "By Aaron Adams, original somewhere in codecademy.com/MineAndCraft12/codebits\n" +
-            "I have alot of work to do to make this work well. Here's the list of to-do's, starting with a key\n" +
-            ":       To-Do (optional comments or details)\n" +
-            ">       Work-In-Progress (optional comments or details)\n" +
-            "    :)  Satisfactory (mandatory comment on any way it could be better)\n" +
-            "    :\\  Needs Improvement (mandatory comment on what isnt right or what can be added)\n" +
-            "    :|  Skipped (mandatory comment on why it was skipped)\n" +
-            "    :(  Unsatisfactory (mandatory comment on why it did not work or is not good)\n" +
-            "    :D  Perfect (mandatory comment on why improvement is useless or unneeded)\n" +
-            "________________________________________________________________________________\n" +
-            "    :)  Make screen size itself to the screen as apposed to stretching to the screen (optimise to resize more quickly)\n" +
-            "    :)  Fix the FPS meter as the beginning info is now irrelevant (possibly fit this one onto the taskbar with the time)\n" +
-            "    :\\  Allow desktop icons to go all the way down and all the way right (some screen sizes cause icons to overlap or to skip a space)\n" +
-            ">       Make the thing look better (always working on this one)\n" +
-            "    :)  Make an object to hold running Timeout and Interval functions and a task manager for them (finally made removeTimeout)\n" +
-            "    :)  Remove size controlling options from settings (make more settings)\n" +
-            "    :)  Move FPS meter onto the taskbar with the time meter (pretty much perfect already)\n" +
-            "    :)  Allow window dragging (actually drag mouse instead of click-click maybe)\n" +
-            "    :)  Give the current window a shadow, and all other windows no shadow (make more noticeable)\n" +
-            "    :D  Make built-in apps remember their last position on-screen (works perfectly)\n" +
-            "    :|  Surprise for 2000 lines of code (skipped due to just chugging on with development :P)\n" +
-            "    :D  Allow users to easily make their own apps (Just make a Tampermonkey script that runs when the page is finished!)\n" +
-            "    :D  Order window layering by order used instead of order initialised (perfect but may have limit)\n" +
-            "    :|  Make login system (use mySQL database or maybe use a hash to save to a file somewhere in Users->User (working on other features first, same with below)\n" +
-            "    :)  Make file-system actually work with a simple-as-possible system, preferably 1 or 2 end commands (in future, maybe real-time load system)\n" +
-            "    :)  Put Aero blur on windows (possibly have windows/icons show through the aero)\n" +
-            "    :)  Settings to enable/disable Aero blur (perfect, remember to add taskbar support)\n" +
-            "    :)  Taskbar support for Aero (have it work to show windows below, possibly)\n" +
-            "    :)  Settings to change window frame color (perfect, possibly differ it from the taskbar later on)\n" +
-            "    :)  Get rid of editor warnings (evals are here to stay sadly, and so are missing radix parameters on parseInt)\n" +
-            "    :|  Make web browser work on non-https sites (works only on teh non-https stable version)\n" +
-            "    :D  Add a way to determine both JS FPS and visual FPS (literally perfect - Chrome FTW)\n" +
-            "    :D  Make filebrowser support USERFILES and find+fix its 'files.n' access issue (works now!)\n" +
-            "    :D  Get rid of all branded names and such, like Start Menu, Aero, etc. (did it!)\n" +
-            "    :D  Allow apps to save cross-session data (works perfectly)\n" +
-            "    :)  Make saving app work no matter filesize (use param 1 at end - should work for large files as long as not insanely crazy)\n" +
-            "    :)  Allow window rotating! (make it easier to improve)\n" +
-            "    :)  Setting to change background-blend-modes on the window aeros, maybe just toggle between multiply and overlay (works just like windowcolor)\n" +
-            "    :)  Setting to change experimental opacity of window aero layer (work just fine)\n" +
-            "    :)  Custom scrollbar for aOS (maybe add cursors later)\n" +
-            "    :)  Implementing Module system so that errors are easier to track (works great)\n" +
-            "    :)  Context Menu (Make the thing easier to set up)\n" +
-            "    :)  Add App Icons (works pretty well)\n" +
-            "    :)  Make system to allow code to wait for FPS reasons (works as well as it ever will)\n" +
-            "    :)  Fix RD (still halves the FPS but better than 1FPS)\n" +
-            "    :)  Add aOS cursors (dunno if adding a text cursor would be worth it)\n" +
-            "    :)  Maybe allow movement of desktop icons (even saves)\n" +
-            "    :)  Fix for browsers that do not support getAnimationFrame\n" +
-            "    :|  Make Window Moving more optimised (what i thought would be an optimization actually ended up slower)\n" +
-            ">       Loads of optimisations (you can count on this one never being finished)\n" +
-            "    :)  Ability to send error report (impossible to email with the IDE i use - but i found another way)\n" +
-            "    :)  Send apps into Enlarge mode (just like hitting the middle of the top-right buttons in windows)\n" +
-            "    :)  Change Window Rotation into Window Scaling\n" +
-            "    :)  Minimize, enlarge, and exit buttons look better now.\n" +
-            "    :)  Let Files app have different filenames\n" +
-            "    :)  Optimize file browser just like the start menu system was optimized\n" +
-            "    :)  Messaging App\n" +
-            "    :)  Performance-checking features - lets you see how many microseconds between two calls of the function\n" +
-            "    :)  Allow User to login to another aOS account (works great)\n" +
-            "    :)  Make window resizing actually resize the window\n" +
-            "    :)  Allow apps to resize their elements when its window is resized\n" +
-            "    :)  Default apps open in middle of screen\n" +
-            "    :)  Save CPU by having the time and FPS render at vsync instead of every millisecond\n" +
-            "    :)  Show network status on the taskbar\n" +
-            "    :)  Allow user to ping aOS server\n" +
-            ">       NORAA - Take that Cortana! (have it in its own window [genius!] and have it learn from you - take JOSHUA from War Games as example for the display and give it a personality shaped by experience)\n" +
-            ">       Performance Mode - certain system functions will be made less CPU-intesive (for older browsers)\n" +
-            "    :)  Speech Recognition for NORAA (possibly find out a way to keep it from being forever stuck... may be an API issue)\n" +
-            "    :)  aOS's own TTS engine (based off of Chrome 33's)\n" +
-            "    :)  NORAA speaks responses to user's spoken commands\n" +
-            "    :)  Optimise formDate (put functions into arrays rather than loops)\n" +
-            "    :)  Added ProFont (windows .ttf version) and changed many apps fonts, like NORAA, jsConsole. All credit to the creators of this absolutely brilliant font. Bravo!\n" +
-            "    :)  Added stylish battery\n" +
-            ">       Optimise many functions for performance mode (Application.setDims)\n" +
-            ">       Languages (The language that is the language that the United States of America currently speaks, Anglish,)",
         changelog: {
+            "??/??/2015: pre-versioning": [
+                "   OLD CHANGELOG AND PLANNING SHEET",
+                "   This was in a large comment in the script before moved to a file in Jan 2016, then here in Jan 2021.",
+                "   By Aaron Adams, original somewhere in codecademy.com/MineAndCraft12/codebits (dead link)",
+                "   I have alot of work to do to make this work well. Here's the list of to-do's, starting with a key",
+                "   : &nbsp; &nbsp; &nbsp; To-Do (optional comments or details)",
+                "   > &nbsp; &nbsp; &nbsp; Work-In-Progress (optional comments or details)",
+                "   &nbsp; &nbsp; :)&nbsp; Satisfactory (mandatory comment on any way it could be better)",
+                "   &nbsp; &nbsp; :\\&nbsp; Needs Improvement (mandatory comment on what isnt right or what can be added)",
+                "   &nbsp; &nbsp; :|&nbsp; Skipped (mandatory comment on why it was skipped)",
+                "   &nbsp; &nbsp; :(&nbsp; Unsatisfactory (mandatory comment on why it did not work or is not good)",
+                "   &nbsp; &nbsp; :D&nbsp; Perfect (mandatory comment on why improvement is useless or unneeded)",
+                "   --------------------------------------------------------------------------------",
+                " : &nbsp; &nbsp; :)&nbsp; Make screen size itself to the screen as apposed to stretching to the screen (optimise to resize more quickly)",
+                " : &nbsp; &nbsp; :)&nbsp; Fix the FPS meter as the beginning info is now irrelevant (possibly fit this one onto the taskbar with the time)",
+                " : &nbsp; &nbsp; :\\&nbsp; Allow desktop icons to go all the way down and all the way right (some screen sizes cause icons to overlap or to skip a space)",
+                "   >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Make the thing look better (always working on this one)",
+                " + &nbsp; &nbsp; :)&nbsp; Make an object to hold running Timeout and Interval functions and a task manager for them (finally made removeTimeout)",
+                " - &nbsp; &nbsp; :)&nbsp; Remove size controlling options from settings (make more settings)",
+                " : &nbsp; &nbsp; :)&nbsp; Move FPS meter onto the taskbar with the time meter (pretty much perfect already)",
+                " + &nbsp; &nbsp; :)&nbsp; Allow window dragging (actually drag mouse instead of click-click maybe)",
+                " + &nbsp; &nbsp; :)&nbsp; Give the current window a shadow, and all other windows no shadow (make more noticeable)",
+                " + &nbsp; &nbsp; :D&nbsp; Make built-in apps remember their last position on-screen (works perfectly)",
+                "   &nbsp; &nbsp; :|&nbsp; Surprise for 2000 lines of code (skipped due to just chugging on with development :P)",
+                " + &nbsp; &nbsp; :D&nbsp; Allow users to easily make their own apps (Just make a Tampermonkey script that runs when the page is finished!)",
+                " : &nbsp; &nbsp; :D&nbsp; Order window layering by order used instead of order initialised (perfect but may have limit)",
+                " + &nbsp; &nbsp; :|&nbsp; Make login system (use mySQL database or maybe use a hash to save to a file somewhere in Users->User (working on other features first, same with below)",
+                " + &nbsp; &nbsp; :)&nbsp; Make file-system actually work with a simple-as-possible system, preferably 1 or 2 end commands (in future, maybe real-time load system)",
+                " + &nbsp; &nbsp; :)&nbsp; Put Aero blur on windows (possibly have windows/icons show through the aero)",
+                " + &nbsp; &nbsp; :)&nbsp; Settings to enable/disable Aero blur (perfect, remember to add taskbar support)",
+                " + &nbsp; &nbsp; :)&nbsp; Taskbar support for Aero (have it work to show windows below, possibly)",
+                " + &nbsp; &nbsp; :)&nbsp; Settings to change window frame color (perfect, possibly differ it from the taskbar later on)",
+                " : &nbsp; &nbsp; :)&nbsp; Get rid of editor warnings (evals are here to stay sadly, and so are missing radix parameters on parseInt)",
+                " + &nbsp; &nbsp; :|&nbsp; Make web browser work on non-https sites (works only on teh non-https stable version)",
+                " + &nbsp; &nbsp; :D&nbsp; Add a way to determine both JS FPS and visual FPS (literally perfect - Chrome FTW)",
+                " + &nbsp; &nbsp; :D&nbsp; Make filebrowser support USERFILES and find+fix its 'files.n' access issue (works now!)",
+                " : &nbsp; &nbsp; :D&nbsp; Get rid of all branded names and such, like Start Menu, Aero, etc. (did it!)",
+                " + &nbsp; &nbsp; :D&nbsp; Allow apps to save cross-session data (works perfectly)",
+                " + &nbsp; &nbsp; :)&nbsp; Make saving app work no matter filesize (use param 1 at end - should work for large files as long as not insanely crazy)",
+                " + &nbsp; &nbsp; :)&nbsp; Allow window rotating! (make it easier to improve)",
+                " + &nbsp; &nbsp; :)&nbsp; Setting to change background-blend-modes on the window aeros, maybe just toggle between multiply and overlay (works just like windowcolor)",
+                " + &nbsp; &nbsp; :)&nbsp; Setting to change experimental opacity of window aero layer (work just fine)",
+                " + &nbsp; &nbsp; :)&nbsp; Custom scrollbar for aOS (maybe add cursors later)",
+                " + &nbsp; &nbsp; :)&nbsp; Implementing Module system so that errors are easier to track (works great)",
+                " + &nbsp; &nbsp; :)&nbsp; Context Menu (Make the thing easier to set up)",
+                " + &nbsp; &nbsp; :)&nbsp; Add App Icons (works pretty well)",
+                " + &nbsp; &nbsp; :)&nbsp; Make system to allow code to wait for FPS reasons (works as well as it ever will)",
+                " : &nbsp; &nbsp; :)&nbsp; Fix RD (still halves the FPS but better than 1FPS)",
+                " + &nbsp; &nbsp; :)&nbsp; Add aOS cursors (dunno if adding a text cursor would be worth it)",
+                " + &nbsp; &nbsp; :)&nbsp; Maybe allow movement of desktop icons (even saves)",
+                " : &nbsp; &nbsp; :)&nbsp; Fix for browsers that do not support getAnimationFrame",
+                " : &nbsp; &nbsp; :|&nbsp; Make Window Moving more optimised (what i thought would be an optimization actually ended up slower)",
+                "   >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Loads of optimisations (you can count on this one never being finished)",
+                " + &nbsp; &nbsp; :)&nbsp; Ability to send error report (impossible to email with the IDE i use - but i found another way)",
+                " + &nbsp; &nbsp; :)&nbsp; Send apps into Enlarge mode (just like hitting the middle of the top-right buttons in windows)",
+                " : &nbsp; &nbsp; :)&nbsp; Change Window Rotation into Window Scaling",
+                " : &nbsp; &nbsp; :)&nbsp; Minimize, enlarge, and exit buttons look better now.",
+                " + &nbsp; &nbsp; :)&nbsp; Let Files app have different filenames",
+                " : &nbsp; &nbsp; :)&nbsp; Optimize file browser just like the start menu system was optimized",
+                " + &nbsp; &nbsp; :)&nbsp; Messaging App",
+                " + &nbsp; &nbsp; :)&nbsp; Performance-checking features - lets you see how many microseconds between two calls of the function",
+                " + &nbsp; &nbsp; :)&nbsp; Allow User to login to another aOS account (works great)",
+                " : &nbsp; &nbsp; :)&nbsp; Make window resizing actually resize the window",
+                " + &nbsp; &nbsp; :)&nbsp; Allow apps to resize their elements when its window is resized",
+                " : &nbsp; &nbsp; :)&nbsp; Default apps open in middle of screen",
+                " : &nbsp; &nbsp; :)&nbsp; Save CPU by having the time and FPS render at vsync instead of every millisecond",
+                " + &nbsp; &nbsp; :)&nbsp; Show network status on the taskbar",
+                " + &nbsp; &nbsp; :)&nbsp; Allow user to ping aOS server",
+                "   >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; NORAA - Take that Cortana! (have it in its own window [genius!] and have it learn from you - take JOSHUA from War Games as example for the display and give it a personality shaped by experience)",
+                "   >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Performance Mode - certain system functions will be made less CPU-intesive (for older browsers)",
+                " + &nbsp; &nbsp; :)&nbsp; Speech Recognition for NORAA (possibly find out a way to keep it from being forever stuck... may be an API issue)",
+                " + &nbsp; &nbsp; :)&nbsp; aOS's own TTS engine (based off of Chrome 33's)",
+                " + &nbsp; &nbsp; :)&nbsp; NORAA speaks responses to user's spoken commands",
+                " : &nbsp; &nbsp; :)&nbsp; Optimise formDate (put functions into arrays rather than loops)",
+                " + &nbsp; &nbsp; :)&nbsp; Added ProFont (windows .ttf version) and changed many apps fonts, like NORAA, jsConsole. All credit to the creators of this absolutely brilliant font. Bravo!",
+                " + &nbsp; &nbsp; :)&nbsp; Added stylish battery",
+                "   >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Optimise many functions for performance mode (Application.setDims)",
+                "   >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Languages (The language that is the language that the United States of America currently speaks, Anglish,)"
+            ],
             "01/26/2016: A1.2.0.0": [
                 " + Changelog Added.",
                 " : Windowblur fixed when dims not set.",
@@ -10147,13 +10160,13 @@ c(function(){
             ],
             "04/26/2017: A1.8.5.0": [
                 " + Windows will now be 'highlighted' when their icon in the taskbar is hovered over.",
-                ": Instead of making windows move slowly, Performance Mode draws a border of the window instead of having the window follow the cursor - great for FPS."
+                " : Instead of making windows move slowly, Performance Mode draws a border of the window instead of having the window follow the cursor - great for FPS."
             ],
             "04/27/2017: A1.8.5.1": [
                 " + Added background to window highlighting to make it more visible; normally it looks sleek but in performance mode it is easier to render.",
                 " : Default window blur is now 2 instead of 5 - helps the FPS and looks a bit better.",
                 " : The experimental Backdrop Filter blur now uses the blur strength setting instead of always 5.",
-                "+ aOS now remembers Performance Mode settings - a very useful setting for many low- to medium-power devices."
+                " + aOS now remembers Performance Mode settings - a very useful setting for many low- to medium-power devices."
             ],
             "04/28/2017: A1.8.5.2": [
                 " : Window highlight looks a bit better.",
@@ -11281,6 +11294,12 @@ c(function(){
                 " : Fixed error message on boot caused by having moved desktop icons.",
                 " : Fixed aosTools causing issues in top-level AaronOS instance when loaded under a copy of AaronOS in a frame.",
                 " : Tweaked Apps Browser formatting."
+            ],
+            "01/25/2021: B1.5.2.0": [
+                " + New app icon for Apps Browser.",
+                " + New app icon for Changelog.",
+                " + New app icon for modal Prompts app.",
+                " : Moved the old pre-versioning to-do list / changelog thing to the bottom of the changelog, where it really should be."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
@@ -12153,7 +12172,14 @@ c(function(){
             cLogSplit: [],
             cLogHTML: '',
             cLogGroup: ''
-        }, 1, "changelog", "appicons/ds/CLg.png"
+        }, 1, "changelog", {
+            backgroundColor: "#303947",
+            foreground: "smarticons/changelog/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
     getId('aOSloadingInfo').innerHTML = 'Window Test';
 });
@@ -14510,7 +14536,14 @@ c(function(){
                     }
                 }
             }
-        }, 1, 'appsbrowser', 'appicons/ds/APB.png'
+        }, 1, 'appsbrowser', {
+            backgroundColor: "#303947",
+            foreground: "smarticons/appsbrowser/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        }
     );
     getId('aOSloadingInfo').innerHTML = 'Sticky Note';
 });
@@ -17302,7 +17335,14 @@ c(function(){
     if(localStorageSupported){
         if(localStorage.getItem('latestVersion') !== aOSversion){
             var newestChange = Object.keys(files.changelog)[Object.keys(files.changelog).length - 1];
-            apps.prompt.vars.notify(newestChange + '<br>' + files.changelog[newestChange].join('<br>'), ['Changelog'], function(btn){if(btn === 0){openapp(apps.changelog);}}, 'New Update!', 'appicons/ds/CLg.png')
+            apps.prompt.vars.notify(newestChange + '<br>' + files.changelog[newestChange].join('<br>'), ['Changelog'], function(btn){if(btn === 0){openapp(apps.changelog);}}, 'New Update!', {
+                backgroundColor: "#303947",
+                foreground: "smarticons/changelog/fg.png",
+                backgroundBorder: {
+                    thickness: 2,
+                    color: "#252F3A"
+                }
+            });
             localStorage.setItem('latestVersion', aOSversion);
         }
     }
