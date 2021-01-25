@@ -11271,6 +11271,7 @@ c(function(){
             ],
             "01/24/2021: B1.5.1.0": [
                 " + Apps Browser now has a search bar.",
+                " + Text Editor can now edit and save different types of variables.",
                 " + Style Editor now shows information about the parent of a hovered element in the preview.",
                 " - Removed old Camera app.",
                 " + Text selection is now properly prevented in areas where text should not be selected.",
@@ -11284,7 +11285,7 @@ c(function(){
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.1.0 (01/24/2020) r0';
+    window.aOSversion = 'B1.5.1.0 (01/24/2020) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
