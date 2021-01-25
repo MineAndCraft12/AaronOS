@@ -1874,17 +1874,17 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             '<div class="winAero" id="win_' + appPath + '_aero"></div>' +
             '<div class="winBimg" id="win_' + appPath + '_img"></div>' +
             '<div class="winRes cursorOpenHand" id="win_' + appPath + '_size"></div>' +
-            '<div class="winCap cursorOpenHand" id="win_' + appPath + '_cap">' +
+            '<div class="winCap cursorOpenHand noselect" id="win_' + appPath + '_cap">' +
             '</div>' +
-            '<div class="winFld cursorPointer" id="win_' + appPath + '_fold">^' +
+            '<div class="winFld cursorPointer noselect" id="win_' + appPath + '_fold">^' +
             '</div>' +
             '<div class="winHTML" id="win_' + appPath + '_html">' +
             '</div>' +
-            '<div class="winBig cursorPointer" id="win_' + appPath + '_big">o' +
+            '<div class="winBig cursorPointer noselect" id="win_' + appPath + '_big">o' +
             '</div>' +
-            '<div class="winShrink cursorPointer" id="win_' + appPath + '_shrink">v' +
+            '<div class="winShrink cursorPointer noselect" id="win_' + appPath + '_shrink">v' +
             '</div>' +
-            '<div class="winExit cursorPointer" id="win_' + appPath + '_exit">x' +
+            '<div class="winExit cursorPointer noselect" id="win_' + appPath + '_exit">x' +
             '</div></div>';
         if(this.appWindow.appImg){
             getId("icons").innerHTML +=
@@ -2626,11 +2626,12 @@ function newDsktpIcon(id, owner, position, title, icon, action, actionArgs, ctxA
         ctxActionArgs: ctxActionArgs || []
     };
     if(getId("app_" + id)){
-        getId("dsktp").removeChild(getId("app_" + id));
+        getId("desktop").removeChild(getId("app_" + id));
     }
     var tempIco = document.createElement("div");
     tempIco.classList.add("app");
     tempIco.classList.add("cursorPointer");
+    tempIco.classList.add("noselect");
     tempIco.id = "app_" + id;
     tempIco.setAttribute("data-icon-id", id);
     tempIco.setAttribute("onclick", 'Function(...dsktp[this.getAttribute("data-icon-id")].action)(...dsktp[this.getAttribute("data-icon-id")].actionArgs)');
@@ -3463,7 +3464,7 @@ c(function(){
                             this.appWindow.setContent(
                                 '<span style="color:#FFF;font-family:aosProFont,monospace;font-size:12px">User: ' + apps.messaging.vars.parseBB(apps.messaging.vars.name) + '</span>' +
                                 '<div class="darkResponsive" style="left:0;bottom:0;height:calc(100% - 3em);overflow-y:scroll;width:calc(70% - 2px);">' +
-                                '<table style="position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table>' +
+                                '<table id="appDsBtable" class="noselect" style="position:absolute;left:0;top:0;width:100%;max-width:100%;"></table>' +
                                 '</div>' +
                                 '<div style="right:0;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);text-align:right">' +
                                 '<img class="cursorPointer" style="width:10px;height:10px;filter:invert(1)" src="ctxMenu/beta/gear.png" onclick="openapp(apps.settings,\'dsktp\')"> ' +
@@ -3477,7 +3478,7 @@ c(function(){
                                 '<input autocomplete="off" style="position:absolute;left:0;top:1.5em;width:calc(100% - 2px);" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>'
                             );
                             if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
+                                getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
                                 for(var appHandle in appsSorted){
@@ -3506,7 +3507,7 @@ c(function(){
                             this.appWindow.setContent(
                                 '<button style="position:absolute;right:0;bottom:8px;width:30%" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">Power</button>' +
                                 '<div class="darkResponsive" style="left:0;top:0;height:calc(100% - 2.5em);overflow-y:scroll;width:calc(70% - 2px);border-top-left-radius:5px;border-top-right-radius:5px;">' +
-                                '<table style="border-top-left-radius:5px;border-top-right-radius:5px;position:absolute;left:0;top:0;width:100%;max-width:100%;" id="appDsBtable"></table>' +
+                                '<table id="appDsBtable" class="noselect" style="border-top-left-radius:5px;border-top-right-radius:5px;position:absolute;left:0;top:0;width:100%;max-width:100%;"></table>' +
                                 '</div>' +
                                 '<div style="right:0;color:#FFF;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);">' +
                                 '<img style="width:50px;margin-left:15px;" src="appicons/ds/aOS.png"><br>' +
@@ -3519,7 +3520,7 @@ c(function(){
                                 '<input autocomplete="off" style="position:absolute;left:0;bottom:0;background-color:#DDD;width:calc(70% - 2px);height:3em;border:none;border-bottom-right-radius:5px;border-bottom-left-radius:5px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>'
                             );
                             if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
+                                getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
                                 for(var appHandle in appsSorted){
@@ -3540,7 +3541,7 @@ c(function(){
                                 getId('appDsBtable').innerHTML = this.vars.listOfApps;
                                 this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
                             }
-                            if(sessionStorage.getItem('GooglePlay') !== "true"){
+                            if(!mobileMode){
                                 getId('appDsBsearch').focus();
                             }
                             break;
@@ -3556,11 +3557,11 @@ c(function(){
                                 '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
                                 '<input autocomplete="off" style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch">' +
                                 '</span><hr style="margin:0;margin-top:2px">' +
-                                '<div id="appDsBtable" class="darkResponsive" style="font-family:aosProFont, monospace; font-size:12px; width:calc(100% - 2px);"></div>' +
+                                '<div id="appDsBtable" class="darkResponsive noselect" style="font-family:aosProFont, monospace; font-size:12px; width:calc(100% - 2px);"></div>' +
                                 '</div>'
                             );
                             if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '<img src="loadLight.gif" style="width:100%;">';
+                                getId('appDsBtable').innerHTML = '';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
                                 for(var appHandle in appsSorted){
@@ -3581,7 +3582,7 @@ c(function(){
                                 getId('appDsBtable').innerHTML = this.vars.listOfApps;
                                 this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
                             }
-                            if(sessionStorage.getItem('GooglePlay') !== "true"){
+                            if(!mobileMode){
                                 getId('appDsBsearch').focus();
                             }
                             break;
@@ -3597,11 +3598,11 @@ c(function(){
                                 '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
                                 '<input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch">' +
                                 '</span><hr style="margin:0;margin-top:2px">' +
-                                '<table id="appDsBtable" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;"></table>' +
+                                '<table id="appDsBtable" class="noselect" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;"></table>' +
                                 '</div>'
                             );
                             if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
+                                getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
                                 for(var appHandle in appsSorted){
@@ -3621,7 +3622,7 @@ c(function(){
                                 getId('appDsBtable').innerHTML = this.vars.listOfApps;
                                 this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
                             }
-                            if(sessionStorage.getItem('GooglePlay') !== "true"){
+                            if(!mobileMode){
                                 getId('appDsBsearch').focus();
                             }
                             break;
@@ -3637,7 +3638,7 @@ c(function(){
                                 '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
                                 //'<button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br>' +
                                 '<input autocomplete="off" style="width:calc(100% - 6px);margin-top:3px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch">' +
-                                '</div><div id="appDsBtableWrapper" style="width:100%;overflow-y:scroll;background-color:rgba(' + darkSwitch('255, 255, 255', '39, 39, 39') + ', 0.5);">' +
+                                '</div><div id="appDsBtableWrapper" class="noselect" style="width:100%;overflow-y:scroll;background-color:rgba(' + darkSwitch('255, 255, 255', '39, 39, 39') + ', 0.5);">' +
                                 '<table id="appDsBtable" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;color:' + darkSwitch('#000', '#FFF') + ';"></table>' +
                                 '</div></div>'
                             );
@@ -3645,7 +3646,7 @@ c(function(){
                             var innerbound = getId("appDsBtableWrapper").getBoundingClientRect();
                             getId("appDsBtableWrapper").style.height = outerbound.height - (innerbound.top - outerbound.top) + "px";
                             if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '<tr><td><img src="loadLight.gif" style="width:100%;"></td></tr>';
+                                getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
                                 //getId('appDsBtable').style.cursor = cursors.loadLight;
                                 getId('appDsBtable').classList.add('cursorLoadLight');
                                 for(var appHandle in appsSorted){
@@ -3670,7 +3671,7 @@ c(function(){
                                 getId('appDsBtable').innerHTML = this.vars.listOfApps;
                                 this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
                             }
-                            if(sessionStorage.getItem('GooglePlay') !== "true"){
+                            if(!mobileMode){
                                 getId('appDsBsearch').focus();
                             }
                     }
@@ -5197,9 +5198,7 @@ c(function(){
         1,
         function(launchtype){
             if(launchtype === 'dsktp'){
-                this.appWindow.setDims("auto", "auto", 400, 500);
-                this.appWindow.setCaption('Application Info');
-                this.appWindow.setContent('This app is used to display information about apps. Try right-clicking a title bar and clicking "about apps" to access this menu.');
+                openapp(apps.appInfo, 'appInfo');
             }else if(launchtype !== 'tskbr'){
                 this.appWindow.setDims("auto", "auto", 400, 500);
                 getId('win_appInfo_html').style.overflowY = 'auto';
@@ -6839,9 +6838,9 @@ c(function(){
                     if(notifsFound !== this.lastNotifsFound){
                         var notifText = "";
                         for(var i of notifsFound){
-                            notifText += '<div class="notifWindow darkResponsive" data-notif="' + i + '">' +
+                            notifText += '<div class="notifWindow noselect darkResponsive" data-notif="' + i + '">' +
                                 '<div class="notifTitle">' + cleanStr(this.notifs[i].caption) + '</div>' +
-                                '<div class="notifContent">' + cleanStr(this.notifs[i].content).split("&lt;br&gt;").join("<br>") + '</div>' +
+                                '<div class="notifContent canselect">' + cleanStr(this.notifs[i].content).split("&lt;br&gt;").join("<br>") + '</div>' +
                                 '<div class="notifButtons">';
                             for(var j in this.notifs[i].buttons){
                                 notifText += '<button onclick="apps.prompt.vars.notifClick(this.parentNode.parentNode, ' + j + ')">' + this.notifs[i].buttons[j] + '</button>';
@@ -7810,12 +7809,12 @@ c(function(){
                 }else{
                     apps.settings.appWindow.setContent(
                         '<div id="STNmenuDiv" style="font-family:aosProFont, monospace;font-size:12px;width:calc(100% - 3px);height:100%;overflow:auto">' +
-                        '<p id="STNmenuTitle" style="font-size:36px;margin:8px;">' + menu.folderName +
+                        '<p id="STNmenuTitle" class="noselect" style="font-size:36px;margin:8px;">' + menu.folderName +
                         '<button id="STNhomeButton" onclick="apps.settings.vars.showMenu(apps.settings.vars.menus)" style="float:left;margin:8px;top:8px;left:0;position:absolute;display:none;">Home</button>' +
                         '</p><br></div>'
                     );
                     //if(menu.folder === 1){
-                        getId("STNmenuDiv").innerHTML += '<div id="STNmenuTable" style="width:100%;position:relative;"></div>';
+                        getId("STNmenuDiv").innerHTML += '<div id="STNmenuTable" class="noselect" style="width:100%;position:relative;"></div>';
                         //var j = 0;
                         var appendStr = '';
                         for(var i in this.menus){
@@ -9144,6 +9143,7 @@ c(function(){
         'Desktop Icon Maker',
         1,
         function(launchtype){
+            getId("win_iconMaker_html").classList.add("noselect");
             if(launchtype.indexOf('newicon') === 0){
                 this.newlaunch = launchtype.split(' ');
                 this.appWindow.setDims("auto", "auto", 400, 500);
@@ -9221,7 +9221,7 @@ c(function(){
                                             apps.iconMaker.vars.buildIcon(iconsFolder[file]);
                                         }catch(err){
                                             var temperrmsg = JSON.parse(iconsFolder[file]);
-                                            apps.prompt.vars.alert("Could not restore desktop icon for " + temperrmsg.title + ". Make sure " + temperrmsg[5].owner + " is installed.", "Okay", function(){}, "AaronOS");
+                                            apps.prompt.vars.alert("Could not restore desktop icon for " + temperrmsg.title + ". Make sure " + temperrmsg.owner + " is installed.", "Okay", function(){}, "AaronOS");
                                         }
                                         //}
                                     }
@@ -9454,9 +9454,9 @@ c(function(){
                     '<textarea id="np2Screen" style="white-space:no-wrap; width:calc(100% - 6px); height:calc(100% - 23px); position:absolute; padding:3px; border:none; bottom: 0px; left: 0px; font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000; overflow:auto"></textarea>' +
                     '<div class="darkResponsive" style="width:100%; border-bottom:1px solid; height:16px;">' +
                     '<input class="darkResponsive" id="np2Load" placeholder="file name" style="padding-left:3px; font-family: aosProFont, monospace; font-size:12px; left: 16px; border:none; height:16px; border-left:1px solid; border-right:1px solid; position:absolute; top:0; width:calc(100% - 115px);"></input>' +
-                    '<div id="np2Mode" onclick="apps.notepad2.vars.toggleFileMode()" class="cursorPointer" style="color:#7F7F7F; font-family:aosProFont, monospace; font-size:12px; height:16px;line-height:16px; padding-right:3px; padding-left: 3px; right:95px">Text Mode</div>' +
-                    '<div class="darkResponsive" onclick="apps.notepad2.vars.openFile(getId(\'np2Load\').value)" class="cursorPointer" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:55px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Load</div> ' +
-                    '<div class="darkResponsive" onclick="apps.notepad2.vars.saveFile(getId(\'np2Load\').value)" class="cursorPointer" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:16px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Save</div> ' +
+                    '<div id="np2Mode" onclick="apps.notepad2.vars.toggleFileMode()" class="cursorPointer noselect" style="color:#7F7F7F; font-family:aosProFont, monospace; font-size:12px; height:16px;line-height:16px; padding-right:3px; padding-left: 3px; right:95px">Text Mode</div>' +
+                    '<div class="darkResponsive" onclick="apps.notepad2.vars.openFile(getId(\'np2Load\').value)" class="cursorPointer noselect" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:55px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Load</div> ' +
+                    '<div class="darkResponsive" onclick="apps.notepad2.vars.saveFile(getId(\'np2Load\').value)" class="cursorPointer noselect" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:16px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Save</div> ' +
                     '</div>'
                 );
                 getId("np2Screen").wrap = "off";
@@ -9504,14 +9504,34 @@ c(function(){
             openEditTools: function(){apps.prompt.vars.notify('This button is unfinished. Right-click the document instead.', [], function(){}, 'Text Editor', 'appicons/ds/TE.png')},
             launchedAs: '',
             filemode: 'string',
+            allFileModes: [
+                'string',
+                'function',
+                'number',
+                'boolean',
+                'object',
+                'any'
+            ],
+            fileModeNames: [
+                'Text Mode',
+                '(function) Eval Mode',
+                '(number) Eval Mode',
+                '(boolean) Eval Mode',
+                '(object) Eval Mode',
+                '(any) Eval Mode'
+            ],
             toggleFileMode: function(){
-                if(this.filemode === "string"){
-                    this.filemode = "function";
-                    getId('np2Mode').innerHTML = "Eval Mode";
-                }else{
-                    this.filemode = "string";
-                    getId('np2Mode').innerHTML = "Text Mode";
+                //if(this.filemode === "string"){
+                //    this.filemode = "function";
+                //    getId('np2Mode').innerHTML = "(function) Eval Mode";
+                //}else{
+                var newFileMode = this.allFileModes.indexOf(this.filemode) + 1;
+                if(newFileMode >= this.allFileModes.length){
+                    newFileMode = 0;
                 }
+                this.filemode = this.allFileModes[newFileMode];
+                getId('np2Mode').innerHTML = this.fileModeNames[newFileMode];
+                //}
             },
             openFile: function(filename){
                 if(!apps.notepad2.appWindow.appIcon){
@@ -9552,10 +9572,22 @@ c(function(){
                 }
                 if(typeof filecontent === "function"){
                     this.filemode = 'function';
-                    getId('np2Mode').innerHTML = "Eval Mode";
-                }else{
+                    getId('np2Mode').innerHTML = "(function) Eval Mode";
+                }else if(typeof filecontent === "string"){
                     this.filemode = 'string';
                     getId('np2Mode').innerHTML = "Text Mode";
+                }else if(typeof filecontent === "number"){
+                    this.filemode = 'number';
+                    getId('np2Mode').innerHTML = "(number) Eval Mode";
+                }else if(typeof filecontent === "boolean"){
+                    this.filemode = 'boolean';
+                    getId('np2Mode').innerHTML = "(boolean) Eval Mode";
+                }else if(typeof filecontent === "object"){
+                    this.filemode = 'object';
+                    getId('np2Mode').innerHTML = "(object) Eval Mode";
+                }else{
+                    this.filemode = 'any';
+                    getId('np2Mode').innerHTML = "(any) Eval Mode";
                 }
                 if(getId('np2Screen').value !== ""){
                     apps.prompt.vars.confirm("You will lose all unsaved work. Continue?", ['No', 'Yes'], function(btn){
@@ -9621,28 +9653,84 @@ c(function(){
                     try{
                         var oldfilecontent = apps.bash.vars.getRealDir(filename);
                     }catch(err){
-                        apps.prompt.vars.alert("Failed to save " + filename + ": " + err, "Okay", function(){}, "Text Editor")
+                        apps.prompt.vars.alert("Failed to save " + filename + ":<br>" + err, "Okay", function(){}, "Text Editor")
                         return;
                     }
                     if(this.filemode === "string"){
                         if(typeof oldfilecontent !== "string" && typeof oldfilecontent !== "undefined"){
-                            apps.prompt.vars.alert("Failed to save " + filename + ": Already exists and is of type " + (typeof oldfilecontent) + " (expected string).", "Okay", function(){}, "Text Editor");
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Already exists and is of type " + (typeof oldfilecontent) + " (expected string).", "Okay", function(){}, "Text Editor");
                             return;
                         }
                         eval(apps.bash.vars.translateDir(filename) + ' = getId("np2Screen").value');
+                    }else if(this.filemode === "number"){
+                        if(typeof oldfilecontent !== "number" && typeof oldfilecontent !== "undefined"){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Already exists and is of type " + (typeof oldfilecontent) + " (expected number).", "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        try{
+                            var newfilecontent = eval(getId("np2Screen").value);
+                        }catch(err){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        if(typeof newfilecontent !== "number"){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input is of type " + (typeof newfilecontent) + "; expected number.", "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        eval(apps.bash.vars.translateDir(filename) + '=' + newfilecontent + "");
+                    }else if(this.filemode === "boolean"){
+                        if(typeof oldfilecontent !== "boolean" && typeof oldfilecontent !== "undefined"){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Already exists and is of type " + (typeof oldfilecontent) + " (expected boolean).", "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        try{
+                            var newfilecontent = eval(getId("np2Screen").value);
+                        }catch(err){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        if(typeof newfilecontent !== "boolean"){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input is of type " + (typeof newfilecontent) + "; expected boolean.", "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        eval(apps.bash.vars.translateDir(filename) + '=' + newfilecontent + "");
+                    }else if(this.filemode === "object"){
+                        if(typeof oldfilecontent !== "object" && typeof oldfilecontent !== "undefined"){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Already exists and is of type " + (typeof oldfilecontent) + " (expected object).", "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        try{
+                            var newfilecontent = eval(getId("np2Screen").value);
+                        }catch(err){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        if(typeof newfilecontent !== "object"){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input is of type " + (typeof newfilecontent) + "; expected object.", "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        eval(apps.bash.vars.translateDir(filename) + '=' + newfilecontent + "");
+                    }else if(this.filemode === "any"){
+                        try{
+                            var newfilecontent = eval(getId("np2Screen").value);
+                        }catch(err){
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
+                            return;
+                        }
+                        eval(apps.bash.vars.translateDir(filename) + '=' + newfilecontent + "");
                     }else if(this.filemode === "function"){
                         if(typeof oldfilecontent !== "function" && typeof oldfilecontent !== "undefined"){
-                            apps.prompt.vars.alert("Failed to save " + filename + ": Already exists and is of type " + (typeof oldfilecontent) + " (expected function).", "Okay", function(){}, "Text Editor");
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Already exists and is of type " + (typeof oldfilecontent) + " (expected function).", "Okay", function(){}, "Text Editor");
                             return;
                         }
                         try{
                             var newfilecontent = eval("(" + getId("np2Screen").value + ")");
                         }catch(err){
-                            apps.prompt.vars.alert("Failed to save " + filename + ": Input error: " + err, "Okay", function(){}, "Text Editor");
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
                             return;
                         }
                         if(typeof newfilecontent !== "function"){
-                            apps.prompt.vars.alert("Failed to save " + filename + ": Input is of type " + (typeof newfilecontent) + "; expected function.", "Okay", function(){}, "Text Editor");
+                            apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input is of type " + (typeof newfilecontent) + "; expected function.", "Okay", function(){}, "Text Editor");
                             return;
                         }
                         eval(apps.bash.vars.translateDir(filename) + '=' + newfilecontent + "");
@@ -11180,11 +11268,23 @@ c(function(){
                 " : Changed the format of the changelog variable.",
                 " : Fixed a rare case where AaronOS installations would not recognize their own server, causing its own commands to be rejected.",
                 " : Fixed some issue reporting and the hex test."
+            ],
+            "01/24/2021: B1.5.1.0": [
+                " + Apps Browser now has a search bar.",
+                " + Style Editor now shows information about the parent of a hovered element in the preview.",
+                " - Removed old Camera app.",
+                " + Text selection is now properly prevented in areas where text should not be selected.",
+                " : Apps Browser now utilizes proper context menus rather than strange buttons.",
+                " : Dashboard no longer auto-selects the search bar in mobile mode.",
+                " : Fixed duplication of desktop icons at boot, caused by having moved desktop icons.",
+                " : Fixed error message on boot caused by having moved desktop icons.",
+                " : Fixed aosTools causing issues in top-level AaronOS instance when loaded under a copy of AaronOS in a frame.",
+                " : Tweaked Apps Browser formatting."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.0.1 (01/22/2020) r1';
+    window.aOSversion = 'B1.5.1.0 (01/24/2020) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11342,7 +11442,7 @@ c(function(){
                 this.vars.currLoc = '/';
                 getId('win_files2_html').style.background = "none";
                 this.appWindow.setContent(
-                    '<div id="FIL2topdiv" style="width:calc(100% - 96px); min-width:calc(70% + 48px); right:0; height:50px;">' +
+                    '<div id="FIL2topdiv" class="noselect" style="width:calc(100% - 96px); min-width:calc(70% + 48px); right:0; height:50px;">' +
                     '<div title="Back" class="cursorPointer darkResponsive" style="width:34px; height:18px; padding-top:2px; left:5px; top:4px; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.back()">&lArr; &nbsp;</div>' +
                     '<div title="Home" class="cursorPointer darkResponsive" style="width:24px; border-left:1px solid #333; height:18px; padding-top:2px; left:30px; top:4px; border-top-left-radius:10px; border-bottom-left-radius:10px; text-align:center;" onClick="apps.files2.vars.home()">H</div>' +
                     '<div title="Refresh" class="cursorPointer darkResponsive" style="width:34px; height:18px; padding-top:2px; right:6px; top:4px; border-top-right-radius:10px; border-bottom-right-radius:10px; text-align:center;" onClick="apps.files2.vars.update()">&nbsp; &#x21BB;</div>' +
@@ -11698,7 +11798,7 @@ c(function(){
                 getId('FIL2searchInput').value = '';
                 getId("FIL2green").style.backgroundColor = 'rgb(170, 255, 170)';
                 getId("FIL2green").style.width = "0";
-                getId("FIL2cntn").style.backgroundImage = 'url(/loadDark.gif)';
+                //getId("FIL2cntn").style.backgroundImage = 'url(/loadDark.gif)';
                 // getId("FILcntn").style.cursor = cursors.loadDark;
                 getId('FIL2cntn').classList.add('cursorLoadDark');
                 getId("FIL2cntn").innerHTML = '<div id="FIL2tbl" class="' + this.viewModes[this.currViewMode][1] + '" style="width:100%; position:absolute; margin:auto;padding-bottom:3px;"></div>';
@@ -12570,7 +12670,7 @@ c(function(){
             },
             saveProj: function(){
                 apps.prompt.vars.confirm('Overwrite your existing saved project?', ['No', 'Yes'], function(btn){
-                    getId('win_appMaker_html').style.backgroundImage = 'url(/loadLight.gif)';
+                    //getId('win_appMaker_html').style.backgroundImage = 'url(/loadLight.gif)';
                     // getId('winAPMh').style.cursor = cursors.loadLight;
                     getId('win_appMaker_html').classList.add('cursorLoadLight');
                     if(btn){
@@ -13620,7 +13720,7 @@ c(function(){
             if(launchType === 'dsktp'){
                 this.appWindow.setContent(
                     '<div id="MSGdiv" style="width:100%;height:calc(100% - 52px);overflow-y:scroll;padding-top:32px;"></div>' +
-                    '<div style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div>' +
+                    '<div class="noselect" style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div>' +
                     '<button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button>' +
                     '<button style="position:absolute;bottom:0;height:24px;width:10%;left:10%;" onclick="apps.messaging.vars.doFormatting()">Formatting</button>' +
                     '<input id="MSGinput" style="position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:sans-serif">' +
@@ -14164,119 +14264,6 @@ c(function(){
         	}
         }
     );
-    getId('aOSloadingInfo').innerHTML = 'Camera';
-});
-c(function(){
-    m('init CAM');
-    apps.camera = new Application(
-        "CAM",
-        "Camera",
-        1,
-        function(launchType){
-            if(launchType !== 'tskbr'){
-                this.appWindow.dimsSet = function(){
-                    getId('CAMvideo').style.width = apps.camera.appWindow.windowH - 6 + 'px';
-                    getId('CAMvideo').style.height = apps.camera.appWindow.windowV - 24 + 'px';
-                };
-                this.appWindow.setCaption('Camera');
-                this.appWindow.setContent(
-                    '<video id="CAMvideo" width="640" height="480" style="background:none" autoplay></video>' +
-                    //'<div onclick="apps.camera.vars.takePic()" style="cursor:url(cursors/pointer.png) 9 3, pointer; width:20px; height:20px; border-radius:10px; bottom:10px; left:310px; background-color:#557"></div>' +
-                    '<canvas id="CAMcanvas" width="640" height="480" style="display:none"></canvas>'
-                );
-                getId('win_camera_html').style.background = 'none';
-                try{
-                    eval( // this was a necessary evil for IE compatibility. IE crashes the script because of ").catch("
-                        "window.navigator.mediaDevices.getUserMedia({'video': true}).then(" +
-                            "function(stream){" +
-                                "apps.camera.vars.streamObj = stream;" +
-                                //getId('CAMvideo').src = window.webkitURL.createObjectURL(stream);
-                                "getId('CAMvideo').srcObject = stream;" +
-                                "getId('CAMvideo').play();" +
-                            "}" +
-                        ").catch(" +
-                            "function(err){" +
-                                "doLog('Error starting camera!', '#F00');" +
-                                "doLog(err, '#F00');" +
-                            "}" +
-                        ");"
-                    );
-                }catch(err){ // error is expected on IE
-                    doLog('Error starting camera!', '#F00');
-                    doLog(err, '#F00');
-                }
-                this.vars.cnv = getId('CAMcanvas');
-                this.vars.ctx = this.vars.cnv.getContext('2d');
-            }
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setDims("auto", "auto", 643, 502);
-            }
-            blockScreensaver("apps.camera");
-            this.appWindow.openWindow();
-        },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    unblockScreensaver("apps.camera", 1);
-                    try{
-                        getId('CAMvideo').pause();
-                        getId('CAMvideo').src = "";
-                        this.vars.streamObj.getTracks()[0].stop();
-                    }catch(e){
-                        apps.prompt.vars.notify('Error stopping camera<br><br>' + e, [], function(){}, 'Camera Error', 'appicons/ds/CAM.png')
-                    }
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    unblockScreensaver("apps.camera", 1)
-                    try{
-                        getId('CAMvideo').pause();
-                        getId('CAMvideo').src = "";
-                        this.vars.streamObj.getTracks()[0].stop();
-                    }catch(e){
-                        apps.prompt.vars.notify('Error stopping camera. Your camera may still be running.<br><br>' + e, [], function(){}, 'Camera Error', 'appicons/ds/CAM.png')
-                    }
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'Very simple camera app, purely meant for testing wether your browser can see through your webcam or not.',
-            cnv: null,
-            ctx: null,
-            streamObj: {},
-            lastImage: {},
-            takePic: function(){
-                this.ctx.drawImage(getId('CAMvideo'), 0, 0, getId('CAMcanvas').width, getId('CAMcanvas').height);
-                this.lastImage = this.ctx.getImageData(0, 0, getId('CAMcanvas').width, getId('CAMcanvas').height);
-            }
-        }, 1, "camera", "appicons/ds/CAM.png"
-    );
     getId('aOSloadingInfo').innerHTML = 'Music Player';
 });
 c(function(){
@@ -14384,9 +14371,9 @@ c(function(){
                 this.appWindow.setCaption('Apps Browser');
                 this.appWindow.setContent(
                     '<div id="APBdiv" class="darkResponsive" style="width:100%;height:100%;overflow-y:auto;font-family:aosProFont;">' +
-                    '<div style="overflow-y:auto;font-size:12px;width:100%;height:40px;border-bottom:1px solid;">' +
-                    'This is a list of every app installed on your system. ' +
-                    'Certain apps in this list may not be available from the Dashboard; these are usually system apps.' +
+                    '<div class="noselect" style="overflow-y:auto;font-size:12px;width:100%;height:40px;border-bottom:1px solid;position:relative;">' +
+                    '&nbsp;List of all applications installed on AaronOS.<br>' +
+                    '&nbsp;<input class="canselect" placeholder="Search" onkeyup="apps.appsbrowser.vars.search(this.value)">' +
                     '</div></div>');
                 this.vars.appsListed = 1;
                 for(var appHandle in appsSorted){
@@ -14419,17 +14406,10 @@ c(function(){
                         this.vars.currAppBuiltIn = 'Built-In aOS App';
                     }
                     //getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + this.vars.appsListed * /*101*/129 + 'px;height:128px;width:100%;border-bottom:1px solid ' + darkSwitch('#000', '#FFF') + ';"><img style="height:128px;width:128px;" src="' + this.vars.currAppImg + '" onerror="this.src=\'appicons/ds/redx.png\'"><div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div><div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppOnTop + this.vars.currAppDesktop + '<br>' + this.vars.currAppOnList + '<br>' + this.vars.currAppBuiltIn + '</div><div style="color:' + darkSwitch('#555', '#AAA') + ';font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppLaunchTypes + '</div></div>';
-                    
-                    getId("APBdiv").innerHTML += '<div class="appsBrowserItem cursorPointer darkResponsive" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" style="top:' + (this.vars.appsListed * 129 - 88) + 'px;height:128px;width:100%;border-bottom:1px solid;">' + buildSmartIcon(128, this.vars.currAppImg) +
-                        //'<div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div>' +
-                        //'<div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div>' +
-                        '<div style="font-size:24px;left:132px;top:calc(66px - 1em);">' + this.vars.currAppName + '</div>' +
-                        '<div class="darkResponsive" style="opacity:0.75;background:none;left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div>' +
-                        '<div class="darkResponsive" style="opacity:0.75;background:none;font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppBuiltIn + '</div>' +
-                        '<div class="darkResponsive"style="opacity:0.75;background:none;font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppIcon + '</div></div>';
-
-                    getId("APBdiv").innerHTML += '<button style="position:absolute;right:0px;top:' + (this.vars.appsListed * 129 - 88) + 'px;font-size:12px;" ' +
-                        'onclick="c(function(){ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], ' +
+                    // old APBdiv style --   top:' + (this.vars.appsListed * 129 - 88) + 'px;
+                    getId("APBdiv").innerHTML += '<div id="APBapp_' + app + '" class="appsBrowserItem cursorPointer darkResponsive" onclick="c(function(){openapp(apps.' + app + ', \'dsktp\')});" ' +
+                        'style="padding-top:1px;padding-bottom:1px;position:relative;height:128px;width:100%;border-bottom:1px solid;" ' +
+                        'oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'ctxMenu/beta/window.png\', \'ctxMenu/beta/file.png\', \'ctxMenu/beta/folder.png\', \'ctxMenu/beta/file.png\'], ' +
                         '\' Open App\', \'c(function(){openapp(apps.' + app + ', \\\'dsktp\\\')})\', ' +
                         '\' Open App via Taskbar\', \'c(function(){openapp(apps.' + app + ', \\\'tskbr\\\')})\', ' +
                         '\'+About This App\', \'c(function(){openapp(apps.appInfo, \\\'' + app + '\\\')})\',  ' +
@@ -14442,7 +14422,16 @@ c(function(){
                             }else{
                                 return ''
                             }
-                        }(app, this.vars.currAppBuiltIn) + '])})">v</button>';
+                        }(app, this.vars.currAppBuiltIn) + ']);">' + buildSmartIcon(128, this.vars.currAppImg, "margin-left:1px;") +
+                        //'<div style="font-size:24px;left:132px;bottom:66px;">' + this.vars.currAppIcon + '</div>' +
+                        //'<div style="left:132px;top:66px;font-size:12px;">' + this.vars.currAppName + '</div>' +
+                        '<div class="APB_app_content" style="font-size:24px;left:132px;top:calc(50% - 1em);">' + this.vars.currAppName + '</div>' +
+                        '<div class="APB_app_content darkResponsive" style="opacity:0.75;background:none;left:132px;top:4px;font-size:12px;text-align:right">apps.' + app + '</div>' +
+                        '<div class="darkResponsive" style="opacity:0.75;background:none;font-size:12px;right:4px;bottom:4px;text-align:right">' + this.vars.currAppBuiltIn + '</div>' +
+                        '<div class="APB_app_content darkResponsive"style="opacity:0.75;background:none;font-size:12px;left:132px;bottom:4px;">' + this.vars.currAppIcon + '</div></div>';
+                                                                                        // position:absolute;
+                    //getId("APBdiv").innerHTML += '<button id="button_APBapp_' + app + '" style="top:' + (this.vars.appsListed * 129 - 88) + 'px;font-size:12px;" ' +
+                    //    'onclick=>v</button>';
                     
                     this.vars.appsListed++;
                 }
@@ -14492,7 +14481,34 @@ c(function(){
             currAppDesktop: '',
             currAppOnList: '',
             currAppLaunchTypes: '',
-            currAppBuiltIn: ''
+            currAppBuiltIn: '',
+            search: function(text){
+                var allDivs = getId("APBdiv").getElementsByClassName('appsBrowserItem');
+                var textSplit = text.toLowerCase().split(" ");
+                for(var i = 0; i < allDivs.length; i++){
+                    var isVisible = false;
+                    var texts = allDivs[i].getElementsByClassName("APB_app_content");
+                    for(var txt = 0; txt < texts.length; txt++){
+                        var textFound = 0;
+                        for(var j in textSplit){
+                            if(texts[txt].innerText.toLowerCase().indexOf(textSplit[j]) > -1){
+                                textFound++;
+                            }
+                        }
+                        if(textFound === textSplit.length){
+                            isVisible = 1;
+                            break;
+                        }
+                    }
+                    if(isVisible){
+                        allDivs[i].style.display = "";
+                        //getId("button_" + allDivs[i].id).style.display = "";
+                    }else{
+                        allDivs[i].style.display = "none";
+                        //getId("button_" + allDivs[i].id).style.display = "none";
+                    }
+                }
+            }
         }, 1, 'appsbrowser', 'appicons/ds/APB.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Sticky Note';
@@ -14579,7 +14595,7 @@ c(function(){
                 this.appWindow.setDims("auto", "auto", 701, 400);
                 this.appWindow.setCaption('Boot Scripts');
                 this.appWindow.setContent(
-                    '<div id="BtS_scripts" style="width:40%;overflow-y:scroll;height:calc(100% - 2em + 8px)"></div>' +
+                    '<div id="BtS_scripts" class="noselect" style="width:40%;overflow-y:scroll;height:calc(100% - 2em + 8px)"></div>' +
                     '<textarea id="BtStextarea" style="font-family:aosProFont, monospace;font-size:12px;position:absolute;right:0;padding:0;border:none;width:calc(60% - 3px);padding-left:3px;height:calc(100% - 2em);resize:none;"></textarea>' +
                     '<div style="bottom:0;width:100%;">' +
                     '<button style="position:relative;width:40%;height:calc(2em - 3px);" onclick="apps.bootScript.vars.newScript()">New Script</button>' +
@@ -14765,7 +14781,9 @@ c(function(){
                         '<hr>Hovered Element:<br>' +
                         '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateType">none</span><br>' +
                         '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateID">none</span><br>' +
-                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateClass">none</span>');
+                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateClass">none</span>' +
+                        '<hr>Parent of Hovered Element:<br>' +
+                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateParent">none</span>');
                     apps.prompt.vars.notify("Test Notification", ["Dismiss"], function(){}, "Style Editor", "appicons/ds/CSE.png");
                     window.addEventListener("mousemove", apps.styleEditor.vars.templateCheck);
                 }else{
@@ -14859,10 +14877,26 @@ c(function(){
                 }else{
                     apps.styleEditor.vars.templateClass = 'no class';
                 }
+                if(elem.parentNode){
+                    apps.styleEditor.vars.templateParent = '&lt;' + elem.parentNode.tagName.toLowerCase() + '&gt;';
+                    if(elem.parentNode.id){
+                        apps.styleEditor.vars.templateParent += '<br>#' + elem.parentNode.id;
+                    }else{
+                        apps.styleEditor.vars.templateParent += '<br>no ID';
+                    }
+                    if(elem.parentNode.classList.length > 0){
+                        apps.styleEditor.vars.templateParent += '<br>.' + [...elem.parentNode.classList].join("<br>.");
+                    }else{
+                        apps.styleEditor.vars.templateParent += '<br>no class';
+                    }
+                }else{
+                    apps.styleEditor.vars.templateParent = 'no parent';
+                }
             },
             templateType: 'no element',
             templateID: 'no ID',
-            templateClass: 'no Class'
+            templateClass: 'no class',
+            templateParent: 'no parent',
         }, 1, 'styleEditor', 'appicons/ds/CSE.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Function Grapher';
@@ -15050,7 +15084,8 @@ c(function(){
                     '<button onclick="apps.magnifier.vars.startMag(event)">Start</button>' +
                     '<button onclick="apps.magnifier.vars.endMag()">Stop</button><br>' +
                     'Zoom: <input id="MAGpercent" value="2" size="3"><br>' +
-                    '<button onclick="apps.magnifier.vars.setMag()">Set Zoom</button>')
+                    '<button onclick="apps.magnifier.vars.setMag()">Set Zoom</button>');
+                    getId("win_magnifier_html").classList.add("noselect");
             }
             this.appWindow.openWindow();
         },
@@ -15495,7 +15530,7 @@ c(function(){
                 this.appWindow.setCaption("aOS Hub");
                 this.appWindow.setDims("auto", "auto", 600, 400);
                 this.appWindow.setContent(
-                    "<div style='position:relative;padding-top:3px;' id='APPCENTER_maindiv'>" +
+                    "<div style='position:relative;padding-top:3px;' id='APPCENTER_maindiv' class='noselect'>" +
                     "<span id='APPCENTER_updates'>Checking for</span> available updates.<br>" +
                     "<button onclick='apps.appCenter.vars.showUpdates()'>Updates</button><br>" +
                     "<b><span id='APPCENTER_NOTICE' style='color:#A00'></span></b><br>" +
@@ -15505,7 +15540,7 @@ c(function(){
                     "<button onclick='apps.appCenter.vars.checkUpdates()'>Refresh</button>" +
                     "</div>" +
                     "<div style='position:relative;text-align:center;margin-top:12px' id='APPCENTER_categories'></div>" +
-                    "<div style='position:relative;width:100%;min-height:20px;' id='APPCENTER_packages'></div>" +
+                    "<div style='position:relative;width:100%;min-height:20px;' id='APPCENTER_packages' class='canselect'></div>" +
                     "</div>"
                 );
                 this.vars.listCategories();

@@ -45,9 +45,9 @@
             <div id="hideall" onClick="toTop({dsktpIcon: 'DESKTOP'}, 1)"></div>
             <!--<div id="dsktpWidgets"></div>-->
             <p id="timesUpdated">Oops!</p>
-            <div id="widgetMenu" class="darkResponsive" style="opacity:0;pointer-events:none;bottom:-350px">
+            <div id="widgetMenu" class="darkResponsive noselect" style="opacity:0;pointer-events:none;bottom:-350px">
                 <div id="widgetTitle"></div>
-                <div id="widgetContent"></div>
+                <div id="widgetContent" class="canselect"></div>
                 <div class="winExit cursorPointer" onClick="closeWidgetMenu()">x</div>
             </div>
             <div id="notifContainer" style="opacity:0;pointer-events:none;right:-350px;">
@@ -70,14 +70,14 @@
         <div id="icnmove" class="cursorOpenHand" onclick="icnmove(event)" onmousemove="icnmoving(event)"></div>
         <div id="winres" class="cursorOpenHand" onmouseup="winres(event)" onmousemove="winresing(event)"></div>
         <div id="windowFrameOverlay"></div>
-        <div id="taskbar">
+        <div id="taskbar" class="noselect">
             <div id="tskbrAero" class="winAero"></div>
             <div id="tskbrBimg" class="winBimg"></div>
             <div id="time"></div>
             <div id="icons">Loading, please wait.</div>
         </div>
         <canvas id="aDE"></canvas>
-        <div id="ctxMenu" onclick="getId('ctxMenu').style.display='none'" class="backdropFilterCtxMenu"></div>
+        <div id="ctxMenu" onclick="getId('ctxMenu').style.display='none'" class="backdropFilterCtxMenu noselect"></div>
         <div id="screensaverLayer"></div>
         <div id="petCursors"></div>
         <!--<div id="aOSloadingBg"></div>-->

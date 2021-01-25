@@ -64,7 +64,7 @@ window.aosTools = {
                 requestData.conversation = "" + this.totalRequests;
             }
             this.callbacks[this.totalRequests] = callback || function(){};
-            window.top.postMessage(requestData, "*");
+            window.parent.postMessage(requestData, "*");
         }else{
             console.log("Warning - request will not reach aOS; aOS is not connected.");
         }

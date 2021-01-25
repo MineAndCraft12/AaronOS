@@ -97,6 +97,20 @@
     }
 }
 
+.noselect{
+    user-select: none;
+}
+.canselect{
+    user-select: auto;
+}
+.easyselect{
+    user-select: all;
+}
+
+iframe{
+    user-select:none;
+}
+
 .darkMode a{
     color:#7F9FEE;
 }
@@ -113,6 +127,7 @@ button{
     outline:none;
     transition:0.2s;
     cursor:inherit;
+    user-select:none;
 }
 button:hover{
     box-shadow:inset 0 0 5px #AAA;
@@ -180,6 +195,7 @@ input, textarea{
     box-shadow:inset 0 0 5px #CCC;
     outline:none;
     transition:0.2s;
+    user-select:auto;
 }
 input:hover, textarea:hover{
     box-shadow:inset 0 0 5px #AAA;
@@ -871,7 +887,8 @@ div{
     }
 #taskbar{
 	bottom:0;
-	left:0;
+    left:0;
+    user-select:none;
 	width:1050px;
 	height:32px;
 	/*Aero theme if supported
