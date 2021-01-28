@@ -642,7 +642,7 @@ var langContent = { // LANGUAGES
             errorReport: 'Failed to save the report. The OS has either failed to initialize or crucial components have been deleted. Please email mineandcraft12@gmail.com with the details of your issue if you would like it fixed.'
         },
         appNames: {
-            startMenu: "aOS Dashboard",
+            startMenu: "AaronOS Dashboard",
             nora: "NORAA",
             taskManager: "Task Manager",
             jsConsole: "JavaScript Console",
@@ -766,7 +766,7 @@ var langContent = { // LANGUAGES
             errorReport: 'Failed miserably to save the report to the server. AaronOS has either failed completely to initialize or extremely crucial and vital components have been deleted or heavily damaged. Please email mineandcraft12@gmail.com with the details of your issue if you would like it fixed.'
         },
         appNames: {
-            startMenu: "aOS Dashboard",
+            startMenu: "AaronOS Dashboard",
             nora: "The Developer\'s Name Backwards",
             taskManager: "Interval and Timeout Manager",
             jsConsole: "Interface Utitlized to Run JavaScript Code On-The-Fly",
@@ -862,7 +862,7 @@ var langContent = { // LANGUAGES
             fatalError5: '\u53D1\u9001\u5DEE\u9519\u62A5\u6848?'
         },
         appNames: {
-            startMenu: 'aOS Dashboard', //&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x5217;&#x51FA;
+            startMenu: '&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x5217;&#x51FA;',
             taskManager: '&#x4EFB;&#x52A1;&#x7ECF;&#x7406;',
             jsConsole: 'JavaScript &#x64CD;&#x4F5C;&#x53F0;',
             bash: '&#x8D5D;&#x54C1;-Bash &#x7EC8;&#x7AEF;',
@@ -3378,7 +3378,7 @@ getId('aOSloadingInfo').innerHTML = 'Applications List';
 c(function(){
     apps.startMenu = new Application(
         "DsB",
-        "aOS Dashboard",
+        "AaronOS Dashboard",
         1,
         function(launchType){
             if(launchType === 'srtup'){
@@ -9160,6 +9160,7 @@ c(function(){
                 this.appWindow.setDims("auto", "auto", 400, 500);
                 this.appWindow.setCaption('Desktop Icon Maker');
                 this.appWindow.setContent(
+                    '<p style="color:#AA0000">This tool is outdated and may not work. Create new icons by right-clicking apps on the Dashboard or taskbar.</p>' +
                     '<h1>New Icon</h1><hr>' +
                     '<span style="display:none">' +
                     'Horizontal tile position: <input id="IcMleft" value="' + (Math.round(this.newlaunch[1] / 108) + 1) + '"><br>' +
@@ -11300,6 +11301,13 @@ c(function(){
                 " + New app icon for Changelog.",
                 " + New app icon for modal Prompts app.",
                 " : Moved the old pre-versioning to-do list / changelog thing to the bottom of the changelog, where it really should be."
+            ],
+            "01/28/2021: B1.5.3.0": [
+                " + Brand new AaronOS Help app, containing a guided tour of the project and additional help materials.",
+                " + The new Help app is used as a greeting to newcomers, to help show them around.",
+                " : Changed the name of the aOS Dashboard to AaronOS Dashboard.",
+                " : Restored the translation of the AaronOS Dashboard to Chinese language localization.",
+                " - Removed right-click shortcut to Desktop Icon Maker -- it's outdated and should be replaced."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
@@ -12180,6 +12188,388 @@ c(function(){
                 color: "#252F3A"
             }
         }
+    );
+    getId('aOSloadingInfo').innerHTML = 'Help';
+});
+
+c(function(){
+    apps.help = new Application(
+        'Hlp',
+        'AaronOS Help',
+        0,
+        function(){
+            if(!this.appWindow.appIcon){
+                this.appWindow.setDims("auto", "auto", 600, 500);
+                this.appWindow.setCaption('AaronOS Help');
+                getId("win_help_html").style.overflowY = "auto";
+                this.vars.showMenu(this.vars.menus);
+            }
+            this.appWindow.openWindow();
+        },
+        function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(localStorage.getItem("aos_help_displayed") !== "1"){
+                        c(function(){
+                            openapp(apps.help, "dsktp");
+                            apps.help.vars.showMenu(apps.help.vars.menus.menuOptions.intro);
+                            localStorage.setItem("aos_help_displayed", "1");
+                        });
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        },
+        {
+            appInfo: 'Tutorial and help app for AaronOS.',
+            search: function(text){
+                var searchElems = getId("Hlp_menudiv").childNodes;
+                for(var i = 0; i < searchElems.length; i++){
+                    if(searchElems[i].innerText.toLowerCase().indexOf(text.toLowerCase()) > -1){
+                        searchElems[i].style.display = "inline-block";
+                    }else{
+                        searchElems[i].style.display = "none";
+                    }
+                }
+            },
+            tutorialStep: "welcome",
+            tutorialSteps: {
+                welcome: {
+                    stepTitle: "Welcome",
+                    stepContent: '<p>Welcome to AaronOS! Thank you for visiting.</p>' +
+                        '<p>This tour will show you some of the basics of AaronOS, and point you in a few directions to look around.</p>' +
+                        '<p>At certain points, the tutorial will give you chances to highlight the specific topics it mentions. ' +
+                        'For example, if you are trying to find this app again, you can find it on the desktop or in the dashboard.</p>' +
+                        '<button onclick="apps.help.vars.showMeHideHighlight(getId(\'app_help\'))">Show Me the Help App</button>' +
+                        '<p>At the end of each page in the tutorial, you can move on to the next step below.</p>' +
+                        '<button onclick="apps.help.vars.showTutorial(\'basics\')">Next Page: The Basics</button>'
+                },
+                basics: {
+                    stepTitle: "The Basics",
+                    stepContent: '<p>The Dashboard, in the bottom left corner, is where you will find a set of quick links and most of your apps. This is where you will likely go to launch most apps.</p>' +
+                        '<button onclick="apps.help.vars.showMeHighlight(getId(\'icn_startMenu\'));setTimeout(()=>{apps.help.vars.showMeApp(\'startMenu\');},2500);">Show Me the Dashboard</button>' +
+                        '<p>Across the taskbar are the icons for all your opened and pinned apps. You can right-click all but the first two icons to pin and unpin them from the taskbar.</p>' +
+                        '<button onclick="apps.help.vars.showMeHighlight(getId(\'icons\'));">Show Me the Taskbar Icons</button>' +
+                        '<p>The right side of the taskbar holds various widgets which contain information like the time, battery level, notifications, and network status.' +
+                        'Additionally, the tilde (~) button will show you all of your opened apps laid out beside each other.</p>' +
+                        '<button onclick="apps.help.vars.showMeHighlight(getId(\'time\'))">Show Me the Widgets</button>' +
+                        '<p>The Help App will have more information on each of these in the future, should you wish to learn more.</p>' +
+                        '<button onclick="apps.help.vars.showTutorial(\'hub\')">Next Page: Finding New Apps</button>'
+                },
+                hub: {
+                    stepTitle: "Finding New Apps",
+                    stepContent: '<p>AaronOS is host to many apps that don\'t come installed by default. ' +
+                        'If you\'re looking for new apps, the aOS Hub is the place to look. It is easily accessible from the desktop or the Dashboard.</p>' +
+                        '<button onclick="apps.help.vars.showMeHideHighlight(getId(\'app_appCenter\'));">Show Me the aOS Hub</button>' +
+                        '<p>On the aOS Hub, you will be able to find both official and third-party applications, system themes, and custom scripts. ' +
+                        'Installing most of these is as simple as clicking the "Install" button on their entry. ' +
+                        'Don\'t worry, you won\'t need to install anything to your actual device.</p>' +
+                        '<p>App developers are able to create their own entries as well, and share them on the Hub with a Repository link. ' +
+                        'A Repository is like a collection of apps, styles, and scripts, all shared from one source. ' +
+                        'If you visit the community, keep an eye out for any third-party repositories that may spring up, and try out any that catch your interest.</p>' +
+                        '<p>Information about the AaronOS communities is available on the next page.</p>' +
+                        '<button onclick="apps.help.vars.showTutorial(\'community\')">Next Page: Community</button>'
+                },
+                community: {
+                    stepTitle: "Community",
+                    stepContent: '<p>If you wish to visit the AaronOS community, we are most heavily based on our official Discord server. ' +
+                    'The Discord server is home to announcements, updates, occasional polls, and our team. ' +
+                    'There are spaces available to share your feedback, suggestions, and bug reports. Additionally, you can feel free to hang around and chat with the community.</p>' +
+                    '<p>The AaronOS Discord server is available at <a target="_blank" href="https://discord.gg/Y5Jytdm">https://discord.gg/Y5Jytdm</a></p><br>' +
+                    '<p>Additionally, there is a Messaging app on AaronOS, where you can talk to everyone there in a more simple environment.</p>' +
+                    '<button onclick="apps.help.vars.showMeHideHighlight(getId(\'app_messaging\'));">Show Me the Messaging App</button>' +
+                    '<p>Web Developers, there is documentation available for creating your own applications in the Developer Documentation app, ' +
+                    'and I am often around to help on the Discord server.</p>' +
+                    '<button onclick="apps.help.vars.showMeHideHighlight(getId(\'app_devDocumentation\'));">Show Me the Developer Documentation</button>'
+                }
+            },
+            showTutorial: function(step){
+                if(typeof step === "string"){
+                    this.tutorialStep = step;
+                }
+                var menuStr = '<div style="position:relative;text-align:center;">' +
+                    '<span style="font-size:2em;">' + this.tutorialSteps[step].stepTitle + '</span><br>' +
+                    '</div>' +
+                    '<button onclick="apps.help.vars.showMenu(apps.help.vars.menus)" style="display:block;position:absolute;right:6px;top:6px;">Help Pages</button>' +
+                    '<div id="Hlp_menudiv" class="noselect" style="width:calc(100% - 6px);padding-top:16px;">' +
+                    this.tutorialSteps[step].stepContent +
+                    '</div>';
+                apps.help.appWindow.setContent(menuStr);
+            },
+            showMeHideHighlight: function(hideElem){
+                setTimeout(() => {
+                    apps.help.signalHandler("shrink");
+                    if(!this.showMeHighlight(hideElem)){
+                        setTimeout(() => {
+                            openapp(apps.help, "tskbr");
+                        }, 2000);
+                    }
+                }, 100);
+            },
+            showMeHighlight: function(highlightElem){
+                if(highlightElem){
+                    setTimeout(() => {
+                            highlightElem.classList.add("showMeHighlight");
+                            setTimeout(() => {
+                                highlightElem.classList.remove("showMeHighlight");
+                            }, 500);
+                            setTimeout(() => {
+                                highlightElem.classList.add("showMeHighlight");
+                            }, 1000);
+                            setTimeout(() => {
+                                highlightElem.classList.remove("showMeHighlight");
+                            }, 1500);
+                            setTimeout(() => {
+                                openapp(apps.help, "tskbr");
+                            }, 2250);
+                    }, 500);
+                    return true;
+                }else{
+                    return false;
+                }
+            },
+            showMeApp: function(highlightApp){
+                if(apps[highlightApp]){
+                    var appWasOpen = apps[highlightApp].appWindow.appIcon;
+                    setTimeout(() => {
+                            if(appWasOpen){
+                                openapp(apps[highlightApp], "tskbr");
+                            }else{
+                                openapp(apps[highlightApp], "dsktp");
+                            }
+                            setTimeout(() => {
+                                if(appWasOpen){
+                                    openapp(apps.help, "tskbr");
+                                }else{
+                                    apps[highlightApp].signalHandler("close");
+                                }
+                            }, 2000);
+                    }, 500);
+                    return true;
+                }else{
+                    return false;
+                }
+            },
+            showMenu: function(menuObj){
+                if(!menuObj){
+                    menuObj = apps.help.vars.menus;
+                }
+                if(menuObj.menuType === "menus"){
+                    var menuStr = '<div style="position:relative;text-align:center;">' +
+                        '<span style="font-size:2em;">' + menuObj.menuTitle + '</span><br>' +
+                        '<input placeholder="Search" id="Hlp_search" onkeyup="apps.help.vars.search(this.value)">' +
+                        '</div>' +
+                        '<button onclick="apps.help.vars.showMenu(apps.help.vars.menus)" style="display:block;position:absolute;right:6px;top:6px;">Help Pages</button>' +
+                        '<div id="Hlp_menudiv" class="noselect" style="width:calc(100% - 6px);font-size:1.5em;">';
+                    for(var i in menuObj.menuOptions){
+                        menuStr += '<div style="width:calc(50% - 6px);display:inline-block;padding-left:6px;position:relative;margin-top:16px;">' +
+                        '<span class="cursorPointer" onclick="apps.help.vars.showMenu(' + menuObj.menuOptions[i].menuLocation + ')">' + menuObj.menuOptions[i].menuTitle + '</span></div>';
+                    }
+                    menuStr += '</div>';
+                    apps.help.appWindow.setContent(menuStr);
+                }else if(menuObj.menuType === "options"){
+                    var menuStr = '<div style="position:relative;text-align:center;">' +
+                        '<span style="font-size:2em;">' + menuObj.menuTitle + '</span><br>' +
+                        '</div>' +
+                        '<button onclick="apps.help.vars.showMenu(apps.help.vars.menus)" style="display:block;position:absolute;right:6px;top:6px;">Help Pages</button>' +
+                        '<div id="Hlp_menudiv" class="noselect" style="width:calc(100% - 6px);padding-top:16px;">';
+                    for(var i in menuObj.menuOptions){
+                        menuStr += '<div style="position:relative;">';
+                        if(menuObj.menuOptions[i].optionTitle){
+                            menuStr += '<span style="font-size:1.5em">' + menuObj.menuOptions[i].optionTitle + '</span>';
+                        }
+                        if(menuObj.menuOptions[i].optionContent){
+                            menuStr += '<p>' + menuObj.menuOptions[i].optionContent() + '</p>';
+                        }
+                        if(menuObj.menuOptions[i].optionButton){
+                            menuStr += menuObj.menuOptions[i].optionButton() +
+                                '<div style="position:relative;height:16px"></div>';
+                        }
+                        menuStr += '</div>';
+                    }
+                    menuStr += '</div>';
+                    apps.help.appWindow.setContent(menuStr);
+                }else if(menuObj.menuType === "action"){
+                    menuObj.menuAction();
+                }else if(menuObj.menuType === "docs"){
+                    var menuStr = '<div style="position:relative;text-align:center;">' +
+                        '<span style="font-size:2em;">' + menuObj.menuTitle + '</span><br>' +
+                        '</div>' +
+                        '<button onclick="apps.help.vars.showMenu(apps.help.vars.menus)" style="display:block;position:absolute;right:6px;top:6px;">Help Pages</button>' +
+                        '<div id="Hlp_menudiv" class="noselect" style="width:calc(100% - 6px);padding-top:16px;">' +
+                        menuObj.menuContent +
+                        '</div>';
+                    apps.help.appWindow.setContent(menuStr);
+                }
+            },
+            menus: {
+                menuTitle: "AaronOS Help",
+                menuType: "menus",
+                menuLocation: "apps.help.vars.menus",
+                menuOptions: {
+                    intro: {
+                        menuTitle: "Welcome",
+                        menuType: "options",
+                        menuLocation: "apps.help.vars.menus.menuOptions.intro",
+                        menuOptions: {
+                            /*
+                            welcome: {
+                                optionTitle: "Welcome",
+                                optionContent: () => {
+                                    return 'Welcome to AaronOS! Thank you for visiting. Make yourself at home and feel free to take a look around.';
+                                }
+                            },
+                            */
+                            tutorial: {
+                                optionTitle: "Guided Tour",
+                                optionContent: () => {
+                                    return 'This is the guided tour / tutorial of AaronOS and shows some of what it has to offer. ' +
+                                        'If this is your first visit, the tutorial may give you a general idea of what AaronOS has in store.';
+                                },
+                                optionButton: () => {
+                                    return '<button onclick="apps.help.vars.showTutorial(\'welcome\')">Guided Tour</button>';
+                                }
+                            },
+                            helpPages: {
+                                optionTitle: "Help Pages",
+                                optionContent: () => {
+                                    return 'If you ever feel lost, feel free to come back to this app for some help about various bits of the project. ' +
+                                    'Alternatively, if you like, you can skip the tour and go there now.'
+                                },
+                                optionButton: () => {
+                                    return '<button onclick="apps.help.vars.showMenu()">Help Pages</button>'
+                                }
+                            },
+                            noHelp: {
+                                optionTitle: "Jump Right In",
+                                optionContent: () => {
+                                    return 'If you want to, you can skip all of that and just jump right in. ' +
+                                    'Just close this app with the buttons in the top corner of the window, and it won\'t appear again until you launch it yourself.'
+                                }
+                            }
+                        }
+                    },
+                    tutorial: {
+                        menuTitle: "Guided Tour",
+                        menuLocation: "apps.help.vars.menus.menuOptions.tutorial",
+                        menuType: "action",
+                        menuAction: () => {
+                            apps.help.vars.showTutorial('welcome');
+                        }
+                    },
+                    desktop: {
+                        menuTitle: "Desktop",
+                        menuLocation: "apps.help.vars.menus.menuOptions.desktop",
+                        menuType: "docs",
+                        menuContent: '<img class="centered" src="helpdocs/desktop.png">' +
+                            '<p>The AaronOS desktop comes with a set of icons that should be helpful to general users and developers alike. ' +
+                            'These icons can be moved around or deleted via the right-click menu or a long-tap on mobile. ' +
+                            'Additional icons can be added by right-clicking an app in the taskbar or Dashboard.</p>' +
+                            '<p>Right-clicking on an empty part of the desktop will display quick shortcuts to the Settings app, the Javascript Console, ' +
+                            'and settings for the Screen Resolution and Desktop Background.</p>' +
+                            '<p>In Settings, you can configure your desktop background in various ways. ' +
+                            'You can specify the URL to a background image of your choice, as well as change how it is fitted to your desktop. ' +
+                            'Additionally, you can choose to enable a Live Background, which allows you to specify a webpage to display as your background.</p>'
+                    },
+                    taskbar: {
+                        menuTitle: "Taskbar",
+                        menuLocation: "apps.help.vars.menus.menuOptions.taskbar",
+                        menuType: "docs",
+                        menuContent: '<img class="centered" src="helpdocs/taskbar.png">' +
+                            '<p>The first two icons on your taskbar are the Dashboard and NORAA. The Dashboard is the home for most of your apps. ' +
+                            'Right-clicking the Dashboard\'s taskbar icon will present several quick shortcuts, as well as log-out options. ' +
+                            'NORAA is the AaronOS personal assistant, which in very early development.</p>' +
+                            '<p>Spread across the taskbar are the icons of your opened and pinned applications. Applications that are currently open are marked by a glowing platform. ' +
+                            'The application currently in focus will have its taskbar icon highlighted, and its caption visible in your web browser tab\'s title. ' +
+                            'Right-clicking an icon will allow you to pin its icon to the taskbar, add the app\'s icon to the desktop, or quickly control its window.</p>' +
+                            '<p>The right side of the taskbar is home to your Widgets, which display helpful information such as time, battery life, network status, and more. ' +
+                            'Clicking a widget will open its menu, and certain widgets will have additional options or details within.</p>' +
+                            '<p>Right-clicking on any empty area of the taskbar will allow you to quickly access the Taskbar settings. ' +
+                            'There, you can change what border of your screen the taskbar is attached to. You can also add, remove, and rearrange the widgets.</p>'
+                    },
+                    windowControls: {
+                        menuTitle: "Window Controls",
+                        menuLocation: "apps.help.vars.menus.menuOptions.windowControls",
+                        menuType: "docs",
+                        menuContent: '<img class="centered" src="helpdocs/wincaption.png">' +
+                            '<p>Across the top of a window, you will find its icon and title (which make up its caption), ' +
+                            'and various controls. In desktop mode, you can move most windows around your screen by dragging their caption. ' +
+                            'You can additionally resize most windows by dragging their border. ' +
+                            'In mobile mode, most often triggered by mobile devices or small screens, windows are automatically maximized and cannot be moved.</p>' +
+                            '<p>The three buttons grouped together will minimize, maximize, or close a window. ' +
+                            'The additional button on the opposite side will fold the window up into its caption, allowing you to see behind it. ' +
+                            'Additionally, right-clicking the caption will show extra options, such as app information or keeping the window on top of others.</p>' +
+                            '<p>Windows in AaronOS are heavily configurable in the Settings app. Among other things, you can toggle the system light / dark theme, ' +
+                            'swap the main window controls to the left side of the caption, change the color of the window glass, change how thick the borders are, ' +
+                            'toggle the glass blur effect or change its strength, and toggle or change the texture on the window borders. ' +
+                            'Additionally, the overall system theme can be customized with Hub themes, or with the Style Editor, if you know CSS.</p>'
+                    },
+                    dashboard: {
+                        menuTitle: "Dashboard",
+                        menuLocation: "apps.help.vars.menus.menuOptions.dashboard",
+                        menuType: "docs",
+                        menuContent: '<img class="centered" src="helpdocs/dashboard.png">' +
+                            '<p>The AaronOS Dashboard is home to most of your apps, several shortcuts, and logout options.</p>' +
+                            '<p>At the top of the default dashboard, multiple shortcuts are available to important applications. ' +
+                            'The rest of the dashboard is occupied by a list of most apps on the system. The list is searchable by name, or by an app\'s specific abbreviation. ' +
+                            'Right-clicking an app in this list will display options to create a desktop icon, view information about the app, or view the app\'s files*.</p>' +
+                            '<p>In Settings, you can select a different look and feel for the Dashboard from a few options.</p>' +
+                            '<p>* These specific files of applications are not saved, and represent their current state in JavaScript. ' +
+                            'Files saved by your apps are accessible in the File Manager, in USERFILES or LOCALFILES.</p>'
+                    },
+                    performance: {
+                        menuTitle: "Performance",
+                        menuLocation: "apps.help.vars.menus.menuOptions.performance",
+                        menuType: "docs",
+                        menuContent: '<img class="centered" src="helpdocs/performance.png">' +
+                            '<p>Certain effects and options in AaronOS can impact performance. ' +
+                            'If you\'re having issues with running AaronOS, especially on a mobile device, these changes may help your performance.</p>' +
+                            '<span style="font-size:1.5em">Performance Mode</span>' +
+                            '<p>Available in Settings -&gt; Performance Mode, this option adjusts image rendering and some system functions in an attempt to improve performance.</p>' +
+                            '<span style="font-size:1.5em">Disable Window Blur Effects</span>' +
+                            '<p>AaronOS features effects that blur the backdrops of windows. While they look pretty, these effects can have a large impact on performace.<br>' +
+                            'If needed, in Settings -&gt; Windows, you can disable the Window Glass Effect to drastically improve performance.</p>' +
+                            '<span style="font-size:1.5em">Close Unneeded Applications</span>' +
+                            '<p>If you often run a large amount of applications on AaronOS or your real device, closing unneeded applications can help performance.</p>'
+                    },
+                    unfinished: {
+                        menuTitle: "Where's the rest?",
+                        menuLocation: "apps.help.vars.menus.menuOptions.unfinished",
+                        menuType: "docs",
+                        menuContent: '<p>This Help App is brand new and is not completely finished yet.</p>' +
+                            '<p>If you\'re trying to find something that is not here, ' +
+                            'let me know in our Discord community, available at <a target="_blank" href="https://discord.gg/Y5Jytdm">https://discord.gg/Y5Jytdm</a>. ' +
+                            'There, you can let me know what you\'re looking for, so that I can prioritize adding it to this app, and help you out there in the meantime.</p>'
+                    }
+                }
+            }
+        }, 0, "help", 'appicons/ds/HLP.png'
     );
     getId('aOSloadingInfo').innerHTML = 'Window Test';
 });
@@ -16506,10 +16896,10 @@ var baseCtx = {
             openapp(apps.settings, 'dsktp');
             apps.settings.vars.showMenu(apps.settings.vars.menus.background);
             getId('bckGrndImg').focus();
-        }, 'ctxMenu/beta/cool.png'],
+        }, 'ctxMenu/beta/cool.png']/*,
         ['+' + lang('ctxMenu', 'addIcon'), function(){
             openapp(apps.iconMaker, 'newicon ' + newCtxCoord[0] + ' ' + newCtxCoord[1]);
-        }, 'ctxMenu/beta/add.png']
+        }, 'ctxMenu/beta/add.png']*/
     ],
     desktop: [
         [' ' + lang('ctxMenu', 'settings'), function(){

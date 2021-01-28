@@ -61,6 +61,19 @@
         box-shadow:inset 0 0 10px #272727;
     }
 
+.showMeHighlight{
+    transition: 0.3s !important;
+    background-color:rgba(190, 190, 255, .6) !important;
+    outline: 1px solid #FFF;
+    box-shadow: 0 0 3px #000;
+}
+
+.centered{
+    margin-left:50%;
+    left:50%;
+    transform:translateX(-50%);
+}
+
 .marquee{
     width:100%;
     overflow:hidden;
