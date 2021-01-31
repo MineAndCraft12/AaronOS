@@ -11308,6 +11308,9 @@ c(function(){
                 " : Changed the name of the aOS Dashboard to AaronOS Dashboard.",
                 " : Restored the translation of the AaronOS Dashboard to Chinese language localization.",
                 " - Removed right-click shortcut to Desktop Icon Maker -- it's outdated and should be replaced."
+            ],
+            "01/31/2021: B1.5.3.1": [
+                " : Changed behavior of highlighting the Dashboard from the Help app."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
@@ -12273,7 +12276,7 @@ c(function(){
                 basics: {
                     stepTitle: "The Basics",
                     stepContent: '<p>The Dashboard, in the bottom left corner, is where you will find a set of quick links and most of your apps. This is where you will likely go to launch most apps.</p>' +
-                        '<button onclick="apps.help.vars.showMeHighlight(getId(\'icn_startMenu\'));setTimeout(()=>{apps.help.vars.showMeApp(\'startMenu\');},2500);">Show Me the Dashboard</button>' +
+                        '<button onclick="apps.help.vars.showMeApp(\'startMenu\');">Show Me the Dashboard</button>' +
                         '<p>Across the taskbar are the icons for all your opened and pinned apps. You can right-click all but the first two icons to pin and unpin them from the taskbar.</p>' +
                         '<button onclick="apps.help.vars.showMeHighlight(getId(\'icons\'));">Show Me the Taskbar Icons</button>' +
                         '<p>The right side of the taskbar holds various widgets which contain information like the time, battery level, notifications, and network status.' +
