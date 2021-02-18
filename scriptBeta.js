@@ -11311,11 +11311,18 @@ c(function(){
             ],
             "01/31/2021: B1.5.3.1": [
                 " : Changed behavior of highlighting the Dashboard from the Help app."
+            ],
+            "02/18/2021: B1.5.4.0": [
+                " : Completely revamped the hidden iFrameBrowser testing app.",
+                " + iFrameBrowser now supports adding a proxy service url to automatically prepend to entered URLs.",
+                " + iFrameBrowser now supports tabs.",
+                " + Added more information and some minimal troubleshooting information to the iFrameBrowser homepage.",
+                " : Documentation for testing a web app now uses the iFrame Browser rather than making you use half of a Web App Maker form."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.3.1 (01/31/2021) r0';
+    window.aOSversion = 'B1.5.4.0 (02/18/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -15596,12 +15603,18 @@ c(function(){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 800, 600);
                 this.appWindow.setCaption('iFrame Browser');
-                this.appWindow.setContent('<div style="font-family:aosProFont, Courier, monospace; font-size:12px;height:25px;border-bottom:1px solid #000; width:100%">' +
-                '<input id="iFBinput" placeholder="https://" style="width:75%;"> <button onclick="apps.iFrameBrowser.vars.go(getId(\'iFBinput\').value)">Go</button>' +
-                '</div>' +
-                '<iframe data-parent-app="iFrameBrowser" id="iFBframe" src="ifbHomepage.php" style="border:none; width:100%; height:calc(100% - 26px); margin-top:26px; display:block;"></iframe>');
+                this.appWindow.setContent('<div id="iFBframes" style="width:100%;height:100%;"></div>' +
+                '<div style="font-family:aosProFont, Courier, monospace; font-size:12px;height:50px;border-bottom:1px solid #000; width:100%; line-height:25px;">' +
+                '<button onclick="apps.iFrameBrowser.vars.doSettings()">Settings</button> ' +
+                '<input id="iFBinput" placeholder="https://" style="width:75%;"> ' +
+                '<button onclick="apps.iFrameBrowser.vars.go(getId(\'iFBinput\').value)">Go</button> ' +
+                '<br>' +
+                '<span id="iFBtabs"></span><button onclick="apps.iFrameBrowser.vars.newTab()">New Tab</button> ' +
+                '<button onclick="apps.iFrameBrowser.vars.closeTab()">Close Tab</button>' +
+                '</div>');
             }
             this.appWindow.openWindow();
+            this.vars.resetTabs();
         },
         function(signal){
             switch(signal){
@@ -15628,7 +15641,9 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    
+                    if(ufload("aos_system/apps/iframebrowser/proxyurl")){
+                        apps.iFrameBrowser.vars.proxyUrl = ufload("aos_system/apps/iframebrowser/proxyurl");
+                    }
                     break;
                 case 'shutdown':
                         
@@ -15640,7 +15655,96 @@ c(function(){
         {
             appInfo: 'The iFrame Browser is a placeholder app to view a webpage in an iframe within an app. This app is not a full web browser. If aOS is loaded over HTTPS, you won\'t be able to view HTTP sites here. Many sites block iFrames.',
             go: function(url){
-                getId("iFBframe").src = url || "ifbHomepage.php";
+                if(getId("iFBframes").childNodes.length < 1){
+                    this.newTab();
+                }
+                if(url === "ifbHomepage.php"){
+                    getId("iFBframes").childNodes[this.currTab].src = url;
+                }else if(url.length > 0){
+                    if(this.proxyUrl){
+                        if(url.indexOf(this.proxyUrl) === 0){
+                            getId("iFBframes").childNodes[this.currTab].src = url;
+                        }else{
+                            getId("iFBframes").childNodes[this.currTab].src = this.proxyUrl + url;
+                        }
+                    }else{
+                        getId("iFBframes").childNodes[this.currTab].src = url;
+                    }
+                }else{
+                    getId("iFBframes").childNodes[this.currTab].src = "ifbHomepage.php";
+                }
+                getId('iFBinput').value = getId("iFBframes").childNodes[this.currTab].src;
+                if(url === "ifbHomepage.php" || url.length === 0){
+                    getId('iFBinput').value = "";
+                }
+            },
+            proxyUrl: "",
+            currTab: 0,
+            resetTabs: function(){
+                this.tabs = [];
+                getId("iFBtabs").innerHTML = "";
+                getId("iFBframes").innerHTML = "";
+                this.newTab();
+            },
+            newTab: function(){
+                var newTabNum = getId('iFBtabs').childNodes.length / 2;
+                getId("iFBtabs").innerHTML += '<button onclick="apps.iFrameBrowser.vars.showTab(' + newTabNum + ')">Tab ' + (newTabNum + 1) + '</button> ';
+                // <iframe data-parent-app="iFrameBrowser" id="iFBframe" src="ifbHomepage.php" style="border:none; width:100%; height:calc(100% - 26px); margin-top:26px; display:block;"></iframe>
+                var newFrame = document.createElement("iframe");
+                newFrame.setAttribute("data-parent-app", "iFrameBrowser");
+                newFrame.classList.add("iFBframe");
+                newFrame.src = "ifbHomepage.php";
+                newFrame.style.border = "none";
+                newFrame.style.width = "100%";
+                newFrame.style.height = "calc(100% - 51px)";
+                newFrame.style.marginTop = "51px";
+                newFrame.style.display = "block";
+                getId("iFBframes").appendChild(newFrame);
+                this.showTab(newTabNum);
+                getId("iFBinput").value = "";
+            },
+            showTab: function(tabNum){
+                if(getId("iFBtabs").childNodes.length > 0){
+                    getId("iFBtabs").childNodes[this.currTab * 2].style.opacity = "0.5";
+                    getId("iFBframes").childNodes[this.currTab].style.display = "none";
+                    this.currTab = tabNum;
+                    getId("iFBtabs").childNodes[this.currTab * 2].style.opacity = "";
+                    getId("iFBframes").childNodes[this.currTab].style.display = "block";
+                    getId("iFBinput").value = getId("iFBframes").childNodes[this.currTab].src;
+                }
+            },
+            closeTab: function(){
+                var oldTab = this.currTab;
+                if(this.currTab >= getId("iFBtabs").childNodes.length / 2 - 1){
+                    if(getId("iFBtabs").childNodes.length / 2 > 1){
+                        this.showTab(this.currTab - 1);
+                    }
+                }
+                getId("iFBtabs").removeChild(getId("iFBtabs").childNodes[oldTab * 2]);
+                getId("iFBtabs").removeChild(getId("iFBtabs").childNodes[oldTab * 2]);
+                getId("iFBframes").removeChild(getId("iFBframes").childNodes[oldTab]);
+                for(var i = 0; i < getId("iFBframes").childNodes.length; i++){
+                    getId("iFBtabs").childNodes[i * 2].innerHTML = "Tab " + (i + 1);
+                    getId("iFBtabs").childNodes[i * 2].setAttribute("onclick", "apps.iFrameBrowser.vars.showTab(" + i + ")");
+                }
+                this.showTab(this.currTab);
+            },
+            doSettings: function(){
+                apps.prompt.vars.prompt(
+                    "This Settings page contains only one setting; a proxy for fetching website content.<br><br>" +
+                    "If you set a proxy address, that address will be prefixed to the beginning of every address you enter.<br><br>" +
+                    "Be aware that proxy sites are capable of seeing and changing all content you view, and all information you enter on their page. " +
+                    "Do not enter personal information or sensitive data while using a proxy.<br><br>" +
+                    "Proxy format: \"https://example.com/\"<br>" + 
+                    "Your current proxy is: \"" + cleanStr(this.proxyUrl) + "\"<br>" +
+                    "Leave this blank to disable the proxy.",
+                    "Submit",
+                    function(str){
+                        apps.iFrameBrowser.vars.proxyUrl = str;
+                        ufsave("aos_system/apps/iframebrowser/proxyurl", str);
+                    },
+                    "iFrame Browser"
+                )
             }
         }, 2, 'iFrameBrowser', 'appicons/ds/systemApp.png'
     );

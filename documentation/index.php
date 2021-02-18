@@ -65,21 +65,28 @@
     <p>
         Unfortunately, this guide is going to start with a bit of prerequisites.
         To host and use your own app, you're going to need a web server with HTTPS, on a domain aOS can access.
-    </p>
-    <p>
         Most free hosts should do the trick as long as they provide HTTPS.
         Many of you interested in this will likely already have a host or site of some sort.
-        If not, you'll need one to make and use your app.
+        If not, you will need one to create and use your app.
     </p>
+    <hr>
     <p>
         First we need to test if your host allows AaronOS to load it in a frame.
-        Load up AaronOS (if not already), open up the Web App Maker app, and go to the "Getting Started" section.
+        Load up AaronOS, select "All Apps" from the Dashboard, and launch the "iFrame Browser" application.
     </p>
     <p>
-        Once you're there, enter the URL to your website into the address field near the iFrame (make sure to include <code>https://</code> at the beginning) and click Test.
+        If you already commonly use the iFrame Browser, please make sure you do not have a proxy active in the app's Settings.
+    </p>
+    <p>
+        Once you're there, enter the URL of your webpage into the address field (make sure to include your <code>https://</code> at the beginning) and click Go.
+    </p>
+    <p>
         If your website successfully loads into the frame, then we should be all set.
+    </p>
+    <p>
         If not, then your website or your browser are blocking AaronOS from loading your site.
         If this is the case, then you need to figure out with your host (or, if you personally run the server, your server configuration) a way to allow AaronOS to load your site.
+        Opening a new tab of the iFrame Browser will present to you a short list of common reasons that this might happen.
     </p>
     <div class="img">
         <img src="img/webapps/iFrameBrowser.png">
