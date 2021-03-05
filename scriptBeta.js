@@ -662,7 +662,7 @@ var langContent = { // LANGUAGES
             pngSave: "PNG Saver",
             canvasGame: "Canvas Video Games",
             internet: "The Internet",
-            aerotest: "Windowblur Test",
+            aerotest: "Transparent Window",
             savemaster: "SaveMaster",
             mouserecord: "Mouse Recorder",
             ti: "TI-83+ Simulator",
@@ -1509,8 +1509,72 @@ var appTotal = 0;
 var appPosX = 8;
 var appPosY = 8;
 var finishedMakingAppClicks = 0;
+/*
+    // EXAMPLE
+    apps.settings = new Application({
+        title: string -> appDesc ("Settings")
+        abbreviation: string -> appIcon ("STN")
+        codeName: string -> appPath ("settings") (this is the app's name in the apps folder)
+        image: (string image url, or object Smart Icon)
+            string -> appImg
+            object -> appImg
+        hideApp: 0, 1, or 2 -> keepOffDesktop (1 does not create desktop icon, 2 also hides from app drawer)
+        launchTypes: 0 or 1 -> handlesLaunchTypes
+        main: function -> mainFunction
+        vars: obj -> appVariables
+        signalHandler: function -> signalHandlerFunction
+    })
+*/
 var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, signalHandlerFunction, appVariables, keepOffDesktop, appPath, appImg){
     try{
+        if(typeof appIcon === "object"){
+            appImg = appIcon.image || "appicons/ds/aOS.png";
+            appPath = appIcon.codeName;
+            if(typeof appIcon.hideApp === "number"){
+                keepOffDesktop = appIcon.hideApp;
+            }else{
+                keepOffDesktop = 1;
+            }
+            appVariables = appIcon.vars || {};
+            signalHandlerFunction = appIcon.signalHandler || function(signal){
+                switch(signal){
+                    case "forceclose":
+                        //this.vars = this.varsOriginal;
+                        this.appWindow.closeWindow();
+                        this.appWindow.closeIcon();
+                        break;
+                    case "close":
+                        this.appWindow.closeWindow();
+                        setTimeout(function(){
+                            if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                                this.appWindow.setContent("");
+                            }
+                        }.bind(this), 300);
+                        break;
+                    case "checkrunning":
+                        if(this.appWindow.appIcon){
+                            return 1;
+                        }else{
+                            return 0;
+                        }
+                    case "shrink":
+                        this.appWindow.closeKeepTask();
+                        break;
+                    case "USERFILES_DONE":
+                        
+                        break;
+                    case 'shutdown':
+                            
+                        break;
+                    default:
+                        doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+                }
+            };
+            mainFunction = appIcon.main || function(){};
+            handlesLaunchTypes = appIcon.launchTypes || 0;
+            appDesc = appIcon.title || "Application";
+            appIcon = appIcon.abbreviation || "App";
+        }
         /*
         if(doLog && appIcon){
             doLog('Init app ' + appIcon, '#D60');
@@ -3376,11 +3440,21 @@ function startWaitingCodeInterval(){
 
 getId('aOSloadingInfo').innerHTML = 'Applications List';
 c(function(){
-    apps.startMenu = new Application(
-        "DsB",
-        "AaronOS Dashboard",
-        1,
-        function(launchType){
+    apps.startMenu = new Application({
+        title: "AaronOS Dashboard",
+        abbreviation: "DsB",
+        codeName: "startMenu",
+        image: {
+            backgroundColor: "#303947",
+        	foreground: "smarticons/aOS/fg.png",
+        	backgroundBorder: {
+        		thickness: 2,
+        		color: "#252F3A"
+        	}
+        },
+        hideApp: 2,
+        launchTypes: 1,
+        main: function(launchType){
             if(launchType === 'srtup'){
                 this.appWindow.paddingMode(0);
                 getId('win_startMenu_shrink').style.display = "none";
@@ -3680,102 +3754,7 @@ c(function(){
                 }
             }
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    setTimeout(apps.startMenu.vars.minimize, 350);
-                    switch(tskbrToggle.tskbrPos){
-                        case 1:
-                            this.appWindow.setDims(-305, 0, 300, 370);
-                            if(mobileMode){
-                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
-                            }
-                            break;
-                        case 2:
-                            this.appWindow.setDims(-305, 0, 300, 370);
-                            if(mobileMode){
-                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
-                            }
-                            break;
-                        case 3:
-                            this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) - 300, parseInt(getId('desktop').style.height, 10) + 5, 300, 370);
-                            if(mobileMode){
-                                getId('win_startMenu_top').style.transform = 'scale(1) translate(0, ' + getId('desktop').style.height + ')';
-                            }
-                            break;
-                        default:
-                            this.appWindow.setDims(-305, parseInt(getId('desktop').style.height, 10) - 370, 300, 370);
-                            if(mobileMode){
-                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
-                            }
-                    }
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    setTimeout(apps.startMenu.vars.minimize, 350);
-                    switch(tskbrToggle.tskbrPos){
-                        case 1:
-                            this.appWindow.setDims(-305, 0, 300, 370);
-                            if(mobileMode){
-                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
-                            }
-                            break;
-                        case 2:
-                            this.appWindow.setDims(-305, 0, 300, 370);
-                            if(mobileMode){
-                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
-                            }
-                            break;
-                        case 3:
-                            this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) - 300, parseInt(getId('desktop').style.height, 10) + 5, 300, 370);
-                            if(mobileMode){
-                                getId('win_startMenu_top').style.transform = 'scale(1) translate(0, ' + getId('desktop').style.height + ')';
-                            }
-                            break;
-                        default:
-                            this.appWindow.setDims(-305, parseInt(getId('desktop').style.height, 10) - 370, 300, 370);
-                            if(mobileMode){
-                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
-                            }
-                    }
-                    this.appWindow.appIcon = 0;
-                    break;
-                case "USERFILES_DONE":
-                    // SET UP WIDGETS
-                    if(ufload("aos_system/taskbar/widget_list") && !safeMode){
-                        var tempList = JSON.parse(ufload("aos_system/taskbar/widget_list"));
-                        for(var i in tempList){
-                            addWidget(i, 1);
-                        }
-                    }else{
-                        addWidget('cpu', 1);
-                        addWidget('fps', 1);
-                        addWidget('network', 1);
-                        addWidget('battery', 1);
-                        //addWidget('users', 1);  (this is now an opt-in feature)
-                        addWidget('notifications', 1);
-                        addWidget('time', 1);
-                        addWidget('flow', 1);
-                    }
-                    break;
-                case "shutdown":
-                    
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
+        vars: {
             appInfo: 'AaronOS is a web-based desktop environment that lives in the cloud. All files are saved on the aOS server, so they can be accessed from anywhere.<br><br>AaronOS is developed by Aaron Adams. He can be directly contacted at mineandcraft12@gmail.com',
             appElems: null,
             search: function(event, iblock){
@@ -3891,26 +3870,124 @@ c(function(){
                     });
                 }, 'ctxMenu/beta/folder.png']
             ]
-        }, 2, "startMenu", {
-            backgroundColor: "#303947",
-        	foreground: "smarticons/aOS/fg.png",
-        	backgroundBorder: {
-        		thickness: 2,
-        		color: "#252F3A"
-        	}
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    setTimeout(apps.startMenu.vars.minimize, 350);
+                    switch(tskbrToggle.tskbrPos){
+                        case 1:
+                            this.appWindow.setDims(-305, 0, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
+                            break;
+                        case 2:
+                            this.appWindow.setDims(-305, 0, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
+                            break;
+                        case 3:
+                            this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) - 300, parseInt(getId('desktop').style.height, 10) + 5, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(0, ' + getId('desktop').style.height + ')';
+                            }
+                            break;
+                        default:
+                            this.appWindow.setDims(-305, parseInt(getId('desktop').style.height, 10) - 370, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
+                    }
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    setTimeout(apps.startMenu.vars.minimize, 350);
+                    switch(tskbrToggle.tskbrPos){
+                        case 1:
+                            this.appWindow.setDims(-305, 0, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
+                            break;
+                        case 2:
+                            this.appWindow.setDims(-305, 0, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
+                            break;
+                        case 3:
+                            this.appWindow.setDims(parseInt(getId('desktop').style.width, 10) - 300, parseInt(getId('desktop').style.height, 10) + 5, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(0, ' + getId('desktop').style.height + ')';
+                            }
+                            break;
+                        default:
+                            this.appWindow.setDims(-305, parseInt(getId('desktop').style.height, 10) - 370, 300, 370);
+                            if(mobileMode){
+                                getId('win_startMenu_top').style.transform = 'scale(1) translate(-' + getId('desktop').style.width + ', 0)';
+                            }
+                    }
+                    this.appWindow.appIcon = 0;
+                    break;
+                case "USERFILES_DONE":
+                    // SET UP WIDGETS
+                    if(ufload("aos_system/taskbar/widget_list") && !safeMode){
+                        var tempList = JSON.parse(ufload("aos_system/taskbar/widget_list"));
+                        for(var i in tempList){
+                            addWidget(i, 1);
+                        }
+                    }else{
+                        addWidget('cpu', 1);
+                        addWidget('fps', 1);
+                        addWidget('network', 1);
+                        addWidget('battery', 1);
+                        //addWidget('users', 1);  (this is now an opt-in feature)
+                        addWidget('notifications', 1);
+                        addWidget('time', 1);
+                        addWidget('flow', 1);
+                    }
+                    break;
+                case "shutdown":
+                    
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
+            }
         }
-    );
+    });
     apps.startMenu.main('srtup');
     getId('aOSloadingInfo').innerHTML = 'NORAA';
 });
 // all Applications go here
 c(function(){
     m('init NRA');
-    apps.nora = new Application(
-        'NRA',
-        'NORAA',
-        1,
-        function(launchtype){
+    apps.nora = new Application({
+        title: "NORAA",
+        abbreviation: "NRA",
+        codeName: "nora",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/noraa/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        },
+        hideApp: 2,
+        launchTypes: 1,
+        main: function(launchtype){
             if(launchtype === 'srtup'){
                 this.appWindow.paddingMode(0);
                 getId('win_nora_exit').style.display = "none";
@@ -4009,63 +4086,7 @@ c(function(){
                 this.appWindow.openWindow();
             }
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeKeepTask();
-                    getId("icn_nora").classList.remove("openAppIcon");
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    getId("icn_nora").classList.remove("openAppIcon");
-                    break;
-                case "USERFILES_DONE":
-                    this.vars.ddg = new XMLHttpRequest();
-                    this.vars.ddg.onreadystatechange = function(){
-                        apps.nora.vars.finishDDG();
-                    }
-                    if(ufload("aos_system/noraa/mood")){
-                        this.vars.updateMood(ufload("aos_system/noraa/mood"), 1);
-                    }
-                    if(ufload("aos_system/noraa/notes")){
-                        this.vars.notes = ufload("aos_system/noraa/notes").split(',');
-                    }
-                    if(ufload("aos_system/noraa/user_profile")){
-                        this.vars.userObj = JSON.parse(ufload("aos_system/noraa/user_profile"));
-                    }
-                    if(ufload("aos_system/noraa/speech_voice")){
-                        this.vars.lang = ufload("aos_system/noraa/speech_voice");
-                        this.vars.initing = 0;
-                        try{
-                            window.speechSynthesis.onvoiceschanged();
-                        }catch(err){
-                            doLog('Error - speechSynthesis not supported.', '#F00');
-                        }
-                    }
-                    if(ufload("aos_system/noraa/speech_response_delay")){
-                        this.vars.inputDelay = parseInt(ufload("aos_system/noraa/speech_response_delay"), 10);
-                    }
-                    this.vars.sayDynamic('hello');
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This is the Virtual Assistant of AaronOS. Compare to Apple\'s Siri, or to Microsoft\'s Cortana.',
             captionCtx: [
                 [' ' + lang('ctxMenu', 'hideApp'), function(){
@@ -5177,26 +5198,78 @@ c(function(){
                     this.currentlySpeaking = 0;
                 }
             }
-        }, 2, "nora", {
-            backgroundColor: "#303947",
-            foreground: "smarticons/noraa/fg.png",
-            backgroundBorder: {
-                thickness: 2,
-                color: "#252F3A"
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeKeepTask();
+                    getId("icn_nora").classList.remove("openAppIcon");
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    getId("icn_nora").classList.remove("openAppIcon");
+                    break;
+                case "USERFILES_DONE":
+                    this.vars.ddg = new XMLHttpRequest();
+                    this.vars.ddg.onreadystatechange = function(){
+                        apps.nora.vars.finishDDG();
+                    }
+                    if(ufload("aos_system/noraa/mood")){
+                        this.vars.updateMood(ufload("aos_system/noraa/mood"), 1);
+                    }
+                    if(ufload("aos_system/noraa/notes")){
+                        this.vars.notes = ufload("aos_system/noraa/notes").split(',');
+                    }
+                    if(ufload("aos_system/noraa/user_profile")){
+                        this.vars.userObj = JSON.parse(ufload("aos_system/noraa/user_profile"));
+                    }
+                    if(ufload("aos_system/noraa/speech_voice")){
+                        this.vars.lang = ufload("aos_system/noraa/speech_voice");
+                        this.vars.initing = 0;
+                        try{
+                            window.speechSynthesis.onvoiceschanged();
+                        }catch(err){
+                            doLog('Error - speechSynthesis not supported.', '#F00');
+                        }
+                    }
+                    if(ufload("aos_system/noraa/speech_response_delay")){
+                        this.vars.inputDelay = parseInt(ufload("aos_system/noraa/speech_response_delay"), 10);
+                    }
+                    this.vars.sayDynamic('hello');
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
             }
         }
-    );
+    });
     apps.nora.main('srtup');
     // getId('aOSloadingInfo').innerHTML = 'aDE';
     getId('aOSloadingInfo').innerHTML = 'Info Viewer...';
 });
 c(function(){
     m('init Nfo');
-    apps.appInfo = new Application(
-        'Nfo',
-        'Application Info Viewer',
-        1,
-        function(launchtype){
+    apps.appInfo = new Application({
+        title: "Application Info Viewer",
+        abbreviation: "Nfo",
+        codeName: "appInfo",
+        image: 'appicons/ds/systemApp.png',
+        hideApp: 2,
+        launchTypes: 1,
+        main: function(launchtype){
             if(launchtype === 'dsktp'){
                 openapp(apps.appInfo, 'appInfo');
             }else if(launchtype !== 'tskbr'){
@@ -5218,55 +5291,25 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This app is used to show information and help pages for AaronOS apps.'
-        }, 2, 'appInfo', 'appicons/ds/systemApp.png'
-    );
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'Task Manager...'; 
 });
 c(function(){
     m('init tMg');
-    apps.taskManager = new Application(
-        "tMg",
-        "Task Manager",
-        1,
-        function(launchType){
+    apps.taskManager = new Application({
+        title: "Task Manager",
+        abbreviation: "tMg",
+        codeName: "taskManager",
+        image: "appicons/ds/systemApp.png",
+        hideApp: 1,
+        launchTypes: 1,
+        main: function(launchtype){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
+                this.appWindow.alwaysOnTop(1);
                 this.appWindow.setDims("auto", "auto", 600, 500);
             }
             this.appWindow.setCaption("aOS Task Manager");
@@ -5275,11 +5318,6 @@ c(function(){
                 "<table id='tMgMemTable'>" +
                 "<tr><td>Script Performance Benchmark:</td><td class='liveElement' data-live-eval='perfStart(\"tMgScptBench\");perfCheck(\"tMgScptBench\")'></td></tr>" +
                 "<tr><td>Visual Performance Benchmark:</td><td class='liveElement' data-live-eval='[perfCheck(\"tMgPerfBench\"),perfStart(\"tMgPerfBench\")][0]'></td></tr>" +
-                //"<tr><td>Memory Available:</td><td id='tMgMemAvailable'>Unvailable - try a different browser</td></tr>" +
-                //"<tr><td>aOS Memory Alloted:</td><td id='tMgMemTaken'>Unavailable</td></tr>" +
-                //"<tr><td>aOS Memory Active:</td><td id='tMgMemActive'>Unavailable</td></tr>" +
-                //"<tr><td>Available Memory Alloted:</td><td><span id='tMgMemUsage'>Unavailable </span>%</td></tr>" +
-                //"<tr><td>Alloted Memory In Use:</td><td><span id='tMgMemAlloted'>Unavailable </span>%</td></tr>" +
                 "<tr><td>Code Pieces Waiting to Run:</td><td><span id='tMgCodeWait' class='liveElement' data-live-eval='codeToRun.length'>0</span></td></tr>" +
                 "<tr><td>Temp Speech Running:</td><td><span id='tMgSpeechRun' class='liveElement' data-live-eval='numtf(apps.nora.vars.contRecogRunning)'>false</span></td></tr>" +
                 "<tr><td>Temp Speech Storage:</td><td><span id='tMgSpeechStore' class='liveElement' data-live-eval='apps.nora.vars.currContTrans'></span></td></tr>" +
@@ -5296,49 +5334,11 @@ c(function(){
             if(this.vars.running.tMg.TskCheck){
                 removeInterval("tMg", "TskCheck");
             }
-            //this.vars.updateMem();
             this.vars.updateTsk();
-            //this.vars.updateMod();
-            //makeInterval("tMg", "MemCheck", "apps.taskManager.vars.updateMem()", 1000);
             makeInterval("tMg", "TskCheck", "apps.taskManager.vars.updateTsk()", 250);
-            //makeInterval("tMg", "ModCheck", "apps.taskManager.vars.updateMod()", 500);
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    this.appWindow.alwaysOnTop(1);
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This is a makeshift Task Manager for aOS. It doesn\'t work that well, and sadly none of the apps actually use it.',
             memInfo: {},
             running: {
@@ -5350,17 +5350,7 @@ c(function(){
             cnv: null,
             ctx: null,
             changed: 0,
-            updateMem: function(){
-                //getId("tMgCodeWait").innerHTML = codeToRun.length;
-                // c(function(){apps.taskManager.vars.memInfo = window.performance.memory;});
-                // c(function(){getId("tMgMemAvailable").innerHTML = vartry('apps.taskManager.vars.memInfo.jsHeapSizeLimit') / 1000000 + " MB";});
-                // c(function(){getId("tMgMemTaken").innerHTML = vartry('apps.taskManager.vars.memInfo.totalJSHeapSize') / 1000000 + " MB";});
-                // c(function(){getId("tMgMemActive").innerHTML = vartry('apps.taskManager.vars.memInfo.usedJSHeapSize') / 1000000 + " MB";});
-                // c(function(){getId("tMgMemUsage").innerHTML = Math.round(vartry('apps.taskManager.vars.memInfo.totalJSHeapSize') / vartry('apps.taskManager.vars.memInfo.jsHeapSizeLimit') * 100);});
-                // c(function(){getId("tMgMemAlloted").innerHTML = Math.round(vartry('apps.taskManager.vars.memInfo.usedJSHeapSize') / vartry('apps.taskManager.vars.memInfo.totalJSHeapSize') * 100);});
-                // c(function(){getId("tMgSpeechStore").innerHTML = apps.nora.vars.currContTrans;});
-                // c(function(){getId("tMgSpeechRun").innerHTML = numtf(apps.nora.vars.contRecogRunning);});
-            },
+            updateMem: function(){},
             updateTsk: function(){
                 if(apps.taskManager.vars.changed){
                     try{getId("tMgTaskList").innerHTML = "<li>APP<ul><li>TaskName | Command | Interval (ms)</li></ul></li>";}catch(err){}
@@ -5382,11 +5372,9 @@ c(function(){
                     apps.taskManager.vars.changed = 0;
                 }
             },
-            updateMod: function(){
-                //getId("tMgModule").innerHTML = [modulelast, module];
-            }
-        }, 1, "taskManager", "appicons/ds/systemApp.png"
-    );
+            updateMod: function(){}
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'JavaScript Console';
 });
 function makeTimeout(appname, taskname, functionname, functiontime){
@@ -5445,20 +5433,30 @@ function setCurrentSelection(){
 requestAnimationFrame(setCurrentSelection);
 c(function(){
     m('init jsC');
-    apps.jsConsole = new Application(
-        "jsC",
-        "JavaScript Console",
-        1,
-        function(launchType){
+    apps.jsConsole = new Application({
+        title: "JavaScript Console",
+        abbreviation: "jsC",
+        codeName: "jsConsole",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/jsConsole/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        },
+        hideApp: 0,
+        launchTypes: 1,
+        main: function(launchType){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 1000, 500);
             }
             this.appWindow.setCaption(lang('jsConsole', 'caption'));
             this.appWindow.setContent(
-                '<div id="cnsTrgt" style="width:100%; height:calc(100% - 18px); font-family:aosProFont,Courier,monospace; font-size:12px; top:0px; left:0px; overflow:scroll"></div>' +
+                '<div id="cnsTrgt" style="width:100%; height:calc(100% - 18px); font-family:aosProFont,Courier,monospace; font-size:12px; top:0px; left:0px; overflow-y:scroll; overflow-x:auto;"></div>' +
                 '<input id="cnsIn" onKeydown="if(event.keyCode === 13){apps.jsConsole.vars.runInput()}" placeholder="' + lang('jsConsole', 'input') + '" style="position:absolute; bottom:0px; font-family:aosProFont,Courier,monospace;display:block; padding:0; font-size:12px; width:90%; left:0px; height:16px;">' +
-                '<button id="cnsB"onClick="apps.jsConsole.vars.runInput()" style="font-size:12px; position:absolute; display:block; width:10%; height:18px; bottom:0px; right:0px;">' + lang('jsConsole', 'runCode') + '</button>'
+                '<button id="cnsB" onClick="apps.jsConsole.vars.runInput()" style="font-size:12px; position:absolute; display:block; width:10%; height:18px; bottom:0px; right:0px;">' + lang('jsConsole', 'runCode') + '</button>'
             );
             this.appWindow.openWindow();
             getId("cnsTrgt").innerHTML = '<span style="color:' + this.vars.cnsPosts[1] + ';">' + this.vars.cnsPosts[0] + '</span>';
@@ -5466,41 +5464,7 @@ c(function(){
                 getId("cnsTrgt").innerHTML += '<br><span style="color:' + this.vars.cnsPosts[j + 1] + ';">' + this.vars.cnsPosts[j] + '</span>';
             }
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This is a JavaScript console for quick debugging without having to open DevTools. It also has extra features like colored text and HTML formatting support.',
             cnsPosts: [
                 "JavaScript Console initialized.", '#D60',
@@ -5540,18 +5504,11 @@ c(function(){
                     doLog("?> Module: " + module, "#F00");
                 }
             }
-        }, 0, "jsConsole", {
-            backgroundColor: "#303947",
-            foreground: "smarticons/jsConsole/fg.png",
-            backgroundBorder: {
-                thickness: 2,
-                color: "#252F3A"
-            }
         }
-    );
+    });
     apps.jsConsole.main();
     requestAnimationFrame(function(){
-    apps.jsConsole.signalHandler("close");
+        apps.jsConsole.signalHandler("close");
     });
     doLog = function(msg, clr){
         console.log('%c' + msg, 'color:' + clr);
@@ -5571,11 +5528,20 @@ c(function(){
     getId('aOSloadingInfo').innerHTML = 'Bash Console';
 });
 c(function(){
-    apps.bash = new Application(
-        'sh',
-        'Psuedo-Bash Terminal',
-        0,
-        function(){
+    apps.bash = new Application({
+        title: 'Psuedo-Bash Terminal',
+        abbreviation: "sh",
+        codeName: "bash",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/bash/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        },
+        hideApp: 0,
+        main: function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setCaption(lang('appNames', 'bash'));
@@ -5586,49 +5552,11 @@ c(function(){
                 );
                 this.vars.checkPrefix();
                 getId('win_bash_html').style.overflowY = 'scroll';
+                getId("win_bash_html").style.overflowX = 'auto';
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    this.vars.prefix = '[' + SRVRKEYWORD.substring(0, 4) + '@aOS bash]$ ';
-                    this.vars.pastValue = '[' + SRVRKEYWORD.substring(0, 4) + '@aOS bash]$ ';
-                    
-                    if(ufload("aos_system/apps/bash/alias")){
-                        this.vars.alias = JSON.parse(ufload("aos_system/apps/bash/alias"));
-                    }
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This app is intended to imitate a Linux Bash Terminal, but is written completely in JavaScript. Type "help" for available commands and usage.',
             prefix: '[user@aOS bash]$ ',
             pastValue: '[user@aOS bash]$ ',
@@ -6502,26 +6430,60 @@ c(function(){
                     }
                 }
             ]
-        }, 1, 'bash', {
-            backgroundColor: "#303947",
-            foreground: "smarticons/bash/fg.png",
-            backgroundBorder: {
-                thickness: 2,
-                color: "#252F3A"
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    this.vars.prefix = '[' + SRVRKEYWORD.substring(0, 4) + '@aOS bash]$ ';
+                    this.vars.pastValue = '[' + SRVRKEYWORD.substring(0, 4) + '@aOS bash]$ ';
+                    
+                    if(ufload("aos_system/apps/bash/alias")){
+                        this.vars.alias = JSON.parse(ufload("aos_system/apps/bash/alias"));
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
             }
         }
-    );
+    });
     window.sh = function(input){
         return apps.bash.vars.execute(input, 1);
     }
     getId('aOSloadingInfo').innerHTML = 'CPU Monitor';
 });
 c(function(){
-    apps.cpuMon = new Application(
-        'CPU',
-        'CPU Monitor',
-        0,
-        function(){
+    apps.cpuMon = new Application({
+        title: "CPU Monitor",
+        abbreviation: "CPU",
+        codeName: "cpuMon",
+        image: "appicons/ds/systemApp.png",
+        hideApp: 1,
+        main: function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setCaption("CPU");
@@ -6541,7 +6503,22 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
+        vars: {
+            appInfo: 'A very simple graph of CPU usage over time. CPU usage is calculated by comparing the current FPS to the max FPS.',
+            drawInt: 0,
+            cnv: null,
+            ctx: null,
+            width: 200,
+            height: 100,
+            draw: function(){
+                apps.cpuMon.vars.ctx.drawImage(apps.cpuMon.vars.cnv, -1, 0);
+                apps.cpuMon.vars.ctx.fillStyle = '#000';
+                apps.cpuMon.vars.ctx.fillRect(apps.cpuMon.vars.width - 1, 0, 1, apps.cpuMon.vars.height);
+                apps.cpuMon.vars.ctx.fillStyle = '#0F0';
+                apps.cpuMon.vars.ctx.fillRect(apps.cpuMon.vars.width - 1, apps.cpuMon.vars.height - (parseInt(stringFPSload) / 100 * apps.cpuMon.vars.height), 1, apps.cpuMon.vars.height);
+            }
+        },
+        signalHandler: function(signal){
             switch(signal){
                 case "forceclose":
                     //this.vars = this.varsOriginal;
@@ -6575,32 +6552,27 @@ c(function(){
                 default:
                     doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
             }
-        },
-        {
-            appInfo: 'A very simple graph of CPU usage over time. CPU usage is calculated by comparing the current FPS to the max FPS.',
-            drawInt: 0,
-            cnv: null,
-            ctx: null,
-            width: 200,
-            height: 100,
-            draw: function(){
-                apps.cpuMon.vars.ctx.drawImage(apps.cpuMon.vars.cnv, -1, 0);
-                apps.cpuMon.vars.ctx.fillStyle = '#000';
-                apps.cpuMon.vars.ctx.fillRect(apps.cpuMon.vars.width - 1, 0, 1, apps.cpuMon.vars.height);
-                apps.cpuMon.vars.ctx.fillStyle = '#0F0';
-                apps.cpuMon.vars.ctx.fillRect(apps.cpuMon.vars.width - 1, apps.cpuMon.vars.height - (parseInt(stringFPSload) / 100 * apps.cpuMon.vars.height), 1, apps.cpuMon.vars.height);
-            }
-        }, 1, "cpuMon", "appicons/ds/systemApp.png"
-    );
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'Prompt System';
 });
 c(function(){
     m('init PMT');
-    apps.prompt = new Application(
-        "PMT",
-        "Application Prompt",
-        1,
-        function(launchtype){
+    apps.prompt = new Application({
+        title: "Application Prompt",
+        abbreviation: "PMT",
+        codeName: "prompt",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/prompt/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        },
+        hideApp: 2,
+        launchTypes: 1,
+        main: function(launchtype){
             if(launchtype === 'dsktp'){
                 if(!this.appWindow.appIcon){
                     this.appWindow.setDims("auto", "auto", 500, 300);
@@ -6613,61 +6585,7 @@ c(function(){
                 this.vars.checkNotifs();
             }
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    window.setTimeout(function(){
-                        /*apps.prompt.vars.hideNotifs();*/
-                        apps.prompt.vars.checkPrompts();
-                    }, 0);
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    if(safeMode){
-                        apps.prompt.vars.alert('Safe mode is enabled. Most of your settings will be ignored, so that you can fix something you may have recently broken. Your files are still in place.<br><br>To exit safe mode, simply remove the "?safe=true" from the URL.', 'Okay', function(){}, 'AaronOS');
-                    }
-                    /*
-                    if(typeof USERFILES.CONFIRM_ADMIN_MESSAGE === 'string'){
-                        if(USERFILES.CONFIRM_ADMIN_MESSAGE.length > 1){
-                            this.vars.confirm('Personal message from admin:<br>' + USERFILES.CONFIRM_ADMIN_MESSAGE, ['OK, Delete Message', 'OK, Keep Message'], function(button){
-                                if(!button){
-                                    USERFILES.CONFIRM_ADMIN_MESSAGE = ' ';
-                                    apps.savemaster.vars.save('CONFIRM_ADMIN_MESSAGE', ' ', 1);
-                                }
-                            }, 'aOS');
-                        }
-                    }
-                    */
-                    this.appWindow.alwaysOnTop(1);
-                    this.appWindow.paddingMode(1);
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This is a prompt or alert box used for applications to create simple messages or get simple input from the user.',
             prompts: [],
             currprompt: [],
@@ -6960,15 +6878,50 @@ c(function(){
             checkPrompts: function(){
                 this.checkNotifs();
             }
-        }, 2, "prompt", {
-            backgroundColor: "#303947",
-            foreground: "smarticons/prompt/fg.png",
-            backgroundBorder: {
-                thickness: 2,
-                color: "#252F3A"
+        },
+        signalHander: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    window.setTimeout(function(){
+                        /*apps.prompt.vars.hideNotifs();*/
+                        apps.prompt.vars.checkPrompts();
+                    }, 0);
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(safeMode){
+                        apps.prompt.vars.alert('Safe mode is enabled. Most of your settings will be ignored, so that you can fix something you may have recently broken. Your files are still in place.<br><br>To exit safe mode, simply remove the "?safe=true" from the URL.', 'Okay', function(){}, 'AaronOS');
+                    }
+                    this.appWindow.alwaysOnTop(1);
+                    this.appWindow.paddingMode(1);
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
             }
         }
-    );
+    });
     openapp(apps.prompt, 'dsktp');
     requestAnimationFrame(function(){
         apps.prompt.signalHandler('close');
@@ -6977,11 +6930,21 @@ c(function(){
 });
 c(function(){
     m('init STN');
-    apps.settings = new Application(
-        "STN",
-        "Settings",
-        1,
-        function(launchtype){
+    apps.settings = new Application({
+        title: "Settings",
+        abbreviation: "STN",
+        codeName: "settings",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/settings/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        },
+        hideApp: 0,
+        launchTypes: 1,
+        main: function(launchtype){
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims("auto", "auto", 700, 400);
             }
@@ -7050,276 +7013,7 @@ c(function(){
                 this.appWindow.openWindow();
             }
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    if(localStorage.getItem("askedPassword") !== "1" && !(typeof USERFILES.aOSpassword === "string")){
-                        window.setTimeout(function(){
-                            if(!(typeof USERFILES.aOSpassword === "string")){
-                                apps.prompt.vars.notify("Please set a password on your account in Settings to protect it.", ["Set Password", "Cancel"], function(btn){
-                                    if(btn === 0){
-                                        openapp(apps.settings, "dsktp");
-                                        apps.settings.vars.showMenu(apps.settings.vars.menus.info);
-                                    }else{
-                                        apps.prompt.vars.notify("In the future, you can go to Settings -&gt; Information to set a password on your account.", ["Okay"], function(){}, 'AaronOS', 'appicons/ds/aOS.png');
-                                    }
-                                }, 'AaronOS', 'appicons/ds/aOS.png');
-                                localStorage.setItem("askedPassword", "1");
-                            }
-                        }, 600000);
-                    }
-                    window.setTimeout(function(){
-                        getId('aOSloadingInfo').innerHTML = 'Welcome.';
-                        getId('desktop').style.display = '';
-                        getId('taskbar').style.display = '';
-                    }, 0);
-                    window.setTimeout(function(){
-                        getId('aOSisLoading').style.opacity = 0;
-                        getId('aOSloadingBg').style.opacity = 0;
-                    }, 5);
-                    window.setTimeout(function(){
-                        getId('aOSisLoading').style.display = 'none';
-                        getId('aOSisLoading').innerHTML = '';
-                        getId('aOSloadingBg').style.display = 'none';
-                    }, 1005);
-                    window.setTimeout(function(){
-                        openapp(apps.settings, 'oldMenuHide');
-                        if(!safeMode){
-                            if(ufload("aos_system/desktop/background_image")){
-                                getId("bckGrndImg").value = ufload("aos_system/desktop/background_image");
-                                apps.settings.vars.sB(1);
-                            }
-                            if(ufload("aos_system/windows/backdropfilter_blur")){
-                                if(ufload("aos_system/windows/backdropfilter_blur") === "0"){
-                                    apps.settings.vars.togBackdropFilter(1);
-                                }
-                            }else if(!backdropFilterSupport){
-                                apps.settings.vars.togBackdropFilter(1);
-                            }
-                            if(ufload("aos_system/windows/blur_enabled")){
-                                if(ufload("aos_system/windows/blur_enabled") === "1"){
-                                    apps.settings.vars.togAero(1);
-                                }
-                            }else if(!backdropFilterSupport){
-                                if(cssFilterSupport){
-                                    apps.settings.vars.togAero(1);
-                                }
-                            }
-                            if(ufload("aos_system/windows/border_color")){
-                                getId("STNwinColorInput").value = ufload("aos_system/windows/border_color");
-                                apps.settings.vars.setWinColor(1);
-                            }
-                            if(ufload("aos_system/windows/blur_blendmode")){
-                                getId("STNwinBlendInput").value = ufload("aos_system/windows/blur_blendmode");
-                                apps.settings.vars.setWinBlend(1);
-                            }
-                            if(ufload("aos_system/windows/blur_radius")){
-                                getId("STNwinblurRadius").value = ufload("aos_system/windows/blur_radius");
-                                apps.settings.vars.setAeroRad(1);
-                            }
-                            if(ufload("aos_system/windows/border_width")){
-                                apps.settings.vars.setWinBorder(ufload("aos_system/windows/border_width"), 1);
-                            }
-                            if(ufload("aos_system/windows/distort_enabled")){
-                                if(ufload("aos_system/windows/distort_enabled") === "1"){
-                                    apps.settings.vars.togDispMap(1);
-                                }
-                            }
-                            if(ufload("aos_system/windows/controls_on_left")){
-                                if(ufload("aos_system/windows/controls_on_left") === "1"){
-                                    apps.settings.vars.togCaptionButtonsLeft(1);
-                                }
-                            }
-                            if(ufload("aos_system/language")){
-                                currentlanguage = ufload("aos_system/language");
-                            }
-                            if(ufload("aos_system/noraa/listen_enabled")){
-                                if(ufload("aos_system/noraa/listen_enabled") === 1){
-                                    apps.settings.vars.togNoraListen(1);
-                                }
-                            }
-                            if(ufload("aos_system/noraa/listen_phrase")){
-                                apps.settings.vars.currNoraPhrase = ufload("aos_system/noraa/listen_phrase");
-                            }
-                            if(ufload("aos_system/apps/settings/data_collect_enabled")){
-                                apps.settings.vars.collectData = parseInt(ufload("aos_system/apps/settings/data_collect_enabled"), 10);
-                            }
-                            if(ufload("aos_system/noraa/adv_help_enabled")){
-                                if(ufload("aos_system/noraa/adv_help_enabled") === "0"){
-                                    apps.settings.vars.togNoraHelpTopics(1);
-                                }
-                            }
-                            if(ufload("aos_system/apps/settings/ctxmenu_two_fingers")){
-                                if(ufload("aos_system/apps/settings/ctxmenu_two_fingers") === "1"){
-                                    apps.settings.vars.togLongTap(1);
-                                }
-                            }
-                            if(ufload("aos_system/windows/border_texture_enabled")){
-                                if(ufload("aos_system/windows/border_texture_enabled") === "0"){
-                                    apps.settings.vars.togWinImg(1);
-                                }
-                            }
-                            if(ufload("aos_system/windows/border_texture")){
-                                getId("STNwinImgInput").value = ufload("aos_system/windows/border_texture");
-                                apps.settings.vars.setWinImg(1);
-                            }
-                            if(ufload("aos_system/clipboard_slots")){
-                                textEditorTools.slots = parseInt(ufload("aos_system/clipboard_slots"));
-                                textEditorTools.updateSlots();
-                            }
-                            if(ufload("aos_system/clipboard")){
-                                if(ufload("aos_system/clipboard") !== '_cleared_clipboard_'){
-                                    textEditorTools.clipboard = JSON.parse(ufload("aos_system/clipboard"));
-                                    if(textEditorTools.clipboard.length < textEditorTools.slots){
-                                        while(textEditorTools.clipboard.length < textEditorTools.slots){
-                                            textEditorTools.clipboard.push("");
-                                        }
-                                    }
-                                }
-                            }
-                            apps.settings.vars.setScale(ufload("aos_system/apps/settings/ui_scale") || "1", 1);
-                            if(ufload("aos_system/apps/settings/saved_screen_res")){
-                                apps.settings.vars.tempResArray = ufload("aos_system/apps/settings/saved_screen_res").split('/');
-                                fitWindowRes(apps.settings.vars.tempResArray[0], apps.settings.vars.tempResArray[1]);
-                            }
-                            if(ufload("aos_system/apps/settings/cors_proxy")){
-                                apps.settings.vars.corsProxy = ufload("aos_system/apps/settings/cors_proxy");
-                            }
-                            if(ufload("aos_system/user_custom_style")){
-                                getId('aosCustomStyle').innerHTML = ufload("aos_system/user_custom_style");
-                            }
-                            if(ufload("aos_system/windows/dark_mode")){
-                                if(ufload("aos_system/windows/dark_mode") === "1"){
-                                    apps.settings.vars.togDarkMode(1);
-                                }
-                            }
-                            if(ufload("aos_system/apps/settings/mobile_mode")){
-                                apps.settings.vars.setMobileMode(ufload("aos_system/apps/settings/mobile_mode"), 1)
-                            }
-                            if(ufload("aos_system/desktop/background_fit")){
-                                apps.settings.vars.setBgFit(ufload("aos_system/desktop/background_fit"), 1);
-                            }
-                            if(ufload("aos_system/desktop/background_live_enabled")){
-                                if(ufload("aos_system/desktop/background_live_enabled") === "1"){
-                                    apps.settings.vars.togLiveBg(1);
-                                }
-                            }
-                            if(ufload("aos_system/desktop/background_live_url")){
-                                apps.settings.vars.setLiveBg(ufload("aos_system/desktop/background_live_url"), 1);
-                            }
-                            if(ufload("aos_system/desktop/background_parallax_layers")){
-                                apps.settings.vars.setPrlxBg(ufload("aos_system/desktop/background_parallax_layers"), 1);
-                            }
-                            if(ufload("aos_system/desktop/background_parallax_enabled")){
-                                if(ufload("aos_system/desktop/background_parallax_enabled") === "1"){
-                                    apps.settings.vars.togPrlxBg(1);
-                                }
-                            }
-                            if(ufload("aos_system/screensaver/enabled")){
-                                if(ufload("aos_system/screensaver/enabled") === "0"){
-                                    apps.settings.vars.togScreensaver();
-                                }
-                            }
-                            if(ufload("aos_system/screensaver/idle_time")){
-                                apps.settings.vars.screensaverTime = parseInt(ufload("aos_system/screensaver/idle_time"), 10);
-                            }
-                            if(ufload("aos_system/screensaver/selected_screensaver")){
-                                apps.settings.vars.currScreensaver = ufload("aos_system/screensaver/selected_screensaver");
-                            }
-                            apps.settings.vars.screensaverTimer = window.setInterval(apps.settings.vars.checkScreensaver, 1000);
-                            if(ufload("aos_system/taskbar/position")){
-                                apps.settings.vars.setTskbrPos(parseInt(ufload("aos_system/taskbar/position"), 10), 1);
-                            }
-                            if(ufload("aos_system/apps/settings/performance_mode")){
-                                if(ufload("aos_system/apps/settings/performance_mode") === "1"){
-                                    apps.settings.vars.togPerformanceMode();
-                                }
-                            }
-                            if(ufload("aos_system/windows/fade_distance")){
-                                setTimeout(function(){
-                                    apps.settings.vars.setFadeDistance(ufload("aos_system/windows/fade_distance"), 1);
-                                }, 100);
-                            }else{
-                                setTimeout(function(){
-                                    apps.settings.vars.setFadeDistance("0.5", 1);
-                                }, 1000);
-                            }
-                            if(typeof ufload("aos_system/taskbar/pinned_apps") === "string"){
-                                pinnedApps = JSON.parse(ufload("aos_system/taskbar/pinned_apps"));
-                                for(var i in pinnedApps){
-                                    getId('icn_' + pinnedApps[i]).style.display = 'inline-block';
-                                }
-                            }
-                        }
-                        
-                        // google play settings
-                        if(sessionStorage.getItem('GooglePlay') === 'true'){
-                            if(ufload("aos_system/apps/settings/performance_mode") !== "1"){
-                                apps.settings.vars.togPerformanceMode(1);
-                            }
-                            if(ufload("aos_system/windows/blur_enabled") !== "0"){
-                                apps.settings.vars.togAero(1);
-                            }
-                            
-                            try{
-                                if(localStorage.getItem('notifyGPlay') !== "1"){
-                                    localStorage.setItem('notifyGPlay', "1");
-                                    apps.prompt.vars.notify('Looks like you logged in through Google Play!<br>These settings were automatically set for you...<br><br>Performance Mode is on.<br>Screen scaling set to 1/2 if your device is 1080p or higher.<br>Tap a titlebar on a window, and then click somewhere else again, to move  a window. You can also resize them on the bottom-right corner.', [], function(){}, 'Google Play', 'appicons/ds/aOS.png');
-                                }
-                            }catch(localStorageNotSupported){
-                                apps.prompt.vars.notify('Looks like you logged in through Google Play!<br>These settings were automatically set for you...<br><br>Performance Mode is on.<br>Screen scaling set to 1/2 if your device is 1080p or higher.<br>Tap a titlebar on a window, and then click somewhere else again, to move  a window. You can also resize them on the bottom-right corner.', [], function(){}, 'Google Play', 'appicons/ds/aOS.png');
-                            }
-                        }
-                        
-                        if(sessionStorage.getItem('fullscreen') === 'true'){
-                            setTimeout(apps.settings.vars.reqFullscreen, 5000);
-                        }
-                        if(!safeMode){
-                            var dsktpIconFolder = ufload("aos_system/desktop/");
-                            if(dsktpIconFolder){
-                                for(var file in dsktpIconFolder){
-                                    if(file.indexOf('ico_') === 0){
-                                        if(getId(file.substring(10, 16)) !== null){
-                                            getId(file.substring(4, file.length)).style.left = eval(USERFILES[file])[0] + "px";
-                                            getId(file.substring(4, file.length)).style.top = eval(USERFILES[file])[1] + "px";
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        apps.settings.appWindow.closeWindow();
-                    }, 0);
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This app contains all official settings for AaronOS.<br><br>If these settings are not enough for you, and you are a very advanced user, you can use the following apps to completely control AaronOS:<br><ul><li>BootScript</li><li>CustomStyle Editor</li></ul>',
             language: {
                 en: {
@@ -8983,54 +8677,8 @@ c(function(){
                     }, 'aOS');
                 }
             }
-        }, 0, "settings", {
-            backgroundColor: "#303947",
-            foreground: "smarticons/settings/fg.png",
-            backgroundBorder: {
-                thickness: 2,
-                color: "#252F3A"
-            }
-        }
-    );
-    window.restartRequired = 0;
-    window.requireRestart = function(){
-        if(restartRequired !== 1){
-            restartRequired = 1;
-            apps.prompt.vars.notify("A change was made that requires a restart of AaronOS.", ["Restart", "Dismiss"], function(btn){
-                if(btn === 0){
-                    apps.settings.vars.shutDown('restart');
-                }
-                restartRequired = 2;
-            }, "AaronOS", "appicons/ds/aOS.png");
-        }
-    }
-    getId('aOSloadingInfo').innerHTML = 'Smart Icon Settings';
-});
-c(function(){
-    apps.smartIconSettings = new Application(
-        'SIS',
-        'Smart Icon Settings',
-        1,
-        function(launchtype){
-            this.appWindow.setCaption("Smart Icon Settings");
-            this.appWindow.setDims("auto", "auto", 800, 600);
-            this.appWindow.setContent(
-                '<div style="position:relative;width:100%;height:256px;padding-top:10px;padding-bottom:10px;background:#000;box-shadow:0 0 5px #000;text-align:center;">' +
-                buildSmartIcon(256, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(128, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(64, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(32, this.vars.aOSicon) +
-                '</div>' +
-                '<br><br>&nbsp;Border Radius:<br>' +
-                '&nbsp;<input id="smartIconSettings_tl" value="' + smartIconOptions.radiusTopLeft + '" size="3" placeholder="100"> ' + '<div style="width:64px;position:relative;display:inline-block"></div> ' +
-                '<input id="smartIconSettings_tr" value="' + smartIconOptions.radiusTopRight + '" size="3" placeholder="100">' + '<br>' +
-                '&nbsp;<input id="smartIconSettings_bl" value="' + smartIconOptions.radiusBottomLeft + '" size="3" placeholder="100"> ' + buildSmartIcon(64, this.vars.aOSicon, 'margin-top:-1em') + ' ' +
-                '<input id="smartIconSettings_br" value="' + smartIconOptions.radiusBottomRight + '" size="3" placeholder="100">' + '<br><br>' +
-                '&nbsp;<button onclick="apps.smartIconSettings.vars.saveRadiuses()">Save</button> ' +
-                '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br><br>' +
-                '<input id="smartIconSettings_bgcolor" value="' + smartIconOptions.bgColor + '" placeholder="color"> <button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button>'
-            );
-            this.appWindow.paddingMode(0);
-            this.appWindow.openWindow();
         },
-        function(signal){
+        signalHandler: function(signal){
             switch(signal){
                 case "forceclose":
                     //this.vars = this.varsOriginal;
@@ -9055,10 +8703,242 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    if(ufload("aos_system/smarticon_settings")){
-                        smartIconOptions = JSON.parse(ufload("aos_system/smarticon_settings"));
-                        updateSmartIconStyle();
+                    if(localStorage.getItem("askedPassword") !== "1" && !(typeof USERFILES.aOSpassword === "string")){
+                        window.setTimeout(function(){
+                            if(!(typeof USERFILES.aOSpassword === "string")){
+                                apps.prompt.vars.notify("Please set a password on your account in Settings to protect it.", ["Set Password", "Cancel"], function(btn){
+                                    if(btn === 0){
+                                        openapp(apps.settings, "dsktp");
+                                        apps.settings.vars.showMenu(apps.settings.vars.menus.info);
+                                    }else{
+                                        apps.prompt.vars.notify("In the future, you can go to Settings -&gt; Information to set a password on your account.", ["Okay"], function(){}, 'AaronOS', 'appicons/ds/aOS.png');
+                                    }
+                                }, 'AaronOS', 'appicons/ds/aOS.png');
+                                localStorage.setItem("askedPassword", "1");
+                            }
+                        }, 600000);
                     }
+                    window.setTimeout(function(){
+                        getId('aOSloadingInfo').innerHTML = 'Welcome.';
+                        getId('desktop').style.display = '';
+                        getId('taskbar').style.display = '';
+                    }, 0);
+                    window.setTimeout(function(){
+                        getId('aOSisLoading').style.opacity = 0;
+                        getId('aOSloadingBg').style.opacity = 0;
+                    }, 5);
+                    window.setTimeout(function(){
+                        getId('aOSisLoading').style.display = 'none';
+                        getId('aOSisLoading').innerHTML = '';
+                        getId('aOSloadingBg').style.display = 'none';
+                    }, 1005);
+                    window.setTimeout(function(){
+                        openapp(apps.settings, 'oldMenuHide');
+                        if(!safeMode){
+                            if(ufload("aos_system/desktop/background_image")){
+                                getId("bckGrndImg").value = ufload("aos_system/desktop/background_image");
+                                apps.settings.vars.sB(1);
+                            }
+                            if(ufload("aos_system/windows/backdropfilter_blur")){
+                                if(ufload("aos_system/windows/backdropfilter_blur") === "0"){
+                                    apps.settings.vars.togBackdropFilter(1);
+                                }
+                            }else if(!backdropFilterSupport){
+                                apps.settings.vars.togBackdropFilter(1);
+                            }
+                            if(ufload("aos_system/windows/blur_enabled")){
+                                if(ufload("aos_system/windows/blur_enabled") === "1"){
+                                    apps.settings.vars.togAero(1);
+                                }
+                            }else if(!backdropFilterSupport){
+                                if(cssFilterSupport){
+                                    apps.settings.vars.togAero(1);
+                                }
+                            }
+                            if(ufload("aos_system/windows/border_color")){
+                                getId("STNwinColorInput").value = ufload("aos_system/windows/border_color");
+                                apps.settings.vars.setWinColor(1);
+                            }
+                            if(ufload("aos_system/windows/blur_blendmode")){
+                                getId("STNwinBlendInput").value = ufload("aos_system/windows/blur_blendmode");
+                                apps.settings.vars.setWinBlend(1);
+                            }
+                            if(ufload("aos_system/windows/blur_radius")){
+                                getId("STNwinblurRadius").value = ufload("aos_system/windows/blur_radius");
+                                apps.settings.vars.setAeroRad(1);
+                            }
+                            if(ufload("aos_system/windows/border_width")){
+                                apps.settings.vars.setWinBorder(ufload("aos_system/windows/border_width"), 1);
+                            }
+                            if(ufload("aos_system/windows/distort_enabled")){
+                                if(ufload("aos_system/windows/distort_enabled") === "1"){
+                                    apps.settings.vars.togDispMap(1);
+                                }
+                            }
+                            if(ufload("aos_system/windows/controls_on_left")){
+                                if(ufload("aos_system/windows/controls_on_left") === "1"){
+                                    apps.settings.vars.togCaptionButtonsLeft(1);
+                                }
+                            }
+                            if(ufload("aos_system/language")){
+                                currentlanguage = ufload("aos_system/language");
+                            }
+                            if(ufload("aos_system/noraa/listen_enabled")){
+                                if(ufload("aos_system/noraa/listen_enabled") === 1){
+                                    apps.settings.vars.togNoraListen(1);
+                                }
+                            }
+                            if(ufload("aos_system/noraa/listen_phrase")){
+                                apps.settings.vars.currNoraPhrase = ufload("aos_system/noraa/listen_phrase");
+                            }
+                            if(ufload("aos_system/apps/settings/data_collect_enabled")){
+                                apps.settings.vars.collectData = parseInt(ufload("aos_system/apps/settings/data_collect_enabled"), 10);
+                            }
+                            if(ufload("aos_system/noraa/adv_help_enabled")){
+                                if(ufload("aos_system/noraa/adv_help_enabled") === "0"){
+                                    apps.settings.vars.togNoraHelpTopics(1);
+                                }
+                            }
+                            if(ufload("aos_system/apps/settings/ctxmenu_two_fingers")){
+                                if(ufload("aos_system/apps/settings/ctxmenu_two_fingers") === "1"){
+                                    apps.settings.vars.togLongTap(1);
+                                }
+                            }
+                            if(ufload("aos_system/windows/border_texture_enabled")){
+                                if(ufload("aos_system/windows/border_texture_enabled") === "0"){
+                                    apps.settings.vars.togWinImg(1);
+                                }
+                            }
+                            if(ufload("aos_system/windows/border_texture")){
+                                getId("STNwinImgInput").value = ufload("aos_system/windows/border_texture");
+                                apps.settings.vars.setWinImg(1);
+                            }
+                            if(ufload("aos_system/clipboard_slots")){
+                                textEditorTools.slots = parseInt(ufload("aos_system/clipboard_slots"));
+                                textEditorTools.updateSlots();
+                            }
+                            if(ufload("aos_system/clipboard")){
+                                if(ufload("aos_system/clipboard") !== '_cleared_clipboard_'){
+                                    textEditorTools.clipboard = JSON.parse(ufload("aos_system/clipboard"));
+                                    if(textEditorTools.clipboard.length < textEditorTools.slots){
+                                        while(textEditorTools.clipboard.length < textEditorTools.slots){
+                                            textEditorTools.clipboard.push("");
+                                        }
+                                    }
+                                }
+                            }
+                            apps.settings.vars.setScale(ufload("aos_system/apps/settings/ui_scale") || "1", 1);
+                            if(ufload("aos_system/apps/settings/saved_screen_res")){
+                                apps.settings.vars.tempResArray = ufload("aos_system/apps/settings/saved_screen_res").split('/');
+                                fitWindowRes(apps.settings.vars.tempResArray[0], apps.settings.vars.tempResArray[1]);
+                            }
+                            if(ufload("aos_system/apps/settings/cors_proxy")){
+                                apps.settings.vars.corsProxy = ufload("aos_system/apps/settings/cors_proxy");
+                            }
+                            if(ufload("aos_system/user_custom_style")){
+                                getId('aosCustomStyle').innerHTML = ufload("aos_system/user_custom_style");
+                            }
+                            if(ufload("aos_system/windows/dark_mode")){
+                                if(ufload("aos_system/windows/dark_mode") === "1"){
+                                    apps.settings.vars.togDarkMode(1);
+                                }
+                            }
+                            if(ufload("aos_system/apps/settings/mobile_mode")){
+                                apps.settings.vars.setMobileMode(ufload("aos_system/apps/settings/mobile_mode"), 1)
+                            }
+                            if(ufload("aos_system/desktop/background_fit")){
+                                apps.settings.vars.setBgFit(ufload("aos_system/desktop/background_fit"), 1);
+                            }
+                            if(ufload("aos_system/desktop/background_live_enabled")){
+                                if(ufload("aos_system/desktop/background_live_enabled") === "1"){
+                                    apps.settings.vars.togLiveBg(1);
+                                }
+                            }
+                            if(ufload("aos_system/desktop/background_live_url")){
+                                apps.settings.vars.setLiveBg(ufload("aos_system/desktop/background_live_url"), 1);
+                            }
+                            if(ufload("aos_system/desktop/background_parallax_layers")){
+                                apps.settings.vars.setPrlxBg(ufload("aos_system/desktop/background_parallax_layers"), 1);
+                            }
+                            if(ufload("aos_system/desktop/background_parallax_enabled")){
+                                if(ufload("aos_system/desktop/background_parallax_enabled") === "1"){
+                                    apps.settings.vars.togPrlxBg(1);
+                                }
+                            }
+                            if(ufload("aos_system/screensaver/enabled")){
+                                if(ufload("aos_system/screensaver/enabled") === "0"){
+                                    apps.settings.vars.togScreensaver();
+                                }
+                            }
+                            if(ufload("aos_system/screensaver/idle_time")){
+                                apps.settings.vars.screensaverTime = parseInt(ufload("aos_system/screensaver/idle_time"), 10);
+                            }
+                            if(ufload("aos_system/screensaver/selected_screensaver")){
+                                apps.settings.vars.currScreensaver = ufload("aos_system/screensaver/selected_screensaver");
+                            }
+                            apps.settings.vars.screensaverTimer = window.setInterval(apps.settings.vars.checkScreensaver, 1000);
+                            if(ufload("aos_system/taskbar/position")){
+                                apps.settings.vars.setTskbrPos(parseInt(ufload("aos_system/taskbar/position"), 10), 1);
+                            }
+                            if(ufload("aos_system/apps/settings/performance_mode")){
+                                if(ufload("aos_system/apps/settings/performance_mode") === "1"){
+                                    apps.settings.vars.togPerformanceMode();
+                                }
+                            }
+                            if(ufload("aos_system/windows/fade_distance")){
+                                setTimeout(function(){
+                                    apps.settings.vars.setFadeDistance(ufload("aos_system/windows/fade_distance"), 1);
+                                }, 100);
+                            }else{
+                                setTimeout(function(){
+                                    apps.settings.vars.setFadeDistance("0.5", 1);
+                                }, 1000);
+                            }
+                            if(typeof ufload("aos_system/taskbar/pinned_apps") === "string"){
+                                pinnedApps = JSON.parse(ufload("aos_system/taskbar/pinned_apps"));
+                                for(var i in pinnedApps){
+                                    getId('icn_' + pinnedApps[i]).style.display = 'inline-block';
+                                }
+                            }
+                        }
+                        
+                        // google play settings
+                        if(sessionStorage.getItem('GooglePlay') === 'true'){
+                            if(ufload("aos_system/apps/settings/performance_mode") !== "1"){
+                                apps.settings.vars.togPerformanceMode(1);
+                            }
+                            if(ufload("aos_system/windows/blur_enabled") !== "0"){
+                                apps.settings.vars.togAero(1);
+                            }
+                            
+                            try{
+                                if(localStorage.getItem('notifyGPlay') !== "1"){
+                                    localStorage.setItem('notifyGPlay', "1");
+                                    apps.prompt.vars.notify('Looks like you logged in through Google Play!<br>These settings were automatically set for you...<br><br>Performance Mode is on.<br>Screen scaling set to 1/2 if your device is 1080p or higher.<br>Tap a titlebar on a window, and then click somewhere else again, to move  a window. You can also resize them on the bottom-right corner.', [], function(){}, 'Google Play', 'appicons/ds/aOS.png');
+                                }
+                            }catch(localStorageNotSupported){
+                                apps.prompt.vars.notify('Looks like you logged in through Google Play!<br>These settings were automatically set for you...<br><br>Performance Mode is on.<br>Screen scaling set to 1/2 if your device is 1080p or higher.<br>Tap a titlebar on a window, and then click somewhere else again, to move  a window. You can also resize them on the bottom-right corner.', [], function(){}, 'Google Play', 'appicons/ds/aOS.png');
+                            }
+                        }
+                        
+                        if(sessionStorage.getItem('fullscreen') === 'true'){
+                            setTimeout(apps.settings.vars.reqFullscreen, 5000);
+                        }
+                        if(!safeMode){
+                            var dsktpIconFolder = ufload("aos_system/desktop/");
+                            if(dsktpIconFolder){
+                                for(var file in dsktpIconFolder){
+                                    if(file.indexOf('ico_') === 0){
+                                        if(getId(file.substring(10, 16)) !== null){
+                                            getId(file.substring(4, file.length)).style.left = eval(USERFILES[file])[0] + "px";
+                                            getId(file.substring(4, file.length)).style.top = eval(USERFILES[file])[1] + "px";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        apps.settings.appWindow.closeWindow();
+                    }, 0);
                     break;
                 case 'shutdown':
                         
@@ -9066,8 +8946,57 @@ c(function(){
                 default:
                     console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
             }
+        }
+    });
+    window.restartRequired = 0;
+    window.requireRestart = function(){
+        if(restartRequired !== 1){
+            restartRequired = 1;
+            apps.prompt.vars.notify("A change was made that requires a restart of AaronOS.", ["Restart", "Dismiss"], function(btn){
+                if(btn === 0){
+                    apps.settings.vars.shutDown('restart');
+                }
+                restartRequired = 2;
+            }, "AaronOS", "appicons/ds/aOS.png");
+        }
+    }
+    getId('aOSloadingInfo').innerHTML = 'Smart Icon Settings';
+});
+c(function(){
+    apps.smartIconSettings = new Application({
+        title: "Smart Icon Settings",
+        abbreviation: "SIS",
+        codeName: "smartIconSettings",
+        image: {
+            backgroundColor: "#303947",
+        	foreground: "smarticons/aOS/fg.png",
+        	backgroundBorder: {
+        		thickness: 2,
+        		color: "#252F3A"
+        	}
         },
-        {
+        hideApp: 1,
+        launchTypes: 1,
+        main: function(launchtype){
+            this.appWindow.setCaption("Smart Icon Settings");
+            this.appWindow.setDims("auto", "auto", 800, 600);
+            this.appWindow.setContent(
+                '<div style="position:relative;width:100%;height:256px;padding-top:10px;padding-bottom:10px;background:#000;box-shadow:0 0 5px #000;text-align:center;">' +
+                buildSmartIcon(256, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(128, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(64, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(32, this.vars.aOSicon) +
+                '</div>' +
+                '<br><br>&nbsp;Border Radius:<br>' +
+                '&nbsp;<input id="smartIconSettings_tl" value="' + smartIconOptions.radiusTopLeft + '" size="3" placeholder="100"> ' + '<div style="width:64px;position:relative;display:inline-block"></div> ' +
+                '<input id="smartIconSettings_tr" value="' + smartIconOptions.radiusTopRight + '" size="3" placeholder="100">' + '<br>' +
+                '&nbsp;<input id="smartIconSettings_bl" value="' + smartIconOptions.radiusBottomLeft + '" size="3" placeholder="100"> ' + buildSmartIcon(64, this.vars.aOSicon, 'margin-top:-1em') + ' ' +
+                '<input id="smartIconSettings_br" value="' + smartIconOptions.radiusBottomRight + '" size="3" placeholder="100">' + '<br><br>' +
+                '&nbsp;<button onclick="apps.smartIconSettings.vars.saveRadiuses()">Save</button> ' +
+                '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br><br>' +
+                '<input id="smartIconSettings_bgcolor" value="' + smartIconOptions.bgColor + '" placeholder="color"> <button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button>'
+            );
+            this.appWindow.paddingMode(0);
+            this.appWindow.openWindow();
+        },
+        vars: {
             appInfo: 'This app is used to configure Smart Icons.',
             testSmartIconOriginal: {
                 background: "smarticons/_template/shadowEdges.png",
@@ -9136,24 +9065,57 @@ c(function(){
                     saveSmartIconStyle();
                 }
             }
-        }, 1, 'smartIconSettings', {
-        	backgroundColor: "#303947",
-        	foreground: "smarticons/aOS/fg.png",
-        	backgroundBorder: {
-        		thickness: 2,
-        		color: "#252F3A"
-        	}
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(ufload("aos_system/smarticon_settings")){
+                        smartIconOptions = JSON.parse(ufload("aos_system/smarticon_settings"));
+                        updateSmartIconStyle();
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
+            }
         }
-    );
+    });
     getId('aOSloadingInfo').innerHTML = 'Desktop Icon Maker';
 })
 c(function(){
     m('init icon maker');
-    apps.iconMaker = new Application(
-        'IcM',
-        'Desktop Icon Maker',
-        1,
-        function(launchtype){
+    apps.iconMaker = new Application({
+        title: "Desktop Icon Maker",
+        abbreviation: "IcM",
+        codeName: "iconMaker",
+        image: 'appicons/ds/IcM.png',
+        hideApp: 2,
+        launchTypes: 1,
+        main: function(launchtype){
             getId("win_iconMaker_html").classList.add("noselect");
             if(launchtype.indexOf('newicon') === 0){
                 this.newlaunch = launchtype.split(' ');
@@ -9197,68 +9159,7 @@ c(function(){
                 this.appWindow.openWindow();
             }
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    setTimeout(function(){
-                        if(!safeMode){
-                            var iconsFolder = ufload("aos_system/desktop/user_icons/");
-                            if(iconsFolder){
-                                for(var file in iconsFolder){
-                                    if(file.indexOf('ico_') === 0){
-                                        //if(iconsFolder[file].indexOf('[') === 0){
-                                        try{
-                                            apps.iconMaker.vars.buildIcon(iconsFolder[file]);
-                                        }catch(err){
-                                            var temperrmsg = JSON.parse(iconsFolder[file]);
-                                            apps.prompt.vars.alert("Could not restore desktop icon for " + temperrmsg.title + ". Make sure " + temperrmsg.owner + " is installed.", "Okay", function(){}, "AaronOS");
-                                        }
-                                        //}
-                                    }
-                                    if(file.indexOf('uico_') === 0){
-                                        try{
-                                            apps.iconMaker.vars.buildIcon(iconsFolder[file]);
-                                            ufdel('aos_system/desktop/user_icons/' + file);
-                                        }catch(err){
-                                            var temperrmsg = JSON.parse(iconsFolder[file]);
-                                            apps.prompt.vars.alert("Could not restore desktop icon for " + temperrmsg[4] + ". Make sure " + temperrmsg[5] + " is installed.", "Okay", function(){}, "AaronOS");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }, 3);
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This app is used to create desktop icons. You can get app names from the File Manager app.',
             newlaunch: '',
             type: 0,
@@ -9396,25 +9297,6 @@ c(function(){
                         );
                     }
                 }
-                /*
-                if(apps.iconMaker.vars.decompiled[3]){
-                    apps.iconMaker.vars.iconClicks['c' + apps.iconMaker.vars.decompiled[0]] = apps.iconMaker.vars.decompiled[5];
-                    getId('desktop').innerHTML +=
-                        '<div class="app cursorPointer" id="app' + apps.iconMaker.vars.decompiled[0] + '" style="left:' + apps.iconMaker.vars.decompiled[1] + 'px;top:' + apps.iconMaker.vars.decompiled[2] + 'px" onclick="eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/console.png\', \'\', \'ctxMenu/beta/x.png\'], \' Execute\', \'eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')\', \'+Move Icon\', \'icnmove(event, \\\'' + apps.iconMaker.vars.decompiled[0] + '\\\')\', \' Delete Icon\', \'apps.iconMaker.vars.deleteIcon(' + apps.iconMaker.vars.decompiled[0] + ')\'])">' +
-                        //'<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="appicons/ds/jsC.png" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
-                        '<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none">' + buildSmartIcon(64, apps.jsConsole.appWindow.appImg) + '</div>' +
-                        '<div class="appDesc" id="dsc' + apps.iconMaker.vars.decompiled[0] + '">' + apps.iconMaker.vars.decompiled[4] + '</div>' +
-                        '</div>';
-                }else{
-                    apps.iconMaker.vars.iconClicks['c' + apps.iconMaker.vars.decompiled[0]] = 'openapp(' + apps.iconMaker.vars.decompiled[5] + ', "dsktp")';
-                    getId("desktop").innerHTML +=
-                        '<div class="app cursorPointer" id="app' + apps.iconMaker.vars.decompiled[0] + '" style="left:' + apps.iconMaker.vars.decompiled[1] + 'px;top:' + apps.iconMaker.vars.decompiled[2] + 'px" onclick="eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/window.png\', \'\', \'ctxMenu/beta/x.png\'], \' Open\', \'eval(apps.iconMaker.vars.iconClicks.c' + apps.iconMaker.vars.decompiled[0] + ')\', \'+Move Icon\', \'icnmove(event, \\\'' + apps.iconMaker.vars.decompiled[0] + '\\\')\', \' Delete Icon\', \'apps.iconMaker.vars.deleteIcon(' + apps.iconMaker.vars.decompiled[0] + ')\'])">' +
-                        //'<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none"><img style="max-height:64px;max-width:64px" src="' + vartry('eval(' + apps.iconMaker.vars.decompiled[5] + ').appWindow.appImg') + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>' +
-                        '<div class="appIcon" id="ico' + apps.iconMaker.vars.decompiled[0] + '" style="pointer-events:none">' + buildSmartIcon(64, eval(apps.iconMaker.vars.decompiled[5]).appWindow.appImg) + '</div>' +
-                        '<div class="appDesc" id="dsc' + apps.iconMaker.vars.decompiled[0] + '">' + apps.iconMaker.vars.decompiled[4] + '</div>' +
-                        '</div>';
-                }
-                */
             },
             moveSelect: '0',
             moveTo: [0, 0],
@@ -9443,41 +9325,8 @@ c(function(){
                     }
                 }, 'aOS');
             }
-        }, 1, 'iconMaker', 'appicons/ds/IcM.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Text Editor';
-});
-var files;
-c(function(){
-    m('init NP2');
-    apps.notepad2 = new Application(
-        "TE2",
-        "Text Editor",
-        1,
-        function(launchType){
-            this.appWindow.paddingMode(0);
-            this.vars.launchedAs = launchType;
-            if(launchType !== "tskbr"){
-                this.appWindow.setCaption("Text Editor");
-                if(!this.appWindow.appIcon){
-                    this.appWindow.setDims("auto", "auto", 650, 400);
-                }
-                this.appWindow.setContent(
-                    '<textarea id="np2Screen" style="white-space:no-wrap; width:calc(100% - 6px); height:calc(100% - 23px); position:absolute; padding:3px; border:none; bottom: 0px; left: 0px; font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000; overflow:auto"></textarea>' +
-                    '<div class="darkResponsive" style="width:100%; border-bottom:1px solid; height:16px;">' +
-                    '<input class="darkResponsive" id="np2Load" placeholder="file name" style="padding-left:3px; font-family: aosProFont, monospace; font-size:12px; left: 16px; border:none; height:16px; border-left:1px solid; border-right:1px solid; position:absolute; top:0; width:calc(100% - 115px);"></input>' +
-                    '<div id="np2Mode" onclick="apps.notepad2.vars.toggleFileMode()" class="cursorPointer noselect" style="color:#7F7F7F; font-family:aosProFont, monospace; font-size:12px; height:16px;line-height:16px; padding-right:3px; padding-left: 3px; right:95px">Text Mode</div>' +
-                    '<div class="darkResponsive" onclick="apps.notepad2.vars.openFile(getId(\'np2Load\').value)" class="cursorPointer noselect" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:55px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Load</div> ' +
-                    '<div class="darkResponsive" onclick="apps.notepad2.vars.saveFile(getId(\'np2Load\').value)" class="cursorPointer noselect" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:16px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Save</div> ' +
-                    '</div>'
-                );
-                getId("np2Screen").wrap = "off";
-                getId('win_notepad2_html').style.background = 'none';
-                this.vars.filemode = "string";
-            }
-            this.appWindow.openWindow();
         },
-        function(signal){
+        signalHandler: function(signal){
             switch(signal){
                 case "forceclose":
                     //this.vars = this.varsOriginal;
@@ -9502,16 +9351,86 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    
+                    setTimeout(function(){
+                        if(!safeMode){
+                            var iconsFolder = ufload("aos_system/desktop/user_icons/");
+                            if(iconsFolder){
+                                for(var file in iconsFolder){
+                                    if(file.indexOf('ico_') === 0){
+                                        //if(iconsFolder[file].indexOf('[') === 0){
+                                        try{
+                                            apps.iconMaker.vars.buildIcon(iconsFolder[file]);
+                                        }catch(err){
+                                            var temperrmsg = JSON.parse(iconsFolder[file]);
+                                            apps.prompt.vars.alert("Could not restore desktop icon for " + temperrmsg.title + ". Make sure " + temperrmsg.owner + " is installed.", "Okay", function(){}, "AaronOS");
+                                        }
+                                        //}
+                                    }
+                                    if(file.indexOf('uico_') === 0){
+                                        try{
+                                            apps.iconMaker.vars.buildIcon(iconsFolder[file]);
+                                            ufdel('aos_system/desktop/user_icons/' + file);
+                                        }catch(err){
+                                            var temperrmsg = JSON.parse(iconsFolder[file]);
+                                            apps.prompt.vars.alert("Could not restore desktop icon for " + temperrmsg[4] + ". Make sure " + temperrmsg[5] + " is installed.", "Okay", function(){}, "AaronOS");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }, 3);
                     break;
                 case 'shutdown':
                         
                     break;
                 default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
+            }
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Text Editor';
+});
+var files;
+c(function(){
+    m('init NP2');
+    apps.notepad2 = new Application({
+        title: "Text Editor",
+        abbreviation: "TE2",
+        codeName: "notepad2",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/textEditor/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
             }
         },
-        {
+        hideApp: 0,
+        launchTypes: 1,
+        main: function(launchType){
+            this.appWindow.paddingMode(0);
+            this.vars.launchedAs = launchType;
+            if(launchType !== "tskbr"){
+                this.appWindow.setCaption("Text Editor");
+                if(!this.appWindow.appIcon){
+                    this.appWindow.setDims("auto", "auto", 650, 400);
+                }
+                this.appWindow.setContent(
+                    '<textarea id="np2Screen" style="white-space:no-wrap; width:calc(100% - 6px); height:calc(100% - 23px); position:absolute; padding:3px; border:none; bottom: 0px; left: 0px; font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000; overflow:auto"></textarea>' +
+                    '<div class="darkResponsive" style="width:100%; border-bottom:1px solid; height:16px;">' +
+                    '<input class="darkResponsive" id="np2Load" placeholder="file name" style="padding-left:3px; font-family: aosProFont, monospace; font-size:12px; left: 16px; border:none; height:16px; border-left:1px solid; border-right:1px solid; position:absolute; top:0; width:calc(100% - 115px);"></input>' +
+                    '<div id="np2Mode" onclick="apps.notepad2.vars.toggleFileMode()" class="cursorPointer noselect" style="color:#7F7F7F; font-family:aosProFont, monospace; font-size:12px; height:16px;line-height:16px; padding-right:3px; padding-left: 3px; right:95px">Text Mode</div>' +
+                    '<div class="darkResponsive" onclick="apps.notepad2.vars.openFile(getId(\'np2Load\').value)" class="cursorPointer noselect" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:55px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Load</div> ' +
+                    '<div class="darkResponsive" onclick="apps.notepad2.vars.saveFile(getId(\'np2Load\').value)" class="cursorPointer noselect" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:16px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Save</div> ' +
+                    '</div>'
+                );
+                getId("np2Screen").wrap = "off";
+                getId('win_notepad2_html').style.background = 'none';
+                this.vars.filemode = "string";
+            }
+            this.appWindow.openWindow();
+        },
+        vars: {
             appInfo: 'Simple text editor for AaronOS. Edits text files created by the user, and views strings, numbers, and functions of AaronOS apps.',
             openEditTools: function(){apps.prompt.vars.notify('This button is unfinished. Right-click the document instead.', [], function(){}, 'Text Editor', 'appicons/ds/TE.png')},
             launchedAs: '',
@@ -9551,14 +9470,6 @@ c(function(){
                 }else{
                     openapp(apps.notepad2, 'tskbr');
                 }
-                
-                /*
-                if(filename.indexOf('/') === -1){
-                    filename = '/USERFILES/' + filename;
-                }else if(filename.indexOf('/') !== 0){
-                    filename = '/' + filename;
-                }
-                */
                 
                 if(filename.indexOf('/USERFILES/') !== 0 && filename.indexOf('/LOCALFILES/') !== 0){
                     if(filename.indexOf('/window/') !== 0){
@@ -9627,14 +9538,6 @@ c(function(){
                     apps.prompt.vars.alert("Failed to save: No filename provided.", "Okay", function(){}, "Text Editor");
                     return;
                 }
-                
-                /*
-                if(filename.indexOf('/') === -1){
-                    filename = '/USERFILES/' + filename;
-                }else if(filename.indexOf('/') !== 0){
-                    filename = '/' + filename;
-                }
-                */
                 
                 if(filename.indexOf('/USERFILES/') !== 0 && filename.indexOf("/LOCALFILES/") !== 0){
                     if(filename.indexOf('/window/') !== 0){
@@ -9749,15 +9652,8 @@ c(function(){
                     }
                 }
             }
-        }, 0, "notepad2", {
-            backgroundColor: "#303947",
-            foreground: "smarticons/textEditor/fg.png",
-            backgroundBorder: {
-                thickness: 2,
-                color: "#252F3A"
-            }
         }
-    );
+    });
     getId('aOSloadingInfo').innerHTML = 'Files';
 });
 c(function(){
@@ -11318,21 +11214,32 @@ c(function(){
                 " + iFrameBrowser now supports tabs.",
                 " + Added more information and some minimal troubleshooting information to the iFrameBrowser homepage.",
                 " : Documentation for testing a web app now uses the iFrame Browser rather than making you use half of a Web App Maker form."
+            ],
+            "03/04/2021: B1.5.4.1": [
+                " + Added desktop icon for Psuedo-Bash Terminal.",
+                " - Removed desktop icon for Pet Cursors.",
+                " : JS Console no longer shows the horizontal scrollbar until it is needed.",
+                " : Bash Terminal now shows the horizontal scrollbar when needed.",
+                " : Windowblur Test is renamed to Transparent Window.",
+                " : Behind-the-scenes, the method to initialize an app has been made far easier and safer. This is a very large change, but the visible impact should be minimal aside more consistent behavior between apps using default behavior."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.4.0 (02/18/2021) r0';
+    window.aOSversion = 'B1.5.4.1 (03/04/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
 c(function(){
     m('init PPT');
-    apps.properties = new Application(
-        "PPT",
-        "Properties Viewer",
-        1,
-        function(launchtype, fileToOpen){
+    apps.properties = new Application({
+        title: "Properties Viewer",
+        abbreviation: "PPT",
+        codeName: "properties",
+        image: "appicons/ds/PPT.png",
+        hideApp: 2,
+        launchTypes: 1,
+        main: function(launchtype, fileToOpen){
             getId('win_properties_html').style.overflow = 'auto';
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims("auto", "auto", 400, 500, 1);
@@ -11365,111 +11272,34 @@ c(function(){
                     '<span style="font-size:24px;">' + apps.files2.vars.filetype(typeof apps.bash.vars.getRealDir(fileToOpen)) + ' / ' + (typeof apps.bash.vars.getRealDir(fileToOpen)) + '</span><br><br><br>' +
                     fileDescription + "<br><br>" +
                     'File Location: ' + fileToOpen + '<br><br>&nbsp;- ' + filePath.join('<br>&nbsp;- ') + '<br><br>' +
-                    /*
-                    function(file){
-                        if(typeof eval(file) === 'object'){
-                            return 'Items in Folder: ' +
-                                function(fil){
-                                    var counting = 0;
-                                    for(var i in fil){
-                                        counting++;
-                                    }
-                                    return counting;
-                                }(eval(file)) + '<br>Size of Folder: <button id="PPTcalcfoldsize" onclick="apps.properties.vars.calcFold(' + file + ')">Calculate</button><br><br>';
-                        }else{
-                            apps.properties.vars.tmpNum = String(eval(file)).length;
-                            apps.properties.vars.tmpTry = 0;
-                            apps.properties.vars.tmpNmb = apps.properties.vars.tmpNum;
-                            while(apps.properties.vars.tmpNum >= 1000){
-                                apps.properties.vars.tmpNum = Math.round(apps.properties.vars.tmpNum / 1000);
-                                apps.properties.vars.tmpTry++;
-                            }
-                            apps.properties.vars.tmpStr = apps.properties.vars.tmpByt[apps.properties.vars.tmpTry];
-                            if(apps.properties.vars.tmpTry !== 0){
-                                apps.properties.vars.tmpStr += apps.properties.vars.tmpNmb + ' Bytes)';
-                            }
-                            return 'File Size: ~ ' + apps.properties.vars.tmpNum + apps.properties.vars.tmpStr + '<br><br>';
-                        }
-                    }(fileToOpen) +
-                    */
                     '</div>'
                 );
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    if(this.vars.counting){
-                        apps.prompt.vars.alert('Please don\'t close the window until it is done counting.', 'Oh. I nearly broke stuff.', function(){}, 'Properties');
-                    }else{
-                        this.appWindow.closeWindow();
-                        setTimeout(function(){
-                            if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                                this.appWindow.setContent("");
-                            }
-                        }.bind(this), 300);
-                    }
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
-            appInfo: 'This app is used to view file properties in the File Manager.',
-            tmpNum: 0,
-            tmpByt: [' Bytes', 'KB (', 'MB (', 'GB ('],
-            tmpTry: 0,
-            tmpStr: ' Bytes',
-            counting: 0,
-            lastCount: 0,
-            lastFile: {},
-            calcFold: function(fname){
-                this.counting = 1;
-                this.lastCount = 0;
-                getId('PPTcalcfoldsize').outerHTML = '~ <span id="PPTcalcfoldsize">0</span> Bytes';
-                this.lastFile = eval(fname);
-                for(var i in this.lastFile){
-                    if(this.lastFile[i] !== undefined){
-                        c(function(number){
-                            apps.properties.vars.lastCount += number;
-                            getId('PPTcalcfoldsize').innerHTML = apps.properties.vars.lastCount;
-                        }, String(this.lastFile[i]).length);
-                    }
-                }
-                c(function(){apps.properties.vars.counting = 0;});
-            }
-        }, 2, "properties", "appicons/ds/PPT.png"
-    );
+        vars: {
+            appInfo: 'This app is used to view file properties in the File Manager.'
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'File Manager';
 });
 c(function(){
     m('init FIL');
-    apps.files2 = new Application(
-        "FIL",
-        "File Manager",
-        1,
-        function(launchType){
+    apps.files2 = new Application({
+        title: "File Manager",
+        abbreviation: "FIL",
+        codeName: "files2",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/files/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        },
+        hideApp: 0,
+        launchTypes: 1,
+        main: function(launchType){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 796, 400, 1);
@@ -11526,49 +11356,7 @@ c(function(){
                 this.vars.setViewMode(this.vars.currViewMode, 1);
             }
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    if(ufload("aos_system/apps/files/view_mode")){
-                        this.vars.setViewMode(parseInt(ufload("aos_system/apps/files/view_mode")), 1);
-                    }
-                    if(ufload("aos_system/apps/files/favorites")){
-                        this.vars.favorites = JSON.parse(ufload("aos_system/apps/files/favorites"));
-                    }
-                    if(ufload("aos_system/apps/files/window_debug")){
-                        apps.settings.vars.FILcanWin = parseInt(ufload("aos_system/apps/files/window_debug"));
-                    }
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'The official AaronOS File Manager, version 2. Use it to manage your personal files and to view aOS code. At the moment, only plain-text userfiles are supported.',
             currLoc: '/',
             viewModes: [
@@ -12101,33 +11889,71 @@ c(function(){
                 }
                 this.updateFavorites();
             }
-        }, 0, "files2", {
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(ufload("aos_system/apps/files/view_mode")){
+                        this.vars.setViewMode(parseInt(ufload("aos_system/apps/files/view_mode")), 1);
+                    }
+                    if(ufload("aos_system/apps/files/favorites")){
+                        this.vars.favorites = JSON.parse(ufload("aos_system/apps/files/favorites"));
+                    }
+                    if(ufload("aos_system/apps/files/window_debug")){
+                        apps.settings.vars.FILcanWin = parseInt(ufload("aos_system/apps/files/window_debug"));
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Changelog';
+});
+c(function(){
+    apps.changelog = new Application({
+        title: "Changelog",
+        abbreviation: "CLg",
+        codeName: "changelog",
+        hideApp: 1,
+        image: {
             backgroundColor: "#303947",
-            foreground: "smarticons/files/fg.png",
+            foreground: "smarticons/changelog/fg.png",
             backgroundBorder: {
                 thickness: 2,
                 color: "#252F3A"
             }
-        }
-    );
-    getId('aOSloadingInfo').innerHTML = 'Changelog';
-});
-c(function(){
-    apps.changelog = new Application(
-        "CLg",
-        "Changelog",
-        0,
-        function(){
+        },
+        main: function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 700, 400, 1);
                 this.appWindow.setCaption("Changelog");
-                /*
-                this.vars.cLogSplit = files.changelog.split('\n\n');
-                for(var i in this.vars.cLogSplit){
-                    this.vars.cLogSplit[i] = this.vars.cLogSplit[i].split('\n ');
-                }
-                */
                 this.vars.cLogHTML = '';
                 for(var i in files.changelog){
                     this.vars.cLogGroup = '';
@@ -12150,64 +11976,24 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.vars.currGame = '';
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This is the official changelog for AaronOS. It lists all versions from the point of its creation up until the current running version.',
             cLogSplit: [],
             cLogHTML: '',
             cLogGroup: ''
-        }, 1, "changelog", {
-            backgroundColor: "#303947",
-            foreground: "smarticons/changelog/fg.png",
-            backgroundBorder: {
-                thickness: 2,
-                color: "#252F3A"
-            }
         }
-    );
+    });
     getId('aOSloadingInfo').innerHTML = 'Help';
 });
 
 c(function(){
-    apps.help = new Application(
-        'Hlp',
-        'AaronOS Help',
-        0,
-        function(){
+    apps.help = new Application({
+        title: 'AaronOS Help',
+        abbreviation: "Hlp",
+        codeName: "help",
+        image: 'appicons/ds/HLP.png',
+        hideApp: 0,
+        main: function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims("auto", "auto", 600, 500);
                 this.appWindow.setCaption('AaronOS Help');
@@ -12216,47 +12002,7 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    if(localStorage.getItem("aos_help_displayed") !== "1"){
-                        c(function(){
-                            openapp(apps.help, "dsktp");
-                            apps.help.vars.showMenu(apps.help.vars.menus.menuOptions.intro);
-                            localStorage.setItem("aos_help_displayed", "1");
-                        });
-                    }
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'Tutorial and help app for AaronOS.',
             search: function(text){
                 var searchElems = getId("Hlp_menudiv").childNodes;
@@ -12579,26 +12325,8 @@ c(function(){
                     }
                 }
             }
-        }, 0, "help", 'appicons/ds/HLP.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Window Test';
-});
-c(function(){
-    m('init TW');
-    apps.aerotest = new Application(
-        "TW",
-        "Transparent Window",
-        0,
-        function(){
-            this.appWindow.setCaption("Transparent Window");
-            if(!this.appWindow.appIcon){
-                this.appWindow.setDims("auto", "auto", 400, 300);
-            }
-            //this.appWindow.setContent('<button onClick="apps.aerotest.appWindow.setDims(50, 50, prompt(\'New window width?\'), prompt(\'New window height?\'))">Change Window Size</button>');
-            getId("win_aerotest_html").style.background = "none";
-            this.appWindow.openWindow();
         },
-        function(signal){
+        signalHandler: function(signal){
             switch(signal){
                 case "forceclose":
                     //this.vars = this.varsOriginal;
@@ -12623,7 +12351,13 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    
+                    if(localStorage.getItem("aos_help_displayed") !== "1"){
+                        c(function(){
+                            openapp(apps.help, "dsktp");
+                            apps.help.vars.showMenu(apps.help.vars.menus.menuOptions.intro);
+                            localStorage.setItem("aos_help_displayed", "1");
+                        });
+                    }
                     break;
                 case 'shutdown':
                         
@@ -12631,18 +12365,37 @@ c(function(){
                 default:
                     doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
             }
-        },
-        {
-            appInfo: 'This application is used for testing the performance and effect quality of WindowBlur. This app is great for testing or playing with new window colors and background blend modes.'
-        }, 2, "aerotest", {
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Window Test';
+});
+c(function(){
+    m('init TW');
+    apps.aerotest = new Application({
+        title: "Transparent Window",
+        abbreviation: "TW",
+        codeName: "aerotest",
+        image: {
             backgroundColor: "#303947",
             foreground: "smarticons/aerotest/fg.png",
             backgroundBorder: {
                 thickness: 2,
                 color: "#252F3A"
             }
+        },
+        hideApp: 2,
+        main: function(){
+            this.appWindow.setCaption("Transparent Window");
+            if(!this.appWindow.appIcon){
+                this.appWindow.setDims("auto", "auto", 400, 300);
+            }
+            getId("win_aerotest_html").style.background = "none";
+            this.appWindow.openWindow();
+        },
+        vars: {
+            appInfo: 'This application is used for testing the performance and effect quality of WindowBlur. This app is great for testing or playing with new window colors and background blend modes.'
         }
-    );
+    });
     getId('aOSloadingInfo').innerHTML = 'File Saving System';
 });
 c(function(){
@@ -12650,11 +12403,13 @@ c(function(){
     m('init SAV');
     /*var cansaveyet = 0;
     window.setTimeout(function(){cansaveyet = 1}, 500);*/
-    apps.savemaster = new Application(
-        "SAV",
-        "SaveMaster",
-        0,
-        function(launchtype){
+    apps.savemaster = new Application({
+        title: "SaveMaster",
+        abbreviation: "SAV",
+        codeName: "savemaster",
+        image: "appicons/ds/SAV.png",
+        hideApp: 2,
+        main: function(){
             this.appWindow.setCaption("SaveMaster");
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims("auto", "auto", 600, 500);
@@ -12664,44 +12419,7 @@ c(function(){
             );
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "save":
-                    getId("mastersaveframe").src = "filesaver.php/?k=" + SRVRKEYWORD + "&f=" + this.vars.sp + "&c=" + this.vars.sc;
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This application handles all file saving over the Cloud to the AaronOS server. It is only accessible via API to aOS apps.',
             sp: "",
             sc: "",
@@ -12886,21 +12604,6 @@ c(function(){
             latestDel: '',
             del: function(filepath){
                 this.savePerf = Math.floor(performance.now());
-                /*
-                this.latestDel = '';
-                if(vartry('apps.savemaster.vars.delete.caller.name').indexOf('-' + lang('aOS', 'failedVarTry') + ' vartry(apps.savemaster.vars.delete.caller.name)') < 0){
-                    this.latestDel += 'A function named "' + apps.savemaster.vars.delete.caller.name + '" ';
-                }else{
-                    this.latestDel += 'An anonymous function ';
-                }
-                if(vartry('event.type').indexOf('-failed vartry(event.type)') < 0){
-                    this.latestDel += 'from a "' + event.type + '" event';
-                }else{
-                    this.latestDel += 'with no defined event trigger';
-                }
-                apps.prompt.vars.confirm(this.latestDel + ' wants to permanently delete the file ' + filepath + '. Do you give permission to delete the file? This cannot be undone.', ['No, do nothing', 'Yes, delete file'], function(btn){
-                    if(btn){
-                */
                 if(!noUserFiles){
                     apps.savemaster.vars.saving = 2;
                     taskbarShowHardware();
@@ -12918,13 +12621,9 @@ c(function(){
                     apps.savemaster.vars.xf['xhttp' + apps.savemaster.vars.savePerf].send(apps.savemaster.vars.xf['fd' + apps.savemaster.vars.savePerf]);
                 }
                 eval('delete ' + apps.bash.vars.translateDir('/USERFILES/' + filepath));
-                /*
-                    }
-                });
-                */
             }
-        }, 2, "savemaster", "appicons/ds/SAV.png"
-    );
+        }
+    });
     window.ufsave = function(filename, filecontent){
         return apps.savemaster.vars.save(filename, filecontent, 1);
     };
@@ -12949,11 +12648,14 @@ c(function(){
 });
 c(function(){
     m('init APM');
-    apps.appmaker = new Application(
-        "APM",
-        "Legacy App Maker",
-        1,
-        function(launchtype){
+    apps.appmaker = new Application({
+        title: "Legacy App Maker",
+        abbreviation: "APM",
+        codeName: "appmaker",
+        image: "appicons/ds/APM.png",
+        hideApp: 1,
+        launchTypes: 1,
+        main: function(launchtype){
             if(launchtype === "dsktp"){
                 this.appWindow.setCaption("Legacy App Maker");
                 if(!this.appWindow.appIcon){
@@ -13016,59 +12718,7 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    //doLog("Initializing APM apps...", "#ACE");
-                    if(safeMode){
-                        doLog("Failed APM apps because Safe Mode is enabled.", "#F00");
-                    }else{
-                        var apmdb = ufload("aos_system/apm_apps");
-                        if(apmdb){
-                            for(var file in apmdb){
-                                if(file.indexOf("app_") === 0){
-                                    try{
-                                        eval(apmdb[file]);
-                                    }catch(err){
-                                        doLog("Failed aos_system/apm_apps/" + file + ":", "#F00");
-                                        doLog(err, "#F00");
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    //doLog("Done.", "#ACE");
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This app is used to create and install your very own custom apps! If your custom app happens to break, you can go to USERFILES and delete its entry under aos_system/apm_apps.',
             div: undefined,
             newapp: "",
@@ -13140,16 +12790,71 @@ c(function(){
                     }
                 }, 'Legacy App Maker');
             }
-        }, 1, "appmaker", "appicons/ds/APM.png"
-    );
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    //doLog("Initializing APM apps...", "#ACE");
+                    if(safeMode){
+                        doLog("Failed APM apps because Safe Mode is enabled.", "#F00");
+                    }else{
+                        var apmdb = ufload("aos_system/apm_apps");
+                        if(apmdb){
+                            for(var file in apmdb){
+                                if(file.indexOf("app_") === 0){
+                                    try{
+                                        eval(apmdb[file]);
+                                    }catch(err){
+                                        doLog("Failed aos_system/apm_apps/" + file + ":", "#F00");
+                                        doLog(err, "#F00");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    //doLog("Done.", "#ACE");
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'Web App Maker';
 });
 c(function(){
-    apps.webAppMaker = new Application(
-        "WAP",
-        "Web App Maker",
-        1,
-        function(launchtype){
+    apps.webAppMaker = new Application({
+        title: "Web App Maker",
+        abbreviation: "WAP",
+        codeName: "webAppMaker",
+        image: "appicons/ds/APM.png",
+        hideApp: 0,
+        launchTypes: 1,
+        main: function(launchtype){
             if(launchtype === "dsktp"){
                 this.appWindow.setCaption("Web App Maker");
                 if(!this.appWindow.appIcon){
@@ -13202,92 +12907,7 @@ c(function(){
             );
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    //doLog("Initializing WAP apps...", "#ACE");
-                    if(safeMode){
-                        doLog("Failed initializing WAP apps because Safe Mode is enabled.", "#F00");
-                    }else{
-                        for(var file in ufload("aos_system/wap_apps")){
-                            try{
-                                apps.webAppMaker.vars.compileApp(ufload("aos_system/wap_apps/" + file), file);
-                            }catch(err){
-                                doLog("Failed initializing " + file + ":", "#F00");
-                                doLog(err, "#F00");
-                            }
-                        }
-                        // alphabetized array of apps
-                        appsSorted = [];
-                        for(var i in apps){
-                            appsSorted.push(apps[i].appDesc.toLowerCase() + "|WAP_apps_sort|" + i);
-                        }
-                        appsSorted.sort();
-                        for(var i in appsSorted){
-                            var tempStr = appsSorted[i].split("|WAP_apps_sort|");
-                            tempStr = tempStr[tempStr.length - 1];
-                            appsSorted[i] = tempStr;
-                        }
-                    }
-                    //doLog("Done.", "#ACE");
-                    //doLog("Initializing WAP Message Listener and Permission system...", "#ACE");
-                    if(safeMode){
-                        doLog("Failed WAP Message Listener because Safe Mode is enabled.", "#F00");
-                    }else{
-                        window.addEventListener("message", apps.webAppMaker.vars.recieveMessage);
-                    }
-                    if(ufload("aos_system/apps/webAppMaker/trusted_apps")){
-                        try{
-                            var tempobj = JSON.parse(ufload("aos_system/apps/webAppMaker/trusted_apps"));
-                            var fail = 0;
-                            for(var i in tempobj){
-                                for(var j in tempobj[i]){
-                                    if(tempobj[i][j] !== "true" && tempobj[i][j] !== "false"){
-                                        fail = 1;
-                                    }
-                                }
-                            }
-                            if(fail){
-                                doLog("Failed Permissions: Not in correct format.", "#F00");
-                            }else{
-                                apps.webAppMaker.vars.trustedApps = tempobj;
-                            }
-                        }catch(err){
-                            doLog("Failed initializing WAP Permissions: " + err, "#F00");
-                        }
-                    }
-                    //doLog("Done.", "#ACE");
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'Use this tool to convert any compatible webpage into an app for aOS!<br><br>If you need to delete an app made with this tool, then open its window, right click its title bar, and click "About App". There will be a file name in that info window. You can delete that file in File Manager -> USERFILES, and the app will be uninstalled.',
             ctxMenus: {
                 defaultCtx: []
@@ -13303,7 +12923,7 @@ c(function(){
                                 disabled: "true",
                             },
                             {
-                                name: "Option 1",
+                                name: "Option 2",
                                 customIcon: "ctxMenu/beta/gear.png",
                                 sectionBegin: "true"
                             },
@@ -14070,11 +13690,13 @@ c(function(){
             },
             compileApp: function(str, appFileName){
                 tempObj = JSON.parse(str);
-                apps['webApp' + apps.webAppMaker.vars.numberOfApps] = new Application(
-                    tempObj.abbr,
-                    tempObj.name,
-                    0,
-                    function(){
+                apps['webApp' + apps.webAppMaker.vars.numberOfApps] = new Application({
+                    title: tempObj.name,
+                    abbreviation: tempObj.abbr,
+                    codeName: 'webApp' + apps.webAppMaker.vars.numberOfApps,
+                    image: tempObj.icon,
+                    hideApp: 0,
+                    main: function(){
                         this.appWindow.setCaption(this.appDesc);
                         if(!this.appWindow.appIcon){
                             this.appWindow.paddingMode(0);
@@ -14083,82 +13705,17 @@ c(function(){
                         }
                         this.appWindow.openWindow();
                     },
-                    function(signal){
-                        switch(signal){
-                            case "forceclose":
-                                //this.vars = this.varsOriginal;
-                                this.appWindow.closeWindow();
-                                this.appWindow.closeIcon();
-                                break;
-                            case "close":
-                                this.appWindow.closeWindow();
-                                setTimeout(function(){
-                                    if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                                        this.appWindow.setContent("");
-                                    }
-                                }.bind(this), 300);
-                                break;
-                            case "checkrunning":
-                                if(this.appWindow.appIcon){
-                                    return 1;
-                                }else{
-                                    return 0;
-                                }
-                            case "shrink":
-                                this.appWindow.closeKeepTask();
-                                break;
-                            case "USERFILES_DONE":
-                                
-                                break;
-                            case 'shutdown':
-                                    
-                                break;
-                            default:
-                                doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-                        }
-                    },
-                    {
+                    vars: {
                         appInfo: 'This app was made using the Web App Maker app.<br><br>Home URL:<br>' + tempObj.url + '<br><br>File path:<br>USERFILES/aos_system/wap_apps/' + appFileName + '<br><br>App object name:<br>apps.webApp' + apps.webAppMaker.vars.numberOfApps,
                         appURL: tempObj.url,
                         sizeX: tempObj.sizeX,
                         sizeY: tempObj.sizeY
-                    }, 0, 'webApp' + apps.webAppMaker.vars.numberOfApps, tempObj.icon
-                );
+                    }
+                });
                 apps.webAppMaker.vars.numberOfApps++;
             }
-        }, 0, "webAppMaker", "appicons/ds/APM.png"
-    );
-    getId('aOSloadingInfo').innerHTML = 'Messaging';
-});
-c(function(){
-    m('init MSG');
-    apps.messaging = new Application(
-        "MSG",
-        "Messaging",
-        1,
-        function(launchType){
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.vars.lastUserRecieved = '';
-                this.appWindow.setDims("auto", "auto", 800, 500);
-            }
-            this.appWindow.setCaption('Messaging');
-            getId('win_messaging_html').setAttribute('onclick', 'if(apps.messaging.vars.soundToPlay && apps.messaging.vars.canLookethOverThereSound){apps.messaging.vars.notifClick.play(); apps.messaging.vars.soundToPlay = 0;}');
-            if(launchType === 'dsktp'){
-                this.appWindow.setContent(
-                    '<div id="MSGdiv" style="width:100%;height:calc(100% - 52px);overflow-y:scroll;padding-top:32px;"></div>' +
-                    '<div class="noselect" style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div>' +
-                    '<button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button>' +
-                    '<button style="position:absolute;bottom:0;height:24px;width:10%;left:10%;" onclick="apps.messaging.vars.doFormatting()">Formatting</button>' +
-                    '<input id="MSGinput" style="position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:sans-serif">' +
-                    '<button onclick="apps.messaging.vars.sendMessage()" style="position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>');
-                this.vars.lastMsgRecieved = this.vars.lastMsgStart;
-                getId('MSGinput').setAttribute('onkeyup', 'if(event.keyCode === 13){apps.messaging.vars.sendMessage();}');
-            }
-            this.appWindow.openWindow();
-            this.vars.requestMessage();
         },
-        function(signal){
+        signalHandler: function(signal){
             switch(signal){
                 case "forceclose":
                     //this.vars = this.varsOriginal;
@@ -14183,16 +13740,58 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    if(ufload("aos_system/apps/messaging/chat_name")){
-                        apps.messaging.vars.name = ufload("aos_system/apps/messaging/chat_name");
-                    }
-                    if(!safeMode){
-                        if(ufload("aos_system/apps/messaging/easter_egg")){
-                            if(ufload("aos_system/apps/messaging/easter_egg") === "1"){
-                                this.vars.canLookethOverThereSound = 1;
+                    //doLog("Initializing WAP apps...", "#ACE");
+                    if(safeMode){
+                        doLog("Failed initializing WAP apps because Safe Mode is enabled.", "#F00");
+                    }else{
+                        for(var file in ufload("aos_system/wap_apps")){
+                            try{
+                                apps.webAppMaker.vars.compileApp(ufload("aos_system/wap_apps/" + file), file);
+                            }catch(err){
+                                doLog("Failed initializing " + file + ":", "#F00");
+                                doLog(err, "#F00");
                             }
                         }
+                        // alphabetized array of apps
+                        appsSorted = [];
+                        for(var i in apps){
+                            appsSorted.push(apps[i].appDesc.toLowerCase() + "|WAP_apps_sort|" + i);
+                        }
+                        appsSorted.sort();
+                        for(var i in appsSorted){
+                            var tempStr = appsSorted[i].split("|WAP_apps_sort|");
+                            tempStr = tempStr[tempStr.length - 1];
+                            appsSorted[i] = tempStr;
+                        }
                     }
+                    //doLog("Done.", "#ACE");
+                    //doLog("Initializing WAP Message Listener and Permission system...", "#ACE");
+                    if(safeMode){
+                        doLog("Failed WAP Message Listener because Safe Mode is enabled.", "#F00");
+                    }else{
+                        window.addEventListener("message", apps.webAppMaker.vars.recieveMessage);
+                    }
+                    if(ufload("aos_system/apps/webAppMaker/trusted_apps")){
+                        try{
+                            var tempobj = JSON.parse(ufload("aos_system/apps/webAppMaker/trusted_apps"));
+                            var fail = 0;
+                            for(var i in tempobj){
+                                for(var j in tempobj[i]){
+                                    if(tempobj[i][j] !== "true" && tempobj[i][j] !== "false"){
+                                        fail = 1;
+                                    }
+                                }
+                            }
+                            if(fail){
+                                doLog("Failed Permissions: Not in correct format.", "#F00");
+                            }else{
+                                apps.webAppMaker.vars.trustedApps = tempobj;
+                            }
+                        }catch(err){
+                            doLog("Failed initializing WAP Permissions: " + err, "#F00");
+                        }
+                    }
+                    //doLog("Done.", "#ACE");
                     break;
                 case 'shutdown':
                         
@@ -14200,8 +13799,49 @@ c(function(){
                 default:
                     doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
             }
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Messaging';
+});
+c(function(){
+    m('init MSG');
+    apps.messaging = new Application({
+        title: "Messaging",
+        abbreviation: "MSG",
+        codeName: "messaging",
+        image: {
+            backgroundColor: "#303947",
+        	foreground: "smarticons/messaging/fg.png",
+        	backgroundBorder: {
+        		thickness: 2,
+        		color: "#252F3A"
+        	}
         },
-        {
+        hideApp: 0,
+        launchTypes: 1,
+        main: function(launchType){
+            if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
+                this.vars.lastUserRecieved = '';
+                this.appWindow.setDims("auto", "auto", 800, 500);
+            }
+            this.appWindow.setCaption('Messaging');
+            getId('win_messaging_html').setAttribute('onclick', 'if(apps.messaging.vars.soundToPlay && apps.messaging.vars.canLookethOverThereSound){apps.messaging.vars.notifClick.play(); apps.messaging.vars.soundToPlay = 0;}');
+            if(launchType === 'dsktp'){
+                this.appWindow.setContent(
+                    '<div id="MSGdiv" style="width:100%;height:calc(100% - 52px);overflow-y:scroll;padding-top:32px;"></div>' +
+                    '<div class="noselect" style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div>' +
+                    '<button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button>' +
+                    '<button style="position:absolute;bottom:0;height:24px;width:10%;left:10%;" onclick="apps.messaging.vars.doFormatting()">Formatting</button>' +
+                    '<input id="MSGinput" style="position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:sans-serif">' +
+                    '<button onclick="apps.messaging.vars.sendMessage()" style="position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>');
+                this.vars.lastMsgRecieved = this.vars.lastMsgStart;
+                getId('MSGinput').setAttribute('onkeyup', 'if(event.keyCode === 13){apps.messaging.vars.sendMessage();}');
+            }
+            this.appWindow.openWindow();
+            this.vars.requestMessage();
+        },
+        vars: {
             appInfo: 'The official AaronOS Messenger. Chat with the entire aOS community, all at once.<br><br>To set your name, go to Settings -&gt; 1, and enter a chat name.<br><br>To view past messages, go to Settings -&gt; 2, and enter in the number of past messages you wish to view.',
             discussionTopic: 'AaronOS is on Discord! <a href="https://discord.gg/Y5Jytdm" target="_blank">https://discord.gg/Y5Jytdm</a><br>Real admins have a green background on their messages!',
             lastMsgRecieved: '-9',
@@ -14283,18 +13923,6 @@ c(function(){
                 }else{
                     this.lastMessage = this.messageTemp;
                     if(this.messageTemp.length !== 0){
-                        /*
-                        this.message = '';
-                        this.messageTemp = this.messageTemp.split('\\').join('\\\\');
-                        for(var i in this.messageTemp){
-                            if(this.messageTemp[i] === '"'){
-                                this.message += "''";
-                            }else{
-                                this.message += encodeURIComponent(this.messageTemp[i]);
-                            }
-                        }
-                        */
-                        //getId("messagingframe").src = 'messager.php?c=' + this.message;     wtf was i thinking lol
                         this.sendhttp = new XMLHttpRequest();
                         this.sendfd = new FormData();
                         this.sendfd.append('c', this.lastMessage);
@@ -14682,42 +14310,8 @@ c(function(){
                 apps.savemaster.vars.saving = 3;
                 taskbarShowHardware();
             }
-        }, 0, "messaging", {
-        	backgroundColor: "#303947",
-        	foreground: "smarticons/messaging/fg.png",
-        	backgroundBorder: {
-        		thickness: 2,
-        		color: "#252F3A"
-        	}
-        }
-    );
-    getId('aOSloadingInfo').innerHTML = 'Music Player';
-});
-c(function(){
-    m('init MSC');
-    apps.musicPlayer = new Application(
-        'MPl',
-        'Music Player',
-        0,
-        function(){
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe data-parent-app="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
-                requestAnimationFrame(this.vars.colorWindows);
-                getId("icn_musicPlayer").style.display = "inline-block";
-                requestAnimationFrame(() => {
-                    this.appWindow.appIcon = 1;
-                    this.vars.colorWindows();
-                });
-            }
-            this.appWindow.setCaption('Music Player');
-            this.appWindow.setDims("auto", "auto", 1038, 626);
-            blockScreensaver("apps.musicVis");
-            if(this.appWindow.appIcon){
-                this.appWindow.openWindow();
-            }
         },
-        function(signal){
+        signalHandler: function(signal){
             switch(signal){
                 case "forceclose":
                     //this.vars = this.varsOriginal;
@@ -14742,7 +14336,16 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    
+                    if(ufload("aos_system/apps/messaging/chat_name")){
+                        apps.messaging.vars.name = ufload("aos_system/apps/messaging/chat_name");
+                    }
+                    if(!safeMode){
+                        if(ufload("aos_system/apps/messaging/easter_egg")){
+                            if(ufload("aos_system/apps/messaging/easter_egg") === "1"){
+                                this.vars.canLookethOverThereSound = 1;
+                            }
+                        }
+                    }
                     break;
                 case 'shutdown':
                         
@@ -14750,8 +14353,44 @@ c(function(){
                 default:
                     doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
             }
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Music Player';
+});
+c(function(){
+    m('init MSC');
+    apps.musicPlayer = new Application({
+        title: "Music Player",
+        abbreviation: "MPl",
+        codeName: "musicPlayer",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/musicPlayer/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
         },
-        {
+        hideApp: 0,
+        main: function(){
+            if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
+                this.appWindow.setContent('<iframe data-parent-app="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
+                requestAnimationFrame(this.vars.colorWindows);
+                getId("icn_musicPlayer").style.display = "inline-block";
+                requestAnimationFrame(() => {
+                    this.appWindow.appIcon = 1;
+                    this.vars.colorWindows();
+                });
+            }
+            this.appWindow.setCaption('Music Player');
+            this.appWindow.setDims("auto", "auto", 1038, 626);
+            blockScreensaver("apps.musicVis");
+            if(this.appWindow.appIcon){
+                this.appWindow.openWindow();
+            }
+        },
+        vars: {
             appInfo: 'This is the official AaronOS Music Player. Select a folder of songs to loop through.',
             updateStyle: function(){
                 //getId("MPlframe").contentWindow.postMessage({dark: darkMode, style: getId("aosCustomStyle").innerHTML}, "https://aaron-os-mineandcraft12.c9.io");
@@ -14775,23 +14414,25 @@ c(function(){
                     this.colorModified = 0;
                 }
             }
-        }, 0, 'musicPlayer', {
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Apps Browser';
+});
+c(function(){
+    apps.appsbrowser = new Application({
+        title: "Apps Browser",
+        abbreviation: "APB",
+        codeName: "appsbrowser",
+        image: {
             backgroundColor: "#303947",
-            foreground: "smarticons/musicPlayer/fg.png",
+            foreground: "smarticons/appsbrowser/fg.png",
             backgroundBorder: {
                 thickness: 2,
                 color: "#252F3A"
             }
-        }
-    );
-    getId('aOSloadingInfo').innerHTML = 'Apps Browser';
-});
-c(function(){
-    apps.appsbrowser = new Application(
-        'APB',
-        'Apps Browser',
-        0,
-        function(){
+        },
+        hideApp: 1,
+        main: function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 400, 500);
@@ -14865,41 +14506,7 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'Use this app to browse through every app installed on the aOS system, including internal system apps.',
             appsListed: 1,
             currAppImg: '',
@@ -14936,25 +14543,28 @@ c(function(){
                     }
                 }
             }
-        }, 1, 'appsbrowser', {
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Sticky Note';
+});
+c(function(){
+    apps.postit = new Application({
+        title: "Sticky Note",
+        abbreviation: "SNt",
+        codeName: "postit",
+        image: {
             backgroundColor: "#303947",
-            foreground: "smarticons/appsbrowser/fg.png",
+            foreground: "smarticons/postit/fg.png",
             backgroundBorder: {
                 thickness: 2,
                 color: "#252F3A"
             }
-        }
-    );
-    getId('aOSloadingInfo').innerHTML = 'Sticky Note';
-});
-c(function(){
-    apps.postit = new Application(
-        'SNt',
-        'Sticky Note',
-        0,
-        function(){
+        },
+        hideApp: 1,
+        main: function(){
             this.appWindow.setCaption('Sticky Note');
             if(!this.appWindow.appIcon){
+                this.appWindow.alwaysOnTop(1);
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims(parseInt(getId("desktop").style.width) - 210, 10, 200, 200);
                 this.appWindow.setContent('<textarea id="stickyNotePad" onblur="apps.postit.vars.savePost()" style="padding:0;color:#000;font-family:Comic Sans MS;font-weight:bold;border:none;resize:none;display:block;width:100%;height:100%;background-color:#FF7;"></textarea>');
@@ -14965,65 +14575,25 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    //apps.savemaster.vars.save('aos_system/apps/postit/saved_note', getId('stickyNotePad').value, 1);
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    this.appWindow.alwaysOnTop(1);
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'Simple stickynote that stays above other apps on your screen. The contents are saved across reboots.',
             savePost: function(){
                 if(apps.postit.appWindow.appIcon){
                     apps.savemaster.vars.save('aos_system/apps/postit/saved_note', getId('stickyNotePad').value, 1);
                 }
             }
-        }, 1, 'postit', {
-            backgroundColor: "#303947",
-            foreground: "smarticons/postit/fg.png",
-            backgroundBorder: {
-                thickness: 2,
-                color: "#252F3A"
-            }
         }
-    );
+    });
     getId('aOSloadingInfo').innerHTML = 'Bootscript App';
 });
 c(function(){
-    apps.bootScript = new Application(
-        'BtS',
-        'Boot Scripts',
-        0,
-        function(){
+    apps.bootScript = new Application({
+        title: "Boot Scripts",
+        abbreviation: "BtS",
+        codeName: "bootScript",
+        image: 'appicons/ds/BtS.png',
+        hideApp: 1,
+        main: function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 701, 400);
@@ -15042,45 +14612,7 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    if(!safeMode){
-                        window.setTimeout(apps.bootScript.vars.doBootScript, 1);
-                    }else{
-                        doLog('Refusing to run BootScripts because SafeMode is on.', "#F00");
-                    }
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'This app runs your own custom JavaScript code just after aOS boots, just before the loading screen disappears. Any JS code will work here - mod aOS to your heart\'s content!<br><br>If you created something you would wish to be featured in aOS, please tell the developer so he can take a look!',
             bootScriptsToEvaluate: {
                 repo: {
@@ -15196,16 +14728,56 @@ c(function(){
             helpBootScript: function(){
                 apps.prompt.vars.alert('WARNING - ADVANCED USERS ONLY<br>The Bootscript is your very own script to run on OS boot. Use it for useful things like... well, I can\'t think of anything. Here you are though.<br><br>BootScript will run your script one millisecond after the OS finishes loading your userfiles.<br><br>Save all variables for your script inside the \'this\' object. Example... this.myVar = 9000.1;<br><br>Bootscripts are written in JavaScript. Use the aOS API and assume that your script lives inside of an app\'s vars... (<b>apps.theoreticalApp.vars</b> <-- your script theoretically here) Check the aOS API doc for reference to what this means.<br><br>Your bootscript is NOT AN APP and has no window. Trying to call anything within this.appWindow WILL result in an error!', 'Okay, thanks.', function(){}, 'Boot Script');
             }
-        }, 1, 'bootScript', 'appicons/ds/BtS.png'
-    );
+        },
+        signalhandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(!safeMode){
+                        window.setTimeout(apps.bootScript.vars.doBootScript, 1);
+                    }else{
+                        doLog('Refusing to run BootScripts because SafeMode is on.', "#F00");
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'Custom Style Editor';
 });
 c(function(){
-    apps.styleEditor = new Application(
-        'CSE',
-        'Custom Style Editor',
-        0,
-        function(){
+    apps.styleEditor = new Application({
+        title: "Custom Style Editor",
+        abbreviation: "CSE",
+        codeName: "styleEditor",
+        image: 'appicons/ds/CSE.png',
+        hideApp: 1,
+        main: function(){
             if(!this.appWindow.appIcon){
                 if(styleEditorTemplateMode){
                     this.appWindow.setDims("auto", "auto", 400, 500);
@@ -15234,44 +14806,7 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    if(styleEditorTemplateMode){
-                        openapp(apps.styleEditor, "dsktp");
-                        setTimeout(function(){toTop(apps.styleEditor);}, 1000);
-                    }
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'Create your own custom CSS stylesheet for aOS! It is embedded as an actual stylesheet, placed such that it overrides the default styles.<br><br>If you create something you want to be featured in aOS, please tell the developer so he can take a look!',
             saveStyleEditor: function(){
                 apps.savemaster.vars.save('aos_system/user_custom_style', getId('CSEtextarea').value, 1);
@@ -15331,16 +14866,55 @@ c(function(){
             templateID: 'no ID',
             templateClass: 'no class',
             templateParent: 'no parent',
-        }, 1, 'styleEditor', 'appicons/ds/CSE.png'
-    );
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(styleEditorTemplateMode){
+                        openapp(apps.styleEditor, "dsktp");
+                        setTimeout(function(){toTop(apps.styleEditor);}, 1000);
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'Function Grapher';
 });
 c(function(){
-    apps.graph = new Application(
-        'Gph',
-        'Function Grapher',
-        0,
-        function(){
+    apps.graph = new Application({
+        title: "Function Grapher",
+        abbreviation: "Gph",
+        codeName: "graph",
+        image: 'appicons/ds/Gph.png',
+        hideApp: 1,
+        main: function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 406, 524);
@@ -15377,41 +14951,7 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'A very simple function grapher for aOS. The "window" size is from -10 to 10 on the X and Y axis. Keep in mind that the math uses JAVASCRIPT NOTATION!',
             cnv: {},
             ctx: {},
@@ -15501,16 +15041,18 @@ c(function(){
                     getId('GphStatus').innerHTML += '<span style="background-color:' + this.currColor + '">&nbsp;</span><span style="background-color:#F00">&nbsp;</span> Break at f(' + x + ') : ' + err + '<br>';
                 }
             }
-        }, 1, 'graph', 'appicons/ds/Gph.png'
-    );
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'Magnifier';
 });
 c(function(){
-    apps.magnifier = new Application(
-        'Mag',
-        'Magnifier',
-        0,
-        function(){
+    apps.magnifier = new Application({
+        title: "Magnifier",
+        abbreviation: "Mag",
+        codeName: "magnifier",
+        image: 'appicons/ds/Mag.png',
+        hideApp: 1,
+        main: function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.setDims(10, 10, 300, 100);
                 this.appWindow.setCaption('Magnifier');
@@ -15523,41 +15065,7 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'Magnify the aOS screen to make it easier to see with visual impairments or HiDPI monitors.',
             running: 0,
             currMag: 2,
@@ -15589,16 +15097,18 @@ c(function(){
                 //getId('monitor').style.transform = 'scale(' + this.currMag + ')';
                 document.body.style.transformOrigin = event.pageX + 'px ' + event.pageY + 'px';
             }
-        }, 1, "magnifier", 'appicons/ds/Mag.png'
-    );
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'iFrame Browser';
 });
 c(function(){
-    apps.iFrameBrowser = new Application(
-        'iFB',
-        'iFrame Browser',
-        0,
-        function(){
+    apps.iFrameBrowser = new Application({
+        title: "iFrame Browser",
+        abbreviation: "iFB",
+        codeName: "iFrameBrowser",
+        image: 'appicons/ds/systemApp.png',
+        hideApp: 2,
+        main: function(){
             if(!this.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 800, 600);
@@ -15616,43 +15126,7 @@ c(function(){
             this.appWindow.openWindow();
             this.vars.resetTabs();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    if(ufload("aos_system/apps/iframebrowser/proxyurl")){
-                        apps.iFrameBrowser.vars.proxyUrl = ufload("aos_system/apps/iframebrowser/proxyurl");
-                    }
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'The iFrame Browser is a placeholder app to view a webpage in an iframe within an app. This app is not a full web browser. If aOS is loaded over HTTPS, you won\'t be able to view HTTP sites here. Many sites block iFrames.',
             go: function(url){
                 if(getId("iFBframes").childNodes.length < 1){
@@ -15746,36 +15220,8 @@ c(function(){
                     "iFrame Browser"
                 )
             }
-        }, 2, 'iFrameBrowser', 'appicons/ds/systemApp.png'
-    );
-    getId('aOSloadingInfo').innerHTML = 'Pet Cursors';
-});
-c(function(){
-    apps.petCursors = new Application(
-        'PC',
-        'Pet Cursors',
-        0,
-        function(){
-            if(!this.appIcon){
-                getId('win_petCursors_html').style.overflowY = 'auto';
-                this.appWindow.setDims("auto", "auto", 800, 500);
-                this.appWindow.setCaption('Pet Cursors');
-                this.appWindow.setContent(
-                    '<p>Use this app to make extra cursor "pets" that follow your mouse around the screen like, well, pets.</p>' +
-                    '<hr>' +
-                    'Use this button to turn the app on and off: <button onclick="apps.petCursors.vars.toggleApp()">Toggle</button><br><br>' +
-                    'Add new cursors:' +
-                    '<br><span id="petCursorsPresets"></span>' +
-                    'Your cursors:' +
-                    '<br><button onclick="apps.petCursors.vars.deleteAll()">Delete All</button>' +
-                    '<br><ol id="petCursorsList"></ol>'
-                );
-                this.vars.buildPresetList();
-                this.vars.buildCursorList();
-            }
-            this.appWindow.openWindow();
         },
-        function(signal){
+        signalHandler: function(signal){
             switch(signal){
                 case "forceclose":
                     //this.vars = this.varsOriginal;
@@ -15800,17 +15246,8 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    if(ufload("aos_system/apps/petCursors/cursors")){
-                        try{
-                            this.vars.cursors = JSON.parse(ufload("aos_system/apps/petCursors/cursors"));
-                        }catch(err){
-                            doLog('Pet Cursors save file is corrupt!', '#F00');
-                        }
-                    }
-                    if(ufload("aos_system/apps/petCursors/app_enabled")){
-                        if(ufload("aos_system/apps/petCursors/app_enabled") === "1"){
-                            this.vars.toggleApp(1);
-                        }
+                    if(ufload("aos_system/apps/iframebrowser/proxyurl")){
+                        apps.iFrameBrowser.vars.proxyUrl = ufload("aos_system/apps/iframebrowser/proxyurl");
                     }
                     break;
                 case 'shutdown':
@@ -15819,8 +15256,38 @@ c(function(){
                 default:
                     doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
             }
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Pet Cursors';
+});
+c(function(){
+    apps.petCursors = new Application({
+        title: "Pet Cursors",
+        abbreviation: "PC",
+        codeName: "petCursors",
+        image: 'appicons/ds/GTK.png',
+        hideApp: 1,
+        main: function(){
+            if(!this.appIcon){
+                getId('win_petCursors_html').style.overflowY = 'auto';
+                this.appWindow.setDims("auto", "auto", 800, 500);
+                this.appWindow.setCaption('Pet Cursors');
+                this.appWindow.setContent(
+                    '<p>Use this app to make extra cursor "pets" that follow your mouse around the screen like, well, pets.</p>' +
+                    '<hr>' +
+                    'Use this button to turn the app on and off: <button onclick="apps.petCursors.vars.toggleApp()">Toggle</button><br><br>' +
+                    'Add new cursors:' +
+                    '<br><span id="petCursorsPresets"></span>' +
+                    'Your cursors:' +
+                    '<br><button onclick="apps.petCursors.vars.deleteAll()">Delete All</button>' +
+                    '<br><ol id="petCursorsList"></ol>'
+                );
+                this.vars.buildPresetList();
+                this.vars.buildCursorList();
+            }
+            this.appWindow.openWindow();
         },
-        {
+        vars: {
             appInfo: 'Pet Cursors will give you any number of extra cursors that will follow you around as you use aOS.',
             enabled: 0,
             buildPresetList: function(){
@@ -16047,16 +15514,71 @@ c(function(){
                     setTimeout(apps.petCursors.vars.moveCursors, 100);
                 }
             }
-        }, 0, 'petCursors', 'appicons/ds/GTK.png'
-    );
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(ufload("aos_system/apps/petCursors/cursors")){
+                        try{
+                            this.vars.cursors = JSON.parse(ufload("aos_system/apps/petCursors/cursors"));
+                        }catch(err){
+                            doLog('Pet Cursors save file is corrupt!', '#F00');
+                        }
+                    }
+                    if(ufload("aos_system/apps/petCursors/app_enabled")){
+                        if(ufload("aos_system/apps/petCursors/app_enabled") === "1"){
+                            this.vars.toggleApp(1);
+                        }
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        }
+    });
     getId('aOSloadingInfo').innerHTML = 'Init aOS Hub...';
 });
 c(function(){
-    apps.appCenter = new Application(
-        'AH',
-        'aOS Hub',
-        1,
-        function(launchtype){
+    apps.appCenter = new Application({
+        title: "aOS Hub",
+        abbreviation: "AH",
+        codeName: "appCenter",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/appCenter/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        },
+        hideApp: 0,
+        launchTypes: 1,
+        main: function(launchtype){
             if(!this.appWindow.appIcon){
                 this.appWindow.setCaption("aOS Hub");
                 this.appWindow.setDims("auto", "auto", 600, 400);
@@ -16085,93 +15607,7 @@ c(function(){
             }
             this.appWindow.openWindow();
         },
-        function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    if(safeMode){
-                        doLog("Failed initializing aOS Hub apps because Safe Mode is enabled.", "#F00");
-                    }else{
-                        repoLoad();
-                        for(var repository in installedPackages){
-                            for(var package in installedPackages[repository]){
-                                if(installedPackages[repository][package].appType === "webApp"){
-                                    try{
-                                        apps.appCenter.vars.compileWebApp(installedPackages[repository][package], repository + '__' + package);
-                                    }catch(err){
-                                        doLog("Failed initializing " + repository + '.' + package + ":", "#F00");
-                                        doLog(err, "#F00");
-                                    }
-                                }else if(installedPackages[repository][package].appType === "stylesheet"){
-                                    if(installedPackages[repository][package].hasOwnProperty("styleContent")){
-                                        var customCSS = document.createElement("style");
-                                        customCSS.classList.add("customstyle_appcenter");
-                                        customCSS.id = "customstyle_appcenter_" + repository + "_" + package;
-                                        customCSS.innerHTML = installedPackages[repository][package].styleContent;
-                                        document.head.appendChild(customCSS);
-                                    }else{
-                                        var customCSS = document.createElement("link");
-                                        customCSS.setAttribute("rel", "stylesheet");
-                                        customCSS.href = installedPackages[repository][package].styleLink;
-                                        customCSS.classList.add("customstyle_appcenter");
-                                        customCSS.id = "customstyle_appcenter_" + repository + "_" + package;
-                                        document.head.appendChild(customCSS);
-                                    }
-                                }
-                            }
-                        }
-                        repoUpdate(null, function(){
-                            var updates = repoGetUpgradeable();
-                            if(updates.length > 0){
-                                apps.prompt.vars.notify(updates.length + " app updates available.", ["Dismiss", "View Updates"], function(btn){
-                                    if(btn === 1){
-                                        openapp(apps.appCenter, "updates");
-                                    }
-                                }, "aOS Hub");
-                            }
-                        });
-                        // alphabetized array of apps
-                        appsSorted = [];
-                        for(var i in apps){
-                            appsSorted.push(apps[i].appDesc.toLowerCase() + "|AC_apps_sort|" + i);
-                        }
-                        appsSorted.sort();
-                        for(var i in appsSorted){
-                            var tempStr = appsSorted[i].split("|AC_apps_sort|");
-                            tempStr = tempStr[tempStr.length - 1];
-                            appsSorted[i] = tempStr;
-                        }
-                    }
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        },
-        {
+        vars: {
             appInfo: 'aOS Hub is a GUI front-end for the aOS repository and package system.',
             previousScrollPoint: 0,
             displayUpdates: function(updateScreen){
@@ -16354,11 +15790,13 @@ c(function(){
                 repoRemoveRepository(elem.getAttribute("data-appcenter-repo"), function(){}, apps.appCenter.vars.listRepos);
             },
             compileWebApp: function(varSet, pkgName){
-                apps['webApp_' + pkgName] = new Application(
-                    varSet.abbreviation,
-                    varSet.name,
-                    0,
-                    function(){
+                apps['webApp_' + pkgName] = new Application({
+                    title: varSet.name,
+                    abbreviation: varSet.abbreviation,
+                    codeName: 'webApp_' + pkgName,
+                    image: varSet.icon,
+                    hideApp: 1,
+                    main: function(){
                         this.appWindow.setCaption(this.appDesc);
                         if(!this.appWindow.appIcon){
                             this.appWindow.paddingMode(0);
@@ -16374,84 +15812,18 @@ c(function(){
                         }else{
                             this.appWindow.openWindow();
                         }
-                        
                     },
-                    function(signal){
-                        switch(signal){
-                            case "forceclose":
-                                //this.vars = this.varsOriginal;
-                                this.appWindow.closeWindow();
-                                this.appWindow.closeIcon();
-                                break;
-                            case "close":
-                                this.appWindow.closeWindow();
-                                setTimeout(function(){
-                                    if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                                        this.appWindow.setContent("");
-                                    }
-                                }.bind(this), 300);
-                                break;
-                            case "checkrunning":
-                                if(this.appWindow.appIcon){
-                                    return 1;
-                                }else{
-                                    return 0;
-                                }
-                            case "shrink":
-                                this.appWindow.closeKeepTask();
-                                break;
-                            case "USERFILES_DONE":
-                                
-                                break;
-                            case 'shutdown':
-                                    
-                                break;
-                            default:
-                                doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-                        }
-                    },
-                    {
+                    vars: {
                         appInfo: 'This app was installed via the aOS Hub.<br><br>Home URL:<br>' + varSet.homeURL + '<br><br>Package name:<br>' + pkgName.split('__').join('.') + '<br><br>App object name:<br>apps.webApp_' + pkgName,
                         appURL: varSet.homeURL,
                         sizeX: varSet.windowSize[0],
                         sizeY: varSet.windowSize[1],
                         manualOpen: varSet.manualOpen || 0
-                    }, 1, 'webApp_' + pkgName, varSet.icon
-                );
-            }
-        }, 0, 'appCenter', {
-            backgroundColor: "#303947",
-            foreground: "smarticons/appCenter/fg.png",
-            backgroundBorder: {
-                thickness: 2,
-                color: "#252F3A"
-            }
-        }
-    );
-    getId('aOSloadingInfo').innerHTML = 'Developer Documentation';
-});
-c(function(){
-    m('init DD');
-    apps.devDocumentation = new Application(
-        'DD',
-        'Developer Documentation',
-        0,
-        function(){
-            if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe data-parent-app="devDocumentation" id="DDframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="documentation/"></iframe>');
-                getId("icn_devDocumentation").style.display = "inline-block";
-                requestAnimationFrame(() => {
-                    this.appWindow.appIcon = 1;
+                    }
                 });
             }
-            this.appWindow.setCaption('Developer Documentation');
-            this.appWindow.setDims("auto", "auto", 1000, 600);
-            if(this.appWindow.appIcon){
-                this.appWindow.openWindow();
-            }
         },
-        function(signal){
+        signalHandler: function(signal){
             switch(signal){
                 case "forceclose":
                     //this.vars = this.varsOriginal;
@@ -16476,7 +15848,59 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    
+                    if(safeMode){
+                        doLog("Failed initializing aOS Hub apps because Safe Mode is enabled.", "#F00");
+                    }else{
+                        repoLoad();
+                        for(var repository in installedPackages){
+                            for(var package in installedPackages[repository]){
+                                if(installedPackages[repository][package].appType === "webApp"){
+                                    try{
+                                        apps.appCenter.vars.compileWebApp(installedPackages[repository][package], repository + '__' + package);
+                                    }catch(err){
+                                        doLog("Failed initializing " + repository + '.' + package + ":", "#F00");
+                                        doLog(err, "#F00");
+                                    }
+                                }else if(installedPackages[repository][package].appType === "stylesheet"){
+                                    if(installedPackages[repository][package].hasOwnProperty("styleContent")){
+                                        var customCSS = document.createElement("style");
+                                        customCSS.classList.add("customstyle_appcenter");
+                                        customCSS.id = "customstyle_appcenter_" + repository + "_" + package;
+                                        customCSS.innerHTML = installedPackages[repository][package].styleContent;
+                                        document.head.appendChild(customCSS);
+                                    }else{
+                                        var customCSS = document.createElement("link");
+                                        customCSS.setAttribute("rel", "stylesheet");
+                                        customCSS.href = installedPackages[repository][package].styleLink;
+                                        customCSS.classList.add("customstyle_appcenter");
+                                        customCSS.id = "customstyle_appcenter_" + repository + "_" + package;
+                                        document.head.appendChild(customCSS);
+                                    }
+                                }
+                            }
+                        }
+                        repoUpdate(null, function(){
+                            var updates = repoGetUpgradeable();
+                            if(updates.length > 0){
+                                apps.prompt.vars.notify(updates.length + " app updates available.", ["Dismiss", "View Updates"], function(btn){
+                                    if(btn === 1){
+                                        openapp(apps.appCenter, "updates");
+                                    }
+                                }, "aOS Hub");
+                            }
+                        });
+                        // alphabetized array of apps
+                        appsSorted = [];
+                        for(var i in apps){
+                            appsSorted.push(apps[i].appDesc.toLowerCase() + "|AC_apps_sort|" + i);
+                        }
+                        appsSorted.sort();
+                        for(var i in appsSorted){
+                            var tempStr = appsSorted[i].split("|AC_apps_sort|");
+                            tempStr = tempStr[tempStr.length - 1];
+                            appsSorted[i] = tempStr;
+                        }
+                    }
                     break;
                 case 'shutdown':
                         
@@ -16484,18 +15908,44 @@ c(function(){
                 default:
                     doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
             }
-        },
-        {
-            appInfo: 'This is the official AaronOS developer documentation. This is mostly useful to those writing Web Apps.',
-        }, 0, 'devDocumentation', {
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Developer Documentation';
+});
+c(function(){
+    m('init DD');
+    apps.devDocumentation = new Application({
+        title: "Developer Documentation",
+        abbreviation: "DD",
+        codeName: "devDocumentation",
+        image: {
             backgroundColor: "#303947",
             foreground: "smarticons/aOS/fg.png",
             backgroundBorder: {
                 thickness: 2,
                 color: "#252F3A"
             }
+        },
+        hideApp: 0,
+        main: function(){
+            if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
+                this.appWindow.setContent('<iframe data-parent-app="devDocumentation" id="DDframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="documentation/"></iframe>');
+                getId("icn_devDocumentation").style.display = "inline-block";
+                requestAnimationFrame(() => {
+                    this.appWindow.appIcon = 1;
+                });
+            }
+            this.appWindow.setCaption('Developer Documentation');
+            this.appWindow.setDims("auto", "auto", 1000, 600);
+            if(this.appWindow.appIcon){
+                this.appWindow.openWindow();
+            }
+        },
+        vars: {
+            appInfo: 'This is the official AaronOS developer documentation. This is mostly useful to those writing Web Apps.'
         }
-    );
+    });
     getId('aOSloadingInfo').innerHTML = 'Finalizing...';
 });
 m('init finalizing');
