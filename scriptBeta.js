@@ -210,7 +210,7 @@ function cleanStr(str){
 // i got bored
 var lsdTimeout = -1;
 function lsd(){
-    doLog('Hey! If you suffer from a photosensitivity, please use lsdCancel() in the next 20 seconds!')
+    doLog('Hey! If you suffer from a photosensitivity, please use lsdCancel() in the next 20 seconds!');
     lsdTimeout = setTimeout(function(){
         doLog('duuuuuude');
         setInterval(function(){
@@ -246,9 +246,12 @@ function lsd(){
             }catch(err){}
         }, 16);
     }, 20000);
+    return 'Hey! If you suffer from a photosensitivity, please use lsdCancel() in the next 20 seconds!';
 }
 function lsdCancel(){
     clearTimeout(lsdTimeout);
+    doLog("Cancelled lsd()");
+    return "Cancelled lsd()";
 }
 
 // make sure monitor doesnt get scrolled away
@@ -5565,7 +5568,11 @@ c(function(){
                 this.appWindow.setCaption(lang('appNames', 'bash'));
                 this.appWindow.setDims("auto", "auto", 662, 504);
                 this.appWindow.setContent(
-                    '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;width:100%;">This terminal is a work-in-progress. Some features are incomplete.</span>' +
+                    '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;width:100%;">' +
+                    'Click on the prompt\'s line to begin typing.<br>' +
+                    'Use "help" for a list of commands or for information of a specific command.<br>' +
+                    'This terminal is a work-in-progress. Some features are incomplete.' +
+                    '</span>' +
                     '<input id="bashInput" onkeydown="apps.bash.vars.checkPrefix()" onkeypress="apps.bash.vars.checkPrefix()" onkeyup="apps.bash.vars.checkPrefix();if(event.keyCode === 13){apps.bash.vars.execute()}" style="background:none;color:inherit;box-shadow:none;display:block;line-height:1em;font-family:aosProFont;font-size:12px;border:none;outline:none;padding:0;width:100%;">'
                 );
                 this.vars.checkPrefix();
@@ -11271,6 +11278,7 @@ c(function(){
                 " : Caption buttons of maximized windows now have the correct amount of padding.",
                 " : Fixed File Browser's search function removing folder icons.",
                 " + The AaronOS system uptime is now available in the Time widget's menu.",
+                " + Added some extra information to the Psuedo-Bash Terminal\'s starting message.",
                 " - Removed the shadow effect from the taskbar.",
             ]
         },
