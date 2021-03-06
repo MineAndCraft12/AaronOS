@@ -368,7 +368,7 @@ div{
             -webkit-backdrop-filter:blur(5px);
             backdrop-filter:blur(5px);
         }
-            .mobileMode .window{
+            .mobileMode .window, .window.maximizedWindow{
                 border-radius:0;
                 left:0 !important;
                 top:0 !important;
@@ -390,7 +390,7 @@ div{
                 /*background-blend-mode:screen;*/
                 background-blend-mode:screen;
             }
-                .mobileMode .winAero:not(#tskbrAero){
+                .mobileMode .winAero:not(#tskbrAero), .window.maximizedWindow .winAero{
                     width: calc(100% + 80px) !important;
                     height: calc(100% + 80px) !important;
                     background-position: 40px 40px !important;
@@ -463,7 +463,7 @@ div{
                 border-bottom-right-radius: 5px;
                 padding-left:3px;
             }
-                .mobileMode .winHTML{
+                .mobileMode .winHTML, .window.maximizedWindow .winHTML{
                     width:calc(100% - 3px) !important;
                     height:calc(100% - 32px) !important;
                     bottom: 0;
@@ -475,7 +475,7 @@ div{
                     width:calc(100% - 6px); /* fallback */
                     width:calc(100% - var(--windowBorderWidth) - var(--windowBorderWidth));
                 }
-                    .mobileMode .winHTML.noPadding{
+                    .mobileMode .winHTML.noPadding, .window.maximizedWindow .winHTML.noPadding{
                         width:100% !important;
                     }
                 .darkMode .winHTML{
@@ -910,7 +910,7 @@ div{
 	text-shadow:0px 0px 2px #000;
 	font-family:Courier, monospace;
 	font-size: 21px;
-    box-shadow: 0 0 10px #000;
+    /*box-shadow: 0 0 10px #000;*/
     z-index:101;
     transform-origin:15px 15px;
     -webkit-backdrop-filter: blur(5px);
@@ -919,10 +919,26 @@ div{
 	#icons{
 		height:32px;
 		/*width:600px;*/
+        max-width:calc(100% - 300px);
+        overflow-x:auto;
+        white-space:nowrap;
 	}
+        #icons::-webkit-scrollbar{
+            height:1px !important;
+            background:#626262 !important;
+            box-shadow:none !important;
+        }
+        #icons::-webkit-scrollbar-thumb{
+            background:#BFBFBF !important;
+            box-shadow:none !important;
+            border-radius:0;
+        }
+        #icons::-webkit-scrollbar-button{
+            display:none;
+        }
         #icons .icon{
             height:32px;
-            width:44px;
+            /*width:44px;*/
             /*border-right:2px solid rgba(100, 100, 155, .6);*/
             border-radius:2px;
             display:none;
@@ -930,11 +946,24 @@ div{
             /*display:inline-block;*/
             position:static;
             transition:background-color .5s;
+            padding-right:5px;
         }
         #icons .icon:hover{
             /*background:radial-gradient(25px at 50% 100%, rgba(220, 220, 255, .8) 0px, rgba(220, 220, 255, 0) 25px);*/
             background:rgba(255, 255, 255, 0.1);
         }
+            .taskbarIconTitle{
+                font-family:"Consolas", "Courier", monospace;
+                font-size:16px;
+                height:32px;
+                line-height:32px;
+                position:relative;
+                display:inline-block;
+                padding-left:6px;
+            }
+            .noIconTitles .taskbarIconTitle{
+                display:none;
+            }
             #icons .icon.activeAppIcon{
                 background: rgba(255, 255, 255, 0.25);
             }

@@ -30,6 +30,8 @@ Looking under the hood?
          |
         \|/                                    */
 
+var bootTime = new Date().getTime();
+
 // force https
 try{
     if(serverCanUseHTTPS){
@@ -1876,11 +1878,13 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 d(1, 'Setting Maximise.');
                 if(this.fullscreen){
                     this.fullscreen = 0;
-                    this.setDims(this.fullscreentempvars[0], this.fullscreentempvars[1], this.fullscreentempvars[2], this.fullscreentempvars[3]);
+                    //this.setDims(this.fullscreentempvars[0], this.fullscreentempvars[1], this.fullscreentempvars[2], this.fullscreentempvars[3]);
+                    getId("win_" + this.objName + "_top").classList.remove("maximizedWindow");
                 }else{
-                    this.fullscreentempvars = [this.windowX, this.windowY, this.windowH, this.windowV];
-                    this.setDims(-1 * apps.settings.vars.winBorder, 0, parseInt(getId('desktop').style.width, 10) + (apps.settings.vars.winBorder * 2), parseInt(getId('desktop').style.height, 10) + apps.settings.vars.winBorder);
+                    //this.fullscreentempvars = [this.windowX, this.windowY, this.windowH, this.windowV];
+                    //this.setDims(-1 * apps.settings.vars.winBorder, 0, parseInt(getId('desktop').style.width, 10) + (apps.settings.vars.winBorder * 2), parseInt(getId('desktop').style.height, 10) + apps.settings.vars.winBorder);
                     this.fullscreen = 1;
+                    getId("win_" + this.objName + "_top").classList.add("maximizedWindow");
                     //getId("win" + this.dsktpIcon).style.transform = 'scale(' + (parseInt(getId("desktop").style.width) / this.windowH) + ',' + (parseInt(getId("desktop").style.height) / this.windowV) + ')';
                 }
             }
@@ -1955,7 +1959,9 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                 '<div class="icon cursorPointer" id="icn_' + appPath + '">' +
                 '<div class="iconOpenIndicator"></div>' +
                 //'<img class="imageIco" src="' + appImg + '" onerror="this.src=\'appicons/ds/redx.png\'"></div>';
-                buildSmartIcon(32, this.appWindow.appImg, "margin-left:6px") + '</div>';
+                buildSmartIcon(32, this.appWindow.appImg, "margin-left:6px") + 
+                '<div class="taskbarIconTitle" id="icntitle_' + appPath + '">' + appDesc + '</div>' +
+                '</div>';
         }else{
             getId("icons").innerHTML +=
                 '<div class="icon cursorPointer" id="icn_' + appPath + '">' +
@@ -2901,7 +2907,15 @@ widgets.time = new Widget(
     'Time', // title
     'time', // name in widgets object
     function(){ // onclick function
-        widgetMenu('Time Widget', 'There are no settings for this widget yet.');
+        var currentTime = (new Date().getTime() - bootTime);
+        var currentDays = Math.floor(currentTime  / 86400000);
+        currentTime -= currentDays * 86400000;
+        var currentHours = Math.floor(currentTime / 3600000);
+        currentTime -= currentHours * 3600000;
+        var currentMinutes = Math.floor(currentTime / 60000);
+        currentTime -= currentMinutes * 60000;
+        var currentSeconds = Math.floor(currentTime / 1000);
+        widgetMenu('Time Widget', 'AaronOS has been running for:<br>' + currentDays + ' days, ' + currentHours + ' hours, ' + currentMinutes + ' minutes, and ' + currentSeconds + ' seconds.');
     },
     function(){ // start function
         widgets.time.vars.running = 1;
@@ -3958,6 +3972,8 @@ c(function(){
                         addWidget('time', 1);
                         addWidget('flow', 1);
                     }
+                    // remove taskbar text
+                    getId('icntitle_startMenu').style.display = "none";
                     break;
                 case "shutdown":
                     
@@ -5221,6 +5237,8 @@ c(function(){
                     getId("icn_nora").classList.remove("openAppIcon");
                     break;
                 case "USERFILES_DONE":
+                    // remove taskbar text
+                    getId('icntitle_nora').style.display = "none";
                     this.vars.ddg = new XMLHttpRequest();
                     this.vars.ddg.onreadystatechange = function(){
                         apps.nora.vars.finishDDG();
@@ -7308,6 +7326,11 @@ c(function(){
                     folderName: 'Taskbar',
                     folderPath: 'apps.settings.vars.menus.taskbar',
                     image: 'settingIcons/new/taskbar.png',
+                    taskbarIconTitle: {
+                        option: 'Taskbar Icon Titles',
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.iconTitlesEnabled)">true</span><br>Shows application titles on taskbar icons. Disabling this option makes icons take up far less space.'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.toggleIconTitles();">Toggle</button>'}
+                    },
                     taskbarPos: {
                         option: 'Taskbar Position',
                         description: function(){return 'Change the position of the taskbar on the screen.'},
@@ -7595,6 +7618,18 @@ c(function(){
                 }
                 if(!nosave){
                     ufsave('aos_system/windows/controls_on_left', this.captionButtonsLeft);
+                }
+            },
+            iconTitlesEnabled: 1,
+            toggleIconTitles: function(nosave){
+                this.iconTitlesEnabled = Math.abs(this.iconTitlesEnabled - 1);
+                if(this.iconTitlesEnabled){
+                    getId("icons").classList.remove("noIconTitles");
+                }else{
+                    getId("icons").classList.add("noIconTitles");
+                }
+                if(!nosave){
+                    ufsave("aos_system/taskbar/iconTitles", String(this.iconTitlesEnabled));
                 }
             },
             setClipboardSlots: function(newSlots, nosave){
@@ -8778,6 +8813,11 @@ c(function(){
                             if(ufload("aos_system/windows/controls_on_left")){
                                 if(ufload("aos_system/windows/controls_on_left") === "1"){
                                     apps.settings.vars.togCaptionButtonsLeft(1);
+                                }
+                            }
+                            if(ufload("aos_system/taskbar/iconTitles")){
+                                if(ufload("aos_system/taskbar/iconTitles") === "0"){
+                                    apps.settings.vars.toggleIconTitles(1);
                                 }
                             }
                             if(ufload("aos_system/language")){
@@ -11222,11 +11262,21 @@ c(function(){
                 " : Bash Terminal now shows the horizontal scrollbar when needed.",
                 " : Windowblur Test is renamed to Transparent Window.",
                 " : Behind-the-scenes, the method to initialize an app has been made far easier and safer. This is a very large change, but the visible impact should be minimal aside more consistent behavior between apps using default behavior."
+            ],
+            "03/06/2021: B1.5.5.0": [
+                " + Added application titles to taskbar icons.",
+                " + Taskbar icons are now horizontally scrollable if there are too many to fit on the screen.",
+                " + Maximized windows now respond correctly to screen resolution changes.",
+                " : Maximized windows now correctly set their size and shape to fill the boundaries of the desktop without bleeding through.",
+                " : Caption buttons of maximized windows now have the correct amount of padding.",
+                " : Fixed File Browser's search function removing folder icons.",
+                " + The AaronOS system uptime is now available in the Time widget's menu.",
+                " - Removed the shadow effect from the taskbar.",
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.4.1 (03/04/2021) r0';
+    window.aOSversion = 'B1.5.5.0 (03/06/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -11809,7 +11859,7 @@ c(function(){
                 getId("FIL2nav").innerHTML = tempHTML;
             },
             updateSearch: function(searchStr){
-                var searchElems = getId('FIL2tbl').getElementsByTagName('div');
+                var searchElems = getId('FIL2tbl').getElementsByClassName('cursorPointer');
                 for(var i = 0; i < searchElems.length; i++){
                     if(searchElems[i].innerText.toLowerCase().indexOf(searchStr.toLowerCase()) === -1){
                         searchElems[i].style.display = 'none';
@@ -16287,6 +16337,14 @@ function winresing(e){
     //getId(winmoveSelect).style.transform = "scale(" + (1 + (e.pageX - winmovex) * 0.0025) + "," + (1 + (e.pageY - winmovey) * 0.0025) + ")";
     //getId(winmoveSelect + "a").style.transform = "rotateY(" + -1 * (e.pageX - winmovex) + "deg)rotateX(" + -1 * (e.pageY - winmovey) + "deg)";
 }
+
+function scrollHorizontally(event){
+    this.scrollBy({
+        left: event.deltaY,
+        behavior: 'smooth'
+    });
+}
+getId("icons").addEventListener("wheel", scrollHorizontally);
 
 function highlightWindow(app){
     getId('windowFrameOverlay').style.display = 'block';

@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>AaronOS - Password</title>
+        <link rel="icon" href="favicon_si_beta.ico" type="image/x-icon">
         <script defer>
             function getId(target){
                 return document.getElementById(target);
