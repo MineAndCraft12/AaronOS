@@ -923,6 +923,9 @@ div{
         overflow-x:auto;
         white-space:nowrap;
 	}
+        .mobileMode #icons{
+            max-width:calc(100% - 200px);
+        }
         #icons::-webkit-scrollbar{
             height:1px !important;
             background:#626262 !important;
@@ -961,7 +964,7 @@ div{
                 display:inline-block;
                 padding-left:6px;
             }
-            .noIconTitles .taskbarIconTitle{
+            .noIconTitles .taskbarIconTitle, .mobileMode .taskbarIconTitle{
                 display:none;
             }
             #icons .icon.activeAppIcon{
