@@ -6119,7 +6119,7 @@ c(function(){
                 {
                     name: 'ls',
                     usage: 'ls [-R] [dirname]',
-                    desc: 'List files in a directory.<br>-R prints subdirectories up to 1 layer deep<br>If no directory is provided, current directory is used.<br>WARNING: -s can be dangerous in large directories like /',
+                    desc: 'List files in a directory.\n-R prints subdirectories up to 1 layer deep\nIf no directory is provided, current directory is used.\nWARNING: -R can be dangerous in large directories like /',
                     action: function(args){
                         //if(apps.bash.vars.translateDir(args) !== 'window'){
                         if(args.length > 0){
@@ -6825,7 +6825,9 @@ c(function(){
                                 doLog("Modal " + modalID + " has no type.");
                         }
                         delete this.notifs[modalID];
-                        requestAnimationFrame(this.checkNotifs);
+                        requestAnimationFrame(function(){
+                            apps.prompt.vars.checkNotifs();
+                        });
                     }
                 }
             },
@@ -11280,11 +11282,14 @@ c(function(){
                 " + The AaronOS system uptime is now available in the Time widget's menu.",
                 " + Added some extra information to the Psuedo-Bash Terminal\'s starting message.",
                 " - Removed the shadow effect from the taskbar.",
+            ],
+            "03/26/2021: B1.5.5.1": [
+                " : Fixed modal windows disappearing after selecting one option and others were still available."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.5.0 (03/06/2021) r0';
+    window.aOSversion = 'B1.5.5.1 (03/26/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
