@@ -11285,11 +11285,14 @@ c(function(){
             ],
             "03/26/2021: B1.5.5.1": [
                 " : Fixed modal windows disappearing after selecting one option and others were still available."
+            ],
+            "03/28/2021: B1.5.5.2": [
+                " + Added third-party content disclaimer to repository page of the Hub."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.5.1 (03/26/2021) r0';
+    window.aOSversion = 'B1.5.5.2 (03/28/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -15812,7 +15815,9 @@ c(function(){
                         '</div></div>';
                 }
                 finalhtml += "<div style='position:relative;width:calc(100% - 35px);padding:16px;border-top:2px solid #7F7F7F;'>" +
-                    "<input id='APPCENTER_ADD_REPO' placeholder='https://'> <button onclick='apps.appCenter.vars.addRepo()'>Add Repository</button>"
+                    "<p>Add a new repository:</p>" +
+                    "<input id='APPCENTER_ADD_REPO' placeholder='https://'> <button onclick='apps.appCenter.vars.addRepo()'>Add Repository</button>" +
+                    "<p>Disclaimer: AaronOS is not responsible for the content of third-party repositories. Be safe!</p>" +
                     "</div>";
                 try{
                     getId("APPCENTER_packages").innerHTML = finalhtml;
