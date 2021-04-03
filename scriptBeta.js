@@ -8304,6 +8304,20 @@ c(function(){
                         getId('screensaverLayer').style.backgroundColor = '';
                         getId('screensaverLayer').innerHTML = '';
                     }
+                },
+                minecraftPlus: {
+                    name: "Minecraft Plus",
+                    selected: function(){
+                        apps.prompt.vars.alert("Screensaver applied.<br>There are no configuration options for this screensaver.<br><br>Screensaver made by Mojang, original <a href='https://plus.minecraft.net/' target='_blank'>here</a>.", "Okay.", function(){}, "Minecraft Plus Screensaver");
+                    },
+                    start: function(){
+                        getId('screensaverLayer').style.backgroundColor = '#000';
+                        getId('screensaverLayer').innerHTML = '<iframe src="https://plus.minecraft.net/?autorun=window" style="pointer-events:none;border:none;width:100%;height:100%;display:block;position:absolute;left:0;top:0;"></iframe>';
+                    },
+                    end: function(){
+                        getId('screensaverLayer').style.backgroundColor = '';
+                        getId('screensaverLayer').innerHTML = '';
+                    }
                 }
             },
             scnsavList: '',
@@ -11288,11 +11302,14 @@ c(function(){
             ],
             "03/28/2021: B1.5.5.2": [
                 " + Added third-party content disclaimer to repository page of the Hub."
+            ],
+            "04/03/2021: B1.5.6.0": [
+                " + Added Mojang's Minecraft Plus screensaver."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.5.2 (03/28/2021) r0';
+    window.aOSversion = 'B1.5.6.0 (04/03/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
