@@ -7103,7 +7103,8 @@ c(function(){
                     liveBackground: {
                         option: 'Live Background',
                         description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.liveBackgroundEnabled)"></span>.<br>' +
-                            'Live Background allows you to set a website as your desktop wallpaper. Not all websites work as Live Backgrounds.'},
+                            'Live Background allows you to set a website as your desktop wallpaper. Not all websites work as Live Backgrounds.<br>' +
+                            'One example here: https://plus.minecraft.net/?autorun=window'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togLiveBg()">Toggle</button> | <input id="STNliveBg" placeholder="URL to site" value="' + apps.settings.vars.liveBackgroundURL + '"> <button onclick="apps.settings.vars.setLiveBg(getId(\'STNliveBg\').value)">Set URL</button>'}
                     },
                     liveBackgroundScrollHide: {
