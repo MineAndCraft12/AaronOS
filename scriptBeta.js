@@ -7106,6 +7106,12 @@ c(function(){
                             'Live Background allows you to set a website as your desktop wallpaper. Not all websites work as Live Backgrounds.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togLiveBg()">Toggle</button> | <input id="STNliveBg" placeholder="URL to site" value="' + apps.settings.vars.liveBackgroundURL + '"> <button onclick="apps.settings.vars.setLiveBg(getId(\'STNliveBg\').value)">Set URL</button>'}
                     },
+                    liveBackgroundScrollHide: {
+                        option: "Hide Live Background Scrollbar",
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.liveBackgroundScrollHidden)"></span>.<br>' +
+                            'Some websites have scrollbars when used as a live background. If this is the case, this setting attempts to hide the scrollbar.'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.togLiveBgScrollHide()">Toggle</button>'}
+                    },
                     parallaxBackground: {
                         option: 'Parallax Background',
                         description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.prlxBackgroundEnabled)"></span>.<br>' +
@@ -7706,6 +7712,7 @@ c(function(){
                 checkMobileSize();
             },
             liveBackgroundEnabled: 0,
+            liveBackgroundScrollHide: 0,
             liveBackgroundURL: '',
             prxlBackgroundEnabled: 0,
             prlxBackgroundURLs: 'images/p1.png,images/p2.png,images/p3.png,images/p4.png',
@@ -7725,6 +7732,18 @@ c(function(){
                 }
                 if(!nosave){
                     ufsave('aos_system/desktop/background_live_enabled', apps.settings.vars.liveBackgroundEnabled);
+                }
+            },
+            togLiveBgScrollHide: function(nosave){
+                if(apps.settings.vars.liveBackgroundScrollHide){
+                    apps.settings.vars.liveBackgroundScrollHide = 0;
+                    getId('liveBackground').style.width = "";
+                }else{
+                    apps.settings.vars.liveBackgroundScrollHide = 1;
+                    getId('liveBackground').style.width = "calc(100% + 17px)";
+                }
+                if(!nosave){
+                    ufsave('aos_system/desktop/background_live_hide_scrollbar', apps.settings.vars.liveBackgroundScrollHide);
                 }
             },
             setLiveBg: function(newURL, nosave){
@@ -8312,7 +8331,7 @@ c(function(){
                     },
                     start: function(){
                         getId('screensaverLayer').style.backgroundColor = '#000';
-                        getId('screensaverLayer').innerHTML = '<iframe src="https://plus.minecraft.net/?autorun=window" style="pointer-events:none;border:none;width:100%;height:100%;display:block;position:absolute;left:0;top:0;"></iframe>';
+                        getId('screensaverLayer').innerHTML = '<iframe src="https://plus.minecraft.net/?autorun=window" style="pointer-events:none;border:none;width:calc(100% + 17px);height:100%;display:block;position:absolute;left:0;top:0;"></iframe>';
                     },
                     end: function(){
                         getId('screensaverLayer').style.backgroundColor = '';
@@ -8915,6 +8934,11 @@ c(function(){
                             if(ufload("aos_system/desktop/background_live_enabled")){
                                 if(ufload("aos_system/desktop/background_live_enabled") === "1"){
                                     apps.settings.vars.togLiveBg(1);
+                                }
+                            }
+                            if(ufload("aos_system/desktop/background_live_hide_scrollbar")){
+                                if(ufload("aos_system/desktop/background_live_hide_scrollbar") === "1"){
+                                    apps.settings.vars.togLiveBgScrollHide(1);
                                 }
                             }
                             if(ufload("aos_system/desktop/background_live_url")){
@@ -11304,7 +11328,8 @@ c(function(){
                 " + Added third-party content disclaimer to repository page of the Hub."
             ],
             "04/03/2021: B1.5.6.0": [
-                " + Added Mojang's Minecraft Plus screensaver."
+                " + Added Mojang's Minecraft Plus screensaver.",
+                " + Added setting to attempt to hide the scrollbar of Live Desktop Backgrounds.g"
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
