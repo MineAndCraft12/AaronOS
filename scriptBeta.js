@@ -7582,11 +7582,12 @@ c(function(){
                         getId('STNmenuTable').style.height = 'calc(100% - 64px)';
                         getId('STNmenuTable').style.bottom = '0';
                         getId('STNmenuTable').style.overflowY = 'auto';
-                        getId('STNmenuTitle').style.marginLeft = '232px';
+                        getId('STNmenuTitle').style.marginLeft = '76px';
                         if(menu !== this.menus){
                             getId('STNhomeButton').style.display = 'block';
                         }
-                        getId('STNmenuDiv').innerHTML += '<div id="STNcontentDiv" style="width:calc(100% - 232px);padding-top:5px;right:0;bottom:0;height:calc(100% - 69px);overflow-y:auto;"></div>';
+                        getId('STNmenuTable').style.maxWidth = "calc(50% - 6px)";
+                        getId('STNmenuDiv').innerHTML += '<div id="STNcontentDiv" style="width:calc(100% - 232px);min-width:50%;padding-top:5px;right:0;bottom:0;height:calc(100% - 69px);overflow-y:auto;"></div>';
                         for(var i in menu){
                             if(i !== 'folder' && i !== 'folderName' && i !== 'folderPath' && i !== 'image'){
                                 getId('STNcontentDiv').innerHTML += '<span style="font-size:24px">' + menu[i].option +
@@ -11330,12 +11331,20 @@ c(function(){
             ],
             "04/03/2021: B1.5.6.0": [
                 " + Added Mojang's Minecraft Plus screensaver.",
-                " + Added setting to attempt to hide the scrollbar of Live Desktop Backgrounds.g"
+                " + Added setting to attempt to hide the scrollbar of Live Desktop Backgrounds."
+            ],
+            "04/05/2021: B1.5.6.1": [
+                " : Existing right-click Context Menus no longer prevent the user from creating a different context menu.",
+                " : Context Menu options now display all-at-once instead of appearing over time.",
+                " : Settings menu title utilizes all available space instead of hanging to the side.",
+                " : Settings categories now make room for content at smaller sizes.",
+                " - Removed [site] tag from Messaging BBCode.",
+                " : Messaging formatting dialogue is now readable in dark mode."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.6.0 (04/03/2021) r0';
+    window.aOSversion = 'B1.5.6.1 (04/05/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13964,7 +13973,10 @@ c(function(){
             doFormatting: function(){
                 tempStr = '';
                 for(var i in apps.messaging.vars.objTypes){
-                    tempStr += '<br><br><br><br><span style="background:#CCC;padding:3px;border-radius:3px;">[' + i + ']</span><br><br>' + (apps.messaging.vars.objDesc[i] || 'No description.') + '<br><br>Example:<br><br><span style="background:#CCC;padding:3px;border-radius:3px;">' + (apps.messaging.vars.objExamp[i] || 'No examples.') + '</span><br><br>' + apps.messaging.vars.parseBB(apps.messaging.vars.objExamp[i] || '');
+                    tempStr += '<br><br><br><br><span style="background:rgba(127, 127, 127, 0.5);padding:3px;border-radius:3px;">[' + i + ']</span><br><br>' +
+                        (apps.messaging.vars.objDesc[i] || 'No description.') + '<br><br>Example:<br><br>' +
+                        '<span style="background:rgba(127, 127, 127, 0.5);padding:3px;border-radius:3px;">' + (apps.messaging.vars.objExamp[i] || 'No examples.') +
+                        '</span><br><br>' + apps.messaging.vars.parseBB(apps.messaging.vars.objExamp[i] || '');
                 }
                 apps.prompt.vars.alert('Here are all the installed formatting tools:' + tempStr, 'Okay', function(){}, 'Messaging');
             },
@@ -14176,12 +14188,12 @@ c(function(){
                 flip: function(str, param){
                     return '<div style="transform:rotate(180deg);display:inline-block;position:relative">' + str + '</div>';
                 },
-                site: function(str, param){
-                    if(str.indexOf('http://') !== 0 && str.indexOf('https://') !== 0 && str.indexOf('/') !== 0){
-                        str = 'https://' + encodeURI(str);
-                    }
-                    return '<div style="position:relative;display:block;width:100%;border:none;background:#FFF;margin-top:-3px;margin-bottom:-3px;border-radius:10px;box-shadow:inset 0 0 5px #000;height:400px;" onclick="if(event.target.tagName.toLowerCase() === \'button\'){this.outerHTML = \'<iframe data-parent-app=\\\'messaging\\\' src=\\\'\' + this.getAttribute(\'data-messaging-site-url\') + \'\\\' style=\\\'\' + this.getAttribute(\'style\') + \'\\\'></iframe>\'}" data-messaging-site-url="' + str + '"><p style="margin-top:188px;text-align:center;"><button>Click to load site:<br>' + str + '</button></p></div>';
-                }
+                //site: function(str, param){
+                //    if(str.indexOf('http://') !== 0 && str.indexOf('https://') !== 0 && str.indexOf('/') !== 0){
+                //        str = 'https://' + encodeURI(str);
+                //    }
+                //    return '<div style="position:relative;display:block;width:100%;border:none;background:#FFF;margin-top:-3px;margin-bottom:-3px;border-radius:10px;box-shadow:inset 0 0 5px #000;height:400px;" onclick="if(event.target.tagName.toLowerCase() === \'button\'){this.outerHTML = \'<iframe data-parent-app=\\\'messaging\\\' src=\\\'\' + this.getAttribute(\'data-messaging-site-url\') + \'\\\' style=\\\'\' + this.getAttribute(\'style\') + \'\\\'></iframe>\'}" data-messaging-site-url="' + str + '"><p style="margin-top:188px;text-align:center;"><button>Click to load site:<br>' + str + '</button></p></div>';
+                //}
             },
             objSafe: {
                 img: 0,
@@ -14197,7 +14209,7 @@ c(function(){
                 glow: 1,
                 outline: 1,
                 flip: 1,
-                site: 0
+                //site: 0
             },
             objShort: {
                 img: 0,
@@ -14213,7 +14225,7 @@ c(function(){
                 glow: 0,
                 outline: 0,
                 flip: 0,
-                site: 0
+                //site: 0
             },
             objDesc: {
                 img: 'Embed an image via URL.',
@@ -14229,7 +14241,7 @@ c(function(){
                 glow: 'Format your text with a colorful glow.',
                 outline: 'Format your text with an outline.',
                 flip: 'Flip your text upside-down.',
-                site: 'Embed a website via URL'
+                //site: 'Embed a website via URL'
             },
             objExamp: {
                 img: '[img]https://aaronos.dev/AaronOS/appicons/aOS.png[/img]',
@@ -14245,7 +14257,7 @@ c(function(){
                 glow: '[glow=red]This is glowy red text.[/glow]',
                 outline: '[outline=red]This is red outlined text.[/outline]',
                 flip: '[flip]This is upside-down text.[/flip]',
-                site: '[site]https://bing.com[/site]'
+                //site: '[site]https://bing.com[/site]'
             },
             parseBB: function(text, safe){
                 var tempIn = text;
@@ -16436,10 +16448,16 @@ var newCtxSetup = [
 var newCtxCoord = [10, 10];
 var newCtxArgs = [];
 var ctxMenuImg = "";
+var showingCtxMenu = 0;
 function ctxMenu(setupArray, version, event, args){
     m('Opening ctxMenu');
     if(version){
-        if(getId('ctxMenu').style.display !== "block"){
+        //if(getId('ctxMenu').style.display !== "block"){
+        if(!showingCtxMenu){
+            showingCtxMenu = 1;
+            requestAnimationFrame(function(){
+                showingCtxMenu = 0;
+            });
             newCtxCoord = [event.pageX * (1 / screenScale), event.pageY * (1 / screenScale)];
             newCtxArgs = args;
             newCtxSetup = setupArray;
@@ -16459,12 +16477,11 @@ function ctxMenu(setupArray, version, event, args){
                 getId("ctxMenu").style.top = newCtxCoord[1] + "px";
             }
             getId("ctxMenu").innerHTML = "";
+            var tempCtxContent = "";
             for(var i in newCtxSetup){
                 if(typeof newCtxSetup[i][0] === 'function'){
                     if(newCtxSetup[i][0](newCtxArgs)[0] === '+' || newCtxSetup[i][0](newCtxArgs)[0] === '_'){
-                        c(function(){
-                            getId("ctxMenu").innerHTML += '<hr>';
-                        });
+                            tempCtxContent += '<hr>';
                     }
                     if(newCtxSetup[i][2]){
                         ctxMenuImg = '<img src="' + newCtxSetup[i][2] + '" style="width:10px; height:10px; margin-top:1px; margin-bottom:-2px; margin-left:1px;" onerror="this.style.marginLeft = \'0\';this.style.marginRight = \'1px\';this.src = \'ctxMenu/beta/simple.png\'">';
@@ -16472,19 +16489,13 @@ function ctxMenu(setupArray, version, event, args){
                         ctxMenuImg = '<img src="ctxMenu/beta/simple.png" style="width:10px; height:10px; margin-top:1px; margin-bottom:-2px; margin-right:1px">';
                     }
                     if(newCtxSetup[i][0](newCtxArgs)[0] === '-' || newCtxSetup[i][0](newCtxArgs)[0] === '_'){
-                        c(function(arg){
-                            getId("ctxMenu").innerHTML += '<p class="hiddenCtxOption">' + arg[1] + "&nbsp;" + newCtxSetup[arg[0]][0](newCtxArgs).substring(1,newCtxSetup[arg[0]][0](newCtxArgs).length) + '&nbsp;</p>';
-                        }, [i, ctxMenuImg]);
+                        tempCtxContent += '<p class="hiddenCtxOption">' + ctxMenuImg + "&nbsp;" + newCtxSetup[i][0](newCtxArgs).substring(1,newCtxSetup[i][0](newCtxArgs).length) + '&nbsp;</p>';
                     }else{
-                        c(function(arg){
-                            getId("ctxMenu").innerHTML += '<p class="cursorPointer" onClick="newCtxSetup[' + arg[0] + '][1](newCtxArgs)">' + arg[1] + "&nbsp;" + newCtxSetup[arg[0]][0](newCtxArgs).substring(1,newCtxSetup[arg[0]][0](newCtxArgs).length) + '&nbsp;</p>';
-                        }, [i, ctxMenuImg]);
+                        tempCtxContent += '<p class="cursorPointer" onClick="newCtxSetup[' + i + '][1](newCtxArgs)">' + ctxMenuImg + "&nbsp;" + newCtxSetup[i][0](newCtxArgs).substring(1,newCtxSetup[i][0](newCtxArgs).length) + '&nbsp;</p>';
                     }
                 }else{
                     if(newCtxSetup[i][0][0] === '+' || newCtxSetup[i][0][0] === '_'){
-                        c(function(){
-                            getId("ctxMenu").innerHTML += '<hr>';
-                        });
+                        tempCtxContent += '<hr>';
                     }
                     if(newCtxSetup[i][2]){
                         ctxMenuImg = '<img src="' + newCtxSetup[i][2] + '" style="width:10px; height:10px; margin-top:1px; margin-bottom:-2px; margin-left:1px;" onerror="this.style.marginLeft = \'0\';this.style.marginRight = \'1px\';this.src = \'ctxMenu/beta/simple.png\'">';
@@ -16492,19 +16503,21 @@ function ctxMenu(setupArray, version, event, args){
                         ctxMenuImg = '<img src="ctxMenu/beta/simple.png" style="width:10px; height:10px; margin-top:1px; margin-bottom:-2px; margin-right:1px">';
                     }
                     if(newCtxSetup[i][0][0] === '-' || newCtxSetup[i][0][0] === '_'){
-                        c(function(arg){
-                            getId("ctxMenu").innerHTML += '<p class="hiddenCtxOption">' + arg[1] + "&nbsp;" + newCtxSetup[arg[0]][0].substring(1,newCtxSetup[arg[0]][0].length) + '&nbsp;</p>';
-                        }, [i, ctxMenuImg]);
+                        tempCtxContent += '<p class="hiddenCtxOption">' + ctxMenuImg + "&nbsp;" + newCtxSetup[i][0].substring(1,newCtxSetup[i][0].length) + '&nbsp;</p>';
                     }else{
-                        c(function(arg){
-                            getId("ctxMenu").innerHTML += '<p class="cursorPointer" onClick="newCtxSetup[' + arg[0] + '][1](newCtxArgs)">' + arg[1] + "&nbsp;" + newCtxSetup[arg[0]][0].substring(1,newCtxSetup[arg[0]][0].length) + '&nbsp;</p>';
-                        }, [i, ctxMenuImg]);
+                        tempCtxContent += '<p class="cursorPointer" onClick="newCtxSetup[' + i + '][1](newCtxArgs)">' + ctxMenuImg + "&nbsp;" + newCtxSetup[i][0].substring(1,newCtxSetup[i][0].length) + '&nbsp;</p>';
                     }
                 }
             }
+            getId("ctxMenu").innerHTML = tempCtxContent;
         }
     }else{
-        if(getId("ctxMenu").style.display !== "block"){
+        //if(getId("ctxMenu").style.display !== "block"){
+        if(!showingCtxMenu){
+            showingCtxMenu = 1;
+            requestAnimationFrame(function(){
+                showingCtxMenu = 0;
+            });
             ctxSetup = setupArray;
             getId("ctxMenu").style.display = "block";
             ctxSetup[0][0] *= (1 / screenScale);
@@ -16524,13 +16537,12 @@ function ctxMenu(setupArray, version, event, args){
                 getId("ctxMenu").style.top = ctxSetup[0][1] + "px";
             }
             getId("ctxMenu").innerHTML = "";
+            var tempCtxContent = "";
             for(var i = 1; i < ctxSetup.length - 1; i += 2){ // first char of name of element: + means new group | - means cannot click | _ means new group and cannot click
                 if(i !== 1){
                     if(ctxSetup[i][0] === '+' || ctxSetup[i][0] === '_'){
                         //getId("ctxMenu").innerHTML += '<hr>';
-                        c(function(){
-                            getId("ctxMenu").innerHTML += '<hr>';
-                        });
+                        tempCtxContent += '<hr>';
                     }
                 }
                 if(ctxSetup[0][2]){
@@ -16540,16 +16552,13 @@ function ctxMenu(setupArray, version, event, args){
                 }
                 if(ctxSetup[i][0] === '-' || ctxSetup[i][0] === '_'){
                     //getId("ctxMenu").innerHTML += '<p class="hiddenCtxOption">' + ctxSetup[i].substring(1,ctxSetup[i].length) + '</p>';
-                    c(function(arg){
-                        getId("ctxMenu").innerHTML += '<p class="hiddenCtxOption">' + arg[1] + "&nbsp;" + ctxSetup[arg[0]].substring(1,ctxSetup[arg[0]].length) + '&nbsp;</p>';
-                    }, [i, ctxMenuImg]);
+                    tempCtxContent += '<p class="hiddenCtxOption">' + ctxMenuImg + "&nbsp;" + ctxSetup[i].substring(1,ctxSetup[i].length) + '&nbsp;</p>';
                 }else{
                     //getId("ctxMenu").innerHTML += '<p onClick="' + ctxSetup[i + 1] + '">' + ctxSetup[i].substring(1,ctxSetup[i].length) + '</p>';
-                    c(function(arg){
-                        getId("ctxMenu").innerHTML += '<p class="cursorPointer" onClick="' + ctxSetup[arg[0] + 1] + '">' + arg[1] + "&nbsp;" + ctxSetup[arg[0]].substring(1,ctxSetup[arg[0]].length) + '&nbsp;</p>';
-                    }, [i, ctxMenuImg]);
+                    tempCtxContent += '<p class="cursorPointer" onClick="' + ctxSetup[i + 1] + '">' + ctxMenuImg + "&nbsp;" + ctxSetup[i].substring(1,ctxSetup[i].length) + '&nbsp;</p>';
                 }
             }
+            getId("ctxMenu").innerHTML = tempCtxContent;
         }
     }
     //disabled as it caused some errors
