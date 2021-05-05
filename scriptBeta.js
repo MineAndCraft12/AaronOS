@@ -11350,11 +11350,14 @@ c(function(){
                 " : Settings categories now make room for content at smaller sizes.",
                 " - Removed [site] tag from Messaging BBCode.",
                 " : Messaging formatting dialogue is now readable in dark mode."
+            ],
+            "05/05/2021: B1.5.6.2": [
+                " : Fixed dead-linked repositories being unremoveable."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.6.1 (04/05/2021) r0';
+    window.aOSversion = 'B1.5.6.2 (05/05/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
