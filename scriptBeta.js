@@ -2527,14 +2527,11 @@ function repoRemoveRepository(query, callback, finishingFunc){
         (callback || doLog)('Nothing done, no removeable repositories found.');
         return false;
     }else{
-        console.log(repositoriesToRemove);
         for(var i in repositoriesToRemove){
             if(repositoriesToRemove[i].indexOf('Warning: No Repo ID: ') === 0){
                 delete repositories[repositoriesToRemove[i].substring(21, repositoriesToRemove[i].length)];
                 (callback || doLog)('Deleted ' + repositoriesToRemove[i].substring(21, repositoriesToRemove[i].length));
             }else{
-                console.log(repositoryIDs[repositoriesToRemove[i]]);
-                console.log(repositories[repositoryIDs[repositoriesToRemove[i]]]);
                 delete repositories[repositoryIDs[repositoriesToRemove[i]]];
                 (callback || doLog)('Deleted ' + repositoriesToRemove[i] + ": " + repositoryIDs[repositoriesToRemove[i]]);
             }
