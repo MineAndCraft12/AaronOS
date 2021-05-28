@@ -8574,8 +8574,10 @@ c(function(){
                         apps.prompt.vars.prompt('What is the password of your target aOS system? You still have a chance to cancel, by leaving the field blank.<br>You may be asked to log in again afterwards.', 'Submit', function(tmpChPass){
                             apps.settings.vars.tempchPass = tmpChPass;
                             if(apps.settings.vars.tempchPass !== ''){
-                                //document.cookie = 'password=' + tmpChPass + ';expires=2147483647';
-                                window.location = '?changeKey=' + apps.settings.vars.tempchKey + '&changePass=' + apps.settings.vars.tempchPass;
+                                var currDate = new Date();
+                                currDate.setTime(currDate.getTime() + (10000));
+                                document.cookie = 'changingKey=true;expires=' + currDate.toUTCString();
+                                window.location.replace('?changeKey=' + apps.settings.vars.tempchKey + '&changePass=' + apps.settings.vars.tempchPass);
                             }else{
                                 apps.prompt.vars.alert('aOS-swap is cancelled.', 'Phew.', function(){}, 'Settings');
                             }
@@ -11350,11 +11352,14 @@ c(function(){
             ],
             "05/05/2021: B1.5.6.2": [
                 " : Fixed dead-linked repositories being unremoveable."
+            ],
+            "05/08/2021: B1.5.6.3": [
+                " : Fixed a security issue with swapping accounts."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.6.2 (05/05/2021) r0';
+    window.aOSversion = 'B1.5.6.3 (05/28/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

@@ -26,7 +26,7 @@
     // if the page needs to be refreshed
     $needtorefresh = false;
     // if a user change was requested
-    if(isset($changeKey) && isset($changePass)){
+    if(isset($changeKey) && isset($changePass) && isset($_COOKIE['changingKey'])){
         // if the user exists
         if(is_dir('USERFILES/'.$changeKey)){
             // if the user has a password
