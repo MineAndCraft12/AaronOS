@@ -7236,7 +7236,7 @@ c(function(){
                     profont: {
                         option: 'ProFont License',
                         description: function(){return 'ProFont is used across many different UI elements of AaronOS.';},
-                        buttons: function(){return 'ProFont is licensed under the <a href="https://opensource.org/licenses/mit-license.php">MIT License</a>.';}
+                        buttons: function(){return 'ProFont is licensed under the <a target="_blank" href="ProFont/MIT_LICENSE.txt">MIT License</a>.';}
                     },
                 },
                 screenRes: {
