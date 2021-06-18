@@ -28,9 +28,11 @@ Some examples of such resources that Aaron is not claiming ownership or responsi
 By deploying or otherwise using the AaronOS project's code and resources, you are agreeing to the agreement laid out in this document.
 
 
-The EULA (this document) may be updated at any time, which will be reflected when the project is updated.
-When downloading a GitHub update of AaronOS to your server, this updated file will be carried in that update. Aaron will also attempt to notify
-    deployers of this change, should it occur.
+The EULA (this document) may be updated at any time, and all changes become effective immediately. Aaron will also attempt
+    within reasonable effort to notify developers, deployers, and users of changes, most typically via the community server on Discord.
+
+In the event that any portion of this document is to be considered by a court of law to be void, unenforceable, or invalid, then the remainder of the document shall
+    not be held void, unenforceable, or invalid as a result.
 
 
 LIABILITY
@@ -42,7 +44,11 @@ While it is highly unlikely that it should occur, you agree that Aaron is not re
 INTELLECTUAL PROPERTY
 
 All code, designs, and resources (excluding those owned by others, such as placeholder resources listed near the beginning of the document) are owned by Aaron, and
-    you agree not to claim them to be your own.
+    you agree not to claim them to be your own. Additionally, Aaron reserves the right in all cases to deny you permission to distribute or modify his intellectual
+    property for any reason.
+
+You agree not to use this project or its code for any illegal purposes, including but not limited to the redistribution of copyrighted material where you do not have
+    the express permission of the copyright-holders involved. This definition includes linking to remote resources that violate the rights of copyright-holders.
 
 The AaronOS logos and other text- or image-based branding are not to modified in such a way that makes it difficult for users to understand that the project is, in fact, AaronOS.
 Examples of acceptable logo or branding modification include but are not limited to:
@@ -120,4 +126,4 @@ The AaronOS project's code and resources are provided as-is, and Aaron is not in
     otherwise changed by people or services beyond Aaron himself.
 
 
-Document last updated 2021-01-22 at 2:47pm
+Document last updated 2021-06-18 at 11:09am

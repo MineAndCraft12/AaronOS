@@ -195,7 +195,7 @@
             "icon": {
                 "foreground": "repository/styles/win98style.png"
             },
-            "description": "Themes aOS to look similar to Microsoft's Windows 98."
+            "description": "Similar theme to Microsoft Windows 98. Used with permission from Microsoft."
         },
         "winxpstyle": {
             "packageName": "Windows XP Theme",
@@ -207,7 +207,7 @@
             "icon": {
                 "foreground": "repository/styles/winxpstyle.png"
             },
-            "description": "Themes aOS to look similar to Microsoft's Windows XP."
+            "description": "Similar theme to Microsoft Windows XP. Used with permission from Microsoft."
         },
         "glassxpstyle": {
             "packageName": "Windows XP Glass",
@@ -219,7 +219,7 @@
             "icon": {
                 "foreground": "repository/styles/glassxpstyle.png"
             },
-            "description": "Themes aOS to look similar to Microsoft's Windows XP.\n\nThis version has glass window borders that you can color any way you like."
+            "description": "Similar theme to Microsoft Windows XP. Used with permission from Microsoft.\n\nThis version has glass window borders that you can color any way you like."
         },
         "win7style": {
             "packageName": "Windows 7 Theme",
@@ -231,7 +231,7 @@
             "icon": {
                 "foreground": "repository/styles/win7style.png"
             },
-            "description": "Themes aOS to look similar to Microsoft's beautiful Windows 7.\n\nRecommended settings:\nWindow Background Image: \"images/win7blur1080.png\"\nWindow Border Width: 6"
+            "description": "Similar theme to Microsoft Windows 7. Used with permission from Microsoft.\n\nRecommended settings:\nWindow Background Image: \"images/win7blur1080.png\"\nWindow Border Width: 6"
         },
         "highsierrastyle": {
             "packageName": "MacOS Theme",
@@ -243,7 +243,7 @@
             "icon": {
                 "foreground": "repository/styles/highsierrastyle.png"
             },
-            "description": "Themes aOS to look similar to Apple's MacOS. Made by ElijahZAwesome"
+            "description": "Themes aOS to look similar to Apple MacOS&tm;. Made by ElijahZAwesome\n\nAaronOS is not endorsed by, sponsored by, or affiliated with Apple."
         }
     }
 }

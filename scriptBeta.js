@@ -7233,6 +7233,11 @@ c(function(){
                             'Allows you to watch aOS load at startup, but looks dirty compared to having a loading screen.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.togDirtyLoad()">Toggle</button>'}
                     },
+                    profont: {
+                        option: 'ProFont License',
+                        description: function(){return 'ProFont is used across many different UI elements of AaronOS.';},
+                        buttons: function(){return 'ProFont is licensed under the <a href="https://opensource.org/licenses/mit-license.php">MIT License</a>.';}
+                    },
                 },
                 screenRes: {
                     folder: 0,
@@ -11355,6 +11360,10 @@ c(function(){
             ],
             "05/08/2021: B1.5.6.3": [
                 " : Fixed a security issue with swapping accounts."
+            ],
+            "06/18/2021: B.1.5.6.4": [
+                " : Updated EULA.",
+                " : Brought 3rd-party potentially copyrighted material into compliance with their respective owners' guidelines."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
