@@ -2751,7 +2751,7 @@ function arrangeDesktopIcons(){
             getId("app_" + ico).style.left = appPosX + "px";
             getId("app_" + ico).style.top = appPosY + "px";
             appPosY += 98;
-            if(appPosY > parseInt(getId('monitor').style.height) - 105){
+            if(appPosY > parseInt(getId('monitor').style.height) - 138){
                 appPosY = 8;
                 appPosX += 108;
             }
@@ -7446,20 +7446,37 @@ c(function(){
                         description: function(){return 'Every web app on your system requires permission to perform certain actions on aOS. All web apps belong to specific web domains. Use the controls below to change permissions for all apps belonging to a domain.'},
                         buttons: function(){
                             var tempHTML = '';
+                            tempHTML += '<div style="position:relative;height:2em;">' +
+                                '<span style="font-size:2em">Permission Descriptions</span> ' +
+                                '<button onclick="if(this.innerHTML === \'v\'){this.innerHTML = \'^\';this.parentElement.style.height = \'\';}else{this.innerHTML = \'v\';this.parentElement.style.height = \'2em\';}">v</button><br><br>';
+                            for(var j in apps.webAppMaker.vars.actions){
+                                tempHTML += (apps.webAppMaker.vars.actionNames[j] || '[Unknown]') + ' (' + j + '): Permission to ' + (apps.webAppMaker.vars.actionDesc[j] || "[???]") + ".<br><ul>";
+                                if(apps.webAppMaker.vars.commandDescriptions.hasOwnProperty(j)){
+                                    for(var l in apps.webAppMaker.vars.commandDescriptions[j]){
+                                        tempHTML += '<li>' + apps.webAppMaker.vars.commandDescriptions[j][l] + '</li>';
+                                    }
+                                }
+                                tempHTML += '</ul>';
+                            }
+                            tempHTML += '</div>';
                             for(var i in apps.webAppMaker.vars.trustedApps){
-                                tempHTML += '<br><br><span style="font-size:2em">' + i + '</span><br><br>';
-                                for(var j in apps.webAppMaker.vars.trustedApps[i]){
+                                tempHTML += '<br><br><div style="position:relative;height:2em;">' +
+                                    '<span style="font-size:2em">' + i + '</span> ' +
+                                    '<button onclick="if(this.innerHTML === \'v\'){this.innerHTML = \'^\';this.parentElement.style.height = \'\';}else{this.innerHTML = \'v\';this.parentElement.style.height = \'2em\';}">v</button><br><br>';
+                                for(var j in apps.webAppMaker.vars.actions){
                                     tempHTML += '<select onchange="apps.webAppMaker.vars.trustedApps[\'' + i + '\'][\'' + j + '\'] = this.value;apps.webAppMaker.vars.updatePermissions()"> ';
-                                    if(apps.webAppMaker.vars.trustedApps[i][j] === "true"){
+                                    if(
+                                        apps.webAppMaker.vars.trustedApps[i][j] === "true" ||
+                                        (apps.webAppMaker.vars.globalPermissions[j] === "true" && !apps.webAppMaker.vars.trustedApps[i].hasOwnProperty(j))
+                                    ){
                                         tempHTML += '<option value="true" selected>Allowed</option><option value="false">Denied</option></select> ';
                                     }else{
                                         tempHTML += '<option value="true">Allowed</option><option value="false" selected>Denied</option></select> ';
                                     }
                                     tempHTML += (apps.webAppMaker.vars.actionNames[j] || '[Unknown]') + ' (' + j + ')<br>Permission to ' + (apps.webAppMaker.vars.actionDesc[j] || "[???]") + ".<br><br>";
-                                    
                                 }
                             }
-                            return tempHTML;
+                            return tempHTML + '</div>';
                         }
                     }
                 },
@@ -11427,11 +11444,17 @@ c(function(){
                 " - Removed Trusted Apps text field from Advanced Settings.",
                 " + Added command history to the Psuedo-Bash-Console.",
                 " + Web apps can now block the screensaver."
+            ],
+            "06/23/2021: B1.5.7.1": [
+                " + Added full list of permission actions to Settings.",
+                " + Domain permissions list is now collapsible.",
+                " : Fixed bug where not all permissions were listed for domains.",
+                " : Fixed bug where desktop icons would place themselves behind the taskbar."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.7.0 (06/22/2021) r0';
+    window.aOSversion = 'B1.5.7.1 (06/23/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13587,17 +13610,21 @@ c(function(){
             },
             commandDescriptions: {
                 context: {
-                    menu: "Display a context menu at the click point."
+                    menu: "Display context menus."
                 },
-                customstyle: {
+                getstyle: {
                     darkmode: "Get the state of dark mode.",
-                    customstyle: "Get the user's stylesheets. Trust me, just let aosTools handle this one:"
+                    customstyle: "Get the user's system theme."
                 },
                 fs: {
-                    read_uf: "Read a file from USERFILES",
-                    write_uf: "Write a file to USERFILES",
-                    read_lf: "Read a file from LOCALFILES",
-                    write_lf: "Write a file to LOCALFILES"
+                    read_uf: "Read and write USERFILES",
+                    read_lf: "Read and write LOCALFILES",
+                },
+                readsetting: {
+                    glbl: "Read your aOS settings."
+                },
+                writesetting: {
+                    glbl: "Change your aOS settings."
                 },
                 prompt: {
                     alert: "Show an alert window to display information.",
@@ -13606,61 +13633,25 @@ c(function(){
                     notify: "Show a notification and ask for a choice."
                 },
                 js: {
-                    exec: "Execute JS code on aOS"
+                    exec: "Execute JavaScript on AaronOS. WARNING! This permission allows an app to do <i>anything</i> to your aOS system, including potentially performing actions on your behalf!"
                 },
                 appwindow: {
                     set_caption: "Set the caption of the app window",
-                    disable_padding: "Disable default 3px of padding",
-                    enable_padding: "Enable default 3px of padding",
+                    disable_padding: "Toggle padding of window content",
                     open_window: "Open the app window.",
                     minimize: "Minimize the app window.",
                     maximize: "Maximize the app window.",
                     unmaximize: "Unmaximize the app window.",
-                    get_maximized: "Ask if the window is maximized; returns true/false",
+                    get_maximized: "Get window maximization state.",
                     close_window: "Close the app window.",
-                    set_dims: "Set the x, y, width, and height of the window.",
-                    block_screensaver: "Adds a blocker for the AaronOS screensaver.",
-                    unblock_screensaver: "Removes a blocker from the AaronOS screensaver.",
+                    set_dims: "Set the size and position of the window.",
+                    block_screensaver: "Block the AaronOS screensaver.",
                 },
                 bgservice: {
-                    set_service: "Set the URL of your background service and initialize it if necessary.",
-                    exit_service: "Close your service, if it is running.",
-                    check_service: "Get the URL of the currently-running service, or false if none."
+                    set_service: "Launch a background service that persists beyond its window being closed.",
+                    exit_service: "Close its background service.",
+                    check_service: "Check the state of its background service."
                 }
-            },
-            buildAPI: function(permissions){
-                var str = '';
-                var str2 = '';
-                for(var i in this.actions){
-                    if(str !== ''){
-                        if(!permissions){
-                            str += '<hr>';
-                        }else{
-                            str += ', ';
-                        }
-                    }
-                    str += '<span style="font-size:24px">' + i + '</span>';
-                    if(!permissions){
-                        str += '<br>';
-                        if(typeof this.commandDescriptions[i] === "object"){
-                            for(var j in this.commandDescriptions[i]){
-                                str += '<br>';
-                                if(typeof this.commandDescriptions[i][j] === "string"){
-                                    str += j + ': ' + this.commandDescriptions[i][j] + "<br>";
-                                    if(typeof this.commandExamples[i] === "object"){
-                                        if(typeof this.commandExamples[i][j] === "string"){
-                                            str += '<div style="position:relative;margin-left:16px;">' + this.commandExamples[i][j] + '</div>';
-                                        }
-                                    }
-                                    str += "<br><br>"
-                                }
-                            }
-                        }else{
-                            str += "no documented commands in this permission set.<br>";
-                        }
-                    }
-                }
-                return str;
             },
             trustedApps: {
                 [window.location.origin]: {
@@ -13668,8 +13659,7 @@ c(function(){
                     "readsetting": "true",
                     "writesetting": "true",
                     "js": "true",
-                    "bgservice": "true",
-                    "context": "true"
+                    "bgservice": "true"
                 }
             },
             globalPermissions: {
