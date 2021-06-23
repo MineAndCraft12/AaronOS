@@ -5576,13 +5576,15 @@ c(function(){
                 this.appWindow.setDims("auto", "auto", 662, 504);
                 this.appWindow.setContent(
                     '<span id="bashContent" style="display:block;line-height:1em;font-family:aosProFont;font-size:12px;width:100%;">' +
-                    'Click on the prompt\'s line to begin typing.<br>' +
+                    'This terminal is a work-in-progress. Some features are incomplete.<br>' +
                     'Use "help" for a list of commands or for information of a specific command.<br>' +
-                    'This terminal is a work-in-progress. Some features are incomplete.' +
+                    'Click on the prompt\'s line to begin typing.' +
                     '</span>' +
-                    '<input id="bashInput" onkeydown="apps.bash.vars.checkPrefix()" onkeypress="apps.bash.vars.checkPrefix()" onkeyup="apps.bash.vars.checkPrefix();if(event.keyCode === 13){apps.bash.vars.execute()}" style="background:none;color:inherit;box-shadow:none;display:block;line-height:1em;font-family:aosProFont;font-size:12px;border:none;outline:none;padding:0;width:100%;">'
+                    '<input id="bashInput" onkeydown="apps.bash.vars.checkPrefix(event, 1)" onkeypress="apps.bash.vars.checkPrefix(event)" onkeyup="apps.bash.vars.checkPrefix(event);if(event.keyCode === 13){apps.bash.vars.execute()}" style="background:none;color:inherit;box-shadow:none;display:block;line-height:1em;font-family:aosProFont;font-size:12px;border:none;outline:none;padding:0;width:100%;">'
                 );
-                this.vars.checkPrefix();
+                this.vars.checkPrefix({keyCode: null});
+                this.vars.currHistory = -1;
+                //getId('win_bash_html').setAttribute('onclick', 'getId("bashInput").focus()');
                 getId('win_bash_html').style.overflowY = 'scroll';
                 getId("win_bash_html").style.overflowX = 'auto';
             }
@@ -5687,8 +5689,14 @@ c(function(){
                 return eval(this.translateDir(origdir));
             },
             alias: {},
-            checkPrefix: function(){
-                if(getId('bashInput').value.indexOf(this.prefix) !== 0){
+            checkPrefix: function(event, keyUp){
+                if(keyUp && event.keyCode === 38){
+                    getId('bashInput').value = this.prefix + this.seekHistory(1);
+                    event.preventDefault();
+                }else if(keyUp && event.keyCode === 40){
+                    getId('bashInput').value = this.prefix + this.seekHistory(-1);
+                    event.preventDefault();
+                }else if(getId('bashInput').value.indexOf(this.prefix) !== 0){
                     getId('bashInput').value = this.pastValue;
                 }
                 this.pastValue = getId('bashInput').value;
@@ -5838,6 +5846,7 @@ c(function(){
                     var commandObjects = this.getCmdObjects(this.command);
                 }else{
                     this.command = getId('bashInput').value.substring(getId('bashInput').value.indexOf('$') + 2, getId('bashInput').value.length);
+                    this.appendHistory(getId('bashInput').value.substring(getId('bashInput').value.indexOf('$') + 2, getId('bashInput').value.length));
                     this.echo(cleanStr(getId('bashInput').value));
                     getId('bashInput').value = this.prefix;
                     this.pastValue = this.prefix;
@@ -5905,6 +5914,32 @@ c(function(){
                 }
             },
             currHelpSearch: '',
+            cmdHistory: [],
+            currHistory: -1,
+            seekHistory: function(direction){ // 1 or -1
+                var nextHistory = this.currHistory + direction;
+                if(nextHistory < 0){
+                    this.currHistory = -1;
+                    return '';
+                }else if(nextHistory >= this.cmdHistory.length){
+                    if(this.cmdHistory.length > 0){
+                        this.currHistory = this.cmdHistory.length - 1;
+                        return this.cmdHistory[this.cmdHistory.length - 1];
+                    }else{
+                        return '';
+                    }
+                }else{
+                    this.currHistory = nextHistory;
+                    return this.cmdHistory[nextHistory];
+                }
+            },
+            appendHistory: function(str){
+                this.cmdHistory.unshift(str);
+                this.currHistory = -1;
+                if(this.cmdHistory.length > 50){
+                    this.cmdHistory.pop();
+                }
+            },
             commands: [
                 {
                     name: 'help',
@@ -7401,72 +7436,31 @@ c(function(){
                         buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'whisker\')">Select Whisker Dashboard</button>'}
                     }
                 },
-                noraa: {
+                applicationPermissions: {
                     folder: 0,
-                    folderName: 'NORAA',
-                    folderPath: 'apps.settings.vars.menus.noraa',
-                    image: 'settingIcons/new/noraa.png',
-                    advHelp: {
-                        option: 'Advanced Help Pages',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.noraHelpTopics)">' + numtf(apps.settings.vars.noraHelpTopics) + '</span>.<br>' +
-                            'NORAA returns more advanced help pages when you ask for OS help, instead of plain text.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.togNoraListen()">Toggle</button>'}
-                    },
-                    listen: {
-                        option: 'NORAA Listening',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(parseInt(apps.settings.vars.currNoraListening))">' + numtf(apps.settings.vars.currNoraListening) + '</span>.<br>' +
-                            'NORAA listens for you to say a specified phrase that will activate him.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.togNoraListen()">Toggle</button>'}
-                    },
-                    listenFor: {
-                        option: 'Listening Phrase',
-                        description: function(){return 'This is the phrase that NORAA listens for you to say, if enabled.'},
-                        buttons: function(){return '<input id="STNnoraphrase" placeholder="listen computer" value="' + apps.settings.vars.currNoraPhrase + '"> <button onclick="apps.settings.vars.togNoraPhrase()">Set</button>'}
-                    },
-                    speechDelay: {
-                        option: 'Speech Input Delay',
-                        description: function(){return 'This is the time, in milliseconds, that NORAA gives you to cancel a command, when speaking to him. Useful for if NORAA did not hear you correctly.'},
-                        buttons: function(){return '<input id="STNnoraDelay" value="' + apps.nora.vars.inputDelay + '"> <button onclick="apps.settings.vars.NORAAsetDelay()">Set</button>'}
-                    },
-                    voices: {
-                        option: 'NORAA\'s Voice',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="apps.nora.vars.lang">' + apps.nora.vars.lang + '</span>. This is the voice NORAA uses to speak to you. Choose from one of the voices below that are supported by your browser.'},
-                        buttons: function(){return apps.settings.vars.getVoicesForNORAA()}
-                    }
-                },
-                smartIcons: {
-                    folder: 0,
-                    folderName: "Smart Icons",
-                    folderPath: "apps.settings.vars.menus.smartIcons",
-                    image: 'settingIcons/new/smartIcon_fg.png',
-                    autoRedirectToApp: {
-                        option: "Smart Icon Settings",
-                        description: function(){return "Click below to open the Smart Icon Settings app."},
+                    folderName: "App Permissions",
+                    folderPath: "apps.settings.vars.menus.applicationPermissions",
+                    image: 'settingIcons/new/permissions.png',
+                    domainPermissions: {
+                        option: 'Domain Permissions',
+                        description: function(){return 'Every web app on your system requires permission to perform certain actions on aOS. All web apps belong to specific web domains. Use the controls below to change permissions for all apps belonging to a domain.'},
                         buttons: function(){
-                            c(function(){
-                                openapp(apps.smartIconSettings, 'dsktp');
-                                apps.settings.vars.showMenu(apps.settings.vars.menus);
-                            });
-                            return '<button onclick="openapp(apps.smartIconSettings, \'dsktp\')">Smart Icon Settings</button>'
+                            var tempHTML = '';
+                            for(var i in apps.webAppMaker.vars.trustedApps){
+                                tempHTML += '<br><br><span style="font-size:2em">' + i + '</span><br><br>';
+                                for(var j in apps.webAppMaker.vars.trustedApps[i]){
+                                    tempHTML += '<select onchange="apps.webAppMaker.vars.trustedApps[\'' + i + '\'][\'' + j + '\'] = this.value;apps.webAppMaker.vars.updatePermissions()"> ';
+                                    if(apps.webAppMaker.vars.trustedApps[i][j] === "true"){
+                                        tempHTML += '<option value="true" selected>Allowed</option><option value="false">Denied</option></select> ';
+                                    }else{
+                                        tempHTML += '<option value="true">Allowed</option><option value="false" selected>Denied</option></select> ';
+                                    }
+                                    tempHTML += (apps.webAppMaker.vars.actionNames[j] || '[Unknown]') + ' (' + j + ')<br>Permission to ' + (apps.webAppMaker.vars.actionDesc[j] || "[???]") + ".<br><br>";
+                                    
+                                }
+                            }
+                            return tempHTML;
                         }
-                    }
-                    
-                },
-                clipboard: {
-                    folder: 0,
-                    folderName: 'Clipboard',
-                    folderPath: 'apps.settings.vars.menus.clipboard',
-                    image: 'settingIcons/new/clipboard.png',
-                    size: {
-                        option: 'Clipboard Slots',
-                        description: function(){return 'Current: <span class="liveElement" data-live-eval="textEditorTools.slots">' + textEditorTools.slots + '</span>.<br>' +
-                            'Number of slots in your clipboard. An excessively large clipboard may be difficult to manage and can cause context menu scrollbars.'},
-                        buttons: function(){return '<input id="STNclipboardSlots"> <button onclick="apps.settings.vars.setClipboardSlots(getId(\'STNclipboardSlots\').value)">Set</button>'}
-                    },
-                    clear: {
-                        option: 'Clear Clipboard',
-                        description: function(){return 'Clear the persistent keyboard of aOS. Useful for if you have a cluttered clipboard. If you do not copy anything to the clipboard until you shut down, then the next time you boot aOS, the clipboard will be empty. Think of this as a fallback for if clicking this button was an accident. Just copy something to the clipboard and nothing will disappear. It is also one last chance to use the stuff you have copied before it is cleared.'},
-                        buttons: function(){return '<button onclick="ufsave(\'aos_system/clipboard\', \'_cleared_clipboard_\');">Clear</button>'}
                     }
                 },
                 screensaver: {
@@ -7515,6 +7509,74 @@ c(function(){
                         }
                     }
                 },
+                smartIcons: {
+                    folder: 0,
+                    folderName: "Smart Icons",
+                    folderPath: "apps.settings.vars.menus.smartIcons",
+                    image: 'settingIcons/new/smartIcon_fg.png',
+                    autoRedirectToApp: {
+                        option: "Smart Icon Settings",
+                        description: function(){return "Click below to open the Smart Icon Settings app."},
+                        buttons: function(){
+                            c(function(){
+                                openapp(apps.smartIconSettings, 'dsktp');
+                                apps.settings.vars.showMenu(apps.settings.vars.menus);
+                            });
+                            return '<button onclick="openapp(apps.smartIconSettings, \'dsktp\')">Smart Icon Settings</button>'
+                        }
+                    }
+                    
+                },
+                clipboard: {
+                    folder: 0,
+                    folderName: 'Clipboard',
+                    folderPath: 'apps.settings.vars.menus.clipboard',
+                    image: 'settingIcons/new/clipboard.png',
+                    size: {
+                        option: 'Clipboard Slots',
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="textEditorTools.slots">' + textEditorTools.slots + '</span>.<br>' +
+                            'Number of slots in your clipboard. An excessively large clipboard may be difficult to manage and can cause context menu scrollbars.'},
+                        buttons: function(){return '<input id="STNclipboardSlots"> <button onclick="apps.settings.vars.setClipboardSlots(getId(\'STNclipboardSlots\').value)">Set</button>'}
+                    },
+                    clear: {
+                        option: 'Clear Clipboard',
+                        description: function(){return 'Clear the persistent keyboard of aOS. Useful for if you have a cluttered clipboard. If you do not copy anything to the clipboard until you shut down, then the next time you boot aOS, the clipboard will be empty. Think of this as a fallback for if clicking this button was an accident. Just copy something to the clipboard and nothing will disappear. It is also one last chance to use the stuff you have copied before it is cleared.'},
+                        buttons: function(){return '<button onclick="ufsave(\'aos_system/clipboard\', \'_cleared_clipboard_\');">Clear</button>'}
+                    }
+                },
+                noraa: {
+                    folder: 0,
+                    folderName: 'NORAA',
+                    folderPath: 'apps.settings.vars.menus.noraa',
+                    image: 'settingIcons/new/noraa.png',
+                    advHelp: {
+                        option: 'Advanced Help Pages',
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(apps.settings.vars.noraHelpTopics)">' + numtf(apps.settings.vars.noraHelpTopics) + '</span>.<br>' +
+                            'NORAA returns more advanced help pages when you ask for OS help, instead of plain text.'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.togNoraListen()">Toggle</button>'}
+                    },
+                    listen: {
+                        option: 'NORAA Listening',
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="numEnDis(parseInt(apps.settings.vars.currNoraListening))">' + numtf(apps.settings.vars.currNoraListening) + '</span>.<br>' +
+                            'NORAA listens for you to say a specified phrase that will activate him.'},
+                        buttons: function(){return '<button onclick="apps.settings.vars.togNoraListen()">Toggle</button>'}
+                    },
+                    listenFor: {
+                        option: 'Listening Phrase',
+                        description: function(){return 'This is the phrase that NORAA listens for you to say, if enabled.'},
+                        buttons: function(){return '<input id="STNnoraphrase" placeholder="listen computer" value="' + apps.settings.vars.currNoraPhrase + '"> <button onclick="apps.settings.vars.togNoraPhrase()">Set</button>'}
+                    },
+                    speechDelay: {
+                        option: 'Speech Input Delay',
+                        description: function(){return 'This is the time, in milliseconds, that NORAA gives you to cancel a command, when speaking to him. Useful for if NORAA did not hear you correctly.'},
+                        buttons: function(){return '<input id="STNnoraDelay" value="' + apps.nora.vars.inputDelay + '"> <button onclick="apps.settings.vars.NORAAsetDelay()">Set</button>'}
+                    },
+                    voices: {
+                        option: 'NORAA\'s Voice',
+                        description: function(){return 'Current: <span class="liveElement" data-live-eval="apps.nora.vars.lang">' + apps.nora.vars.lang + '</span>. This is the voice NORAA uses to speak to you. Choose from one of the voices below that are supported by your browser.'},
+                        buttons: function(){return apps.settings.vars.getVoicesForNORAA()}
+                    }
+                },
                 language: {
                     folder: 0,
                     folderName: 'Language',
@@ -7541,11 +7603,6 @@ c(function(){
                     folderName: 'Advanced',
                     folderPath: 'apps.settings.vars.menus.advanced',
                     image: 'settingIcons/new/advanced.png',
-                    trustedApps: {
-                        option: 'Trusted Apps',
-                        description: function(){return 'This is a list of all external apps that you have allowed to use permissions on aOS. The list is JSON-encoded.';},
-                        buttons: function(){return '<textarea id="STN_trusted_apps" style="white-space:nowrap;width:75%;height:8em">' + (ufload("aos_system/apps/webAppMaker/trusted_apps") || JSON.stringify(apps.webAppMaker.vars.trustedApps, null, 2)) + '</textarea><button onclick="ufsave(\'aos_system/apps/webAppMaker/trusted_apps\', getId(\'STN_trusted_apps\').value);apps.webAppMaker.vars.reflectPermissions();">Set</button>'}
-                    },
                     reset: {
                         option: 'Reset aOS',
                         description: function(){return 'If you wish, you can completely reset aOS. This will give you a new OS ID, which will have the effect of removing all of your files. Your old files will still be preserved, so you can ask the developer for help if you mistakenly reset aOS. If you wish for your old files to be permanently removed, please contact the developer.'},
@@ -11364,11 +11421,17 @@ c(function(){
             "06/18/2021: B.1.5.6.4": [
                 " : Updated EULA.",
                 " : Brought 3rd-party potentially copyrighted material into compliance with their respective owners' guidelines."
+            ],
+            "06/22/2021: B1.5.7.0": [
+                " + Added App Permissions section to Settings.",
+                " - Removed Trusted Apps text field from Advanced Settings.",
+                " + Added command history to the Psuedo-Bash-Console.",
+                " + Web apps can now block the screensaver."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.6.4 (06/18/2021) r0';
+    window.aOSversion = 'B1.5.7.0 (06/22/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13437,6 +13500,20 @@ c(function(){
                         }else{
                             return false;
                         }
+                    },
+                    block_screensaver: function(input, frame){
+                        if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                            return blockScreensaver("webApp_" + frame.frameElement.getAttribute("data-parent-app"));
+                        }else{
+                            return false;
+                        }
+                    },
+                    unblock_screensaver: function(input, frame){
+                        if(apps[frame.frameElement.getAttribute("data-parent-app")]){
+                            return unblockScreensaver("webApp_" + frame.frameElement.getAttribute("data-parent-app"));
+                        }else{
+                            return false;
+                        }
                     }
                 },
                 bgservice: {
@@ -13486,15 +13563,26 @@ c(function(){
                     }
                 }
             },
+            actionNames: {
+                fs: "Filesystem",
+                prompt: "Prompt",
+                readsetting: "Read Settings",
+                writesetting: "Write Settings",
+                js: "Execute JavaScript",
+                getstyle: "System Theme",
+                context: "Context Menus",
+                appwindow: "App Window",
+                bgservice: "Background Service"
+            },
             actionDesc: {
                 fs: "access your files on aOS",
                 prompt: "show prompts and notifications on aOS",
                 readsetting: "read your settings on aOS",
                 writesetting: "change your settings on aOS",
-                js: "execute JavaScript code on aOS (DANGEROUS!)",
-                getstyle: "theme itself to aOS",
+                js: "execute JavaScript code on aOS (DANGEROUS! MAKE SURE YOU COMPLETELY TRUST THE DEVELOPER!)",
+                getstyle: "read and synchronize with your system theme",
                 context: "use various context menus",
-                appwindow: "manipulate its window",
+                appwindow: "manipulate its window and block the screensaver",
                 bgservice: "run in the background"
             },
             commandDescriptions: {
@@ -13530,7 +13618,9 @@ c(function(){
                     unmaximize: "Unmaximize the app window.",
                     get_maximized: "Ask if the window is maximized; returns true/false",
                     close_window: "Close the app window.",
-                    set_dims: "Set the x, y, width, and height of the window."
+                    set_dims: "Set the x, y, width, and height of the window.",
+                    block_screensaver: "Adds a blocker for the AaronOS screensaver.",
+                    unblock_screensaver: "Removes a blocker from the AaronOS screensaver.",
                 },
                 bgservice: {
                     set_service: "Set the URL of your background service and initialize it if necessary.",

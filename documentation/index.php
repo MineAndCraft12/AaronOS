@@ -1128,7 +1128,7 @@
         </ul>
     </p>
     <hr>
-    <h1 class="docHeader" id="doc_at_appwindow_take_focus" data-search-terms="appwindow:get_take_focus">Take Focus</h1>
+    <h1 class="docHeader" id="doc_at_appwindow_take_focus" data-search-terms="appwindow:take_focus">Take Focus</h1>
     <p>
         Action: <code>appwindow:take_focus</code>
     </p>
@@ -1158,6 +1158,75 @@
         <code>response.content</code>
         <ul>
             <li><code>true</code>: Command succeeded.</li>
+            <li><code>false</code>: Command failed.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_block_screensaver" data-search-terms="appwindow:block_screensaver">Block Screensaver</h1>
+    <p>
+        Action: <code>appwindow:block_screensaver</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.blockScreensaver(function(res){document.getElementById('try_appwindow_block_screensaver').innerHTML = res.content})">Try It</button>:
+    <code class="aosTools_try" id="try_appwindow_block_screensaver">&nbsp;</code>
+    <p>
+        This action will block the AaronOS screensaver from blanking the screen from inactivity.
+        Your app may block the screensaver multiple times. Each blocker belongs to your app's window.
+        Blocking multiple times can be useful if multiple features in your app need to block the screensaver.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.blockScreensaver((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:block_screensaver"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li>number: How many blockers your app now owns.</li>
+            <li><code>false</code>: Command failed.</li>
+        </ul>
+    </p>
+    <hr>
+    <h1 class="docHeader" id="doc_at_appwindow_unblock_screensaver" data-search-terms="appwindow:unblock_screensaver">Unblock Screensaver</h1>
+    <p>
+        Action: <code>appwindow:unblock_screensaver</code>
+    </p>
+    <button class="aosTools_try" onclick="aosTools.unblockScreensaver(function(res){document.getElementById('try_appwindow_unblock_screensaver').innerHTML = res.content})">Try It</button>:
+    <code class="aosTools_try" id="try_appwindow_unblock_screensaver">&nbsp;</code>
+    <p>
+        This action will unblock the AaronOS screensaver from blanking the screen from inactivity.
+        If your app has blocked the screensaver multiple times, this will only remove ONE block from the screensaver.
+        Blocking multiple times can be useful if multiple features in your app need to block the screensaver.
+    </p>
+    <h2>Easy Request</h2>
+    <pre><code>
+        aosTools.unblockScreensaver((response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Manual Request</h2>
+    <pre><code>
+        aosTools.sendRequest({
+            action: "appwindow:unblock_screensaver"
+        }, (response) =&gt; {
+            // callback
+        });
+    </code></pre>
+    <h2>Return Values</h2>
+    <p>
+        <code>response.content</code>
+        <ul>
+            <li>number: How many blockers your app now owns.</li>
+            <li><code>-1</code>: There were no blockers to remove.</li>
             <li><code>false</code>: Command failed.</li>
         </ul>
     </p>
