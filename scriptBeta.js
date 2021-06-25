@@ -3310,10 +3310,10 @@ function showEditContext(event, fromWebApp, webAppPosition, webAppConversation, 
         textEditorTools.webAppInfo = [webAppConversation, webAppFrame, webAppOrigin];
     }
     if(!fromWebApp){
-        textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "ctxMenu/beta/happy.png", "ctxMenu/beta/load.png", "ctxMenu/beta/save.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
+        textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "ctxMenu/beta/happy.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
     }else{
         var framePosition = webAppFrame.frameElement.getBoundingClientRect();
-        textEditorTools.tmpGenArray = [[webAppPosition[0] + framePosition.x, webAppPosition[1] + framePosition.y, "ctxMenu/beta/happy.png", "ctxMenu/beta/load.png", "ctxMenu/beta/save.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'spoken\',conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1]);getId(\'ctxMenu\').style.display = \'none\'"];
+        textEditorTools.tmpGenArray = [[webAppPosition[0] + framePosition.x, webAppPosition[1] + framePosition.y, "ctxMenu/beta/happy.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'spoken\',conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1]);getId(\'ctxMenu\').style.display = \'none\'"];
     }
     for(var i = 1; i <= textEditorTools.slots; i++){
         if(currentSelection.length === 0){
@@ -3324,9 +3324,9 @@ function showEditContext(event, fromWebApp, webAppPosition, webAppConversation, 
             textEditorTools.tempvar2 = '+';
         }
         if(i === 1){
-            textEditorTools.tmpGenArray.push(textEditorTools.tempvar2 + 'Copy "' + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." to Slot 1');
+            textEditorTools.tmpGenArray.push(textEditorTools.tempvar2 + 'Copy 1 (' + cleanStr(currentSelection.substring(0, 5)) + '...)');
         }else{
-            textEditorTools.tmpGenArray.push(textEditorTools.tempvar + 'Copy "' + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." to Slot ' + i);
+            textEditorTools.tmpGenArray.push(textEditorTools.tempvar + 'Copy ' + i + ' (' + cleanStr(currentSelection.substring(0, 5)) + '...)');
         }
         textEditorTools.tmpGenArray[0].push('ctxMenu/beta/load.png');
         if(!fromWebApp){
@@ -3340,32 +3340,32 @@ function showEditContext(event, fromWebApp, webAppPosition, webAppConversation, 
             if(!fromWebApp){
                 if(textEditorTools.clipboard[i - 1].length === 0 || (typeof event.target.id !== "string" || event.target.id === "") || event.target.getAttribute("disabled") !== null){
                     if(i === 1){
-                        textEditorTools.tmpGenArray.push('_Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                        textEditorTools.tmpGenArray.push('_Paste ' + i + ' (' + cleanStr(textEditorTools.clipboard[i - 1].substring(0, 5)) + '...)');
                     }else{
-                        textEditorTools.tmpGenArray.push('-Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                        textEditorTools.tmpGenArray.push('-Paste ' + i + ' (' + cleanStr(textEditorTools.clipboard[i - 1].substring(0, 5)) + '...)');
                     }
                     textEditorTools.tmpGenArray.push('');
                 }else{
                     if(i === 1){
-                        textEditorTools.tmpGenArray.push('+Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                        textEditorTools.tmpGenArray.push('+Paste ' + i + ' (' + cleanStr(textEditorTools.clipboard[i - 1].substring(0, 5)) + '...)');
                     }else{
-                        textEditorTools.tmpGenArray.push(' Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                        textEditorTools.tmpGenArray.push(' Paste ' + i + ' (' + cleanStr(textEditorTools.clipboard[i - 1].substring(0, 5)) + '...)');
                     }
                     textEditorTools.tmpGenArray.push('textEditorTools.paste(\'' + event.target.id + '\', ' + i + ', ' + event.target.selectionStart + ',' + event.target.selectionEnd + ');getId(\'ctxMenu\').style.display = \'none\'');
                 }
             }else{
                 if(textEditorTools.clipboard[i - 1].length === 0){
                     if(i === 1){
-                        textEditorTools.tmpGenArray.push('_Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                        textEditorTools.tmpGenArray.push('_Paste ' + i + ' (' + cleanStr(textEditorTools.clipboard[i - 1].substring(0, 5)) + '...)');
                     }else{
-                        textEditorTools.tmpGenArray.push('-Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                        textEditorTools.tmpGenArray.push('-Paste ' + i + ' (' + cleanStr(textEditorTools.clipboard[i - 1].substring(0, 5)) + '...)');
                     }
                     textEditorTools.tmpGenArray.push('');
                 }else{
                     if(i === 1){
-                        textEditorTools.tmpGenArray.push('+Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                        textEditorTools.tmpGenArray.push('+Paste ' + i + ' (' + cleanStr(textEditorTools.clipboard[i - 1].substring(0, 5)) + '...)');
                     }else{
-                        textEditorTools.tmpGenArray.push(' Paste "' + textEditorTools.clipboard[i - 1].substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + '..." from Slot ' + i);
+                        textEditorTools.tmpGenArray.push(' Paste ' + i + ' (' + cleanStr(textEditorTools.clipboard[i - 1].substring(0, 5)) + '...)');
                     }
                     textEditorTools.tmpGenArray.push('apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'pasted\',pastedText:textEditorTools.clipboard[' + (i - 1) + '],conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1]);getId(\'ctxMenu\').style.display = \'none\'');
                 }
@@ -3373,26 +3373,6 @@ function showEditContext(event, fromWebApp, webAppPosition, webAppConversation, 
             textEditorTools.tmpGenArray[0].push('ctxMenu/beta/save.png');
         }
     }
-    /*
-    for(var i = 1; i <= textEditorTools.slots; i++){
-        if(textEditorTools.clipboard[i - 1].length === 0 || nopaste || currentSelection.length === 0){
-            if(i === 1){
-                textEditorTools.tmpGenArray.push('_Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
-            }else{
-                textEditorTools.tmpGenArray.push('-Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
-            }
-            textEditorTools.tmpGenArray.push('');
-        }else{
-            if(i === 1){
-                textEditorTools.tmpGenArray.push('+Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
-            }else{
-                textEditorTools.tmpGenArray.push(' Swap with "' + textEditorTools.clipboard[i - 1].substring(0, 5) + '..." from Slot ' + i);
-            }
-            textEditorTools.tmpGenArray.push('textEditorTools.swap(\'' + this.id + '\', ' + i + ', ' + this.selectionStart + ');getId(\'ctxMenu\').style.display = \'none\'');
-        }
-        textEditorTools.tmpGenArray[0].push('/ctxMenu/beta/file.png');
-    }
-    */
     textEditorTools.tempvar3 = currentSelection;
     ctxMenu(textEditorTools.tmpGenArray);
 }
@@ -8550,13 +8530,13 @@ c(function(){
                         this.tempArray[elem].style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
                         this.tempArray[elem].style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
                         if(this.dispMapEffect){
-                            getId(this.tempArray[elem].id.substring(0, this.tempArray[elem].id.length - 4) + "_img").style.backgroundPosition = "0 100%";
+                            getId(this.tempArray[elem].id.substring(0, this.tempArray[elem].id.length - 4) + "_img").style.backgroundPosition = "";
                         }
                     }
                     getId('taskbar').style.webkitBackdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
                     getId('taskbar').style.backdropFilter = 'blur(' + this.currWinblurRad + 'px)' + this.dispMapEffect;
                     if(this.dispMapEffect){
-                        getId("tskbrBimg").style.backgroundPosition = "0 100%";
+                        getId("tskbrBimg").style.backgroundPosition = "";
                     }
                     getId('ctxMenu').classList.add('backdropFilterCtxMenu');
                     this.isBackdrop = 1;
@@ -11450,6 +11430,11 @@ c(function(){
                 " + Domain permissions list is now collapsible.",
                 " : Fixed bug where not all permissions were listed for domains.",
                 " : Fixed bug where desktop icons would place themselves behind the taskbar."
+            ],
+            "06/24/2021: B1.5.7.2": [
+                " : Tweaked copy-paste menu text to be more consistent between lines.",
+                " : Fixed copy-paste menu icons being wrong.",
+                " : Fixed experimental window distortion effect being misaligned with window background texture."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
