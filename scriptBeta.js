@@ -2232,7 +2232,11 @@ function repoUpdateIntermediate(){
                     }
                 }
             }
-            repoUpdateCallback("Network Error " + this.status + ": " + this.repositoryName);
+            if(repoUpdateCallbackColored){
+                repoUpdateCallback("| Network Error " + this.status + ": " + this.repositoryName, "#579");
+            }else{
+                repoUpdateCallback("Network Error " + this.status + ": " + this.repositoryName);
+            }
         }
         repoStagedUpdates--;
         if(repoStagedUpdates <= 0){
@@ -2252,13 +2256,25 @@ function repoUpdateInstall(repoURL, repoResponse){
             if(!repositoryIDs.hasOwnProperty(repoJSON.repoID)){
                 repositories[repoURL] = repoJSON;
                 repositoryIDs[repoJSON.repoID] = repoURL;
-                repoUpdateCallback("Success: " + repoURL);
+                if(repoUpdateCallbackColored){
+                    repoUpdateCallback("| Success: " + repoURL, "#579");
+                }else{
+                    repoUpdateCallback("Success: " + repoURL);
+                }
             }else if(repositoryIDs[repository] !== repoURL){
-                repoUpdateCallback("Error: " + repoJSON.repoID + " already exists: " + repoURL);
+                if(repoUpdateCallbackColored){
+                    repoUpdateCallback("| Error: " + repoJSON.repoID + " already exists: " + repoURL, "#579");
+                }else{
+                    repoUpdateCallback("Error: " + repoJSON.repoID + " already exists: " + repoURL);
+                }
             }
         }
     }catch(err){
-        repoUpdateCallback("Error: " + err + ": " + repoURL);
+        if(repoUpdateCallbackColored){
+            repoUpdateCallback("| Error: " + err + ": " + repoURL, "#579");
+        }else{
+            repoUpdateCallback("Error: " + err + ": " + repoURL);
+        }
     }
 }
 
@@ -2270,9 +2286,16 @@ function repoUpdateFinished(){
         
     }
     try{
-        repoUpdateCallback("");
-        repoUpdateCallback(repoPackageSearch("").length + " total packages available.");
-        repoUpdateCallback(repoGetUpgradeable().length + " total updates available.");
+        if(repoUpdateCallbackColored){
+            repoUpdateCallback("| ", "#579");
+            repoUpdateCallback("| " + repoPackageSearch("").length + " total packages available.", "#579");
+            repoUpdateCallback("| " + repoGetUpgradeable().length + " total updates available.", "#579");
+            repoUpdateCallback("| -----", "#579");
+        }else{
+            repoUpdateCallback("");
+            repoUpdateCallback(repoPackageSearch("").length + " total packages available.");
+            repoUpdateCallback(repoGetUpgradeable().length + " total updates available.");
+        }
         //repoUpdateCallback(repoUpdateOutput);
         try{
             if(typeof repoUpdateFinishFunc === 'function'){
@@ -2299,14 +2322,17 @@ function repoUpdateFinished(){
 var repoUpdateXHR = {};
 
 repoUpdateCallback = null;
+repoUpdateCallbackColored = 0;
 repoUpdateFinishFunc = null;
 
 function repoUpdate(callback, finishFunc){
     if(repoStagedUpdates <= 0 && repoStagedUpgrades <= 0){
         if(callback){
             repoUpdateCallback = callback;
+            repoUpdateCallbackColored = 0;
         }else{
             repoUpdateCallback = doLog;
+            repoUpdateCallbackColored = 1;
         }
         if(finishFunc){
             repoUpdateFinishFunc = finishFunc;
@@ -2328,8 +2354,14 @@ function repoUpdate(callback, finishFunc){
             repoUpdateXHR[repo].send();
             repoStagedUpdates++;
         }
-        repoUpdateCallback("Updating " + repoStagedUpdates + " repositories");
-        repoUpdateCallback("");
+        if(repoUpdateCallbackColored){
+            repoUpdateCallback("| -----", "#579");
+            repoUpdateCallback("| Updating " + repoStagedUpdates + " repositories", "#579");
+            repoUpdateCallback("| ", "#579");
+        }else{
+            repoUpdateCallback("Updating " + repoStagedUpdates + " repositories");
+            repoUpdateCallback("");
+        }
         try{
             apps.saveMaster.vars.saving = 3;
         }catch(err){
@@ -11435,11 +11467,16 @@ c(function(){
                 " : Tweaked copy-paste menu text to be more consistent between lines.",
                 " : Fixed copy-paste menu icons being wrong.",
                 " : Fixed experimental window distortion effect being misaligned with window background texture."
+            ],
+            "06/26/2021: B1.5.7.3": [
+                " : Fixed boot scripts not working at all.",
+                " : Console logs for repository updates look better now.",
+                " : Extreme Graphics is no longer enabled by default in Minesweeper."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.7.2 (06/24/2021) r0';
+    window.aOSversion = 'B1.5.7.3 (06/26/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14939,7 +14976,7 @@ c(function(){
                 apps.prompt.vars.alert('WARNING - ADVANCED USERS ONLY<br>The Bootscript is your very own script to run on OS boot. Use it for useful things like... well, I can\'t think of anything. Here you are though.<br><br>BootScript will run your script one millisecond after the OS finishes loading your userfiles.<br><br>Save all variables for your script inside the \'this\' object. Example... this.myVar = 9000.1;<br><br>Bootscripts are written in JavaScript. Use the aOS API and assume that your script lives inside of an app\'s vars... (<b>apps.theoreticalApp.vars</b> <-- your script theoretically here) Check the aOS API doc for reference to what this means.<br><br>Your bootscript is NOT AN APP and has no window. Trying to call anything within this.appWindow WILL result in an error!', 'Okay, thanks.', function(){}, 'Boot Script');
             }
         },
-        signalhandler: function(signal){
+        signalHandler: function(signal){
             switch(signal){
                 case "forceclose":
                     //this.vars = this.varsOriginal;

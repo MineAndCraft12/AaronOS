@@ -259,7 +259,7 @@
                     clear: 1,
                     safe: 1,
                     easyClear: 1,
-                    xtrGraphics: 1,
+                    xtrGraphics: 0,
                     settings: function(){
                         var btn = parseInt(prompt("Please choose a setting to toggle:\n1: Omnipresent Grid (" + this.grid + ")\n2: Automatic Clearing (" + this.clear + ")\n3: Safe Mode (" + this.safe + ")\n4: Easy Clear (" + this.easyClear + ")\n5: Extreme Graphics (" + this.xtrGraphics + ") (will regenerate field)\n6: DEBUG"));
                         if(btn){
