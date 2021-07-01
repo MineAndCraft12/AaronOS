@@ -11485,12 +11485,13 @@ c(function(){
                 " - Removed old unused canvas element."
             ],
             "07/01/2021: B1.5.7.5": [
+                " + Added scrollbar to long messages in Messaging.",
                 " + Added safety warning to installation of boot scripts from Hub."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.7.5 (07/01/2021) r0';
+    window.aOSversion = 'B1.5.7.5 (07/01/2021) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14453,7 +14454,7 @@ c(function(){
                         if(this.lastResponseObject.n !== this.lastUserRecieved){
                             if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
                                 tempAddStr += '<div style="color:#0A0; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace;">&nbsp;' + this.parseBB(this.lastResponseObject.n, 1) + ' <span style="color:transparent">' + this.lastResponseObject.l + '</span></div>';
-                                tempAddStr += '<div style="background-color:#CEA; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
+                                tempAddStr += '<div style="max-height:60%; overflow-y:auto; background-color:#CEA; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
                                 if(this.lastResponseObject.t !== this.lastRecievedTime){
                                     tempAddStr += '<div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '&nbsp;</div>';
                                 }
@@ -14464,7 +14465,7 @@ c(function(){
                                 getId('MSGdiv').innerHTML += tempAddStr;
                             }else{
                                 tempAddStr += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace;">&nbsp;' + this.parseBB(this.lastResponseObject.n, 1) + ' <span style="color:transparent">' + this.lastResponseObject.l + '</span></div>';
-                                tempAddStr += '<div style="background-color:#ACE; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
+                                tempAddStr += '<div style="max-height:60%; overflow-y:auto; background-color:#ACE; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
                                 if(this.lastResponseObject.t !== this.lastRecievedTime){
                                     tempAddStr += '<div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '&nbsp;</div>';
                                 }
@@ -14477,7 +14478,7 @@ c(function(){
                         }else{
                             getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:2px;"></div>';
                             if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
-                                tempAddStr += '<div style="background-color:#CEA; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
+                                tempAddStr += '<div style="max-height:60%; overflow-y:auto; background-color:#CEA; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
                                 if(this.lastResponseObject.t !== this.lastRecievedTime){
                                     tempAddStr += '<div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '&nbsp;</div>';
                                 }
@@ -14487,7 +14488,7 @@ c(function(){
                                 tempAddStr += this.parseBB(this.lastResponseObject.c) + '</div>';
                                 getId("MSGdiv").innerHTML += tempAddStr;
                             }else{
-                                tempAddStr += '<div style="background-color:#ACE; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
+                                tempAddStr += '<div style="max-height:60%; overflow-y:auto; background-color:#ACE; position:static; padding-left:3px; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:calc(80% - 3px); margin-left:10%; font-family:sans-serif;">';
                                 if(this.lastResponseObject.t !== this.lastRecievedTime){
                                     tempAddStr += '<div style="width:10%;text-align:right;margin-left:-10%;color:#7F7F7F;font-size:12px;font-family:aosProFont,monospace">' + String(new Date(this.lastResponseObject.t - 0)).split(' ')[4] + '&nbsp;</div>';
                                 }
@@ -14504,17 +14505,17 @@ c(function(){
                         if(this.lastResponseObject.n !== this.lastUserRecieved){
                             if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
                                 getId('MSGdiv').innerHTML += '<div style="color:#0A0; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace;">&nbsp;' + this.lastResponseObject.n + '</div>';
-                                getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
+                                getId('MSGdiv').innerHTML += '<div style="max-height:60%; overflow-y:auto; background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
                             }else{
                                 getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:20px; font-family:monospace;">&nbsp;' + this.lastResponseObject.n + '</div>';
-                                getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
+                                getId('MSGdiv').innerHTML += '<div style="max-height:60%; overflow-y:auto; background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
                             }
                         }else{
                             getId('MSGdiv').innerHTML += '<div style="color:#777; position:static; width:80%; margin-left:10%; height:2px;"></div>';
                             if(this.lastResponseObject.n.indexOf('{ADMIN}') === 0){
-                                getId('MSGdiv').innerHTML += '<div style="background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
+                                getId('MSGdiv').innerHTML += '<div style="max-height:60%; overflow-y:auto; background-color:#CEA; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
                             }else{
-                                getId('MSGdiv').innerHTML += '<div style="background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
+                                getId('MSGdiv').innerHTML += '<div style="max-height:60%; overflow-y:auto; background-color:#ACE; position:static; padding-top:3px; padding-bottom:3px; border-radius:10px; color:#000; width:80%; margin-left:10%; font-family:monospace;">' + this.lastResponseObject.c.split('[IMG]').join('<img style="max-width:100%" src="').split('[/IMG]').join('">') + '</div>';
                             }
                         }
                     }
