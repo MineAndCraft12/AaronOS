@@ -11483,11 +11483,14 @@ c(function(){
                 " - Removed old fake password check from admin usernames in Messaging.",
                 " : Fixed visible loading feature.",
                 " - Removed old unused canvas element."
+            ],
+            "07/01/2021: B1.5.7.5": [
+                " + Added safety warning to installation of boot scripts from Hub."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.7.4 (06/30/2021) r0';
+    window.aOSversion = 'B1.5.7.5 (07/01/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -15928,7 +15931,15 @@ c(function(){
             },
             install: function(buttonElement){
                 apps.appCenter.vars.previousScrollPoint = getId("win_appCenter_html").scrollTop;
-                repoAddPackage(buttonElement.getAttribute("data-appcenter-repo") + "." + buttonElement.getAttribute("data-appcenter-package"), null, apps.appCenter.vars.displayUpdates);
+                if(repositories[repositoryIDs[buttonElement.getAttribute("data-appcenter-repo")]].packages[buttonElement.getAttribute("data-appcenter-package")].packageType === 'bootscript'){
+                    apps.prompt.vars.confirm("Use caution! Make sure you trust the developer of boot scripts; they can access all of your data and perform actions on your behalf.", ["Cancel", "Install"], (choice) => {
+                        if(choice){
+                            repoAddPackage(buttonElement.getAttribute("data-appcenter-repo") + "." + buttonElement.getAttribute("data-appcenter-package"), null, apps.appCenter.vars.displayUpdates);
+                        }
+                    }, "AaronOS Hub");
+                }else{
+                    repoAddPackage(buttonElement.getAttribute("data-appcenter-repo") + "." + buttonElement.getAttribute("data-appcenter-package"), null, apps.appCenter.vars.displayUpdates);
+                }
                 //getId("APPCENTER_NOTICE_" + buttonElement.getAttribute("data-appcenter-repo") + "_" + buttonElement.getAttribute("data-appcenter-package")).innerHTML = "Restart to apply changes.";
                 //getId("APPCENTER_NOTICE").innerHTML = "Restart to apply changes.";
             },
