@@ -442,8 +442,9 @@ var d = function(level, message){
     }
 };
 
-if(typeof dirtyLoadingEnabled !== 'number'){
-    dirtyLoadingEnabled = 0;
+var dirtyLoadingEnabled = 0;
+if(localStorage.getItem("aosdirtyloading") === "1"){
+    dirtyLoadingEnabled = 1;
 }
 
 // counts the length of an object
@@ -982,7 +983,9 @@ function getId(target){
 	return document.getElementById(target);
 }
 // make desktop invisible to speed up boot
-if(!dirtyLoadingEnabled){
+if(dirtyLoadingEnabled){
+    getId('aOSloadingBg').style.display = 'none';
+}else{
     getId('desktop').style.display = 'none';
     getId('taskbar').style.display = 'none';
 }
@@ -5287,6 +5290,7 @@ c(function(){
                         this.vars.inputDelay = parseInt(ufload("aos_system/noraa/speech_response_delay"), 10);
                     }
                     this.vars.sayDynamic('hello');
+                    this.vars.say("[This app in in Beta. It's not complete.]");
                     break;
                 case 'shutdown':
                         
@@ -7713,6 +7717,7 @@ c(function(){
             togDirtyLoad: function(){
                 dirtyLoadingEnabled = -1 * dirtyLoadingEnabled + 1;
                 apps.savemaster.vars.save('aos_system/apps/settings/ugly_boot', dirtyLoadingEnabled, 1);
+                localStorage.setItem("aosdirtyloading", String(dirtyLoadingEnabled));
             },
             resetOS: function(){
                 apps.prompt.vars.confirm('<h1>STOP</h1><br><br>Please confirm with absolute certainty that you wish to RESET AaronOS.', ['<h1>CANCEL</h1>', '<h1 style="color:#F00">RESET</h1>'], function(btn){if(btn){
@@ -11472,11 +11477,17 @@ c(function(){
                 " : Fixed boot scripts not working at all.",
                 " : Console logs for repository updates look better now.",
                 " : Extreme Graphics is no longer enabled by default in Minesweeper."
+            ],
+            "06/30/2021: B1.5.7.4": [
+                " : Modified NORAA startup text slightly.",
+                " - Removed old fake password check from admin usernames in Messaging.",
+                " : Fixed visible loading feature.",
+                " - Removed old unused canvas element."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.7.3 (06/26/2021) r0';
+    window.aOSversion = 'B1.5.7.4 (06/30/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14115,17 +14126,17 @@ c(function(){
                                 apps.messaging.vars.nameTemp = txtIN;
                                 if(apps.messaging.vars.nameTemp.length > 30 && apps.messaging.vars.nameTemp.length < 3){
                                     apps.prompt.vars.alert('Your name cannot be more than 30 or less than 3 characters long.', 'Okay', function(){}, 'Messaging');
-                                }else if(apps.messaging.vars.nameTemp.toLowerCase().indexOf('mineandcraft12') > -1 || apps.messaging.vars.nameTemp.toUpperCase().indexOf('{ADMIN}') > -1){
-                                    apps.prompt.vars.prompt('REALITY CHECK<br>Please enter your password, Aaron... or admin.', 'This user security agent again?', function(secretpass){
+                                }else if(apps.messaging.vars.nameTemp.toUpperCase().indexOf('{ADMIN}') > -1){
+                                    apps.prompt.vars.alert('Sorry, admins can only be set manually. Please ask an administrator.', 'Okay', function(){
                                         //if(secretpass === navigator.userAgent){
-                                            apps.messaging.vars.name = apps.messaging.vars.nameTemp; // = "";
+                                            //apps.messaging.vars.name = apps.messaging.vars.nameTemp; // = "";
                                             //for(var i in apps.messaging.vars.nameTemp){
                                             //    apps.messaging.vars.name += encodeURIComponent(apps.messaging.vars.nameTemp[i]);
                                             //}
                                             
                                             // This zone is quite battlescarred. Why must our fellow samaritans attack it so much?
                                             
-                                            apps.savemaster.vars.save('aos_system/apps/messaging/chat_name', apps.messaging.vars.name, 1, 'mUname', secretpass || 'pass');
+                                            //apps.savemaster.vars.save('aos_system/apps/messaging/chat_name', apps.messaging.vars.name, 1, 'mUname', secretpass || 'pass');
                                         //}else{
                                         //    apps.prompt.vars.alert('Nice try! You aren\'t Aaron! And you aren\'t an admin either! What gives, man? Calm down with the impersonation here! I\'m just a kid doing something really cool with computers, chill out and quit trying to mess things up!', 'Sheesh, I guess I won\'t pretend to be Aaron or an admin, like a jerk or something.', function(){}, 'Aaron');
                                         //}

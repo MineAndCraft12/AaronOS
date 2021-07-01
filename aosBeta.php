@@ -76,7 +76,7 @@
             <div id="time"></div>
             <div id="icons">Loading, please wait.</div>
         </div>
-        <canvas id="aDE"></canvas>
+        <!--<canvas id="aDE"></canvas>-->
         <div id="ctxMenu" onclick="getId('ctxMenu').style.display='none'" class="backdropFilterCtxMenu noselect"></div>
         <div id="screensaverLayer"></div>
         <div id="petCursors"></div>
