@@ -165,6 +165,7 @@ var safe = !safeMode;
 
 // style editor template mode
 var styleEditorTemplateMode = (window.location.href.indexOf('styletemplate=true') > -1);
+var themeEditorTemplateMode = (window.location.href.indexOf('themetemplate=true') > -1);
 
 var darkMode = 0;
 function darkSwitch(light, dark){
@@ -11487,11 +11488,15 @@ c(function(){
             "07/01/2021: B1.5.7.5": [
                 " + Added scrollbar to long messages in Messaging.",
                 " + Added safety warning to installation of boot scripts from Hub."
+            ],
+            "07/03/2021: B1.5.8.0": [
+                " + Added new System Theme Editor app, utilizing the Ace editor by Ajax.org",
+                " + Added notification to Custom Style Editor, informing users of the new app."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.7.5 (07/01/2021) r1';
+    window.aOSversion = 'B1.5.8.0 (07/03/2021) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -15064,6 +15069,18 @@ c(function(){
                         getId('CSEtextarea').innerHTML = ufload("aos_system/user_custom_style");
                         //this.vars.updateFrame();
                     }
+                    apps.prompt.vars.notify(
+                        "Try the new System Theme Editor instead; it features the Ace text editor with syntax highlighting and other code features!",
+                        ["Open App", "Dismiss"],
+                        (btn) => {
+                            if(btn === 0){
+                                openapp(apps.themeEdit, 'dsktp');
+                                apps.styleEditor.signalHandler("close");
+                            }
+                        },
+                        "System Theme Editor",
+                        "appicons/ds/CSE.png"
+                    );
                 }
             }
             this.appWindow.openWindow();
@@ -15157,6 +15174,145 @@ c(function(){
                     if(styleEditorTemplateMode){
                         openapp(apps.styleEditor, "dsktp");
                         setTimeout(function(){toTop(apps.styleEditor);}, 1000);
+                    }
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'System Theme Editor';
+});
+c(function(){
+    apps.themeEdit = new Application({
+        title: "System Theme Editor",
+        abbreviation: "STE",
+        codeName: "themeEdit",
+        image: 'appicons/ds/CSE.png',
+        hideApp: 1,
+        main: function(){
+            if(!this.appWindow.appIcon){
+                if(themeEditorTemplateMode){
+                    this.appWindow.setDims("auto", "auto", 400, 500);
+                    this.appWindow.setCaption("Theme Preview");
+                    this.appWindow.setContent(
+                        '<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>' +
+                        '<hr>Hovered Element:<br>' +
+                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.themeEdit.vars.templateType">none</span><br>' +
+                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.themeEdit.vars.templateID">none</span><br>' +
+                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.themeEdit.vars.templateClass">none</span>' +
+                        '<hr>Parent of Hovered Element:<br>' +
+                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.themeEdit.vars.templateParent">none</span>');
+                    apps.prompt.vars.notify("Test Notification", ["Dismiss"], function(){}, "Theme Editor", "appicons/ds/CSE.png");
+                    window.addEventListener("mousemove", apps.themeEdit.vars.templateCheck);
+                }else{
+                    this.appWindow.paddingMode(0);
+                    this.appWindow.setDims("auto", "auto", 400, 400);
+                    this.appWindow.toggleFullscreen();
+                    this.appWindow.setCaption('System Theme Editor');
+                    this.appWindow.setContent(
+                        '<iframe data-parent-app="styleEditor" src="ace/themeEdit.html" style="padding:0;border:none;width:calc(50% - 1px);height:90%;border-right:1px solid #7F7F7F;"></iframe>' +
+                        '<iframe data-parent-app="styleEditor" src="aosBeta.php?themetemplate=true&nofiles=true" id="themeEditframe" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" onload="apps.themeEdit.vars.updateFrame()"></iframe>' +
+                        '<button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.themeEdit.vars.saveStyleEditor()">Save</button>' +
+                        '<button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.themeEdit.vars.helpStyleEditor()">Help</button>'
+                    );
+                }
+            }
+            this.appWindow.openWindow();
+        },
+        vars: {
+            appInfo: 'Create your own system theme for aOS! It is embedded as an actual stylesheet, placed such that it overrides the default styles.<br><br>If you create something you want to be featured in aOS, please tell the developer so he can take a look!',
+            currEditorContent: "",
+            saveStyleEditor: function(){
+                apps.savemaster.vars.save('aos_system/user_custom_style', this.currEditorContent, 1);
+                getId('aosCustomStyle').innerHTML = this.currEditorContent;
+            },
+            helpStyleEditor: function(){
+                apps.prompt.vars.alert('WARNING - ADVANCED USERS ONLY<br>The Custom Stylesheet is your very own set of styling rules for aOS. Use it to style aOS to your whim - theoretically, every element of the OS can be customized with this file.<br><br>You can check out style.css for the default stylesheet, and use your browser\'s developer tools to get easier access to elements as they are shown on-screen.', 'Okay, thanks.', function(){}, 'Boot Script');
+            },
+            updateFrame: function(text){
+                this.currEditorContent = text;
+                getId("themeEditframe").contentDocument.getElementById('aosCustomStyle').innerHTML = text || getId("aosCustomStyle").innerHTML;
+            },
+            templateCheck: function(event){
+                var elem = document.elementFromPoint(event.pageX, event.pageY);
+                if(elem.tagName){
+                    apps.themeEdit.vars.templateType = '&lt;' + elem.tagName.toLowerCase() + '&gt;';
+                    var elemRect = elem.getBoundingClientRect();
+                    getId("windowFrameOverlay").style.display = "block";
+                    getId("windowFrameOverlay").style.left = elemRect.left + "px";
+                    getId("windowFrameOverlay").style.top = elemRect.top + "px";
+                    getId("windowFrameOverlay").style.width = elemRect.width + "px";
+                    getId("windowFrameOverlay").style.height = elemRect.height + "px";
+                }else{
+                    apps.themeEdit.vars.templateType = 'no element';
+                }
+                if(elem.id){
+                    apps.themeEdit.vars.templateID = '#' + elem.id;
+                }else{
+                    apps.themeEdit.vars.templateID = 'no ID';
+                }
+                if(elem.classList.length > 0){
+                    var allClasses = elem.classList;
+                    apps.themeEdit.vars.templateClass = '';
+                    for(var i = 0; i < allClasses.length; i++){
+                        apps.themeEdit.vars.templateClass += '.' + allClasses[i] + '<br>';
+                    }
+                }else{
+                    apps.themeEdit.vars.templateClass = 'no class';
+                }
+                if(elem.parentNode){
+                    apps.themeEdit.vars.templateParent = '&lt;' + elem.parentNode.tagName.toLowerCase() + '&gt;';
+                    if(elem.parentNode.id){
+                        apps.themeEdit.vars.templateParent += '<br>#' + elem.parentNode.id;
+                    }else{
+                        apps.themeEdit.vars.templateParent += '<br>no ID';
+                    }
+                    if(elem.parentNode.classList.length > 0){
+                        apps.themeEdit.vars.templateParent += '<br>.' + [...elem.parentNode.classList].join("<br>.");
+                    }else{
+                        apps.themeEdit.vars.templateParent += '<br>no class';
+                    }
+                }else{
+                    apps.themeEdit.vars.templateParent = 'no parent';
+                }
+            },
+            templateType: 'no element',
+            templateID: 'no ID',
+            templateClass: 'no class',
+            templateParent: 'no parent',
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    this.appWindow.closeWindow();
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    if(themeEditorTemplateMode){
+                        openapp(apps.themeEdit, "dsktp");
+                        setTimeout(function(){toTop(apps.themeEdit);}, 1000);
                     }
                     break;
                 case 'shutdown':

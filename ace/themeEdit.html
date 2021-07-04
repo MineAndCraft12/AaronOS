@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ACE Style Editor</title>
+    <style>
+        #editor { 
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
+    <script src="../aosTools.js" data-light="true"></script>
+</head>
+<body>
+    <div id="editor"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/worker-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/theme-clouds.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/theme-clouds_midnight.min.js"></script>
+<script defer>
+    var editor = ace.edit("editor");
+    editor.session.setMode("ace/mode/css");
+    editor.setShowPrintMargin(false);
+
+    function setTheme(){
+        aosTools.getDarkMode((response) => {
+            console.log(response.content);
+            if(response.content){
+                editor.setTheme("ace/theme/clouds_midnight");
+            }else{
+                editor.setTheme("ace/theme/clouds");
+            }
+        });
+    }
+    function pasteText(data){
+        if(data.content === "pasted"){
+            editor.insert(data.pastedText);
+        }
+    }
+    // this entire func is ripped from aOS Tools for the purpose of replacing one line of its function
+    function showEditMenu(event, enablePaste, textOverride, positionOverride){
+        aosTools.waitingPasteTarget = event ? event.target : null;
+        aosTools.waitingPasteRange = event ? (event.target.selectionStart ? [event.target.selectionStart, event.target.selectionEnd] : null) : null;
+        aosTools.sendRequest({
+            action: "context:text_menu",
+            position: positionOverride || event ? [event.pageX, event.pageY] : [0, 0],
+            // editor.getSelectedText() is the only change from vanilla aOS Tools
+            selectedText: textOverride || editor.getSelectedText(),
+            enablePaste: (event ? (typeof event.target.value === "string" ? true : false) : false) ? enablePaste : 0
+        }, aosTools.recievePasteCommand);
+        if(event){
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+    function configureEditor(){
+        aosTools.getCustomStyle((response) => {
+            if(typeof response.content.customStyle === "string");
+            editor.session.setValue(response.content.customStyle);
+        });
+        aosTools.updateStyle = setTheme;
+        aosTools.recievePasteCommand = pasteText;
+        aosTools.editMenu = showEditMenu;
+        editor.session.on('change', (delta) => {
+            aosTools.sendRequest({
+                action: "js:exec",
+                content: "apps.themeEdit.vars.updateFrame(" + JSON.stringify([editor.getValue()]) + "[0])"
+            }, () => {});
+        });
+    }
+
+    window.aosTools_connectListener = configureEditor;
+    if(typeof aosTools === "object"){
+        aosTools.testConnection();
+    }
+</script>
+</body>
+</html>
