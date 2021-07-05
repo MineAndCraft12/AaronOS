@@ -53,10 +53,10 @@
             }
         }
         function configureEditor(){
-            aosTools.getCustomStyle((response) => {
-                if(typeof response.content.customStyle === "string");
-                editor.session.setValue(response.content.customStyle);
-            });
+            //aosTools.getCustomStyle((response) => {
+            //    if(typeof response.content.customStyle === "string");
+            //    editor.session.setValue(response.content.customStyle);
+            //});
             aosTools.updateStyle = setTheme;
             aosTools.recievePasteCommand = pasteText;
             aosTools.editMenu = showEditMenu;
@@ -66,6 +66,7 @@
                     content: "apps.bootScript.vars.updateFrame(" + JSON.stringify([editor.getValue()]) + "[0])"
                 }, () => {});
             });
+            setTheme();
         }
 
         window.aosTools_connectListener = configureEditor;

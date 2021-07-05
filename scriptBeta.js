@@ -11500,12 +11500,13 @@ c(function(){
                 " - Removed the old plain-text Custom Style Editor.",
                 " : Renamed Boot Scripts to Boot Script Editor.",
                 " : Fixed Ace editors failing to check syntax.",
+                " : Fixed Ace editors not setting themselves to the correct theme on init.",
                 " : Ace resources are now hosted first-party (this server) rather than pulled from Cloudflare."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.9.0 (07/04/2021) r0';
+    window.aOSversion = 'B1.5.9.0 (07/04/2021) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

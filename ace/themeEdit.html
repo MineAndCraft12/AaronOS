@@ -66,6 +66,7 @@
                     content: "apps.themeEdit.vars.updateFrame(" + JSON.stringify([editor.getValue()]) + "[0])"
                 }, () => {});
             });
+            setTheme();
         }
 
         window.aosTools_connectListener = configureEditor;
