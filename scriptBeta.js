@@ -164,8 +164,10 @@ var safeMode = (window.location.href.indexOf('safe=true') > -1);
 var safe = !safeMode;
 
 // style editor template mode
-var styleEditorTemplateMode = (window.location.href.indexOf('styletemplate=true') > -1);
 var themeEditorTemplateMode = (window.location.href.indexOf('themetemplate=true') > -1);
+if(!themeEditorTemplateMode){
+    themeEditorTemplateMode = (window.location.href.indexOf('styletemplate=true') > -1);
+}
 
 var darkMode = 0;
 function darkSwitch(light, dark){
@@ -690,7 +692,7 @@ var langContent = { // LANGUAGES
             housegame: "House Game",
             simon: "Simon",
             postit: "Sticky Note",
-            bootScript: "Boot Scripts",
+            bootScript: "Boot Script Editor",
             bugCentral: "Bug Central",
             rdp: "Remote Desktop Host",
             rdpViewer: "Remote Desktop Viewer",
@@ -814,7 +816,7 @@ var langContent = { // LANGUAGES
             housegame: "Video Game that Takes Place Between Two Warring Factions",
             simon: "Simon",
             postit: "Sticky Note",
-            bootScript: "Boot Scripts",
+            bootScript: "Boot Script Editor",
             bugCentral: "Bug Central",
             rdp: "Remote Desktop Host",
             rdpViewer: "Remote Desktop Viewer",
@@ -11492,11 +11494,18 @@ c(function(){
             "07/03/2021: B1.5.8.0": [
                 " + Added new System Theme Editor app, utilizing the Ace editor by Ajax.org",
                 " + Added notification to Custom Style Editor, informing users of the new app."
+            ],
+            "07/04/2021: B1.5.9.0": [
+                " + Added Ace environment to Boot Script Editor.",
+                " - Removed the old plain-text Custom Style Editor.",
+                " : Renamed Boot Scripts to Boot Script Editor.",
+                " : Fixed Ace editors failing to check syntax.",
+                " : Ace resources are now hosted first-party (this server) rather than pulled from Cloudflare."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.8.0 (07/03/2021) r1';
+    window.aOSversion = 'B1.5.9.0 (07/04/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14855,7 +14864,7 @@ c(function(){
 });
 c(function(){
     apps.bootScript = new Application({
-        title: "Boot Scripts",
+        title: "Boot Script Editor",
         abbreviation: "BtS",
         codeName: "bootScript",
         image: 'appicons/ds/BtS.png',
@@ -14864,10 +14873,11 @@ c(function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
                 this.appWindow.setDims("auto", "auto", 701, 400);
-                this.appWindow.setCaption('Boot Scripts');
+                this.appWindow.setCaption('Boot Script Editor');
                 this.appWindow.setContent(
                     '<div id="BtS_scripts" class="noselect" style="width:40%;overflow-y:scroll;height:calc(100% - 2em + 8px)"></div>' +
-                    '<textarea id="BtStextarea" style="font-family:aosProFont, monospace;font-size:12px;position:absolute;right:0;padding:0;border:none;width:calc(60% - 3px);padding-left:3px;height:calc(100% - 2em);resize:none;"></textarea>' +
+                    //'<textarea id="BtStextarea" style="font-family:aosProFont, monospace;font-size:12px;position:absolute;right:0;padding:0;border:none;width:calc(60% - 3px);padding-left:3px;height:calc(100% - 2em);resize:none;"></textarea>' +
+                    '<iframe id="BtS_edit_frame" data-parent-app="bootScript" src="ace/scriptEdit.html" onload="apps.bootScript.vars.openScript(\'main\');" style="position:absolute; right:0; padding:0; border:none; width:60%; height:calc(100% - 2em + 8px);"></iframe>' +
                     '<div style="bottom:0;width:100%;">' +
                     '<button style="position:relative;width:40%;height:calc(2em - 3px);" onclick="apps.bootScript.vars.newScript()">New Script</button>' +
                     '<button style="float:right;width:30%;height:calc(2em - 3px);" onclick="apps.bootScript.vars.saveBootScript()">Save</button>' +
@@ -14875,7 +14885,7 @@ c(function(){
                     '</div>'
                 );
                 this.vars.listScripts();
-                this.vars.openScript('main');
+                //this.vars.openScript('main');
             }
             this.appWindow.openWindow();
         },
@@ -14945,15 +14955,38 @@ c(function(){
             },
             currScript: 'main',
             openScript: function(scriptName){
-                this.currScript = scriptName;
-                var allScripts = document.getElementsByClassName('BtS_script');
-                for(var i = 0; i < allScripts.length; i++){
-                    allScripts[i].style.color = '';
-                }
                 if(ufload("aos_system/apps/bootScript/" + scriptName)){
-                    getId("BtStextarea").value = ufload("aos_system/apps/bootScript/" + scriptName);
+                    //getId("BtStextarea").value = ufload("aos_system/apps/bootScript/" + scriptName);
+                    if(
+                        ufload('aos_system/apps/bootScript/' + cleanStr(this.currScript)) !== getId("BtS_edit_frame").contentWindow.editor.getValue() &&
+                        getId("BtS_edit_frame").contentWindow.editor.getValue() !== ""
+                    ){
+                        apps.prompt.vars.confirm(
+                            "The current changes are NOT saved! Are you sure you want to load a different file?",
+                            ["Cancel", "Load &amp; Lose Changes"],
+                            (btn) => {
+                                if(btn){
+                                    this.currScript = scriptName;
+                                    var allScripts = document.getElementsByClassName('BtS_script');
+                                    for(var i = 0; i < allScripts.length; i++){
+                                        allScripts[i].style.color = '';
+                                    }
+                                    getId("BtS_edit_frame").contentWindow.editor.session.setValue(ufload("aos_system/apps/bootScript/" + cleanStr(scriptName)));
+                                    getId("BtS_script_" + scriptName).style.color = "#0AA";
+                                }
+                            },
+                            "Boot Script Editor"
+                        )
+                    }else{
+                        this.currScript = scriptName;
+                        var allScripts = document.getElementsByClassName('BtS_script');
+                        for(var i = 0; i < allScripts.length; i++){
+                            allScripts[i].style.color = '';
+                        }
+                        getId("BtS_edit_frame").contentWindow.editor.session.setValue(ufload("aos_system/apps/bootScript/" + cleanStr(scriptName)));
+                        getId("BtS_script_" + scriptName).style.color = "#0AA";
+                    }
                 }
-                getId("BtS_script_" + scriptName).style.color = "#0AA";
             },
             newScript: function(){
                 apps.prompt.vars.prompt("Please enter a name for the new script.<br><br>Leave blank to cancel.", "Submit", function(str){
@@ -14961,10 +14994,10 @@ c(function(){
                         if(!ufload("aos_system/apps/bootScript").hasOwnProperty(cleanStr(str))){
                             apps.bootScript.vars.createScript(str);
                         }else{
-                            apps.prompt.vars.alert("There is already a boot script with that name.", "Okay", function(){}, "Boot Scripts");
+                            apps.prompt.vars.alert("There is already a boot script with that name.", "Okay", function(){}, "Boot Script Editor");
                         }
                     }
-                }, "Boot Scripts");
+                }, "Boot Script Editor");
             },
             createScript: function(name){
                 ufsave("aos_system/apps/bootScript/" + cleanStr(name), "// AaronOS Boot Script");
@@ -14989,7 +15022,7 @@ c(function(){
                 getId("BtS_scripts").innerHTML = finalHTML;
             },
             saveBootScript: function(){
-                ufsave('aos_system/apps/bootScript/' + this.currScript, getId('BtStextarea').value);
+                ufsave('aos_system/apps/bootScript/' + this.currScript, getId('BtS_edit_frame').contentWindow.editor.getValue());
                 // apps.prompt.vars.alert('Saved.', 'Okay', function(){}, 'Boot Script');
             },
             helpBootScript: function(){
@@ -15035,155 +15068,6 @@ c(function(){
             }
         }
     });
-    getId('aOSloadingInfo').innerHTML = 'Custom Style Editor';
-});
-c(function(){
-    apps.styleEditor = new Application({
-        title: "Custom Style Editor",
-        abbreviation: "CSE",
-        codeName: "styleEditor",
-        image: 'appicons/ds/CSE.png',
-        hideApp: 1,
-        main: function(){
-            if(!this.appWindow.appIcon){
-                if(styleEditorTemplateMode){
-                    this.appWindow.setDims("auto", "auto", 400, 500);
-                    this.appWindow.setCaption("CSE Preview");
-                    this.appWindow.setContent(
-                        '<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>' +
-                        '<hr>Hovered Element:<br>' +
-                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateType">none</span><br>' +
-                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateID">none</span><br>' +
-                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateClass">none</span>' +
-                        '<hr>Parent of Hovered Element:<br>' +
-                        '<span class="liveElement" style="font-family:monospace" data-live-eval="apps.styleEditor.vars.templateParent">none</span>');
-                    apps.prompt.vars.notify("Test Notification", ["Dismiss"], function(){}, "Style Editor", "appicons/ds/CSE.png");
-                    window.addEventListener("mousemove", apps.styleEditor.vars.templateCheck);
-                }else{
-                    this.appWindow.paddingMode(0);
-                    this.appWindow.setDims("auto", "auto", 400, 400);
-                    this.appWindow.toggleFullscreen();
-                    this.appWindow.setCaption('Custom Style Editor');
-                    this.appWindow.setContent('<textarea id="CSEtextarea" style="font-family:aosProFont, monospace;font-size:12px;padding:0;border:none;width:50%;height:90%;resize:none;" onkeyup="try{apps.styleEditor.vars.updateFrame()}catch(e){}"></textarea><iframe data-parent-app="styleEditor" src="aosBeta.php?styletemplate=true&nofiles=true" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" id="CSEframe" onload="apps.styleEditor.vars.updateFrame()"></iframe><button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.saveStyleEditor()">Save</button><button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.styleEditor.vars.helpStyleEditor()">Help</button>');
-                    if(ufload("aos_system/user_custom_style")){
-                        getId('CSEtextarea').innerHTML = ufload("aos_system/user_custom_style");
-                        //this.vars.updateFrame();
-                    }
-                    apps.prompt.vars.notify(
-                        "Try the new System Theme Editor instead; it features the Ace text editor with syntax highlighting and other code features!",
-                        ["Open App", "Dismiss"],
-                        (btn) => {
-                            if(btn === 0){
-                                openapp(apps.themeEdit, 'dsktp');
-                                apps.styleEditor.signalHandler("close");
-                            }
-                        },
-                        "System Theme Editor",
-                        "appicons/ds/CSE.png"
-                    );
-                }
-            }
-            this.appWindow.openWindow();
-        },
-        vars: {
-            appInfo: 'Create your own custom CSS stylesheet for aOS! It is embedded as an actual stylesheet, placed such that it overrides the default styles.<br><br>If you create something you want to be featured in aOS, please tell the developer so he can take a look!',
-            saveStyleEditor: function(){
-                apps.savemaster.vars.save('aos_system/user_custom_style', getId('CSEtextarea').value, 1);
-                getId('aosCustomStyle').innerHTML = ufload("aos_system/user_custom_style");
-            },
-            helpStyleEditor: function(){
-                apps.prompt.vars.alert('WARNING - ADVANCED USERS ONLY<br>The Custom Stylesheet is your very own set of styling rules for aOS. Use it to style aOS to your whim - theoretically, every element of the OS can be customized with this file.<br><br>You can check out style.css for the default stylesheet, and use your browser\'s developer tools to get easier access to elements as they are shown on-screen.', 'Okay, thanks.', function(){}, 'Boot Script');
-            },
-            updateFrame: function(){
-                // iframe is called CSEframe
-                getId('CSEframe').contentDocument.getElementById('aosCustomStyle').innerHTML = getId('CSEtextarea').value;
-            },
-            templateCheck: function(event){
-                var elem = document.elementFromPoint(event.pageX, event.pageY);
-                if(elem.tagName){
-                    apps.styleEditor.vars.templateType = '&lt;' + elem.tagName.toLowerCase() + '&gt;';
-                    var elemRect = elem.getBoundingClientRect();
-                    getId("windowFrameOverlay").style.display = "block";
-                    getId("windowFrameOverlay").style.left = elemRect.left + "px";
-                    getId("windowFrameOverlay").style.top = elemRect.top + "px";
-                    getId("windowFrameOverlay").style.width = elemRect.width + "px";
-                    getId("windowFrameOverlay").style.height = elemRect.height + "px";
-                }else{
-                    apps.styleEditor.vars.templateType = 'no element';
-                }
-                if(elem.id){
-                    apps.styleEditor.vars.templateID = '#' + elem.id;
-                }else{
-                    apps.styleEditor.vars.templateID = 'no ID';
-                }
-                if(elem.classList.length > 0){
-                    var allClasses = elem.classList;
-                    apps.styleEditor.vars.templateClass = '';
-                    for(var i = 0; i < allClasses.length; i++){
-                        apps.styleEditor.vars.templateClass += '.' + allClasses[i] + '<br>';
-                    }
-                }else{
-                    apps.styleEditor.vars.templateClass = 'no class';
-                }
-                if(elem.parentNode){
-                    apps.styleEditor.vars.templateParent = '&lt;' + elem.parentNode.tagName.toLowerCase() + '&gt;';
-                    if(elem.parentNode.id){
-                        apps.styleEditor.vars.templateParent += '<br>#' + elem.parentNode.id;
-                    }else{
-                        apps.styleEditor.vars.templateParent += '<br>no ID';
-                    }
-                    if(elem.parentNode.classList.length > 0){
-                        apps.styleEditor.vars.templateParent += '<br>.' + [...elem.parentNode.classList].join("<br>.");
-                    }else{
-                        apps.styleEditor.vars.templateParent += '<br>no class';
-                    }
-                }else{
-                    apps.styleEditor.vars.templateParent = 'no parent';
-                }
-            },
-            templateType: 'no element',
-            templateID: 'no ID',
-            templateClass: 'no class',
-            templateParent: 'no parent',
-        },
-        signalHandler: function(signal){
-            switch(signal){
-                case "forceclose":
-                    //this.vars = this.varsOriginal;
-                    this.appWindow.closeWindow();
-                    this.appWindow.closeIcon();
-                    break;
-                case "close":
-                    this.appWindow.closeWindow();
-                    setTimeout(function(){
-                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
-                            this.appWindow.setContent("");
-                        }
-                    }.bind(this), 300);
-                    break;
-                case "checkrunning":
-                    if(this.appWindow.appIcon){
-                        return 1;
-                    }else{
-                        return 0;
-                    }
-                case "shrink":
-                    this.appWindow.closeKeepTask();
-                    break;
-                case "USERFILES_DONE":
-                    if(styleEditorTemplateMode){
-                        openapp(apps.styleEditor, "dsktp");
-                        setTimeout(function(){toTop(apps.styleEditor);}, 1000);
-                    }
-                    break;
-                case 'shutdown':
-                        
-                    break;
-                default:
-                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
-            }
-        }
-    });
     getId('aOSloadingInfo').innerHTML = 'System Theme Editor';
 });
 c(function(){
@@ -15197,7 +15081,7 @@ c(function(){
             if(!this.appWindow.appIcon){
                 if(themeEditorTemplateMode){
                     this.appWindow.setDims("auto", "auto", 400, 500);
-                    this.appWindow.setCaption("Theme Preview");
+                    this.appWindow.setCaption("System Theme Preview");
                     this.appWindow.setContent(
                         '<h1>Header</h1><p>Paragraph</p><hr><input placeholder="Input"> <button>Button</button><br><input type="checkbox"> <input type="checkbox" checked="checked"> <input type="radio"> <input type="radio" checked="checked"><br><textarea>Text Area</textarea>' +
                         '<hr>Hovered Element:<br>' +
@@ -15214,8 +15098,8 @@ c(function(){
                     this.appWindow.toggleFullscreen();
                     this.appWindow.setCaption('System Theme Editor');
                     this.appWindow.setContent(
-                        '<iframe data-parent-app="styleEditor" src="ace/themeEdit.html" style="padding:0;border:none;width:calc(50% - 1px);height:90%;border-right:1px solid #7F7F7F;"></iframe>' +
-                        '<iframe data-parent-app="styleEditor" src="aosBeta.php?themetemplate=true&nofiles=true" id="themeEditframe" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" onload="apps.themeEdit.vars.updateFrame()"></iframe>' +
+                        '<iframe data-parent-app="themeEdit" src="ace/themeEdit.html" style="padding:0;border:none;width:calc(50% - 1px);height:90%;border-right:1px solid #7F7F7F;"></iframe>' +
+                        '<iframe data-parent-app="themeEdit" src="aosBeta.php?themetemplate=true&nofiles=true" id="themeEditframe" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" onload="apps.themeEdit.vars.updateFrame()"></iframe>' +
                         '<button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.themeEdit.vars.saveStyleEditor()">Save</button>' +
                         '<button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.themeEdit.vars.helpStyleEditor()">Help</button>'
                     );

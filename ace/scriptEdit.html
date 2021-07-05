@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Ace System Theme Editor</title>
+    <title>Ace Boot Script Editor</title>
     <style>
         #editor { 
             position: absolute;
@@ -18,7 +18,7 @@
     <script src="ace.js"></script>
     <script defer>
         var editor = ace.edit("editor");
-        editor.session.setMode("ace/mode/css");
+        editor.session.setMode("ace/mode/javascript");
         editor.setShowPrintMargin(false);
 
         function setTheme(){
@@ -63,7 +63,7 @@
             editor.session.on('change', (delta) => {
                 aosTools.sendRequest({
                     action: "js:exec",
-                    content: "apps.themeEdit.vars.updateFrame(" + JSON.stringify([editor.getValue()]) + "[0])"
+                    content: "apps.bootScript.vars.updateFrame(" + JSON.stringify([editor.getValue()]) + "[0])"
                 }, () => {});
             });
         }
