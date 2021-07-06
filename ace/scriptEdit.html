@@ -16,10 +16,15 @@
 <body>
     <div id="editor"></div>
     <script src="ace.js"></script>
+    <script src="ext-language_tools.js"></script>
     <script defer>
         var editor = ace.edit("editor");
         editor.session.setMode("ace/mode/javascript");
         editor.setShowPrintMargin(false);
+        editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableLiveAutocompletion: true
+        });
 
         function setTheme(){
             aosTools.getDarkMode((response) => {

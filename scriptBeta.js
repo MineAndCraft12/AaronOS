@@ -11502,11 +11502,14 @@ c(function(){
                 " : Fixed Ace editors failing to check syntax.",
                 " : Fixed Ace editors not setting themselves to the correct theme on init.",
                 " : Ace resources are now hosted first-party (this server) rather than pulled from Cloudflare."
+            ],
+            "07/05/2021: B1.5.9.1": [
+                " + Added support for live auto-completion in Ace environments."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.9.0 (07/04/2021) r1';
+    window.aOSversion = 'B1.5.9.1 (07/05/2021) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
