@@ -3,6 +3,59 @@
 <head>
     <title>Ace System Theme Editor</title>
     <style>
+        ::-webkit-scrollbar{
+            width:16px;
+            background-color:#555;
+            box-shadow:inset 0 0 10px #CCC;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+        ::-webkit-scrollbar-corner{
+            background-color:#555;
+            box-shadow:inset 0 0 10px #CCC;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+        ::-webkit-resizer{
+            border-radius:8px;
+            background-color:#CCC;
+            box-shadow:inset 0 0 10px #555;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+        ::-webkit-scrollbar-thumb{
+            border-radius:8px;
+            background-color:#CCC;
+            box-shadow:inset 0 0 10px #555;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+        ::-webkit-scrollbar-button{
+            border-radius:8px;
+            background-color:#CCC;
+            box-shadow:inset 0 0 10px #555;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+            .darkMode ::-webkit-scrollbar{
+                width:16px;
+                background-color:#272727;
+                box-shadow:inset 0 0 10px #383838;
+            }
+            .darkMode ::-webkit-scrollbar-corner{
+                background-color:#272727;
+                box-shadow:inset 0 0 10px #383838;
+            }
+            .darkMode ::-webkit-resizer{
+                border-radius:8px;
+                background-color:#555;
+                box-shadow:inset 0 0 10px #272727;
+            }
+            .darkMode ::-webkit-scrollbar-thumb{
+                border-radius:8px;
+                background-color:#555;
+                box-shadow:inset 0 0 10px #272727;
+            }
+            .darkMode ::-webkit-scrollbar-button{
+                border-radius:8px;
+                background-color:#555;
+                box-shadow:inset 0 0 10px #272727;
+            }
         #editor { 
             position: absolute;
             top: 0;
@@ -28,10 +81,11 @@
 
         function setTheme(){
             aosTools.getDarkMode((response) => {
-                console.log(response.content);
                 if(response.content){
+                    document.body.classList.add("darkMode");
                     editor.setTheme("ace/theme/clouds_midnight");
                 }else{
+                    document.body.classList.remove("darkMode");
                     editor.setTheme("ace/theme/clouds");
                 }
             });

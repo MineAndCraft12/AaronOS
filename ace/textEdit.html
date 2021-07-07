@@ -72,11 +72,11 @@
     <script src="ext-language_tools.js"></script>
     <script defer>
         var editor = ace.edit("editor");
-        editor.session.setMode("ace/mode/javascript");
+        editor.session.setMode("ace/mode/plain_text");
         editor.setShowPrintMargin(false);
         editor.setOptions({
-            enableBasicAutocompletion: true,
-            enableLiveAutocompletion: true
+            enableBasicAutocompletion: false,
+            enableLiveAutocompletion: false
         });
 
         function setTheme(){

@@ -32,37 +32,6 @@ Looking under the hood?
 
 var bootTime = new Date().getTime();
 
-// force https
-try{
-    if(serverCanUseHTTPS){
-        if((window.location.href.indexOf('http://') === 0 || window.location.href.indexOf('://') === -1) && navigator.userAgent.indexOf('MSIE') === -1){
-            var tempLoc = window.location.href.split('http://');
-            tempLoc.shift();
-            window.location = 'https://' + tempLoc.join('http://');
-            makeAnErrorToQuit();
-        }
-    }
-    window.getSSLTestVars = function(){
-        return {
-            canUseHTTPS: serverCanUseHTTPS,
-            errors: sslTestEncounteredError,
-            hostServer: sslTestHostServer,
-            certifServer: sslTestCertificateServer
-        };
-    }
-}catch(err){
-    console.log(err);
-    console.log("issue in test_ssl.php?");
-    window.getSSLTestVars = function(){
-        return {
-            canUseHTTPS: serverCanUseHTTPS,
-            errors: sslTestEncounteredError,
-            hostServer: sslTestHostServer,
-            certifServer: sslTestCertificateServer
-        };
-    }
-}
-
 if(typeof console === "undefined"){
     console = {
         log: function(){
@@ -5685,7 +5654,6 @@ c(function(){
                                     new Function(this.workdirtemp[this.workdirdepth], 'var ' + this.workdirtemp[this.workdirdepth]);
                                     this.workdirfinal += "." + this.workdirtemp[this.workdirdepth];
                                 }catch(err){
-                                    console.log("oof")
                                     this.workdirfinal += "['" + this.workdirtemp[this.workdirdepth] + "']";
                                 }
                             }else{
@@ -6059,8 +6027,6 @@ c(function(){
                             this.vars.prevworkdir = apps.bash.vars.workdir;
                             try{
                                 this.vars.tempadd = args[0].split('/');
-                                console.log("tempadd");
-                                console.log(this.vars.tempadd);
                                 var cleanEscapeRun = 0;
                                 while(!cleanEscapeRun){
                                     cleanEscapeRun = 1;
@@ -6078,7 +6044,6 @@ c(function(){
                                         }
                                     }
                                 }
-                                console.log(this.vars.tempadd);
                                 this.vars.tempstart = (apps.bash.vars.workdir[0] === '/');
                                 if(args[0][0] === '/' || apps.bash.vars.workdir === '/'){
                                     this.vars.tempdir = [];
@@ -6086,8 +6051,6 @@ c(function(){
                                 }else{
                                     this.vars.tempdir = apps.bash.vars.workdir.split('/');
                                 }
-                                console.log("tempdir");
-                                console.log(this.vars.tempdir);
                                 cleanEscapeRun = 0;
                                 while(!cleanEscapeRun){
                                     cleanEscapeRun = 1;
@@ -6105,7 +6068,6 @@ c(function(){
                                         }
                                     }
                                 }
-                                console.log(this.vars.tempdir);
                                 for(var i in this.vars.tempadd){
                                     if(this.vars.tempadd[i] === '..'){
                                         this.vars.tempdir.pop();
@@ -8298,7 +8260,6 @@ c(function(){
                         apps.prompt.vars.alert("Screensaver applied.<br>There are no configuration options for this screensaver.", "Okay.", function(){}, "Bouncy Ball Screensaver");
                     },
                     start: function(){
-                        console.log('start');
                         apps.settings.vars.screensavers.bouncyBall.vars.scr = [parseInt(getId('monitor').style.width), parseInt(getId('monitor').style.height) - 30];
                         getId('screensaverLayer').innerHTML = '<canvas style="position:absolute;display:block;left:0;top:0" id="bbssCnv"></canvas>';
                         getId('bbssCnv').width = parseInt(getId('monitor').style.width);
@@ -8313,7 +8274,6 @@ c(function(){
                         apps.petCursors.vars.aggressiveChase = 1;
                     },
                     end: function(){
-                        console.log('end');
                         apps.settings.vars.screensavers.bouncyBall.vars.canRun = 0;
                         apps.settings.vars.screensavers.bouncyBall.vars.ctxFg = null;
                         getId('screensaverLayer').innerHTML = '';
@@ -9141,7 +9101,7 @@ c(function(){
                         
                     break;
                 default:
-                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
             }
         }
     });
@@ -9297,7 +9257,7 @@ c(function(){
                         
                     break;
                 default:
-                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
             }
         }
     });
@@ -9581,7 +9541,7 @@ c(function(){
                         
                     break;
                 default:
-                    console.log("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'");
             }
         }
     });
@@ -9613,7 +9573,8 @@ c(function(){
                     this.appWindow.setDims("auto", "auto", 650, 400);
                 }
                 this.appWindow.setContent(
-                    '<textarea id="np2Screen" style="white-space:no-wrap; width:calc(100% - 6px); height:calc(100% - 23px); position:absolute; padding:3px; border:none; bottom: 0px; left: 0px; font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000; overflow:auto"></textarea>' +
+                    //'<textarea id="np2Screen" style="white-space:no-wrap; width:calc(100% - 6px); height:calc(100% - 23px); position:absolute; padding:3px; border:none; bottom: 0px; left: 0px; font-family:aosProFont,Courier,monospace; font-size:12px; resize:none; box-shadow:0px 0px 5px #000; overflow:auto"></textarea>' +
+                    '<iframe id="np2Env" src="ace/textEdit.html" data-parent-app="notepad2" onload="apps.notepad2.vars.catchError()" style="width:100%; height:calc(100% - 17px); position:absolute; border:none; bottom:0px;"></iframe>' +
                     '<div class="darkResponsive" style="width:100%; border-bottom:1px solid; height:16px;">' +
                     '<input class="darkResponsive" id="np2Load" placeholder="file name" style="padding-left:3px; font-family: aosProFont, monospace; font-size:12px; left: 16px; border:none; height:16px; border-left:1px solid; border-right:1px solid; position:absolute; top:0; width:calc(100% - 115px);"></input>' +
                     '<div id="np2Mode" onclick="apps.notepad2.vars.toggleFileMode()" class="cursorPointer noselect" style="color:#7F7F7F; font-family:aosProFont, monospace; font-size:12px; height:16px;line-height:16px; padding-right:3px; padding-left: 3px; right:95px">Text Mode</div>' +
@@ -9621,8 +9582,6 @@ c(function(){
                     '<div class="darkResponsive" onclick="apps.notepad2.vars.saveFile(getId(\'np2Load\').value)" class="cursorPointer noselect" style="font-family:aosProFont, monospace; font-size:12px; height:16px; line-height:16px; top:0; right:16px; text-align:center;width:38px; border-left:1px solid; border-right:1px solid;">Save</div> ' +
                     '</div>'
                 );
-                getId("np2Screen").wrap = "off";
-                getId('win_notepad2_html').style.background = 'none';
                 this.vars.filemode = "string";
             }
             this.appWindow.openWindow();
@@ -9632,6 +9591,27 @@ c(function(){
             openEditTools: function(){apps.prompt.vars.notify('This button is unfinished. Right-click the document instead.', [], function(){}, 'Text Editor', 'appicons/ds/TE.png')},
             launchedAs: '',
             filemode: 'string',
+            catchContent: null,
+            catchError: function(){
+                if(this.catchContent){
+                    getId('np2Env').contentWindow.editor.session.setValue(this.catchContent);
+                    getId('np2Env').contentWindow.editor.scrollToLine(0);
+                    if(this.fileModeAdvFeatures[this.allFileModes.indexOf(this.filemode)]){
+                        getId('np2Env').contentWindow.editor.session.setMode("ace/mode/javascript");
+                        getId('np2Env').contentWindow.editor.setOptions({
+                            enableBasicAutocompletion: true,
+                            enableLiveAutocompletion: true
+                        });
+                    }else{
+                        getId('np2Env').contentWindow.editor.session.setMode("ace/mode/plain_text");
+                        getId('np2Env').contentWindow.editor.setOptions({
+                            enableBasicAutocompletion: false,
+                            enableLiveAutocompletion: false
+                        });
+                    }
+                    this.catchContent = null;
+                }
+            },
             allFileModes: [
                 'string',
                 'function',
@@ -9648,6 +9628,15 @@ c(function(){
                 '(object) Eval Mode',
                 '(any) Eval Mode'
             ],
+            // the following file types have syntax highlight and code completion enabled
+            fileModeAdvFeatures: [
+                0, // str
+                1, // func
+                1, // num
+                1, // bool
+                1, // obj
+                1  // any
+            ],
             toggleFileMode: function(){
                 //if(this.filemode === "string"){
                 //    this.filemode = "function";
@@ -9660,6 +9649,19 @@ c(function(){
                 this.filemode = this.allFileModes[newFileMode];
                 getId('np2Mode').innerHTML = this.fileModeNames[newFileMode];
                 //}
+                if(this.fileModeAdvFeatures[newFileMode]){
+                    getId('np2Env').contentWindow.editor.session.setMode("ace/mode/javascript");
+                    getId('np2Env').contentWindow.editor.setOptions({
+                        enableBasicAutocompletion: true,
+                        enableLiveAutocompletion: true
+                    });
+                }else{
+                    getId('np2Env').contentWindow.editor.session.setMode("ace/mode/plain_text");
+                    getId('np2Env').contentWindow.editor.setOptions({
+                        enableBasicAutocompletion: false,
+                        enableLiveAutocompletion: false
+                    });
+                }
             },
             openFile: function(filename){
                 if(!apps.notepad2.appWindow.appIcon){
@@ -9679,8 +9681,6 @@ c(function(){
                 }
                 
                 try{
-                    console.log(filename);
-                    console.log(apps.bash.vars.translateDir(filename));
                     var filecontent = apps.bash.vars.getRealDir(filename);
                 }catch(err){
                     apps.prompt.vars.alert("Failed to open " + filename + ": " + err, "Okay", function(){}, "Text Editor");
@@ -9690,34 +9690,80 @@ c(function(){
                     apps.prompt.vars.alert("Failed to open " + filename + ": the item is a folder or null.", "Okay", function(){}, "Text Editor");
                     return;
                 }
-                if(typeof filecontent === "function"){
-                    this.filemode = 'function';
-                    getId('np2Mode').innerHTML = "(function) Eval Mode";
-                }else if(typeof filecontent === "string"){
-                    this.filemode = 'string';
-                    getId('np2Mode').innerHTML = "Text Mode";
-                }else if(typeof filecontent === "number"){
-                    this.filemode = 'number';
-                    getId('np2Mode').innerHTML = "(number) Eval Mode";
-                }else if(typeof filecontent === "boolean"){
-                    this.filemode = 'boolean';
-                    getId('np2Mode').innerHTML = "(boolean) Eval Mode";
-                }else if(typeof filecontent === "object"){
-                    this.filemode = 'object';
-                    getId('np2Mode').innerHTML = "(object) Eval Mode";
-                }else{
-                    this.filemode = 'any';
-                    getId('np2Mode').innerHTML = "(any) Eval Mode";
-                }
-                if(getId('np2Screen').value !== ""){
+                if(typeof getId('np2Env').contentWindow.editor === "undefined"){
+                    requestAnimationFrame(function(){
+                        toTop(apps.notepad2);
+                    });
+                    getId('np2Load').value = filename;
+                    this.catchContent = String(filecontent);
+                    if(typeof filecontent === "function"){
+                        this.filemode = 'function';
+                        getId('np2Mode').innerHTML = "(function) Eval Mode";
+                    }else if(typeof filecontent === "string"){
+                        this.filemode = 'string';
+                        getId('np2Mode').innerHTML = "Text Mode";
+                    }else if(typeof filecontent === "number"){
+                        this.filemode = 'number';
+                        getId('np2Mode').innerHTML = "(number) Eval Mode";
+                    }else if(typeof filecontent === "boolean"){
+                        this.filemode = 'boolean';
+                        getId('np2Mode').innerHTML = "(boolean) Eval Mode";
+                    }else if(typeof filecontent === "object"){
+                        this.filemode = 'object';
+                        getId('np2Mode').innerHTML = "(object) Eval Mode";
+                    }else{
+                        this.filemode = 'any';
+                        getId('np2Mode').innerHTML = "(any) Eval Mode";
+                    }
+                }else if(getId('np2Env').contentWindow.editor.getValue() !== ""){
                     apps.prompt.vars.confirm("You will lose all unsaved work. Continue?", ['No', 'Yes'], function(btn){
                         if(btn){
                             requestAnimationFrame(function(){
                                 toTop(apps.notepad2);
                             });
                             getId('np2Load').value = filename;
-                            getId('np2Screen').value = filecontent;
-                            getId('np2Screen').scrollTop = 0;
+                            try{
+                                getId('np2Env').contentWindow.editor.session.setValue(String(filecontent));
+                                getId('np2Env').contentWindow.editor.scrollToLine(0);
+                            }catch(err){
+                                this.catchContent = String(filecontent);
+                            }
+                            if(typeof filecontent === "function"){
+                                this.filemode = 'function';
+                                getId('np2Mode').innerHTML = "(function) Eval Mode";
+                            }else if(typeof filecontent === "string"){
+                                this.filemode = 'string';
+                                getId('np2Mode').innerHTML = "Text Mode";
+                            }else if(typeof filecontent === "number"){
+                                this.filemode = 'number';
+                                getId('np2Mode').innerHTML = "(number) Eval Mode";
+                            }else if(typeof filecontent === "boolean"){
+                                this.filemode = 'boolean';
+                                getId('np2Mode').innerHTML = "(boolean) Eval Mode";
+                            }else if(typeof filecontent === "object"){
+                                this.filemode = 'object';
+                                getId('np2Mode').innerHTML = "(object) Eval Mode";
+                            }else{
+                                this.filemode = 'any';
+                                getId('np2Mode').innerHTML = "(any) Eval Mode";
+                            }
+                            try{
+                                if(this.fileModeAdvFeatures[this.allFileModes.indexOf(this.filemode)]){
+                                    getId('np2Env').contentWindow.editor.session.setMode("ace/mode/javascript");
+                                    getId('np2Env').contentWindow.editor.setOptions({
+                                        enableBasicAutocompletion: true,
+                                        enableLiveAutocompletion: true
+                                    });
+                                }else{
+                                    getId('np2Env').contentWindow.editor.session.setMode("ace/mode/plain_text");
+                                    getId('np2Env').contentWindow.editor.setOptions({
+                                        enableBasicAutocompletion: false,
+                                        enableLiveAutocompletion: false
+                                    });
+                                }
+                            }catch(err){
+
+                            }
                         }
                     }.bind(this), 'Text Editor');
                 }else{
@@ -9725,8 +9771,48 @@ c(function(){
                         toTop(apps.notepad2);
                     });
                     getId('np2Load').value = filename;
-                    getId('np2Screen').value = filecontent;
-                    getId('np2Screen').scrollTop = 0;
+                    try{
+                        getId('np2Env').contentWindow.editor.session.setValue(String(filecontent));
+                        getId('np2Env').contentWindow.editor.scrollToLine(0);
+                    }catch(err){
+                        this.catchContent = String(filecontent);
+                    }
+                    if(typeof filecontent === "function"){
+                        this.filemode = 'function';
+                        getId('np2Mode').innerHTML = "(function) Eval Mode";
+                    }else if(typeof filecontent === "string"){
+                        this.filemode = 'string';
+                        getId('np2Mode').innerHTML = "Text Mode";
+                    }else if(typeof filecontent === "number"){
+                        this.filemode = 'number';
+                        getId('np2Mode').innerHTML = "(number) Eval Mode";
+                    }else if(typeof filecontent === "boolean"){
+                        this.filemode = 'boolean';
+                        getId('np2Mode').innerHTML = "(boolean) Eval Mode";
+                    }else if(typeof filecontent === "object"){
+                        this.filemode = 'object';
+                        getId('np2Mode').innerHTML = "(object) Eval Mode";
+                    }else{
+                        this.filemode = 'any';
+                        getId('np2Mode').innerHTML = "(any) Eval Mode";
+                    }
+                    try{
+                        if(this.fileModeAdvFeatures[this.allFileModes.indexOf(this.filemode)]){
+                            getId('np2Env').contentWindow.editor.session.setMode("ace/mode/javascript");
+                            getId('np2Env').contentWindow.editor.setOptions({
+                                enableBasicAutocompletion: true,
+                                enableLiveAutocompletion: true
+                            });
+                        }else{
+                            getId('np2Env').contentWindow.editor.session.setMode("ace/mode/plain_text");
+                            getId('np2Env').contentWindow.editor.setOptions({
+                                enableBasicAutocompletion: false,
+                                enableLiveAutocompletion: false
+                            });
+                        }
+                    }catch(err){
+
+                    }
                 }
             },
             saveFile: function(filename){
@@ -9753,14 +9839,14 @@ c(function(){
                         apps.prompt.vars.alert("Failed to save: No filename provided.", "Okay", function(){}, "Text Editor");
                         return;
                     }
-                    apps.savemaster.vars.save(shortfilename, getId("np2Screen").value, 1);
+                    apps.savemaster.vars.save(shortfilename, getId("np2Env").contentWindow.editor.getValue(), 1);
                 }else if(filename.indexOf('/LOCALFILES/') === 0){
                     var shortfilename = filename.substring(12, filename.length);
                     if(shortfilename.length === 0){
                         apps.prompt.vars.alert("Failed to save: No filename provided.", "Okay", function(){}, "Text Editor");
                         return;
                     }
-                    lfsave(shortfilename, getId("np2Screen").value);
+                    lfsave(shortfilename, getId("np2Env").contentWindow.editor.getValue());
                 }else{
                     try{
                         var oldfilecontent = apps.bash.vars.getRealDir(filename);
@@ -9773,14 +9859,14 @@ c(function(){
                             apps.prompt.vars.alert("Failed to save " + filename + ":<br>Already exists and is of type " + (typeof oldfilecontent) + " (expected string).", "Okay", function(){}, "Text Editor");
                             return;
                         }
-                        eval(apps.bash.vars.translateDir(filename) + ' = getId("np2Screen").value');
+                        eval(apps.bash.vars.translateDir(filename) + ' = getId("np2Env").contentWindow.editor.getValue()');
                     }else if(this.filemode === "number"){
                         if(typeof oldfilecontent !== "number" && typeof oldfilecontent !== "undefined"){
                             apps.prompt.vars.alert("Failed to save " + filename + ":<br>Already exists and is of type " + (typeof oldfilecontent) + " (expected number).", "Okay", function(){}, "Text Editor");
                             return;
                         }
                         try{
-                            var newfilecontent = eval(getId("np2Screen").value);
+                            var newfilecontent = eval(getId("np2Env").contentWindow.editor.getValue());
                         }catch(err){
                             apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
                             return;
@@ -9796,7 +9882,7 @@ c(function(){
                             return;
                         }
                         try{
-                            var newfilecontent = eval(getId("np2Screen").value);
+                            var newfilecontent = eval(getId("np2Env").contentWindow.editor.getValue());
                         }catch(err){
                             apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
                             return;
@@ -9812,7 +9898,7 @@ c(function(){
                             return;
                         }
                         try{
-                            var newfilecontent = eval(getId("np2Screen").value);
+                            var newfilecontent = eval(getId("np2Env").contentWindow.editor.getValue());
                         }catch(err){
                             apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
                             return;
@@ -9824,7 +9910,7 @@ c(function(){
                         eval(apps.bash.vars.translateDir(filename) + '=' + newfilecontent + "");
                     }else if(this.filemode === "any"){
                         try{
-                            var newfilecontent = eval(getId("np2Screen").value);
+                            var newfilecontent = eval(getId("np2Env").contentWindow.editor.getValue());
                         }catch(err){
                             apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
                             return;
@@ -9836,7 +9922,7 @@ c(function(){
                             return;
                         }
                         try{
-                            var newfilecontent = eval("(" + getId("np2Screen").value + ")");
+                            var newfilecontent = eval("(" + getId("np2Env").contentWindow.editor.getValue() + ")");
                         }catch(err){
                             apps.prompt.vars.alert("Failed to save " + filename + ":<br>Input error: " + err, "Okay", function(){}, "Text Editor");
                             return;
@@ -11505,11 +11591,21 @@ c(function(){
             ],
             "07/05/2021: B1.5.9.1": [
                 " + Added support for live auto-completion in Ace environments."
+            ],
+            "07/06/2021: B1.6.0.0": [
+                " + Text Editor now utilizes the Ace environment.",
+                " : Fixed incorrect scrollbars in Ace environments.",
+                " : Optimized keystroke tracking and file saving in System Theme Editor.",
+                " : Fixed System Theme Editor reverting to default theme if editor was empty.",
+                " : Fixed Boot Script Editor not scrolling to top when changing files.",
+                " - Removed unused keystroke tracking from Boot Script Editor.",
+                " - Removed broken and disused SSL test from the beginning of the script.",
+                " - Removed old unnecessary console logging from all parts of the project."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.5.9.1 (07/05/2021) r1';
+    window.aOSversion = 'B1.6.0.0 (07/06/2021) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -12139,7 +12235,6 @@ c(function(){
                             '</div>';
                     }else{
                         var currName = currPath[currPath.length - 1];
-                        console.log(this.favorites, i);
                         if(currPath.indexOf("apps") === 0 && currPath.length === 2){
                             tempHTML += '<div class="cursorPointer" onclick="apps.files2.vars.currLoc = \'' + this.favorites[i] + '\';apps.files2.vars.update()" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\', \'ctxMenu/beta/x.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'' + this.favorites[i] + '\\\');toTop(apps.properties)\', \'+Remove Favorite\', \'apps.files2.vars.toggleFavorite(\\\'' + this.favorites[i] + '\\\')\', \'_Delete\', \'\'])">' +
                                 //'<img class="FIL2aosAppIcon" src="' + (apps[currName] || {appWindow:{appImg:"appicons/ds/redx.png"}}).appWindow.appImg + '"> ' +
@@ -14976,6 +15071,7 @@ c(function(){
                                         allScripts[i].style.color = '';
                                     }
                                     getId("BtS_edit_frame").contentWindow.editor.session.setValue(ufload("aos_system/apps/bootScript/" + cleanStr(scriptName)));
+                                    getId('BtS_edit_frame').contentWindow.editor.scrollToLine(0);
                                     getId("BtS_script_" + scriptName).style.color = "#0AA";
                                 }
                             },
@@ -14988,6 +15084,7 @@ c(function(){
                             allScripts[i].style.color = '';
                         }
                         getId("BtS_edit_frame").contentWindow.editor.session.setValue(ufload("aos_system/apps/bootScript/" + cleanStr(scriptName)));
+                        getId('BtS_edit_frame').contentWindow.editor.scrollToLine(0);
                         getId("BtS_script_" + scriptName).style.color = "#0AA";
                     }
                 }
@@ -15022,7 +15119,6 @@ c(function(){
                         finalHTML += "<br><br><span class='BtS_script' id='BtS_script_" + i + "'>" + i + "</span> <button onclick='apps.bootScript.vars.openScript(\"" + i + "\")'>Load</button> <button onclick='apps.bootScript.vars.delScript(\"" + i + "\")'>Delete</button>";
                     }
                 }
-                console.log(finalHTML);
                 getId("BtS_scripts").innerHTML = finalHTML;
             },
             saveBootScript: function(){
@@ -15102,7 +15198,7 @@ c(function(){
                     this.appWindow.toggleFullscreen();
                     this.appWindow.setCaption('System Theme Editor');
                     this.appWindow.setContent(
-                        '<iframe data-parent-app="themeEdit" src="ace/themeEdit.html" style="padding:0;border:none;width:calc(50% - 1px);height:90%;border-right:1px solid #7F7F7F;"></iframe>' +
+                        '<iframe data-parent-app="themeEdit" src="ace/themeEdit.html" id="themeEditEnv" style="padding:0;border:none;width:calc(50% - 1px);height:90%;border-right:1px solid #7F7F7F;"></iframe>' +
                         '<iframe data-parent-app="themeEdit" src="aosBeta.php?themetemplate=true&nofiles=true" id="themeEditframe" style="position:absolute;right:0;top:0;border:none;display:block;width:50%;height:90%" onload="apps.themeEdit.vars.updateFrame()"></iframe>' +
                         '<button style="position:absolute;bottom:0;left:0;width:50%;height:10%;" onclick="apps.themeEdit.vars.saveStyleEditor()">Save</button>' +
                         '<button style="position:absolute;bottom:0;right:0;width:50%;height:10%;" onclick="apps.themeEdit.vars.helpStyleEditor()">Help</button>'
@@ -15113,17 +15209,21 @@ c(function(){
         },
         vars: {
             appInfo: 'Create your own system theme for aOS! It is embedded as an actual stylesheet, placed such that it overrides the default styles.<br><br>If you create something you want to be featured in aOS, please tell the developer so he can take a look!',
-            currEditorContent: "",
+            //currEditorContent: "",
             saveStyleEditor: function(){
-                apps.savemaster.vars.save('aos_system/user_custom_style', this.currEditorContent, 1);
-                getId('aosCustomStyle').innerHTML = this.currEditorContent;
+                ufsave('aos_system/user_custom_style', getId("themeEditEnv").contentWindow.editor.getValue());
+                getId('aosCustomStyle').innerHTML = getId("themeEditEnv").contentWindow.editor.getValue();
             },
             helpStyleEditor: function(){
                 apps.prompt.vars.alert('WARNING - ADVANCED USERS ONLY<br>The Custom Stylesheet is your very own set of styling rules for aOS. Use it to style aOS to your whim - theoretically, every element of the OS can be customized with this file.<br><br>You can check out style.css for the default stylesheet, and use your browser\'s developer tools to get easier access to elements as they are shown on-screen.', 'Okay, thanks.', function(){}, 'Boot Script');
             },
             updateFrame: function(text){
-                this.currEditorContent = text;
-                getId("themeEditframe").contentDocument.getElementById('aosCustomStyle').innerHTML = text || getId("aosCustomStyle").innerHTML;
+                //this.currEditorContent = text;
+                if(typeof text === 'string'){ 
+                    getId("themeEditframe").contentDocument.getElementById('aosCustomStyle').innerHTML = text;
+                }else{
+                    getId("themeEditframe").contentDocument.getElementById("aosCustomStyle").innerHTML = getId("aosCustomStyle").innerHTML;
+                }
             },
             templateCheck: function(event){
                 var elem = document.elementFromPoint(event.pageX, event.pageY);
@@ -16089,7 +16189,6 @@ c(function(){
                 for(var i in currUpdates){
                     currUpdates[i] = currUpdates[i].split('.');
                     var selectedPackage = installedPackages[currUpdates[i][0]][currUpdates[i][1]];
-                    console.log(selectedPackage);
                     finalhtml += "<div style='position:relative;width:calc(100% - 35px);padding:16px;border-top:2px solid #7F7F7F;'>";
                     finalhtml += "<b>" + selectedPackage.name + "</b><br>" +
                         "<span style='font-family:aosProFont, monospace; font-size:12px'>" + currUpdates[i][0] + "." + selectedPackage.id + "</span><br>";
@@ -16436,7 +16535,6 @@ var icomoveOrX = 0;
 var icomoveOrY = 0;
 function icomove(e, elem){
     if(elem){
-        console.log(elem);
         getId("icomove").style.display = "block";
         icomoveSelect = "app_" + elem;
         icomovex = e.pageX;
@@ -17614,8 +17712,6 @@ c(function(){
             localStorage.setItem('latestVersion', aOSversion);
         }
     }
-    
-    console.log("Done initializing aOS.");
 });
 var bootFileHTTP = new XMLHttpRequest();
 bootFileHTTP.onreadystatechange = function(){
@@ -17648,7 +17744,6 @@ bootFileHTTP.onreadystatechange = function(){
         requestAnimationFrame(function(){bootFileHTTP = null;});
         doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to run startup apps.');
         doLog('Took ' + Math.round(performance.now() * 10) / 10 + 'ms grand total to reach desktop.');
-        console.log("Load successful, apps alerted, and bootFileHTTP deleted.");
     }
 };
 c(function(){
@@ -17678,7 +17773,6 @@ c(function(){
         requestAnimationFrame(function(){bootFileHTTP = null;});
         doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to exec USERFILES_DONE.');
         doLog('Took ' + Math.round(performance.now() * 10) / 10 + 'ms grand total to reach desktop.');
-        console.log("Load successful, apps alerted, and bootFileHTTP deleted.");
     }
 });
 c(function(){
