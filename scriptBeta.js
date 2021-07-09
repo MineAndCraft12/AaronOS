@@ -11606,6 +11606,7 @@ c(function(){
                 " : JS Console inputs / outputs now use darker colors that are a bit easier to read.",
                 " : JS Console now uses window padding.",
                 " : Cleaned up and optimized the JS Console.",
+                " : JS Console no longer rebuilds its UI every time its window is focused.",
                 " : Repository update on boot is run after the apps and OS finish initializing.",
                 " - Removed redundant submit button from JS Console.",
                 " - Disabled browser autocomplete and spellcheck in JS Console.",
@@ -11614,7 +11615,7 @@ c(function(){
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.1.0 (07/09/2021) r0';
+    window.aOSversion = 'B1.6.1.0 (07/09/2021) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
