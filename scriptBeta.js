@@ -5465,60 +5465,59 @@ c(function(){
         launchTypes: 1,
         main: function(launchType){
             if(!this.appWindow.appIcon){
-                this.appWindow.paddingMode(0);
+                this.appWindow.paddingMode(1);
                 this.appWindow.setDims("auto", "auto", 1000, 500);
-            }
-            this.appWindow.setCaption(lang('jsConsole', 'caption'));
-            this.appWindow.setContent(
-                '<div id="cnsTrgt" style="width:100%; height:calc(100% - 18px); font-family:aosProFont,Courier,monospace; font-size:12px; top:0px; left:0px; overflow-y:scroll; overflow-x:auto;"></div>' +
-                '<input id="cnsIn" onKeydown="if(event.keyCode === 13){apps.jsConsole.vars.runInput()}" placeholder="' + lang('jsConsole', 'input') + '" style="position:absolute; bottom:0px; font-family:aosProFont,Courier,monospace;display:block; padding:0; font-size:12px; width:90%; left:0px; height:16px;">' +
-                '<button id="cnsB" onClick="apps.jsConsole.vars.runInput()" style="font-size:12px; position:absolute; display:block; width:10%; height:18px; bottom:0px; right:0px;">' + lang('jsConsole', 'runCode') + '</button>'
-            );
-            this.appWindow.openWindow();
-            getId("cnsTrgt").innerHTML = '<span style="color:' + this.vars.cnsPosts[1] + ';">' + this.vars.cnsPosts[0] + '</span>';
-            for(var j = 2; j < this.vars.cnsPosts.length; j+= 2){
-                getId("cnsTrgt").innerHTML += '<br><span style="color:' + this.vars.cnsPosts[j + 1] + ';">' + this.vars.cnsPosts[j] + '</span>';
+                this.appWindow.openWindow();
+                this.appWindow.setCaption(lang('jsConsole', 'caption'));
+                this.appWindow.setContent(
+                    '<div id="cnsTrgt" style="width:100%; height:auto; position:relative; font-family:aosProFont,Courier,monospace; font-size:12px;"></div>' +
+                    '<input id="cnsIn" autocomplete="off" spellcheck="false" onKeydown="if(event.keyCode === 13){apps.jsConsole.vars.runInput()}" placeholder="' + lang('jsConsole', 'input') + '" style="position:relative; font-family:aosProFont,Courier,monospace;display:block; padding:0; font-size:12px; width:calc(100% - 8px); padding-left:3px; margin-top:3px; height:16px;">'
+                    //'<button id="cnsB" onClick="apps.jsConsole.vars.runInput()" style="font-size:12px; position:absolute; display:block; width:10%; height:18px; bottom:0px; right:0px;">' + lang('jsConsole', 'runCode') + '</button>'
+                );
+                var tempLogs = '<span style="color:' + this.vars.cnsPosts[0][1] + ';">' + this.vars.cnsPosts[0][0] + '</span>';
+                for(var j = 1; j < this.vars.cnsPosts.length; j += 1){
+                    tempLogs += '<br><span style="color:' + this.vars.cnsPosts[j][1] + ';">' + this.vars.cnsPosts[j][0] + '</span>';
+                }
+                getId("cnsTrgt").innerHTML = tempLogs;
+                getId("win_jsConsole_html").style.overflow = "auto";
+                getId("win_jsConsole_html").scrollTop = getId("win_jsConsole_html").scrollHeight;
+                requestAnimationFrame(function(){
+                    getId("win_jsConsole_html").scrollTop = getId("win_jsConsole_html").scrollHeight;
+                });
+            }else{
+                this.appWindow.openWindow();
             }
         },
         vars: {
             appInfo: 'This is a JavaScript console for quick debugging without having to open DevTools. It also has extra features like colored text and HTML formatting support.',
             cnsPosts: [
-                "JavaScript Console initialized.", '#D60',
-                '', '#7F7F7F',
-                'Source Code Line of the Day: ' + lineOfTheDay[0], '#7F7F7F',
-                cleanStr(lineOfTheDay[1].trim()), '#7F7F7F',
-                '', '#7F7F7F',
-                'Took ' + timeToPageLoad + 'ms to fetch primary script.', ''
+                ['Source Code Line of the Day: ' + lineOfTheDay[0], '#7F7F7F'],
+                [cleanStr(lineOfTheDay[1].trim()), '#7F7F7F'],
+                ['', '#7F7F7F'],
+                ['Took ' + timeToPageLoad + 'ms to fetch primary script.', '']
             ],
             lastInputUsed: 'jsConsoleHasNotBeenUsed',
             makeLog: function(logStr, logClr){
-                c(function(arg){
-                    try{
-                        apps.extDebug.vars.externalWindow.document.getElementById('screen').innerHTML += '<br>&nbsp;&nbsp;' + arg;
-                    }catch(err){}
-                }, logStr);
-                this.cnsPosts.push(logStr);
-                this.cnsPosts.push(logClr);
-                try{
+                this.cnsPosts.push([logStr, logClr]);
+                if(getId("cnsTrgt")){
                     getId("cnsTrgt").innerHTML += '<br><span style="color:' + logClr + ';">' + logStr + '</span>';
-                    getId("cnsTrgt").scrollTop = getId("cnsTrgt").scrollHeight;
-                }catch(err){
-                    // jsconsole window is not open
+                    getId("win_jsConsole_html").scrollTop = getId("win_jsConsole_html").scrollHeight;
                 }
             },
             runInput: function(){
                 m('Running jsC Input');
                 d(1, 'Running jsC input');
                 this.lastInputUsed = getId("cnsIn").value;
-                doLog("-> " + cleanStr(getId("cnsIn").value), "#0A0");
+                doLog("-> " + cleanStr(getId("cnsIn").value), "#070");
                 try{
                     this.tempOutput = eval(getId("cnsIn").value);
-                    doLog("=> " + this.tempOutput, "#0AA");
-                    doLog("?> " + typeof this.tempOutput, "#0AA");
+                    doLog("=> " + this.tempOutput, "#077");
+                    doLog("?> " + typeof this.tempOutput, "#077");
                 }catch(err){
                     doLog("=> " + err, "#F00");
                     doLog("?> Module: " + module, "#F00");
                 }
+                getId("cnsIn").value = "";
             }
         }
     });
@@ -11601,11 +11600,21 @@ c(function(){
                 " - Removed unused keystroke tracking from Boot Script Editor.",
                 " - Removed broken and disused SSL test from the beginning of the script.",
                 " - Removed old unnecessary console logging from all parts of the project."
+            ],
+            "07/09/2021: B1.6.1.0": [
+                " : JS Console input field is now positioned at the end of the feed rather than bottom of the window.",
+                " : JS Console inputs / outputs now use darker colors that are a bit easier to read.",
+                " : JS Console now uses window padding.",
+                " : Cleaned up and optimized the JS Console.",
+                " : Repository update on boot is run after the apps and OS finish initializing.",
+                " - Removed redundant submit button from JS Console.",
+                " - Disabled browser autocomplete and spellcheck in JS Console.",
+                " - Removed un-needed console initialization log."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.0.0 (07/06/2021) r1';
+    window.aOSversion = 'B1.6.1.0 (07/09/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -16294,15 +16303,17 @@ c(function(){
                                 }
                             }
                         }
-                        repoUpdate(null, function(){
-                            var updates = repoGetUpgradeable();
-                            if(updates.length > 0){
-                                apps.prompt.vars.notify(updates.length + " app updates available.", ["Dismiss", "View Updates"], function(btn){
-                                    if(btn === 1){
-                                        openapp(apps.appCenter, "updates");
-                                    }
-                                }, "aOS Hub");
-                            }
+                        c(() => {
+                            repoUpdate(null, () => {
+                                var updates = repoGetUpgradeable();
+                                if(updates.length > 0){
+                                    apps.prompt.vars.notify(updates.length + " app updates available.", ["Dismiss", "View Updates"], function(btn){
+                                        if(btn === 1){
+                                            openapp(apps.appCenter, "updates");
+                                        }
+                                    }, "aOS Hub");
+                                }
+                            });
                         });
                         // alphabetized array of apps
                         appsSorted = [];
@@ -17744,6 +17755,7 @@ bootFileHTTP.onreadystatechange = function(){
         requestAnimationFrame(function(){bootFileHTTP = null;});
         doLog('Took ' + (perfCheck('masterInitAOS') / 1000) + 'ms to run startup apps.');
         doLog('Took ' + Math.round(performance.now() * 10) / 10 + 'ms grand total to reach desktop.');
+        doLog(" ");
     }
 };
 c(function(){
