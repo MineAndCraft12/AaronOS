@@ -20,7 +20,7 @@
                 $tokenlettertypes = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!#%&*-.^_`|~';
                 $newtoken = '';
                 for($i = 0; $i < 30; $i++){
-                    $newtoken = $newtoken.$tokenlettertypes[rand(0, strlen($tokenlettertypes) - 1)];
+                    $newtoken = $newtoken.$tokenlettertypes[random_int(0, strlen($tokenlettertypes) - 1)];
                 }
                 //$newtoken = strval(microtime(TRUE));
                 
