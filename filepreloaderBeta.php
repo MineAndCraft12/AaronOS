@@ -93,7 +93,7 @@
         while($newcode === 'blank' || is_dir('USERFILES/'.$newcode)){
             $newcode = '';
             for($i = 0; $i < 21; $i++){ // capacity for 41-trillion, 107-billion, 996-million, 877-thousand, 935-hundred, 680 unique web-browser keys
-                $newcode = $newcode.$lettertypes[rand(0, strlen($lettertypes) - 1)];
+                $newcode = $newcode.$lettertypes[random_int(0, strlen($lettertypes) - 1)];
             }
         }
         // tell the browser
@@ -108,7 +108,7 @@
         while($newcode === 'blank' || is_dir('USERFILES/'.$newcode)){
             $newcode = '';
             for($i = 0; $i < 21; $i++){ // capacity for 41-trillion, 107-billion, 996-million, 877-thousand, 935-hundred, 680 unique web-browser keys
-                $newcode = $newcode.$lettertypes[rand(0, strlen($lettertypes) - 1)];
+                $newcode = $newcode.$lettertypes[random_int(0, strlen($lettertypes) - 1)];
             }
         }
         // tell the browser
