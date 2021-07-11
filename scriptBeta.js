@@ -11611,11 +11611,14 @@ c(function(){
                 " - Removed redundant submit button from JS Console.",
                 " - Disabled browser autocomplete and spellcheck in JS Console.",
                 " - Removed un-needed console initialization log."
+            ],
+            "07/11/2021: B1.6.1.1": [
+                " : Changed backend random number generator to cryptographically secure version."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.1.0 (07/09/2021) r1';
+    window.aOSversion = 'B1.6.1.1 (07/11/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
