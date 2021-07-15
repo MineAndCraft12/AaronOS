@@ -11614,11 +11614,17 @@ c(function(){
             ],
             "07/11/2021: B1.6.1.1": [
                 " : Changed backend random number generator to cryptographically secure version."
+            ],
+            "07/14/2021: B1.6.2.0": [
+                " : Brought Music Player to feature-parity with standalone version.",
+                " : For anyone who never used the standalone version, this is a fairly major overhaul of the music player.",
+                " - Removed legacy Music Player code from AaronOS project. Music Player is now its own separate project.",
+                " : The web and standalone versions of Music Player now share the same codebase."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.1.1 (07/11/2021) r0';
+    window.aOSversion = 'B1.6.2.0 (07/14/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14763,7 +14769,7 @@ c(function(){
         main: function(){
             if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                this.appWindow.setContent('<iframe data-parent-app="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="music/"></iframe>');
+                this.appWindow.setContent('<iframe data-parent-app="musicPlayer" id="MPlframe" onload="apps.musicPlayer.vars.updateStyle()" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="../AaronOS_Music/index.html"></iframe>');
                 requestAnimationFrame(this.vars.colorWindows);
                 getId("icn_musicPlayer").style.display = "inline-block";
                 requestAnimationFrame(() => {
