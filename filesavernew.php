@@ -121,12 +121,13 @@
                     echo("Success!");
                     fclose($file);
                     
-                    if(isset($_GET["error"])){
-                        $errfile = fopen('USERFILES/!ERROR/'.$_POST['f'].'__'.$_POST['k'], 'w');
-                        fwrite($errfile, $_POST['c']);
-                        echo('Success! Wrote error log as well.');
-                        fclose($errfile);
-                    }
+                    // removed due to abuse
+                    //if(isset($_GET["error"])){
+                    //    $errfile = fopen('USERFILES/!ERROR/'.$_POST['f'].'__'.$_POST['k'], 'w');
+                    //    fwrite($errfile, $_POST['c']);
+                    //    echo('Success! Wrote error log as well.');
+                    //    fclose($errfile);
+                    //}
                     if(isset($_GET['mUname'])){
                         if(strpos(strtolower($_POST['c']), '{admin}') !== false){
                             echo 'Admin username check: ';
