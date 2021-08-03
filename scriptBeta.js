@@ -149,9 +149,9 @@ function darkSwitch(light, dark){
 var autoMobile = 1;
 function checkMobileSize(){
     if(autoMobile){
-        if(!mobileMode && (screen.width < 768 || parseInt(getId('monitor').style.width) < 768)){
+        if(!mobileMode && (!window.matchMedia("(pointer: fine)").matches || parseInt(getId("monitor").style.width, 10) < 768)){
             setMobile(1);
-        }else if(mobileMode && (screen.width >= 768 && parseInt(getId('monitor').style.width) >= 768)){
+        }else if(mobileMode && (window.matchMedia("(pointer: fine)").matches && parseInt(getId("monitor").style.width, 10) >= 768)){
             setMobile(0);
         }
     }
@@ -318,8 +318,6 @@ window.onerror = function(errorMsg, url, lineNumber){
             console.log("Could not prompt error!");
         }
     }
-    // present error and ask to send report
-    //lasterrorconfirmation = confirm(lang('aOS', 'fatalError1') + errorMessages[Math.floor(Math.random() * errorMessages.length)] + "\n\n" + lang('aOS', 'fatalError2') + " " + url + "\n" + lang('aOS', 'fatalError3') + " '" + module + "' " + lang('aOS', 'fatalError4') + " [" + lineNumber + "]:\n" + errorMsg + "\n\n" + lang('aOS', 'fatalError5'));
     try{
         doLog("");
         doLog("You found an error! " + randomPhrase, '#F00');
@@ -337,49 +335,6 @@ window.onerror = function(errorMsg, url, lineNumber){
         console.log(errorMsg);
         console.log("");
     }
-    // if the user wants report sent
-    /*
-    if(lasterrorconfirmation){
-        try{
-            // save a special file containing error message
-            apps.savemaster.vars.save(
-                function(){
-                    try{
-                        return formDate("_M_D_Y__H_m_S_s");
-                    }catch(e){
-                        return 'formDateBroken';
-                    }
-                }(),
-                '_report version : 4\n' +
-                'aOS ID          : ' + vartry("SRVRKEYWORD") + '\n' +
-                'aOS dim         : ' + [vartry("getId('monitor').style.width"), vartry("getId('monitor').style.height")] + '\n' +
-                'browser dim     : ' + [vartry("window.outerWidth"), vartry("window.outerHeight")] + '\n' +
-                'browser page dim: ' + [vartry("window.innerWidth"), vartry("window.innerHeight")] + '\n' +
-                'browser codeName: ' + vartry("window.navigator.appCodeName") + '\n' +
-                'browser cookies : ' + vartry("window.navigator.cookieEnabled") + '\n' +
-                'browser name    : ' + vartry("window.navigator.appName") + '\n' +
-                'browser platform: ' + vartry("window.navigator.platform") + '\n' +
-                'browser UA head : ' + vartry("window.navigator.userAgent") + '\n' +
-                'browser version : ' + vartry("window.navigator.appVersion") + '\n' +
-                'code waiting    : ' + vartry('codeToRun.length') + '\n' +
-                'computer dim    : ' + [vartry("screen.width"), vartry("screen.height")] + '\n' +
-                'error url       : ' + url + '\n' +
-                'error module    : ' + module + '\n' +
-                'error line      : ' + lineNumber + '\n' +
-                'error message   : ' + errorMsg + '\n' +
-                'FPS JavaScript  : ' + vartry("stringFPS") + '\n' +
-                'FPS visual      : ' + vartry("stringVFPS") + '\n' +
-                'jsC last input  : ' + vartry("apps.jsConsole.vars.lastInputUsed") + '\n' +
-                'rqAnimFramIntact: ' + vartry("requestAnimationFrameIntact") + '\n' +
-                'script version  : ' + vartry("aOSversion"),
-                1, "ERROR_REPORT"
-            );
-            console.log("Report Sent: _aOS_error_report_" + function(){try{return formDate("_M_D_Y__H_m_S_s")}catch(e){return 'formDateBroken'}}(), "#F00");
-        }catch(err){
-            alert(lang('aOS', 'errorReport'));
-        }
-    }
-    */
 };
 
 // scale of screen, for HiDPI compatibility
@@ -1625,11 +1580,14 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
             setDims: function(xOff, yOff, xSiz, ySiz, ignoreDimsSet){
                 d(2, 'Setting dims of window.');
                 if(!this.fullscreen){
+                    var windowCentered = [0, 0];
                     if(xOff === "auto"){
                         xOff = Math.round(parseInt(getId('desktop').style.width) / 2 - (xSiz / 2));
+                        windowCentered[0] = 1;
                     }
                     if(yOff === "auto"){
                         yOff = Math.round(parseInt(getId('desktop').style.height) / 2 - (ySiz / 2));
+                        windowCentered[1] = 1;
                     }
                     xOff = Math.round(xOff);
                     yOff = Math.round(yOff);
@@ -1673,6 +1631,14 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
                     //getId("win" + this.dsktpIcon + "a").style.height = ySiz + 80 + "px";
                     if(typeof this.dimsSet === 'function' && !ignoreDimsSet){
                         this.dimsSet();
+                    }
+                    if(
+                        !this.fullscreen && (
+                            (windowCentered[0] && xSiz > parseInt(getId("desktop").style.width, 10)) ||
+                            (windowCentered[1] && ySiz > parseInt(getId("desktop").style.height, 10))
+                        )
+                    ){
+                        this.toggleFullscreen();
                     }
                 }
             },
@@ -7776,7 +7742,7 @@ c(function(){
                     autoMobile = 0;
                 }
                 if(!nosave){
-                    ufsave('aos_system/apps/settings/mobile_mode', type);
+                    lfsave('aos_system/apps/settings/mobile_mode', type);
                 }
                 checkMobileSize();
             },
@@ -8994,8 +8960,8 @@ c(function(){
                                     apps.settings.vars.togDarkMode(1);
                                 }
                             }
-                            if(ufload("aos_system/apps/settings/mobile_mode")){
-                                apps.settings.vars.setMobileMode(ufload("aos_system/apps/settings/mobile_mode"), 1)
+                            if(lfload("aos_system/apps/settings/mobile_mode")){
+                                apps.settings.vars.setMobileMode(lfload("aos_system/apps/settings/mobile_mode"), 1);
                             }
                             if(ufload("aos_system/desktop/background_fit")){
                                 apps.settings.vars.setBgFit(ufload("aos_system/desktop/background_fit"), 1);
@@ -11620,11 +11586,18 @@ c(function(){
                 " : For anyone who never used the standalone version, this is a fairly major overhaul of the music player.",
                 " - Removed legacy Music Player code from AaronOS project. Music Player is now its own separate project.",
                 " : The web and standalone versions of Music Player now share the same codebase."
+            ],
+            "08/02/2021: B1.6.2.1": [
+                " + Auto-centered windows that are larger than the desktop's size now automatically maximize.",
+                " + Automatic Mobile Mode now checks if your device has no fine pointer device (mouse) attached.",
+                " : Auto-Mobile now engages if there is no mouse connected OR the screen width is &lt; 768px.",
+                " : Auto-Mobile now disengages if there is a mouse connected AND the screen width is &gt;= 768px.",
+                " : Mobile mode setting (off, on, automatic) is now saved per-device rather than per-account."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.2.0 (07/14/2021) r0';
+    window.aOSversion = 'B1.6.2.1 (08/02/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14263,25 +14236,9 @@ c(function(){
                                 if(apps.messaging.vars.nameTemp.length > 30 && apps.messaging.vars.nameTemp.length < 3){
                                     apps.prompt.vars.alert('Your name cannot be more than 30 or less than 3 characters long.', 'Okay', function(){}, 'Messaging');
                                 }else if(apps.messaging.vars.nameTemp.toUpperCase().indexOf('{ADMIN}') > -1){
-                                    apps.prompt.vars.alert('Sorry, admins can only be set manually. Please ask an administrator.', 'Okay', function(){
-                                        //if(secretpass === navigator.userAgent){
-                                            //apps.messaging.vars.name = apps.messaging.vars.nameTemp; // = "";
-                                            //for(var i in apps.messaging.vars.nameTemp){
-                                            //    apps.messaging.vars.name += encodeURIComponent(apps.messaging.vars.nameTemp[i]);
-                                            //}
-                                            
-                                            // This zone is quite battlescarred. Why must our fellow samaritans attack it so much?
-                                            
-                                            //apps.savemaster.vars.save('aos_system/apps/messaging/chat_name', apps.messaging.vars.name, 1, 'mUname', secretpass || 'pass');
-                                        //}else{
-                                        //    apps.prompt.vars.alert('Nice try! You aren\'t Aaron! And you aren\'t an admin either! What gives, man? Calm down with the impersonation here! I\'m just a kid doing something really cool with computers, chill out and quit trying to mess things up!', 'Sheesh, I guess I won\'t pretend to be Aaron or an admin, like a jerk or something.', function(){}, 'Aaron');
-                                        //}
-                                    }, 'Messaging');
+                                    apps.prompt.vars.alert('Sorry, admins can only be set manually. Please ask an administrator.', 'Okay', function(){}, 'Messaging');
                                 }else{
-                                    apps.messaging.vars.name = apps.messaging.vars.nameTemp; // = "";
-                                    //for(var i in apps.messaging.vars.nameTemp){
-                                    //    apps.messaging.vars.name += encodeURIComponent(apps.messaging.vars.nameTemp[i]);
-                                    //}
+                                    apps.messaging.vars.name = apps.messaging.vars.nameTemp;
                                     apps.savemaster.vars.save('aos_system/apps/messaging/chat_name', apps.messaging.vars.name, 1, 'mUname', '');
                                 }
                             }, 'Messaging');
