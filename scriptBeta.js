@@ -7222,12 +7222,12 @@ c(function(){
                 },
                 screenRes: {
                     folder: 0,
-                    folderName: 'Screen Resolution',
+                    folderName: 'Display',
                     folderPath: 'apps.settings.vars.menus.screenRes',
                     image: 'settingIcons/new/resolution.png',
                     fullscreen: {
                         option: 'Full Screen',
-                        description: function(){return 'Puts aOS into fullscreen mode, so it does not look like it has been loaded in a browser. A more stable way to achieve this is with the F11 key.'},
+                        description: function(){return 'Show AaronOS in fullscreen, outside of browser UI. A more stable way to achieve this is with the F11 key.'},
                         buttons: function(){return '<button onclick="apps.settings.vars.reqFullscreen()">Enter Fullscreen</button> <button onclick="apps.settings.vars.endFullscreen()">Exit Fullscreen</button>'}
                     },
                     mobileMode: {
@@ -7238,29 +7238,18 @@ c(function(){
                     },
                     scaling: {
                         option: 'Content Scaling',
-                        description: function(){return 'If you have a HiDPI screen or text and buttons on aOS are too small, you can use this option to make aOS bigger. Regular size is 1. Double size is 2. Triple size is 3. It is not recommended, but you can also shrink aOS with a decimal value less than 1. For instance, half size is 0.5'},
-                        buttons: function(){return '<input placeholder="1" id="STNscaling"> <button onclick="apps.settings.vars.setScale(getId(\'STNscaling\').value)">Set</button>'}
+                        description: function(){return 'Use this option to scale AaronOS larger or smaller.<br>Default is 1. Double size is 2. Half size is 0.5.'},
+                        buttons: function(){return '<input placeholder="1" size="3" id="STNscaling" value="' + window.screenScale + '"> <button onclick="apps.settings.vars.setScale(getId(\'STNscaling\').value)">Set</button>'}
                     },
                     currRes: {
-                        option: 'aOS Monitor Resolution',
+                        option: 'Virtual Monitor Resolution',
                         description: function(){return 'Current: <span class="liveElement" data-live-eval="getId(\'monitor\').style.width">' + getId('monitor').style.width + '</span> by <span class="liveElement" data-live-eval="getId(\'monitor\').style.height">' + getId('monitor').style.height + '</span>.<br>' +
-                            'This is the dimensions in pixels of AaronOS\'s virtual display. If the virtual display does not fit in your browser window, scrollbars will appear.'},
-                        buttons: function(){return '<input id="STNscnresX">px by <input id="STNscnresY">px <button onclick="fitWindowRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Set aOS Screen Res</button>'}
-                    },
-                    saveRes: {
-                        option: 'Save Resolution',
-                        description: function(){return 'Have aOS automatically load to a specified resolution at boot (specified in the text fields above).'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save</button> <button onclick="ufdel(\'aos_system/apps/settings/saved_screen_res\')">Delete</button>'}
-                    },
-                    currWin: {
-                        option: 'Current Browser Window Resolution',
-                        description: function(){return '<span class="liveElement" data-live-eval="window.innerWidth">' + window.innerWidth + '</span>px by <span class="liveElement" data-live-eval="window.innerHeight">' + window.innerHeight + '</span>px'},
-                        buttons: function(){return '<button onclick="fitWindow()">Fit aOS to Window</button>'}
-                    },
-                    currScn: {
-                        option: 'Current Screen Resolution',
-                        description: function(){return '<span class="liveElement" data-live-eval="screen.width">' + screen.width + '</span>px by <span class="liveElement" data-live-eval="screen.height">' + screen.height + '</span>px'},
-                        buttons: function(){return '<button onclick="fitWindowOuter()">Fit aOS to Screen</button>'}
+                            'These are the dimensions of AaronOS\'s virtual display. Scrollbars will be present if the display is made too large.'},
+                        buttons: function(){return '<button onclick="fitWindow()">Fit to Browser Window</button> <button onclick="fitWindowOuter()">Fit to Screen</button><hr>' +
+                            'Custom Resolution: <input id="STNscnresX" size="4" placeholder="width"> by <input id="STNscnresY" size="4" placeholder="height"><br><br>' +
+                            '<button onclick="fitWindowRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Set For Now</button> ' +
+                            '<button onclick="apps.settings.vars.saveRes(getId(\'STNscnresX\').value, getId(\'STNscnresY\').value)">Save Persistent</button> ' +
+                            '<button onclick="lfdel(\'aos_system/apps/settings/saved_screen_res\');fitWindow();">Delete Persistent</button>'}
                     }
                 },
                 windows: {
@@ -7420,6 +7409,20 @@ c(function(){
                                         tempHTML += '<option value="true">Allowed</option><option value="false" selected>Denied</option></select> ';
                                     }
                                     tempHTML += (apps.webAppMaker.vars.actionNames[j] || '[Unknown]') + ' (' + j + ')<br>Permission to ' + (apps.webAppMaker.vars.actionDesc[j] || "[???]") + ".<br><br>";
+                                    if(apps.webAppMaker.vars.permissionsUsed.hasOwnProperty(i)){
+                                        var printedTimesUsed = 0;
+                                        if(apps.webAppMaker.vars.permissionsUsed[i].hasOwnProperty(j)){
+                                            tempHTML += "Granted " + apps.webAppMaker.vars.permissionsUsed[i][j] + " times since boot.<br>";
+                                            printedTimesUsed = 1;
+                                        }
+                                        if(apps.webAppMaker.vars.permissionsDenied[i].hasOwnProperty(j)){
+                                            tempHTML += "Refused " + apps.webAppMaker.vars.permissionsUsed[i][j] + " times since boot.<br>";
+                                            printedTimesUsed = 1;
+                                        }
+                                        if(printedTimesUsed){
+                                            tempHTML += "<br>";
+                                        }
+                                    }
                                 }
                             }
                             return tempHTML + '</div>';
@@ -7641,7 +7644,7 @@ c(function(){
             screensaverBlockNames: [],
             corsProxy: 'https://cors-anywhere.herokuapp.com/',
             saveRes: function(newX, newY){
-                ufsave('aos_system/apps/settings/saved_screen_res', newX + '/' + newY);
+                lfsave('aos_system/apps/settings/saved_screen_res', newX + '/' + newY);
                 fitWindowRes(newX, newY);
             },
             togDirtyLoad: function(){
@@ -7698,7 +7701,7 @@ c(function(){
                 window.screenScale = parseFloat(newScale);
                 fitWindow();
                 if(!nosave){
-                    ufsave('aos_system/apps/settings/ui_scale', newScale);
+                    lfsave('aos_system/apps/settings/ui_scale', newScale);
                 }
             },
             togDarkMode: function(nosave){
@@ -8580,12 +8583,10 @@ c(function(){
                 }
             },
             reqFullscreen: function(){
-                (getId("monitor").requestFullscreen || getId("monitor").webkitRequestFullscreen || getId("monitor").mozRequestFullscreen)();
-                window.setTimeout(fitWindowRes(screen.width, screen.height), 100);
+                getId("monitor").requestFullscreen();
             },
             endFullscreen: function(){
-                document.webkitExitFullscreen();
-                window.setTimeout(fitWindow, 100);
+                document.exitFullscreen();
             },
             tempchKey: '',
             tempchPass: '',
@@ -8944,9 +8945,9 @@ c(function(){
                                     }
                                 }
                             }
-                            apps.settings.vars.setScale(ufload("aos_system/apps/settings/ui_scale") || "1", 1);
-                            if(ufload("aos_system/apps/settings/saved_screen_res")){
-                                apps.settings.vars.tempResArray = ufload("aos_system/apps/settings/saved_screen_res").split('/');
+                            apps.settings.vars.setScale(lfload("aos_system/apps/settings/ui_scale") || "1", 1);
+                            if(lfload("aos_system/apps/settings/saved_screen_res")){
+                                apps.settings.vars.tempResArray = lfload("aos_system/apps/settings/saved_screen_res").split('/');
                                 fitWindowRes(apps.settings.vars.tempResArray[0], apps.settings.vars.tempResArray[1]);
                             }
                             if(ufload("aos_system/apps/settings/cors_proxy")){
@@ -11593,11 +11594,17 @@ c(function(){
                 " : Auto-Mobile now engages if there is no mouse connected OR the screen width is &lt; 768px.",
                 " : Auto-Mobile now disengages if there is a mouse connected AND the screen width is &gt;= 768px.",
                 " : Mobile mode setting (off, on, automatic) is now saved per-device rather than per-account."
+            ],
+            "08/04/2021: B1.6.3.0": [
+                " + Number of permissions used by web apps are now tracked and displayed in Settings.",
+                " : Renamed Settings menu of Screen Resolution to Display.",
+                " : Greatly simplified options available in Display settings.",
+                " : Screen resolution and scale settings are saved to device rather than account."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.2.1 (08/02/2021) r0';
+    window.aOSversion = 'B1.6.3.0 (08/04/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13837,6 +13844,8 @@ c(function(){
                 }
                 doLog("Done.", "#ACE");
             },
+            permissionsUsed: {},
+            permissionsDenied: {},
             recieveMessage: function(msg){
                 if(typeof msg.data === "string"){
                     doLog("String-formatted request is no longer supported. " + msg.origin, "#F00");
@@ -13909,6 +13918,11 @@ c(function(){
                                     apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
                                     return;
                                 }
+
+                                if(!apps.webAppMaker.vars.permissionsUsed.hasOwnProperty(msg.origin)){
+                                    apps.webAppMaker.vars.permissionsUsed[msg.origin] = {};
+                                    apps.webAppMaker.vars.permissionsDenied[msg.origin] = {};
+                                }
                                 
                                 if(!apps.webAppMaker.vars.trustedApps.hasOwnProperty(msg.origin)){
                                     if(!apps.webAppMaker.vars.globalPermissions.hasOwnProperty(msg.data.action.split(":")[0])){
@@ -13920,6 +13934,11 @@ c(function(){
                                             returnMessage.conversation = msg.data.conversation;
                                         }
                                         apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                        if(!apps.webAppMaker.vars.permissionsDenied[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
+                                            apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                        }else{
+                                            apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]]++;
+                                        }
                                         return;
                                     }
                                 }else{
@@ -13935,6 +13954,11 @@ c(function(){
                                             returnMessage.conversation = msg.data.conversation;
                                         }
                                         apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                        if(!apps.webAppMaker.vars.permissionsDenied[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
+                                            apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                        }else{
+                                            apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]]++;
+                                        }
                                         return;
                                     }
                                     if(apps.webAppMaker.vars.trustedApps[msg.origin][msg.data.action.split(':')[0]] !== "true"){
@@ -13948,6 +13972,11 @@ c(function(){
                                                     returnMessage.conversation = msg.data.conversation;
                                                 }
                                                 apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                                if(!apps.webAppMaker.vars.permissionsDenied[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
+                                                    apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                                }else{
+                                                    apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]]++;
+                                                }
                                                 return;
                                             }
                                         }else{
@@ -13959,9 +13988,20 @@ c(function(){
                                                 returnMessage.conversation = msg.data.conversation;
                                             }
                                             apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                            if(!apps.webAppMaker.vars.permissionsDenied[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
+                                                apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                            }else{
+                                                apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]]++;
+                                            }
                                             return;
                                         }
                                     }
+                                }
+
+                                if(!apps.webAppMaker.vars.permissionsUsed[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
+                                    apps.webAppMaker.vars.permissionsUsed[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                }else{
+                                    apps.webAppMaker.vars.permissionsUsed[msg.origin][msg.data.action.split(":")[0]]++;
                                 }
 
                                 returnMessage.messageType = "response";
@@ -13973,17 +14013,16 @@ c(function(){
                                     apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
                                 }
                             }else{
-                                doLog("postMessage from " + msg.origin + ": ", "#ACE");
+                                doLog("Incorrectly formatted postMessage from " + msg.origin + ". Check Developer Tools.", "#ACE");
                                 console.log(msg.data);
-                                debugArray(msg.data);
                             }
                         }else{
-                            doLog("postMessage from " + msg.origin + ": ", "#ACE");
+                            doLog("Incorrectly formatted postMessage from " + msg.origin + ". Check Developer Tools.", "#ACE");
                             console.log(msg.data);
-                            debugArray(msg.data);
                         }
                     }else{
-                        doLog("postMessage from " + msg.origin + ": " + apps.webAppMaker.vars.sanitize(msg.data), "#ACE");
+                        doLog("Incorrectly formatted postMessage from " + msg.origin + ". Check Developer Tools.", "#ACE");
+                        console.log(msg.data);
                     }
                 }
             },
@@ -17200,6 +17239,12 @@ function calcWindowblur(win, noBgSize){
     }
 }
 
+function fitWindowIfPermitted(){
+    if(!lfload("aos_system/apps/settings/saved_screen_res")){
+        fitWindow();
+    }
+}
+
 function fitWindow(){
     perfStart('fitWindow');
     if(screenScale === 1 || screenScale < 0.25){
@@ -17572,7 +17617,7 @@ window.lfdel = function(filename){
 };
 
 //auto-resize display on window change
-window.addEventListener('resize', fitWindow);
+window.addEventListener('resize', fitWindowIfPermitted);
 
 //window.setTimeout(fitWindow, 1000);
 //longtap support
