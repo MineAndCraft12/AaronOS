@@ -11597,14 +11597,15 @@ c(function(){
             ],
             "08/04/2021: B1.6.3.0": [
                 " + Number of permissions used by web apps are now tracked and displayed in Settings.",
+                " + Saving a custom resolution prevents aOS from changing it automatically when viewport changes.",
+                " : Screen resolution and scale settings are saved to device rather than account.",
                 " : Renamed Settings menu of Screen Resolution to Display.",
-                " : Greatly simplified options available in Display settings.",
-                " : Screen resolution and scale settings are saved to device rather than account."
+                " : Simplified the options available in Display settings.",
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.3.0 (08/04/2021) r0';
+    window.aOSversion = 'B1.6.3.0 (08/04/2021) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
