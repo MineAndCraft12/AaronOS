@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>TI-BASIC to JS</title>
+    <style>
+        ::-webkit-scrollbar{
+            width:16px;
+            background-color:#555;
+            box-shadow:inset 0 0 10px #CCC;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+        ::-webkit-scrollbar-corner{
+            background-color:#555;
+            box-shadow:inset 0 0 10px #CCC;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+        ::-webkit-resizer{
+            border-radius:8px;
+            background-color:#CCC;
+            box-shadow:inset 0 0 10px #555;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+        ::-webkit-scrollbar-thumb{
+            border-radius:8px;
+            background-color:#CCC;
+            box-shadow:inset 0 0 10px #555;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+        ::-webkit-scrollbar-button{
+            border-radius:8px;
+            background-color:#CCC;
+            box-shadow:inset 0 0 10px #555;
+            cursor:url(cursors/beta/default.png) 3 2, default;
+        }
+            .darkMode ::-webkit-scrollbar{
+                width:16px;
+                background-color:#272727;
+                box-shadow:inset 0 0 10px #383838;
+            }
+            .darkMode ::-webkit-scrollbar-corner{
+                background-color:#272727;
+                box-shadow:inset 0 0 10px #383838;
+            }
+            .darkMode ::-webkit-resizer{
+                border-radius:8px;
+                background-color:#555;
+                box-shadow:inset 0 0 10px #272727;
+            }
+            .darkMode ::-webkit-scrollbar-thumb{
+                border-radius:8px;
+                background-color:#555;
+                box-shadow:inset 0 0 10px #272727;
+            }
+            .darkMode ::-webkit-scrollbar-button{
+                border-radius:8px;
+                background-color:#555;
+                box-shadow:inset 0 0 10px #272727;
+            }
+        #editorTI { 
+            position: absolute;
+            top: 0;
+            right: calc(100% - 192px);
+            bottom: 128px;
+            left: 0;
+            max-width:50%;
+        }
+        #editorJS {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 128px;
+            width: calc(100% - 192px);
+            min-width:50%;
+        }
+        #displayText{
+            position:absolute;
+            font-family:monospace;
+            font-size:16px;
+            left:0;
+            bottom:0;
+            height:128px;
+            width:192px;
+            background:hsl(40deg, 30%, 70%) !important;
+            color:#000 !important;
+            overflow:hidden;
+        }
+        #displayGraph{
+            position:absolute;
+            display:block;
+            bottom:0;
+            left:0;
+            height:128px;
+            width:192px;
+            background:hsl(40deg, 30%, 70%) !important;
+            color:#000 !important;
+            image-rendering:pixelated;
+        }
+        #captureText{
+            position:absolute;
+            display:block;
+            background:none;
+            color:transparent;
+            bottom:0;
+            left:0;
+            height:128px;
+            width:192px;
+            border-left:2px solid transparent;
+            border-right:2px solid transparent;
+            transition:0.3s;
+            padding:0;
+            border:none;
+            text-shadow:none;
+            margin:none;
+            color:transparent;
+            resize:none;
+            overflow:hidden;
+        }
+        #settings{
+            font-family:Sans-serif;
+            position:absolute;
+            bottom:0;
+            left:195px;
+            height:128px;
+            width:calc(100% - 195px);
+        }
+    </style>
+    <script src="../aosTools.js" data-light="true"></script>
+</head>
+<body>
+    <div id="editorTI"></div>
+    <div id="editorJS"></div>
+    <div id="displayText"></div>
+    <canvas id="displayCanvas" width="96" height="64" style="display:none"></canvas>
+    <textarea id="captureText" onkeydown="ti.keyDown(event)" onkeyup="ti.keyUp(event)" resize="none"></textarea>
+    <div id="settings">
+        <input type="checkbox" onchange="ti.setCompressSymbols(this.checked)" checked> Compress Symbols<br><br>
+        W.I.P. App Not Finished!
+    </div>
+    <script src="ace.js"></script>
+    <script src="ext-language_tools.js"></script>
+    <script defer>
+        var focusedEditor = 0;
+        var editorTI = ace.edit("editorTI");
+        editorTI.on("focus", () => {
+            focusedEditor = 1;
+        });
+        var editorJS = ace.edit("editorJS");
+        editorTI.on("focus", () => {
+            focusedEditor = 0;
+        });
+        editorTI.session.setMode("ace/mode/plain_text");
+        editorJS.session.setMode("ace/mode/javascript");
+        editorJS.setReadOnly(true);
+        editorTI.setShowPrintMargin(true);
+        editorTI.setPrintMarginColumn(16);
+        editorJS.setShowPrintMargin(false);
+
+        function setTheme(){
+            aosTools.getDarkMode((response) => {
+                if(response.content){
+                    document.body.classList.add("darkMode");
+                    editorTI.setTheme("ace/theme/clouds_midnight");
+                    editorJS.setTheme("ace/theme/clouds_midnight");
+                }else{
+                    document.body.classList.remove("darkMode");
+                    editorTI.setTheme("ace/theme/clouds");
+                    editorJS.setTheme("ace/theme/clouds");
+                }
+            });
+        }
+        function pasteText(data){
+            if(data.content === "pasted" && editorFocused){
+                editorTI.insert(data.pastedText);
+            }
+        }
+        // this entire func is ripped from aOS Tools for the purpose of replacing one line of its function
+        function showEditMenu(event, enablePaste, textOverride, positionOverride){
+            if(editorFocused){
+                aosTools.waitingPasteTarget = event ? event.target : null;
+                aosTools.waitingPasteRange = event ? (event.target.selectionStart ? [event.target.selectionStart, event.target.selectionEnd] : null) : null;
+                aosTools.sendRequest({
+                    action: "context:text_menu",
+                    position: positionOverride || event ? [event.pageX, event.pageY] : [0, 0],
+                    // editorTI.getSelectedText() is the only change from vanilla aOS Tools
+                    selectedText: textOverride || editorTI.getSelectedText(),
+                    enablePaste: (event ? (typeof event.target.value === "string" ? true : false) : false) ? enablePaste : 0
+                }, aosTools.recievePasteCommand);
+            }else{
+                aosTools.sendRequest({
+                    action: "context:text_menu",
+                    position: positionOverride || event ? [event.pageX, event.pageY] : [0, 0],
+                    // editorTI.getSelectedText() is the only change from vanilla aOS Tools
+                    selectedText: textOverride || editorJS.getSelectedText(),
+                    enablePaste: 0
+                }, aosTools.recievePasteCommand);
+            }
+            if(event){
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }
+        function configureEditor(){
+            aosTools.updateStyle = setTheme;
+            aosTools.recievePasteCommand = pasteText;
+            aosTools.editMenu = showEditMenu;
+            setTheme();
+        }
+
+        window.aosTools_connectListener = configureEditor;
+        if(typeof aosTools === "object"){
+            aosTools.testConnection();
+        }
+
+        var ti = {
+            currLineTI: -1,
+            currLineJS: -1,
+            basicStr: "",
+            basicLines: [],
+            jsLines: [],
+            jsStr: "",
+            currIndent: 0,
+            lastIndent: 0,
+            compressSymbols: 1,
+            setCompressSymbols: function(newvalue){
+                if(this.compressSymbols){
+                    if(!newvalue){
+                        editorTI.off("change", ti.doEditorChanged);
+                        var cursorpos = editorTI.session.selection.toJSON();
+                        editorTI.session.setValue(this.doDecompressSymbols(editorTI.getValue()));
+                        editorTI.session.selection.fromJSON(cursorpos);
+                        editorTI.on("change", ti.doEditorChanged);
+                    }
+                }else{
+                    if(newvalue){
+                        editorTI.off("change", ti.doEditorChanged);
+                        var cursorpos = editorTI.session.selection.toJSON();
+                        editorTI.session.setValue(this.doCompressSymbols(editorTI.getValue()));
+                        editorTI.session.selection.fromJSON(cursorpos)
+                        editorTI.on("change", ti.doEditorChanged);
+                    }
+                }
+                this.compressSymbols = newvalue;
+            },
+            doCompressSymbols: function(str){
+                return str
+                    .split("->").join("→")
+                    .split(">=").join("≥")
+                    .split("<=").join("≤")
+                    .split("=/=").join("≠")
+                    .split("!=").join("≠")
+                    .split("Theta").join("Θ");
+            },
+            doDecompressSymbols: function(str){
+                return str
+                    .split("→").join("->")
+                    .split("≥").join(">=")
+                    .split("≤").join("<=")
+                    .split("≠").join("!=")
+                    .split("Θ").join("Theta");
+            },
+            translateToJS: function(){
+                
+                if(this.compressSymbols){
+                    editorTI.off("change", ti.doEditorChanged);
+                    var cursorpos = editorTI.session.selection.toJSON();
+                    editorTI.session.setValue(this.doCompressSymbols(editorTI.getValue()));
+                    editorTI.session.selection.fromJSON(cursorpos);
+                    editorTI.on("change", ti.doEditorChanged);
+                    this.basicStr = this.doDecompressSymbols(editorTI.getValue());
+                }else{
+                    this.basicStr = editorTI.getValue();
+                }
+                this.basicLines = this.basicStr.split('\n');
+                for(var i in this.basicLines){
+                    if(this.basicLines[i].charAt(0) !== ":"){
+                        this.basicLines[i] = ":" + this.basicLines[i];
+                    }
+                }
+                this.basicLines = this.basicLines.join("").split(":");
+                if(this.basicLines[0].length === 0){
+                    this.basicLines.shift();
+                }
+                this.jsLines = [];
+                this.currLineJS = -1;
+                this.currIndent = 0;
+                this.lastIndent = 0;
+
+                // translate the language
+                for(var i in this.basicLines){
+                    this.currLineJS++;
+                    var tempJSLine = '';
+                    var lastMatch = this.basicLines[i].length;
+                    var masterLinePrefix = "";
+                    var canSemicolon = true;
+                    console.log("-----");
+                    for(var j = this.basicLines[i].length - 1; j > -1; j--){
+                        console.log(this.basicLines[i].substring(j, lastMatch));
+                        var match = 0;
+                        for(var phrase in this.lang){
+                            if(this.basicLines[i].substring(j, lastMatch).indexOf(phrase) === 0){
+                                console.log("    Matched " + phrase);
+
+                                if(j > 0){
+                                    // prefixPass
+                                    if(this.lang[phrase].hasOwnProperty("prefixPass")){
+                                        if(typeof this.lang[phrase].prefixPass === "string"){
+                                            if(this.basicLines[i].charAt(j - 1) === this.lang[phrase].prefixPass){
+                                                console.log("    Skipped match due to prefix " + this.lang[phrase].prefixPass);
+                                                continue;
+                                            }
+                                        }else{
+                                            if(this.lang[phrase].prefixPass.indexOf(this.basicLines[i].charAt(j - 1)) !== -1){
+                                                console.log("    Skipped match due to prefix " + this.lang[phrase].prefixPass);
+                                                continue;
+                                            }
+                                        }
+                                    }
+
+                                    // prefixPassRegex
+                                    if(this.lang[phrase].hasOwnProperty("prefixPassRegex")){
+                                        if(this.basicLines[i].charAt(j - 1).match(this.lang[phrase].prefixPassRegex)){
+                                            console.log("    Skipped match due to prefix match " + this.basicLines[i].charAt(j - 1));
+                                            continue;
+                                        }
+                                    }
+                                }
+
+                                if(j < this.basicLines[i].length){
+                                    // suffixPass
+                                    if(this.lang[phrase].hasOwnProperty("suffixPass")){
+                                        if(typeof this.lang[phrase].suffixPass === "string"){
+                                            if(this.basicLines[i].charAt(j + 1) === this.lang[phrase].suffixPass){
+                                                console.log("    Skipped match due to prefix " + this.lang[phrase].suffixPass);
+                                                continue;
+                                            }
+                                        }else{
+                                            if(this.lang[phrase].suffixPass.indexOf(this.basicLines[i].charAt(j + 1)) !== -1){
+                                                console.log("    Skipped match due to prefix " + this.lang[phrase].psuffixPass);
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                }
+
+                                var strPieces = {
+                                    initiatorPrefix: "",
+                                    initiator: "",
+                                    origin: phrase,
+                                    terminator: this.basicLines[i].substring(j + phrase.length, lastMatch),
+                                    terminatorSuffix: "",
+                                    lineAppend: "",
+                                    newJ: null,
+                                    keepOriginalAfter: null,
+                                    revertOriginalAfterOrigin: false
+                                }
+
+                                // initiatorPrefix
+                                if(this.lang[phrase].hasOwnProperty("initiatorPrefix")){
+                                    strPieces.initiatorPrefix = this.lang[phrase].initiatorPrefix;
+                                }
+
+                                // replace
+                                if(this.lang[phrase].hasOwnProperty("replace")){
+                                    strPieces.origin = this.lang[phrase].replace;
+                                }
+
+                                // terminator
+                                if(this.lang[phrase].hasOwnProperty("terminator")){
+                                    //var relativeTerminatorIndex = this.basicLines[i].substring(j).indexOf(this.lang[phrase].terminator);
+                                    var numOfSelf = (this.basicLines[i].substring(j).match(new RegExp(phrase.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g')) || []).length;
+                                    var numOfTerm = (this.basicLines[i].substring(j).match(new RegExp(this.lang[phrase].terminator.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g')) || []).length;
+                                    console.log(numOfSelf + " - " + numOfTerm);
+                                    if(numOfTerm < numOfSelf){
+                                        if(tempJSLine.indexOf(', "') > -1){
+                                            tempJSLine = tempJSLine.substring(0, tempJSLine.indexOf(', "')) + this.lang[phrase].terminator + tempJSLine.substring(tempJSLine.indexOf(', "'));
+                                        }else{
+                                            strPieces.lineAppend = this.lang[phrase].terminator;
+                                        }
+                                    }
+                                }
+
+                                // doNotSemicolon
+                                if(this.lang[phrase].hasOwnProperty("doNotSemicolon")){
+                                    canSemicolon = false;
+                                }
+
+                                // doNotTranslateAfterOrigin
+                                if(this.lang[phrase].hasOwnProperty("doNotTranslateAfterOrigin")){
+                                    strPieces.revertOriginalAfterOrigin = true;
+                                }
+
+                                // linePrepend
+                                if(this.lang[phrase].hasOwnProperty("linePrepend")){
+                                    masterLinePrefix = this.lang[phrase].linePrepend;
+                                }
+
+                                // lineAppend
+                                if(this.lang[phrase].hasOwnProperty("lineAppend")){
+                                    strPieces.lineAppend = this.lang[phrase].lineAppend;
+                                }
+
+                                // if revertOriginalAfterOrigin, do that here
+                                if(strPieces.revertOriginalAfterOrigin){
+                                    tempJSLine = this.basicLines[i].substring(j + phrase.length);
+                                }
+
+                                // if J is changed, actually do the change
+                                if(strPieces.newJ !== null){
+                                    j = strPieces.newJ;
+                                }
+
+                                // if keepOriginalAfter, actually do that here
+                                if(strPieces.keepOriginalAfter !== null){
+                                    tempJSLine = this.basicLines[i].substring(strPieces.keepOriginalAfter, lastMatch) + tempJSLine;
+                                }
+
+                                // build the str
+                                tempJSLine = strPieces.initiatorPrefix + strPieces.initiator + strPieces.origin + strPieces.terminator + strPieces.terminatorSuffix + tempJSLine + strPieces.lineAppend;
+
+                                //indent
+                                console.log("Indent: " + this.currIndent);
+                                if(this.lang[phrase].hasOwnProperty("indent")){
+                                    this.currIndent += this.lang[phrase].indent;
+                                    if(this.currIndent < 0){
+                                        this.currIndent = 0;
+                                    }
+                                    if(this.lang[phrase].indent < 0){
+                                        this.lastIndent = this.currIndent;
+                                    }
+                                }
+
+                                lastMatch = j;
+                                match = 1;
+                                break;
+                            }
+                        }
+                        // if no keywords found, search for variable names
+                        if(!match){
+                            var tempCategory = this.findVarCategory(this.basicLines[i].substring(j, lastMatch));
+                            if(tempCategory !== null){
+                                tempJSLine = 'get("' + tempCategory[1] + '")' +
+                                    this.basicLines[i].substring(j + tempCategory[1].length, lastMatch) +
+                                    tempJSLine;
+                                lastMatch = j;
+                            }
+                        }
+                    }
+                    tempJSLine = this.basicLines[i].substring(0, lastMatch) + tempJSLine;
+                    var numSearch = -2;
+                    while(numSearch !== -1){
+                        var numSearchLast = numSearch;
+                        numSearch = tempJSLine.indexOf("get(", numSearch);
+                        if(numSearch === -1 || numSearch === numSearchLast){
+                            break;
+                        }
+                        if(numSearch > 0){
+                            if(!isNaN(parseInt(tempJSLine.charAt(numSearch - 1), 10))){
+                                tempJSLine = tempJSLine.substring(0, numSearch) + " * " + tempJSLine.substring(numSearch);
+                            }
+                        }
+                        numSearch += 1;
+                    }
+                    numSearch = -2;
+                    while(numSearch !== -1){
+                        var numSearchLast = numSearch;
+                        numSearch = tempJSLine.indexOf(")", numSearch);
+                        if(numSearch === -1 || numSearch === numSearchLast){
+                            break;
+                        }
+                        if(numSearch < tempJSLine.length - 1){
+                            if(!isNaN(parseInt(tempJSLine.charAt(numSearch + 1), 10))){
+                                tempJSLine = tempJSLine.substring(0, numSearch + 1) + " * " + tempJSLine.substring(numSearch + 1);
+                            }
+                        }
+                        numSearch += 1;
+                    }
+                    numSearch = -2;
+                    while(numSearch !== -1){
+                        var numSearchLast = numSearch;
+                        numSearch = tempJSLine.indexOf("(", numSearch);
+                        if(numSearch === -1 || numSearch === numSearchLast){
+                            break;
+                        }
+                        if(numSearch > 0){
+                            if(!isNaN(parseInt(tempJSLine.charAt(numSearch - 1), 10))){
+                                tempJSLine = tempJSLine.substring(0, numSearch) + " * " + tempJSLine.substring(numSearch);
+                            }
+                        }
+                        numSearch += 1;
+                    }
+                    tempJSLine = tempJSLine.split(")(").join(") * (");
+                    tempJSLine = tempJSLine.split(")get(").join(") * get(");
+                    if(masterLinePrefix){
+                        tempJSLine = masterLinePrefix + tempJSLine;
+                    }
+                    if(canSemicolon){
+                        tempJSLine += ";";
+                    }
+                    if(lastMatch === this.basicLines[i].length){
+                        tempJSLine = this.basicLines[i];
+                    }
+                    for(var ind = 0; ind < this.lastIndent; ind++){
+                        tempJSLine = "\t" + tempJSLine;
+                    }
+                    this.lastIndent = this.currIndent;
+                    this.jsLines[this.currLineJS] = tempJSLine;
+                }
+
+                this.jsStr = this.jsLines.join("\n");
+                editorJS.session.setValue(this.jsStr);
+            },
+            lang: {
+                /*
+                    lines are worked through from end to beginning
+                    "Trigger Phrase": {
+                        Replace phrase with string
+                            replace: string
+                        Initiate object with string if one precedes it, replacing initiator if array
+                            initiator: string || [string, string]
+                        Initiate object with range up to regex match
+                            initiatorRegex: regex
+                        Terminate object with string if no terminator is present, replacing terminator if array
+                            terminator: string || [string, string]
+                        Raise indentation by number (negative to lower)
+                            indent: number
+                        Pass this phrase if string matches preceding character
+                            prefixPass: string || [string...]
+                        Pass this phrase if regex matches preceding character
+                            prefixPassRegex: regex
+                        Pass this phrase if string matches following character
+                            suffixPass: string || [string...]
+                        Pass this phrase if regex matches following character
+                            suffixPassRegex: regex
+                        Ignore terminator if initiator is discovered
+                            initiatorIgnoresTerminator: boolean
+                        Do not translate range between initiator and terminator
+                            doNotTranslateContent: boolean
+                    }
+                */
+                "If ": {
+                    replace: "if(",
+                    lineAppend: ")",
+                    doNotSemicolon: true
+                },
+                "Then": {
+                    replace: "{",
+                    indent: 1,
+                    doNotSemicolon: true
+                },
+                "End": {
+                    replace: "}",
+                    indent: -1,
+                    doNotSemicolon: true
+                },
+                "Disp ": {
+                    replace: "disp(",
+                    terminator: ")"
+                },
+                "(": {
+                    prefixPassRegex: /[a-z]/,
+                    terminator: ")"
+                },
+                '"': {
+                    initiator: '"',
+                    terminator: '"',
+                    initiatorIgnoresTerminator: true,
+                    doNotTranslateRange: true
+                },
+                "=": {
+                    replace: " === ",
+                    prefixPass: ["<", ">", "/", "!"],
+                },
+                "=/=": {
+                    replace: " !== "
+                },
+                "->": {
+                    replace: ', "',
+                    linePrepend: "set(",
+                    lineAppend: '")',
+                    doNotTranslateAfterOrigin: true
+                },
+                ">": {
+                    replace: " > ",
+                    prefixPass: "-",
+                    suffixPass: "="
+                },
+                "<": {
+                    replace: " < ",
+                    suffixPass: "="
+                },
+                ">=": {
+                    replace: " >= "
+                },
+                "<=": {
+                    replace: " <= "
+                },
+                "+": {
+                    replace: " + "
+                },
+                "-": {
+                    replace: " - ",
+                    suffixPass: ">"
+                },
+                "*": {
+                    replace: " * "
+                },
+                "/": {
+                    replace: " / "
+                },
+                "!=": {
+                    replace: " !== "
+                },
+                " and ": {
+                    replace: " && "
+                },
+                " or ": {
+                    replace: " || "
+                },
+                " xor ": {
+                    // this is NOT accurate right now
+                    replace: "^ /* WARNING: In TI, xor is logical. In JS, xor is bitwise until I find a solution. */"
+                },
+                "not(": {
+                    replace: "!(",
+                    terminator: ")"
+                },
+            },
+            vars: {
+                calc: {
+                    Ans: 0, Entry: ""
+                },
+                str: {
+                    Str1: "", Str2: "", Str3: "", Str4: "", Str5: "", Str6: "", Str7: "", Str8: "", Str9: "", Str0: "",
+                },
+                list: {
+                    L1: [], L2: [], L3: [], L4: [], L5: [], L6: []
+                },
+                windowXY: {
+                    Xmin: -10, Xmax: 10, Xscl: 1, Ymin: -10, Ymax: 10, Yscl: 1, Xres: 1,
+                    DeltaX: 0.2127659574, DeltaY: 0.3225806452, XFact: 4, YFact: 4
+                },
+                alpha: {
+                    A: 0, B: 0, C: 0, D: 0, E: 0, F: 0, G: 0, H: 0, I: 0, J: 0, K: 0, L: 0, M: 0,
+                    N: 0, O: 0, P: 0, Q: 0, R: 0, S: 0, T: 0, U: 0, V: 0, W: 0, X: 0, Y: 0, Z: 0, Theta: 0
+                },
+            },
+            displayLines: new Array(8).fill("                "),
+            disp: function(){
+
+            },
+            findVarCategory: function(varname){
+                for(var i in this.vars){
+                    for(var j in this.vars[i]){
+                        if(varname.indexOf(j) === 0){
+                            return [i, j];
+                        }
+                    }
+                    //if(this.vars[i].hasOwnProperty(varname)){
+                    //    return i;
+                    //}
+                }
+                return null;
+            },
+            get: function(varname){
+                var category = this.findVarCategory(varname)[0];
+                switch(category){
+                    default:
+                        return this.vars[category][varname];
+                }
+            },
+            set: function(newValue, varname){
+                var category = this.findVarCategory(varname)[0];
+                var pass = 1;
+                var specialValue = null;
+                var failExpected = null;
+                var failActual = null;
+                switch(category){
+                    case "calc":
+                        if(varname === "Entry" && !typeof newvalue === "string"){
+                            pass = 0;
+                        }
+                        break;
+                    default:
+                        pass = 1;
+                }
+                switch(pass){
+                    case 0:
+                        throw new TypeError("Line " + this.currLineTI + "/" + this.currLineJS + ": " + category + " variable " + varname + " expected " + failExpected + "; cannot accept " + failActual);
+                    case 1:
+                        this.vars[category][varname] = newvalue;
+                    case 2:
+                        this.vars[category][varname] = specialValue;
+                }
+            },
+            doEditorChanged: function(){
+                try{
+                    ti.translateToJS();
+                }catch(err){
+                    editorJS.session.setValue(String(err));
+                }
+            }
+        };
+        editorTI.on("change", ti.doEditorChanged);
+    </script>
+</body>
+</html>

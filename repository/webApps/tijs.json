@@ -1,0 +1,12 @@
+{
+    "name": "TI-BASIC to JS",
+    "id": "tijs",
+    "version": "1.1",
+    "abbreviation": "TiB",
+    "appType": "webApp",
+    "homeURL": "ace/tijs.html",
+    "icon": {
+        "foreground": "appicons/ds/Clc.png"
+    },
+    "windowSize": [753, 507]
+}

@@ -5,10 +5,15 @@ window.aosTools = {
     connectListener: window.aosTools_connectListener || null,
     connectFailListener: window.aosTools_connectFailListener || null,
 
+    pageID: "",
+    connectionAlreadyTested: 0,
     testConnection: function(){
-        if(document.currentScript){
-            if(document.currentScript.getAttribute("data-light") === "true"){
-                aosTools.light = 1;
+        if(!aosTools.connectionAlreadyTested){
+            console.log("Initializing aosTools...");
+            if(document.currentScript){
+                if(document.currentScript.getAttribute("data-light") === "true"){
+                    aosTools.light = 1;
+                }
             }
         }
         if(window.aosTools_fallbackMessageListener){
@@ -20,25 +25,55 @@ window.aosTools = {
         if(window.aosTools_connectFailListener){
             aosTools.connectFailListener = aosTools_connectFailListener;
         }
-        if(window.self !== window.top){
-            aosTools.sendRequest({
-                action: "getstyle:darkmode"
-            }, aosTools.testConnected);
+
+        if(!aosTools.connectionAlreadyTested){
+            var randomIDChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var tempStr = "";
+            for(var i = 0; i < 16; i++){
+                tempStr += randomIDChars[Math.floor(Math.random() * randomIDChars.length)];
+            }
+            aosTools.pageID = tempStr;
+
+            if(window.self !== window.top){
+                aosTools.sendRequest({
+                    action: "page_id:create",
+                    conversation: "aosTools_verify_page_id"
+                }, aosTools.testConnected);
+            }else{
+                aosTools.connected = 0;
+                console.log("Warning - page is not loaded in a frame and aOS is not connected.");
+                if(aosTools.connectFailListener){
+                    aosTools.connectFailListener();
+                }
+            }
         }else{
-            aosTools.connected = 0;
-            console.log("Warning - page is not loaded in a frame and aOS is not connected.");
-            if(aosTools.connectFailListener){
+            console.log("aosTools already started initializing. Skipping some initialization work.");
+            if(aosTools.connected === 1){
+                aosTools.connectListener();
+            }else if(aosTools.connected === 0){
                 aosTools.connectFailListener();
             }
         }
+        aosTools.connectionAlreadyTested = 1;
     },
     testConnected: function(data){
+        if(data.content === "pending" || data.content === "ignore"){
+            return;
+        }
         if(typeof data.content === "boolean"){
             aosTools.connected = 1;
-            if(aosTools.light){
-                console.log("AaronOS is connected. Light mode, not updating stylesheet.");
+            if(data.content === true){
+                if(aosTools.light){
+                    console.log("AaronOS is connected. Light mode, not updating stylesheet.");
+                }else{
+                    console.log("AaronOS is connected. Updating stylesheet.");
+                }
             }else{
-                console.log("AaronOS is connected. Updating stylesheet.");
+                if(aosTools.light){
+                    console.log("AaronOS is connected, but no parent app found! App-Window-related requests may not work. Light mode, not updating stylesheet.");
+                }else{
+                    console.log("AaronOS is connected, but no parent app found! App-Window-related requests may not work. Updating stylesheet.");
+                }
             }
             aosTools.updateStyle();
             if(aosTools.connectListener){
@@ -46,7 +81,7 @@ window.aosTools = {
             }
         }else{
             aosTools.connected = 0;
-            console.log("Warning - Requests will not reach aOS; top frame does not seem to be aOS.");
+            console.log("Warning - Requests will not reach aOS; parent frame does not seem to be AaronOS.");
             if(aosTools.connectFailListener){
                 aosTools.connectFailListener();
             }
@@ -63,12 +98,13 @@ window.aosTools = {
                 this.totalRequests++;
                 requestData.conversation = "" + this.totalRequests;
             }
+            requestData.aosToolsFrameID = aosTools.pageID;
             this.callbacks[this.totalRequests] = callback || function(){};
             window.parent.postMessage(requestData, "*");
         }else{
             console.log("Warning - request will not reach aOS; aOS is not connected.");
         }
-        if(this.connected === -1){
+        if(this.connected === -1 && requestData.action.indexOf("page_id:") !== 0){
             console.log("Warning - requests may not reach aOS; connection test not complete.");
         }
     },
@@ -77,6 +113,10 @@ window.aosTools = {
             if(event.data.conversation){
                 if(event.data.conversation === "aosTools_Subscribed_Style_Update"){
                     aosTools.updateStyle();
+                }else if(event.data.conversation === "aosTools_get_page_id"){
+                    aosTools.sendRequest({action:"page_id:respond", content: event.data.content}, function(){});
+                }else if(event.data.conversation === "aosTools_verify_page_id"){
+                    aosTools.testConnected(event.data);
                 }else{
                     if(typeof aosTools.callbacks[event.data.conversation] === "function"){
                         aosTools.callbacks[event.data.conversation](event.data);

@@ -1,0 +1,13 @@
+{
+    "name": "Domainless App",
+    "id": "nodomain",
+    "version": "1.0",
+    "abbreviation": "DlA",
+    "appType": "webApp",
+    "homeURL": "data:text/html,<html><head><script src='https://aaronos.dev/AaronOS/aosTools.js'></script></head><body><div class='winhtml'><input placeholder='Input Field'><br><br><button>Button</button></div></body></html>",
+    "icon": {
+        "foreground": "appicons/ds/aOS.png"
+    },
+    "windowSize": [500, 400],
+    "manualOpen": 0
+}

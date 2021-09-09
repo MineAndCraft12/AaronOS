@@ -3285,8 +3285,8 @@ function showEditContext(event, fromWebApp, webAppPosition, webAppConversation, 
     if(!fromWebApp){
         textEditorTools.tmpGenArray = [[event.pageX, event.pageY, "ctxMenu/beta/happy.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');getId(\'ctxMenu\').style.display = \'none\'"];
     }else{
-        var framePosition = webAppFrame.frameElement.getBoundingClientRect();
-        textEditorTools.tmpGenArray = [[webAppPosition[0] + framePosition.x, webAppPosition[1] + framePosition.y, "ctxMenu/beta/happy.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'spoken\',conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1]);getId(\'ctxMenu\').style.display = \'none\'"];
+        var framePosition = webAppFrame.getBoundingClientRect();
+        textEditorTools.tmpGenArray = [[webAppPosition[0] + framePosition.x, webAppPosition[1] + framePosition.y, "ctxMenu/beta/happy.png"], textEditorTools.tempvar + "Speak \'" + currentSelection.substring(0, 5).split("\n").join(' ').split('<').join('&lt;').split('>').join('&gt;') + "...\'", "textspeech(\'" + currentSelection.split("\n").join('<br>').split('\\').join('\\\\').split('"').join("&quot;").split("'").join("&quot;").split('<').join('&lt;').split('>').join('&gt;') + "\');apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'spoken\',conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1].contentWindow);getId(\'ctxMenu\').style.display = \'none\'"];
     }
     for(var i = 1; i <= textEditorTools.slots; i++){
         if(currentSelection.length === 0){
@@ -3305,7 +3305,7 @@ function showEditContext(event, fromWebApp, webAppPosition, webAppConversation, 
         if(!fromWebApp){
             textEditorTools.tmpGenArray.push('textEditorTools.copy(' + (i - 0) + ');getId(\'ctxMenu\').style.display = \'none\'');
         }else{
-            textEditorTools.tmpGenArray.push('textEditorTools.copy(' + (i - 0) + ');apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'copied\',conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1]);getId(\'ctxMenu\').style.display = \'none\'');
+            textEditorTools.tmpGenArray.push('textEditorTools.copy(' + (i - 0) + ');apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'copied\',conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1].contentWindow);getId(\'ctxMenu\').style.display = \'none\'');
         }
     }
     if(canPasteHere){
@@ -3340,7 +3340,7 @@ function showEditContext(event, fromWebApp, webAppPosition, webAppConversation, 
                     }else{
                         textEditorTools.tmpGenArray.push(' Paste ' + i + ' (' + cleanStr(textEditorTools.clipboard[i - 1].substring(0, 5)) + '...)');
                     }
-                    textEditorTools.tmpGenArray.push('apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'pasted\',pastedText:textEditorTools.clipboard[' + (i - 1) + '],conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1]);getId(\'ctxMenu\').style.display = \'none\'');
+                    textEditorTools.tmpGenArray.push('apps.webAppMaker.vars.postReply({messageType:\'response\',content:\'pasted\',pastedText:textEditorTools.clipboard[' + (i - 1) + '],conversation:textEditorTools.webAppInfo[0]}, textEditorTools.webAppInfo[2], textEditorTools.webAppInfo[1].contentWindow);getId(\'ctxMenu\').style.display = \'none\'');
                 }
             }
             textEditorTools.tmpGenArray[0].push('ctxMenu/beta/save.png');
@@ -6719,10 +6719,6 @@ c(function(){
                 if(modalsFound.length > 0){
                     apps.prompt.vars.showModals();
                     if(modalsFound !== this.lastModalsFound){
-                        // TODO: MODAL DIALOGUES
-                        // present a list of all active modals in the window
-                        // user can scroll through the list and react to them at their own pace
-                        // window can be minimized
                         var modalText = '';
                         for(var i of modalsFound){
                             modalText += '<div style="position:relative" data-modal="' + i + '">';
@@ -11601,11 +11597,20 @@ c(function(){
                 " : Screen resolution and scale settings are saved to device rather than account.",
                 " : Renamed Settings menu of Screen Resolution to Display.",
                 " : Simplified the options available in Display settings.",
+            ],
+            "09/08/2021: B1.6.4.0": [
+                " + Third party apps now actually work correctly!",
+                " : Fixed bug causing entire apps to become unuseable if they implement aOSTools across domains. (that's literally every third-party app)",
+                " : Completely rewrote code for identifying the app that a frame belongs to. Now works cross-origin!",
+                " : aosTools now negotiates with AaronOS to get its frame assigned an identifier at init.",
+                " : aosTools no longer initializes itself multiple times.",
+                " + Work-In-Progress TI-BASIC to JS translator, available in the Hub.",
+                " + Testing app added to test repository, which has no domain."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.3.0 (08/04/2021) r1';
+    window.aOSversion = 'B1.6.4.0 (09/08/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13290,6 +13295,7 @@ c(function(){
             ctxMenus: {
                 defaultCtx: []
             },
+            // TODO: actually follow the new frame ID system for frame manipulation
             actions: { // PERMISSIONS
                 context: {
                     /*
@@ -13309,7 +13315,7 @@ c(function(){
                     */
                     // show custom menu
                     menu: function(input, frame, frameOrigin){
-                        var boundingRect = frame.frameElement.getBoundingClientRect();
+                        var boundingRect = frame.getBoundingClientRect();
                         var arrayToRender = [];
                         for(var i in input.options){
                             var namePrefix = " ";
@@ -13330,7 +13336,7 @@ c(function(){
                                                 messageType: "response",
                                                 content: j,
                                                 conversation: input.conversation
-                                            }, frameOrigin, frame);
+                                            }, frameOrigin, frame.contentWindow);
                                         }
                                     })(),
                                     input.options[i].customImage
@@ -13345,7 +13351,7 @@ c(function(){
                                                 messageType: "response",
                                                 content: j,
                                                 conversation: input.conversation
-                                            }, frameOrigin, frame);
+                                            }, frameOrigin, frame.contentWindow);
                                         }
                                     })(),
                                     "ctxMenu/beta/" + input.options[i].image + ".png"
@@ -13360,7 +13366,7 @@ c(function(){
                                                 messageType: "response",
                                                 content: j,
                                                 conversation: input.conversation
-                                            }, frameOrigin, frame);
+                                            }, frameOrigin, frame.contentWindow);
                                         }
                                     })()
                                 ]);
@@ -13413,8 +13419,8 @@ c(function(){
                                     messageType: "response",
                                     content: true,
                                     conversation: input.conversation
-                                }, frameOrigin, srcFrame);
-                            }, (apps[srcFrame.frameElement.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc);
+                                }, frameOrigin, srcFrame.contentWindow);
+                            }, (apps[srcFrame.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc);
                         }catch(err){
                             return false;
                         }
@@ -13427,8 +13433,8 @@ c(function(){
                                     messageType: "response",
                                     content: userText,
                                     conversation: input.conversation
-                                }, frameOrigin, srcFrame);
-                            }, (apps[srcFrame.frameElement.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc);
+                                }, frameOrigin, srcFrame.contentWindow);
+                            }, (apps[srcFrame.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc);
                         }catch(err){
                             return false;
                         }
@@ -13441,8 +13447,8 @@ c(function(){
                                     messageType: "response",
                                     content: userBtn,
                                     conversation: input.conversation
-                                }, frameOrigin, srcFrame);
-                            }, (apps[srcFrame.frameElement.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc);
+                                }, frameOrigin, srcFrame.contentWindow);
+                            }, (apps[srcFrame.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc);
                         }catch(err){
                             return false;
                         }
@@ -13455,8 +13461,8 @@ c(function(){
                                     messageType: "response",
                                     content: userBtn,
                                     conversation: input.conversation
-                                }, frameOrigin, srcFrame);
-                            }, (apps[srcFrame.frameElement.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc, input.image || "");
+                                }, frameOrigin, srcFrame.contentWindow);
+                            }, (apps[srcFrame.getAttribute("data-parent-app")] || {appDesc: "An app"}).appDesc, input.image || "");
                         }catch(err){
                             return err;
                         }
@@ -13502,9 +13508,9 @@ c(function(){
                 appwindow: {
                     set_caption: function(input, frame){
                         try{
-                            if(frame.frameElement.getAttribute("data-parent-app")){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.setCaption(input.content);
+                            if(frame.getAttribute("data-parent-app")){
+                                if(apps[frame.getAttribute("data-parent-app")]){
+                                    apps[frame.getAttribute("data-parent-app")].appWindow.setCaption(input.content);
                                     return true;
                                 }
                                 return false;
@@ -13516,9 +13522,9 @@ c(function(){
                     },
                     disable_padding: function(input, frame){
                         try{
-                            if(frame.frameElement.getAttribute("data-parent-app")){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.paddingMode(0);
+                            if(frame.getAttribute("data-parent-app")){
+                                if(apps[frame.getAttribute("data-parent-app")]){
+                                    apps[frame.getAttribute("data-parent-app")].appWindow.paddingMode(0);
                                     return true;
                                 }
                                 return false;
@@ -13530,9 +13536,9 @@ c(function(){
                     },
                     enable_padding: function(input, frame){
                         try{
-                            if(frame.frameElement.getAttribute("data-parent-app")){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.paddingMode(1);
+                            if(frame.getAttribute("data-parent-app")){
+                                if(apps[frame.getAttribute("data-parent-app")]){
+                                    apps[frame.getAttribute("data-parent-app")].appWindow.paddingMode(1);
                                     return true;
                                 }
                                 return false;
@@ -13544,10 +13550,10 @@ c(function(){
                     },
                     open_window: function(input, frame){
                         try{
-                            if(frame.frameElement.getAttribute("data-parent-app")){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.openWindow();
-                                    toTop(apps[frame.frameElement.getAttribute("data-parent-app")]);
+                            if(frame.getAttribute("data-parent-app")){
+                                if(apps[frame.getAttribute("data-parent-app")]){
+                                    apps[frame.getAttribute("data-parent-app")].appWindow.openWindow();
+                                    toTop(apps[frame.getAttribute("data-parent-app")]);
                                     return true;
                                 }
                                 return false;
@@ -13559,9 +13565,9 @@ c(function(){
                     },
                     close_window: function(input, frame){
                         try{
-                            if(frame.frameElement.getAttribute("data-parent-app")){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                    apps[frame.frameElement.getAttribute("data-parent-app")].signalHandler("close");
+                            if(frame.getAttribute("data-parent-app")){
+                                if(apps[frame.getAttribute("data-parent-app")]){
+                                    apps[frame.getAttribute("data-parent-app")].signalHandler("close");
                                     return true;
                                 }
                                 return false;
@@ -13573,9 +13579,9 @@ c(function(){
                     },
                     minimize: function(input, frame){
                         try{
-                            if(frame.frameElement.getAttribute("data-parent-app")){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                    apps[frame.frameElement.getAttribute("data-parent-app")].signalHandler("shrink");
+                            if(frame.getAttribute("data-parent-app")){
+                                if(apps[frame.getAttribute("data-parent-app")]){
+                                    apps[frame.getAttribute("data-parent-app")].signalHandler("shrink");
                                     return true;
                                 }
                                 return false;
@@ -13587,10 +13593,10 @@ c(function(){
                     },
                     maximize: function(input, frame){
                         try{
-                            if(frame.frameElement.getAttribute("data-parent-app")){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                    if(!apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen){
-                                        apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
+                            if(frame.getAttribute("data-parent-app")){
+                                if(apps[frame.getAttribute("data-parent-app")]){
+                                    if(!apps[frame.getAttribute("data-parent-app")].appWindow.fullscreen){
+                                        apps[frame.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
                                     }
                                     return true;
                                 }
@@ -13603,10 +13609,10 @@ c(function(){
                     },
                     unmaximize: function(input, frame){
                         try{
-                            if(frame.frameElement.getAttribute("data-parent-app")){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                    if(apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen){
-                                        apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
+                            if(frame.getAttribute("data-parent-app")){
+                                if(apps[frame.getAttribute("data-parent-app")]){
+                                    if(apps[frame.getAttribute("data-parent-app")].appWindow.fullscreen){
+                                        apps[frame.getAttribute("data-parent-app")].appWindow.toggleFullscreen();
                                     }
                                     return true;
                                 }
@@ -13618,21 +13624,21 @@ c(function(){
                         }
                     },
                     get_maximized: function(input, frame){
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                return numtf(apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.fullscreen);
+                        if(frame.getAttribute("data-parent-app")){
+                            if(apps[frame.getAttribute("data-parent-app")]){
+                                return numtf(apps[frame.getAttribute("data-parent-app")].appWindow.fullscreen);
                             }
                         }
                     },
                     set_dims: function(input, frame){
                         try{
-                            if(frame.frameElement.getAttribute("data-parent-app")){
-                                if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                                    apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.setDims(
+                            if(frame.getAttribute("data-parent-app")){
+                                if(apps[frame.getAttribute("data-parent-app")]){
+                                    apps[frame.getAttribute("data-parent-app")].appWindow.setDims(
                                         input.x || "auto",
                                         input.y || "auto",
-                                        input.width || apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.sizeH,
-                                        input.height || apps[frame.frameElement.getAttribute("data-parent-app")].appWindow.sizeV
+                                        input.width || apps[frame.getAttribute("data-parent-app")].appWindow.sizeH,
+                                        input.height || apps[frame.getAttribute("data-parent-app")].appWindow.sizeV
                                     );
                                     return true;
                                 }
@@ -13667,23 +13673,23 @@ c(function(){
                         };
                     },
                     take_focus: function(input, frame){
-                        if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                            toTop(apps[frame.frameElement.getAttribute("data-parent-app")]);
+                        if(apps[frame.getAttribute("data-parent-app")]){
+                            toTop(apps[frame.getAttribute("data-parent-app")]);
                             return true;
                         }else{
                             return false;
                         }
                     },
                     block_screensaver: function(input, frame){
-                        if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                            return blockScreensaver("webApp_" + frame.frameElement.getAttribute("data-parent-app"));
+                        if(apps[frame.getAttribute("data-parent-app")]){
+                            return blockScreensaver("webApp_" + frame.getAttribute("data-parent-app"));
                         }else{
                             return false;
                         }
                     },
                     unblock_screensaver: function(input, frame){
-                        if(apps[frame.frameElement.getAttribute("data-parent-app")]){
-                            return unblockScreensaver("webApp_" + frame.frameElement.getAttribute("data-parent-app"));
+                        if(apps[frame.getAttribute("data-parent-app")]){
+                            return unblockScreensaver("webApp_" + frame.getAttribute("data-parent-app"));
                         }else{
                             return false;
                         }
@@ -13694,16 +13700,16 @@ c(function(){
                         if(!input.serviceURL){
                             return false;
                         }
-                        if(frame.frameElement.getAttribute("data-parent-app")){
-                            if(getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice")){
-                                getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice").src = input.serviceURL;
+                        if(frame.getAttribute("data-parent-app")){
+                            if(getId("win_" + frame.getAttribute("data-parent-app") + "_bgservice")){
+                                getId("win_" + frame.getAttribute("data-parent-app") + "_bgservice").src = input.serviceURL;
                                 return true;
                             }else{
                                 var tempElement = document.createElement("iframe");
                                 tempElement.classList.add("winBgService");
-                                tempElement.id = "win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice";
-                                tempElement.setAttribute("data-parent-app", frame.frameElement.getAttribute("data-parent-app"));
-                                getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_top").appendChild(tempElement);
+                                tempElement.id = "win_" + frame.getAttribute("data-parent-app") + "_bgservice";
+                                tempElement.setAttribute("data-parent-app", frame.getAttribute("data-parent-app"));
+                                getId("win_" + frame.getAttribute("data-parent-app") + "_top").appendChild(tempElement);
                                 tempElement.src = input.serviceURL;
                                 return true;
                             }
@@ -13712,9 +13718,9 @@ c(function(){
                     },
                     exit_service: function(input, frame){
                         try{
-                            if(getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice")){
-                                getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_top").removeChild(
-                                    getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice")
+                            if(getId("win_" + frame.getAttribute("data-parent-app") + "_bgservice")){
+                                getId("win_" + frame.getAttribute("data-parent-app") + "_top").removeChild(
+                                    getId("win_" + frame.getAttribute("data-parent-app") + "_bgservice")
                                 );
                                 return true;
                             }
@@ -13724,9 +13730,9 @@ c(function(){
                         }
                     },
                     check_service: function(input, frame){
-                        if(getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice")){
-                            if(getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice").src){
-                                return getId("win_" + frame.frameElement.getAttribute("data-parent-app") + "_bgservice").src;
+                        if(getId("win_" + frame.getAttribute("data-parent-app") + "_bgservice")){
+                            if(getId("win_" + frame.getAttribute("data-parent-app") + "_bgservice").src){
+                                return getId("win_" + frame.getAttribute("data-parent-app") + "_bgservice").src;
                             }else{
                                 return false;
                             }
@@ -13847,9 +13853,13 @@ c(function(){
             },
             permissionsUsed: {},
             permissionsDenied: {},
+            pageIDsToVerify: {},
+            frameIDsToVerify: {},
+            framesToVerify: {},
+            verifiedFrames: {},
             recieveMessage: function(msg){
                 if(typeof msg.data === "string"){
-                    doLog("String-formatted request is no longer supported. " + msg.origin, "#F00");
+                    doLog("String-formatted request is no longer supported. " + (msg.origin !== "null" ? msg.origin : "*"), "#F00");
                 }else{
                     if(typeof msg.data === "object"){
                         if(msg.data.messageType){
@@ -13867,7 +13877,7 @@ c(function(){
                                     if(msg.data.conversation){
                                         returnMessage.conversation = msg.data.conversation;
                                     }
-                                    apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                    apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
                                     return;
                                 }
 
@@ -13884,9 +13894,9 @@ c(function(){
                                         if(apps.webAppMaker.vars.globalPermissions.hasOwnProperty(msg.data.action.split(":")[1])){
                                             returnMessage.content = "granted: " + msg.data.action.split(":")[1];
                                         }else if(apps.webAppMaker.vars.actions.hasOwnProperty(msg.data.action.split(":")[1])){
-                                            if(apps.webAppMaker.vars.trustedApps.hasOwnProperty(msg.origin)){
-                                                if(apps.webAppMaker.vars.trustedApps[msg.origin].hasOwnProperty(msg.data.action.split(":")[1])){
-                                                    if(apps.webAppMaker.vars.trustedApps[msg.origin][msg.data.action.split(":")[1]] === "true"){
+                                            if(apps.webAppMaker.vars.trustedApps.hasOwnProperty((msg.origin !== "null" ? msg.origin : "*"))){
+                                                if(apps.webAppMaker.vars.trustedApps[(msg.origin !== "null" ? msg.origin : "*")].hasOwnProperty(msg.data.action.split(":")[1])){
+                                                    if(apps.webAppMaker.vars.trustedApps[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[1]] === "true"){
                                                         returnMessage.content = "granted: " + msg.data.action.split(":")[1];
                                                     }
                                                 }
@@ -13898,14 +13908,103 @@ c(function(){
 
                                     if(returnMessage.content.indexOf("asking") === 0){
                                         if(msg.data.action.split(":").length === 1){
-                                            apps.webAppMaker.vars.askPermission(null, msg.origin, msg.source, (msg.data.conversation || null));
+                                            apps.webAppMaker.vars.askPermission(null, (msg.origin !== "null" ? msg.origin : "*"), msg.source, (msg.data.conversation || null));
                                         }else if(apps.webAppMaker.vars.actions.hasOwnProperty(msg.data.action.split(":")[1])){
-                                            apps.webAppMaker.vars.askPermission(msg.data.action.split(":")[1], msg.origin, msg.source, (msg.data.conversation || null));
+                                            apps.webAppMaker.vars.askPermission(msg.data.action.split(":")[1], (msg.origin !== "null" ? msg.origin : "*"), msg.source, (msg.data.conversation || null));
                                         }
                                     }else{
-                                        apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                        apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
                                     }
                                     return;
+                                }
+
+                                if(msg.data.action === "page_id:create"){
+                                    var returnMessage = {
+                                        messageType: "response",
+                                        data: "pending",
+                                        content: "pending"
+                                    };
+                                    if(msg.data.conversation){
+                                        returnMessage.conversation = msg.data.conversation;
+                                    }
+                                    apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
+
+                                    var loopMessage = {
+                                        messageType: "response",
+                                        data: [],
+                                        conversation: "aosTools_get_page_id"
+                                    }
+                                    var randomIDChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                                    var tempStr = "";
+                                    for(var i = 0; i < 16; i++){
+                                        tempStr += randomIDChars[Math.floor(Math.random() * randomIDChars.length)];
+                                    }
+                                    apps.webAppMaker.vars.pageIDsToVerify[tempStr] = msg.data.aosToolsFrameID;
+                                    apps.webAppMaker.vars.frameIDsToVerify[tempStr] = [];
+                                    apps.webAppMaker.vars.framesToVerify[tempStr] = [];
+
+                                    var allFramesOnPage = document.getElementsByTagName("iframe");
+                                    for(var i = 0; i < allFramesOnPage.length; i++){
+                                        if(allFramesOnPage[i].getAttribute("data-parent-app")){
+                                            var tempStr2 = "";
+                                            for(var j = 0; j < 16; j++){
+                                                tempStr2 += randomIDChars[Math.floor(Math.random() * randomIDChars.length)];
+                                            }
+                                            apps.webAppMaker.vars.frameIDsToVerify[tempStr].push(tempStr2);
+                                            apps.webAppMaker.vars.framesToVerify[tempStr].push(allFramesOnPage[i])
+                                            loopMessage.content = [tempStr, tempStr2];
+                                            apps.webAppMaker.vars.postReply(loopMessage, "*", allFramesOnPage[i].contentWindow);
+                                        }
+                                    }
+                                    return;
+                                }
+
+                                if(msg.data.action === "page_id:respond"){
+                                    if(apps.webAppMaker.vars.frameIDsToVerify.hasOwnProperty(msg.data.content[0])){
+                                        if(apps.webAppMaker.vars.frameIDsToVerify[msg.data.content[0]].indexOf(msg.data.content[1]) > -1){
+                                            if(msg.data.aosToolsFrameID === apps.webAppMaker.vars.pageIDsToVerify[msg.data.content[0]]){
+                                                // the correct frame is identified
+                                                apps.webAppMaker.vars.verifiedFrames[apps.webAppMaker.vars.pageIDsToVerify[msg.data.content[0]]] = apps.webAppMaker.vars.framesToVerify[msg.data.content[0]][apps.webAppMaker.vars.frameIDsToVerify[msg.data.content[0]].indexOf(msg.data.content[1])];
+                                                apps.webAppMaker.vars.verifiedFrames[apps.webAppMaker.vars.pageIDsToVerify[msg.data.content[0]]].setAttribute("data-frame-id", apps.webAppMaker.vars.pageIDsToVerify[msg.data.content[0]]);
+                                                var returnMessage = {
+                                                    messageType: "response",
+                                                    content: true,
+                                                    data: true
+                                                };
+                                                if(msg.data.conversation){
+                                                    returnMessage.conversation = "aosTools_verify_page_id";
+                                                }
+                                                apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
+                                                delete apps.webAppMaker.vars.pageIDsToVerify[msg.data.content[0]];
+                                                // clean up removed frames
+                                                for(var i in apps.webAppMaker.vars.verifiedFrames){
+                                                    if(!document.body.contains(apps.webAppMaker.vars.verifiedFrames[i])){
+                                                        delete apps.webAppMaker.vars.verifiedFrames[i];
+                                                    }
+                                                }
+                                                return;
+                                            }
+
+                                            apps.webAppMaker.vars.framesToVerify[msg.data.content[0]].splice(apps.webAppMaker.vars.frameIDsToVerify[msg.data.content[0]].indexOf(msg.data.content[1]), 1);
+                                            apps.webAppMaker.vars.frameIDsToVerify[msg.data.content[0]].splice(apps.webAppMaker.vars.frameIDsToVerify[msg.data.content[0]].indexOf(msg.data.content[1]), 1);
+                                            if(apps.webAppMaker.vars.frameIDsToVerify[msg.data.content[0]].length === 0){
+                                                delete apps.webAppMaker.vars.frameIDsToVerify[msg.data.content[0]];
+                                                delete apps.webAppMaker.vars.framesToVerify[msg.data.content[0]];
+                                                if(apps.webAppMaker.vars.pageIDsToVerify.hasOwnProperty(msg.data.content[0])){
+                                                    delete apps.webAppMaker.vars.pageIDsToVerify[msg.data.content[0]];
+                                                }
+                                            }
+                                        }
+                                    }
+                                    var returnMessage = {
+                                        messageType: "response",
+                                        data: "ignore",
+                                        content: "ignore"
+                                    };
+                                    if(msg.data.conversation){
+                                        returnMessage.conversation = msg.data.conversation;
+                                    }
+                                    apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
                                 }
 
                                 if(!apps.webAppMaker.vars.actions.hasOwnProperty(msg.data.action.split(":")[0])){
@@ -13916,35 +14015,35 @@ c(function(){
                                     if(msg.data.conversation){
                                         returnMessage.conversation = msg.data.conversation;
                                     }
-                                    apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                    apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
                                     return;
                                 }
 
-                                if(!apps.webAppMaker.vars.permissionsUsed.hasOwnProperty(msg.origin)){
-                                    apps.webAppMaker.vars.permissionsUsed[msg.origin] = {};
-                                    apps.webAppMaker.vars.permissionsDenied[msg.origin] = {};
+                                if(!apps.webAppMaker.vars.permissionsUsed.hasOwnProperty((msg.origin !== "null" ? msg.origin : "*"))){
+                                    apps.webAppMaker.vars.permissionsUsed[(msg.origin !== "null" ? msg.origin : "*")] = {};
+                                    apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")] = {};
                                 }
                                 
-                                if(!apps.webAppMaker.vars.trustedApps.hasOwnProperty(msg.origin)){
+                                if(!apps.webAppMaker.vars.trustedApps.hasOwnProperty((msg.origin !== "null" ? msg.origin : "*"))){
                                     if(!apps.webAppMaker.vars.globalPermissions.hasOwnProperty(msg.data.action.split(":")[0])){
                                         returnMessage = {
                                             messageType: "response",
-                                            content: "Error - origin not recognized: " + msg.origin
+                                            content: "Error - origin not recognized: " + (msg.origin !== "null" ? msg.origin : "*")
                                         };
                                         if(msg.data.conversation){
                                             returnMessage.conversation = msg.data.conversation;
                                         }
-                                        apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
-                                        if(!apps.webAppMaker.vars.permissionsDenied[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
-                                            apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                        apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
+                                        if(!apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")].hasOwnProperty(msg.data.action.split(":")[0])){
+                                            apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]] = 1;
                                         }else{
-                                            apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]]++;
+                                            apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]]++;
                                         }
                                         return;
                                     }
                                 }else{
                                     if(
-                                        !apps.webAppMaker.vars.trustedApps[msg.origin].hasOwnProperty(msg.data.action.split(":")[0]) &&
+                                        !apps.webAppMaker.vars.trustedApps[(msg.origin !== "null" ? msg.origin : "*")].hasOwnProperty(msg.data.action.split(":")[0]) &&
                                         !apps.webAppMaker.vars.globalPermissions.hasOwnProperty(msg.data.action.split(":")[0])
                                     ){
                                         returnMessage = {
@@ -13954,15 +14053,15 @@ c(function(){
                                         if(msg.data.conversation){
                                             returnMessage.conversation = msg.data.conversation;
                                         }
-                                        apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
-                                        if(!apps.webAppMaker.vars.permissionsDenied[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
-                                            apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                        apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
+                                        if(!apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")].hasOwnProperty(msg.data.action.split(":")[0])){
+                                            apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]] = 1;
                                         }else{
-                                            apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]]++;
+                                            apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]]++;
                                         }
                                         return;
                                     }
-                                    if(apps.webAppMaker.vars.trustedApps[msg.origin][msg.data.action.split(':')[0]] !== "true"){
+                                    if(apps.webAppMaker.vars.trustedApps[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(':')[0]] !== "true"){
                                         if(apps.webAppMaker.vars.globalPermissions.hasOwnProperty(msg.data.action.split(":")[0])){
                                             if(apps.webAppMaker.vars.globalPermissions[msg.data.action.split(":")[0]] !== "true"){
                                                 returnMessage = {
@@ -13972,11 +14071,11 @@ c(function(){
                                                 if(msg.data.conversation){
                                                     returnMessage.conversation = msg.data.conversation;
                                                 }
-                                                apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
-                                                if(!apps.webAppMaker.vars.permissionsDenied[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
-                                                    apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                                apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
+                                                if(!apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")].hasOwnProperty(msg.data.action.split(":")[0])){
+                                                    apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]] = 1;
                                                 }else{
-                                                    apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]]++;
+                                                    apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]]++;
                                                 }
                                                 return;
                                             }
@@ -13988,41 +14087,41 @@ c(function(){
                                             if(msg.data.conversation){
                                                 returnMessage.conversation = msg.data.conversation;
                                             }
-                                            apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
-                                            if(!apps.webAppMaker.vars.permissionsDenied[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
-                                                apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                            apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
+                                            if(!apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")].hasOwnProperty(msg.data.action.split(":")[0])){
+                                                apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]] = 1;
                                             }else{
-                                                apps.webAppMaker.vars.permissionsDenied[msg.origin][msg.data.action.split(":")[0]]++;
+                                                apps.webAppMaker.vars.permissionsDenied[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]]++;
                                             }
                                             return;
                                         }
                                     }
                                 }
 
-                                if(!apps.webAppMaker.vars.permissionsUsed[msg.origin].hasOwnProperty(msg.data.action.split(":")[0])){
-                                    apps.webAppMaker.vars.permissionsUsed[msg.origin][msg.data.action.split(":")[0]] = 1;
+                                if(!apps.webAppMaker.vars.permissionsUsed[(msg.origin !== "null" ? msg.origin : "*")].hasOwnProperty(msg.data.action.split(":")[0])){
+                                    apps.webAppMaker.vars.permissionsUsed[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]] = 1;
                                 }else{
-                                    apps.webAppMaker.vars.permissionsUsed[msg.origin][msg.data.action.split(":")[0]]++;
+                                    apps.webAppMaker.vars.permissionsUsed[(msg.origin !== "null" ? msg.origin : "*")][msg.data.action.split(":")[0]]++;
                                 }
 
                                 returnMessage.messageType = "response";
                                 if(msg.data.conversation){
                                     returnMessage.conversation = msg.data.conversation;
                                 }
-                                returnMessage.content = apps.webAppMaker.vars.actions[msg.data.action.split(":")[0]][msg.data.action.split(":")[1]](msg.data, msg.source, msg.origin);
+                                returnMessage.content = apps.webAppMaker.vars.actions[msg.data.action.split(":")[0]][msg.data.action.split(":")[1]](msg.data, (apps.webAppMaker.vars.verifiedFrames[msg.data.aosToolsFrameID] || msg.data.aosToolsFrameID), (msg.origin !== "null" ? msg.origin : "*"));
                                 if(returnMessage.content !== "APPMAKER_DO_NOT_REPLY"){
-                                    apps.webAppMaker.vars.postReply(returnMessage, msg.origin, msg.source);
+                                    apps.webAppMaker.vars.postReply(returnMessage, (msg.origin !== "null" ? msg.origin : "*"), msg.source);
                                 }
                             }else{
-                                doLog("Incorrectly formatted postMessage from " + msg.origin + ". Check Developer Tools.", "#ACE");
+                                doLog("Incorrectly formatted postMessage from " + (msg.origin !== "null" ? msg.origin : "*") + ". Check Developer Tools.", "#ACE");
                                 console.log(msg.data);
                             }
                         }else{
-                            doLog("Incorrectly formatted postMessage from " + msg.origin + ". Check Developer Tools.", "#ACE");
+                            doLog("Incorrectly formatted postMessage from " + (msg.origin !== "null" ? msg.origin : "*") + ". Check Developer Tools.", "#ACE");
                             console.log(msg.data);
                         }
                     }else{
-                        doLog("Incorrectly formatted postMessage from " + msg.origin + ". Check Developer Tools.", "#ACE");
+                        doLog("Incorrectly formatted postMessage from " + (msg.origin !== "null" ? msg.origin : "*") + ". Check Developer Tools.", "#ACE");
                         console.log(msg.data);
                     }
                 }

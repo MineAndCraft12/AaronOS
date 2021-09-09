@@ -125,6 +125,18 @@
             },
             "description": "JS Paint was developed by Isaiah Odhner and embedded into an aOS app with his permission.\n\nFull site at https://jspaint.app"
         },
+        "tijs": {
+            "packageName": "TI-BASIC to JS",
+            "packageID": "tijs",
+            "packageAliases": ["calculator", "prgm", "texas", "instruments", "TI-83+"],
+            "version": "1.1",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/tijs.json",
+            "icon": {
+                "foreground": "appicons/ds/Clc.png"
+            },
+            "description": "Convert TI-BASIC code into JS code compatible with a simulated text display and canvas."
+        },
         "textToBin": {
             "packageName": "Text to Binary",
             "packageID": "textToBin",

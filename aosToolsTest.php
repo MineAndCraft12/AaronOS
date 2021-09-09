@@ -18,25 +18,7 @@
                 // open your app's window (if your app uses manualOpen)
                 aosTools.openWindow();
 
-                // list all the items in aosTools (ignore this bit)
-                for(var i in aosTools){
-                    document.getElementById("allItems").innerHTML += "aosTools." + i;
-                    switch(typeof aosTools[i]){
-                        case "number":
-                            document.getElementById("allItems").innerHTML += ": " + aosTools[i];
-                            break;
-                        case "function":
-                            document.getElementById("allItems").innerHTML += ": " + aosTools[i].toString().substring(0, aosTools[i].toString().indexOf("{"));
-                            break;
-                        case "string":
-                            document.getElementById("allItems").innerHTML += ": " + aosTools[i];
-                            break;
-                        default:
-                            document.getElementById("allItems").innerHTML += ": <i>(" + typeof aosTools[i] + ")</i>";
-                    }
-                    document.getElementById("allItems").innerHTML += "<br><br>";
-                }
-                // You can stop ignoring now
+                document.getElementById("notconnected").style.display = "none";
             }
             // if aosTools was already initialized by the time this script is running
             if(typeof aosTools === "object"){
@@ -47,13 +29,12 @@
     </head>
     <body>
         <div class="winHTML">
-            Test Page<br>
-            <button>Test Button</button><br>
-            <input placeholder="test input">
-            <hr>
-            That's a test hr element ^^<br><br>
-            Here are all items in the aosTools object:<br><br>
-            <pre id="allItems"></pre>
+            <h1>Test Page</h1>
+            <p>aosTools is<span id="notconnected" style="color:red"> not</span> connected!</p>
+            <p>
+                <input placeholder="Input Field"><br><br>
+                <button>Button</button>
+            </p>
         </div>
     </body>
 </html>

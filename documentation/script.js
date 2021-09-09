@@ -68,7 +68,6 @@ function presentDocument(docID, headerID){
         documentElements[i].classList.remove("visible");
     }
     document.getElementById(docID).classList.add("visible");
-    console.log("yee");
     if(headerID){
         requestAnimationFrame(() => {
             document.getElementById(docID).scrollTop = document.getElementById(headerID).offsetTop;

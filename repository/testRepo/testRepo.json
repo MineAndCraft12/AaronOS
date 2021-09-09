@@ -41,6 +41,18 @@
             },
             "description": "Test app for the aosToolsTest.js utility."
         },
+        "nodomain": {
+            "packageName": "Domainless Cross-Origin App",
+            "packageID": "nodomain",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/testRepo/nodomain.json",
+            "icon": {
+                "foreground": "appicons/ds/aOS.png"
+            },
+            "description": "This app is a data:// url which does nothing but link aosTools."
+        },
         "mapjs": {
             "packageName": "MapJS",
             "packageID": "mapjs",
