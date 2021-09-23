@@ -11606,11 +11606,18 @@ c(function(){
                 " : aosTools no longer initializes itself multiple times.",
                 " + Work-In-Progress TI-BASIC to JS translator, available in the Hub.",
                 " + Testing app added to test repository, which has no domain."
+            ],
+            "09/23/2021: B1.6.5.0": [
+                " + Major Music Player update.",
+                " : Music Player visualizers are much snappier.",
+                " : Music Player visualizers have all received reworks.",
+                " : Music Player visualizers have recieved new, cleaner icons.",
+                " : Fixed Music Player not working after the last update."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.4.0 (09/08/2021) r0';
+    window.aOSversion = 'B1.6.5.0 (09/23/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
