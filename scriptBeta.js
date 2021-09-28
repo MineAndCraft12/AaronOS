@@ -11610,14 +11610,26 @@ c(function(){
             "09/23/2021: B1.6.5.0": [
                 " + Major Music Player update.",
                 " : Music Player visualizers are much snappier.",
-                " : Music Player visualizers have all received reworks.",
-                " : Music Player visualizers have recieved new, cleaner icons.",
+                " : All Music Player visualizers have received reworks.",
+                " : All Music Player visualizers have recieved new, cleaner icons.",
                 " : Fixed Music Player not working after the last update."
+            ],
+            "09/27/2021: B1.6.6.0": [
+                " : Music Player update! All changes on this date pertain to it.",
+                " : Changed default visualizer, color scheme, and power curve.",
+                " : Treble Circle is now just Circle, and no longer cuts off bass frequencies.",
+                " : All circle-based visualizers have fixed and improved dynamic scale logic.",
+                " : All AudioVision visualizers have greatly improved amplitude logic.",
+                " : All circle-based and AudioVision visualizers have new icons.",
+                " : Fixed incorrect colors on Bars visualizer.",
+                " : Fixed Layered Circle's treble layer listening the wrong frequencies by accident.",
+                " : Adjusted default audio delay to a more accurate value.",
+                " : Fixed system audio being far less intense than audio files."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.5.0 (09/23/2021) r0';
+    window.aOSversion = 'B1.6.6.0 (09/27/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
