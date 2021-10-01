@@ -11625,11 +11625,18 @@ c(function(){
                 " : Fixed Layered Circle's treble layer listening the wrong frequencies by accident.",
                 " : Adjusted default audio delay to a more accurate value.",
                 " : Fixed system audio being far less intense than audio files."
+            ],
+            "10/01/2021: B1.6.7.0": [
+                " + Music Player visualizer menu now has folders for categories.",
+                " + Added Reflection visualizer.",
+                " + Added Wave visualizer.",
+                " + Added Centered Spectrum visualizer.",
+                " : Some visualizer categories are renamed."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.6.0 (09/27/2021) r0';
+    window.aOSversion = 'B1.6.7.0 (10/01/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
