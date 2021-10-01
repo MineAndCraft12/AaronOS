@@ -11631,6 +11631,7 @@ c(function(){
                 " + Added Reflection visualizer.",
                 " + Added Wave visualizer.",
                 " + Added Centered Spectrum visualizer.",
+                " + Added new amplitude curve: Sinuzoid. It is now the default.",
                 " : Some visualizer categories are renamed."
             ]
         },
