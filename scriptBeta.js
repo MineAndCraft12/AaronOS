@@ -11633,6 +11633,13 @@ c(function(){
                 " + Added Centered Spectrum visualizer.",
                 " + Added new amplitude curve: Sinuzoid. It is now the default.",
                 " : Some visualizer categories are renamed."
+            ],
+            "10/04/2021: B1.6.8.0": [
+                " + Music Player colors menu now has folders for categories.",
+                " + Added Centered visualizer.",
+                " : Obelisks visualizer looks a lot cleaner now.",
+                " : New thumbnails for all visualizers.",
+                " : Some colors are now renamed."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
