@@ -11640,6 +11640,10 @@ c(function(){
                 " : Obelisks visualizer looks a lot cleaner now.",
                 " : New thumbnails for all visualizers.",
                 " : Some colors are now renamed."
+            ],
+            "10/26/2021: B1.6.8.1": [
+                " + Added Dynamic Tiles visualizer for music player.",
+                " : Fixed Tiles visualizer missing a tile."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
