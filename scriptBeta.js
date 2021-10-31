@@ -11644,11 +11644,26 @@ c(function(){
             "10/26/2021: B1.6.8.1": [
                 " + Added Dynamic Tiles visualizer for music player.",
                 " : Fixed Tiles visualizer missing a tile."
+            ],
+            "10/31/2021: B1.6.9.0": [
+                " : Music Visualizer color overhauls update! All changes this update apply to the music player.",
+                " + Added visualizers: Bass Wave, Dynamic Tiles, Pitchmograph, Waveform, Seismograph.",
+                " + New thumbnails for all colors.",
+                " : Color rendering overhauled. Many colors are more vibrant. Most are re-written.",
+                " + Added Capri Plum color theme.",
+                " + Added Fullscreen button.",
+                " + Added setting for SmoothingTimeConstant.",
+                " + Delay and SmoothingTimeConstant setting now save.",
+                " : Settings menu is rearranged.",
+                " + Added photosensitivity warning.",
+                " : Cursor on visualizer is changed to pointer.",
+                " + Cursor is hidden when visualizer is expanded.",
+                " : Visualizers originally called Seismograph are now called Beatmograph."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.7.0 (10/01/2021) r0';
+    window.aOSversion = 'B1.6.9.0 (10/31/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
