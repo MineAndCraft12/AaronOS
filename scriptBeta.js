@@ -11660,7 +11660,7 @@ c(function(){
                 " + Cursor is hidden when visualizer is expanded.",
                 " : Visualizers originally called Seismograph are now called Beatmograph."
             ],
-            "11/4/2021: B1.6.9.1": [
+            "11/04/2021: B1.6.9.1": [
                 " : Music Player smoke effect is more subtle.",
                 " : Music Player smoke effect is less bland.",
                 " + Music Player smoke effect brightness is configurable.",
@@ -11669,7 +11669,7 @@ c(function(){
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.9.0 (10/31/2021) r0';
+    window.aOSversion = 'B1.6.9.1 (11/04/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
