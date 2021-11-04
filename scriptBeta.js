@@ -11659,6 +11659,12 @@ c(function(){
                 " : Cursor on visualizer is changed to pointer.",
                 " + Cursor is hidden when visualizer is expanded.",
                 " : Visualizers originally called Seismograph are now called Beatmograph."
+            ],
+            "11/4/2021: B1.6.9.1": [
+                " : Music Player smoke effect is more subtle.",
+                " : Music Player smoke effect is less bland.",
+                " + Music Player smoke effect brightness is configurable.",
+                " + Music Player warns mobile users they can only select one file."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
