@@ -245,6 +245,18 @@
             },
             "description": "Similar theme to Microsoft Windows 7. Used with permission from Microsoft.\n\nRecommended settings:\nWindow Background Image: \"images/win7blur1080.png\"\nWindow Border Width: 6"
         },
+        "win10style": {
+            "packageName": "Windows 10 Theme",
+            "packageID": "win10style",
+            "packageAliases": [],
+            "version": "1.0",
+            "packageType": "stylesheet",
+            "installURL": "repository/styles/win10style.json",
+            "icon": {
+                "foreground": "repository/styles/win10style.png"
+            },
+            "description": "Similar theme to Microsoft Windows 10. Used with permission from Microsoft.\n\nRecommended settings:\nWindow Background Image: Disabled\nWindow Border Width: 1"
+        },
         "highsierrastyle": {
             "packageName": "MacOS Theme",
             "packageID": "highsierrastyle",

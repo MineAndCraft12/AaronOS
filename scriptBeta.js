@@ -11665,11 +11665,15 @@ c(function(){
                 " : Music Player smoke effect is less bland.",
                 " + Music Player smoke effect brightness is configurable.",
                 " + Music Player warns mobile users they can only select one file."
+            ],
+            "11/14/2021: B1.6.9.2": [
+                " + Restored the Windows 10 theme to the Hub.",
+                " : Windows 10 theme has been overhauled."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.9.1 (11/04/2021) r0';
+    window.aOSversion = 'B1.6.9.2 (11/14/2021) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

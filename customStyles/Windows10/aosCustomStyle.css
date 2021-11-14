@@ -31,26 +31,18 @@
 /* window html */
 .winHTML{
     border-radius: 0;
-    left: 1px;
-    bottom: 1px;
-    padding-right: 4px;
-    padding-bottom: 2px;
-}
-/* taskbar */
-#taskbar .winAero{
-    opacity:0.5;
 }
 /* window buttons */
-.winBig, .winShrink, .winExit{
+.winBig, .winShrink, .winExit, .winFld{
     color: #FFF;
     border-radius: 0;
     border: none;
-    height: 29px;
-    top: 1px;
+    height: 31px;
+    top: 0px;
     width: 38px;
     font-family:aosProFont;
     font-size:19px;
-    line-height:25px;
+    line-height:30px;
     text-align:center;
     box-shadow:none;
 }
@@ -65,11 +57,16 @@
     right: 40px;
 }
 .winShrink{
-    right: 79px;
+    right: 80px;
 }
-.winBig:hover, .winShrink:hover{
+.winFld{
+    left:1px;
+    width:24px;
+    line-height:38px;
+}
+.winBig:hover, .winShrink:hover, .winFld:hover{
     background-color: rgba(255, 255, 255, 0.3);
-    color: #FFF;
+    color: #FFF !important;
 }
 /* context menu */
 #ctxMenu{
@@ -80,17 +77,21 @@
     background-color:#D7D7D7;
     border-radius: 0;
     border: none;
-    margin-left:14px;
-    width:calc(100% - 14px);
+    margin-left:5% !important;
+    width:90%;
+    height:1px;
+    background-image:none;
 }
 #ctxMenu p{
     transition: 0s;
-    color: #000;
 }
 #ctxMenu p:hover{
     transition: 0s;
     background-color: #91C9F7;
     color: #000;
+}
+.darkMode #ctxMenu p:hover{
+    background-color: #414141;
 }
 /* buttons */
 button{
@@ -99,6 +100,7 @@ button{
     color: #000;
     outline: none;
     transition: 0.1s;
+    box-shadow:none !important;
 }
 button:hover{
     border-color:#0078D7;
@@ -107,4 +109,16 @@ button:hover{
 button:active{
     border-color:#005499;
     background-color:#CCE4F7;
+}
+.darkMode button:hover{
+    border-color: #ADADAD;
+    background-color:#474747;
+}
+.darkMode button:active{
+    border-color: #ADADAD;
+    background-color:#6C6C6C;
+}
+
+#tskbrBimg, .winBimg{
+    background-image:none;
 }
