@@ -9150,6 +9150,10 @@ c(function(){
                     for(var i = 0; i < smartIconsInWindow.length; i++){
                         smartIconsInWindow[i].style.background = "url(" + tempImageSrc + ")";
                     }
+                    smartIconsInWindow = getId("win_smartIconSettings_html").getElementsByClassName("smarticon_nobg");
+                    for(var i = 0; i < smartIconsInWindow.length; i++){
+                        smartIconsInWindow[i].style.background = "url(" + tempImageSrc + ")";
+                    }
                 }
             },
             saveRadiuses: function(radiuses, nosave){
