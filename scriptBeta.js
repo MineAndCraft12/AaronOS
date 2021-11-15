@@ -7484,7 +7484,7 @@ c(function(){
                                 openapp(apps.smartIconSettings, 'dsktp');
                                 apps.settings.vars.showMenu(apps.settings.vars.menus);
                             });
-                            return '<button onclick="openapp(apps.smartIconSettings, \'dsktp\')">Smart Icon Settings</button>'
+                            return '<button onclick="openapp(apps.smartIconSettings, \'dsktp\')">Smart Icon Settings</button>';
                         }
                     }
                     
@@ -9110,7 +9110,8 @@ c(function(){
                 '<input id="smartIconSettings_br" value="' + smartIconOptions.radiusBottomRight + '" size="3" placeholder="100">' + '<br><br>' +
                 '&nbsp;<button onclick="apps.smartIconSettings.vars.saveRadiuses()">Save</button> ' +
                 '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br><br>' +
-                '<input id="smartIconSettings_bgcolor" value="' + smartIconOptions.bgColor + '" placeholder="color"> <button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button>'
+                '<input id="smartIconSettings_bgcolor" value="' + smartIconOptions.bgColor + '" placeholder="color"> <button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button><br><br>' +
+                'Test an image: <input type="file" accept="image/*" onchange="apps.smartIconSettings.vars.changeImage(this)">'
             );
             this.appWindow.paddingMode(0);
             this.appWindow.openWindow();
@@ -9141,6 +9142,15 @@ c(function(){
             		thickness: 2,
             		color: "#252F3A"
             	}
+            },
+            changeImage: function(elem){
+                if(elem.files.length > 0){
+                    var tempImageSrc = URL.createObjectURL(elem.files[0]);
+                    var smartIconsInWindow = getId("win_smartIconSettings_html").getElementsByClassName("smarticon_fg");
+                    for(var i = 0; i < smartIconsInWindow.length; i++){
+                        smartIconsInWindow[i].style.background = "url(" + tempImageSrc + ")";
+                    }
+                }
             },
             saveRadiuses: function(radiuses, nosave){
                 if(radiuses){
@@ -11667,13 +11677,14 @@ c(function(){
                 " + Music Player warns mobile users they can only select one file."
             ],
             "11/14/2021: B1.6.9.2": [
+                " + New Smart Icons can be tested in Smart Icon Settings.",
                 " + Restored the Windows 10 theme to the Hub.",
                 " : Windows 10 theme has been overhauled."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.9.2 (11/14/2021) r0';
+    window.aOSversion = 'B1.6.9.2 (11/14/2021) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
