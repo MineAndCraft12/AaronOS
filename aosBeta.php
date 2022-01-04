@@ -83,15 +83,15 @@
         <!--<div id="aOSloadingBg"></div>-->
         <?php
             if(isset($_COOKIE['keyword'])){
-                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt')){
+                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/lockscreen_image.txt')){
                     if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/apps/settings/ugly_boot.txt')){
                         if(file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/apps/settings/ugly_boot.txt') == '1'){
-                            echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt').');opacity:0"></div><script defer>requestAnimationFrame(function(){getId("desktop").style.display = "";getId("taskbar").style.display = "";});window.dirtyLoadingEnabled = 1;</script>';
+                            echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/lockscreen_image.txt').');opacity:0"></div><script defer>requestAnimationFrame(function(){getId("desktop").style.display = "";getId("taskbar").style.display = "";});window.dirtyLoadingEnabled = 1;</script>';
                         }else{
-                            echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt').');"></div>';
+                            echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/lockscreen_image.txt').');"></div>';
                         }
                     }else{
-                        echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt').');"></div>';
+                        echo '<div id="aOSloadingBg" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/lockscreen_image.txt').');"></div>';
                     }
                 }else{
                     echo '<div id="aOSloadingBg"></div>';

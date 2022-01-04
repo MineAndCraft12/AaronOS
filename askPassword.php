@@ -238,7 +238,7 @@
     <body>
         <?php
             if(isset($_COOKIE['keyword'])){
-                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt')){
+                if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/lockscreen_image.txt')){
                     echo '<div id="background" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/lockscreen_image.txt').');"></div>';
                 }else{
                     echo '<div id="background"></div>';
