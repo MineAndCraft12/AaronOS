@@ -103,14 +103,13 @@
         <div id="aOSisLoading" class="cursorLoadLight">
             <div id="aOSisLoadingDiv">
                 <h1>AaronOS</h1>
-                <hr>
+                <hr><br><br><br><br><br><br>
                 <div id="aOSloadingInfoDiv">
                     <div id="aOSloadingInfo" class="liveElement" data-live-eval="finishedWaitingCodes / totalWaitingCodes * 100 + '%'" data-live-target="style.width">Initializing...</div>
-                </div><br><br>
-                &nbsp;<br>
-                <a href="?safeMode"><button>Safe Mode</button></a><br><br>
-                <button onclick="document.getElementById('aOSisLoading').style.display = 'none';document.getElementById('aOSloadingBg').style.display = 'none';document.getElementById('desktop').style.display = '';document.getElementById('taskbar').style.display = '';">Force Boot</button><br><br>
-                <?php if(isset($_COOKIE['keyword'])){echo 'Your OS ID is <span id="aOSloadingKey">'.$_COOKIE['keyword'].'</span>';}else{echo 'You will get a new OS ID.';} ?>
+                </div><br><br><br><br><br>
+                <?php if(isset($_COOKIE['keyword'])){echo 'OS ID: <span id="aOSloadingKey">'.$_COOKIE['keyword'].'</span>';}else{echo 'You will get a new OS ID.';} ?>
+                <br><br><a href="?safeMode"><button>Safe Mode</button></a> 
+                <button onclick="document.getElementById('aOSisLoading').style.display = 'none';document.getElementById('aOSloadingBg').style.display = 'none';document.getElementById('desktop').style.display = '';document.getElementById('taskbar').style.display = '';">Force Boot</button>
                 <img id="aosLoadingImage" src="appicons/ds/aOS.png" style="display:none"><!--<br>-->
             </div>
         </div>

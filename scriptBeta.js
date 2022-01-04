@@ -1920,7 +1920,7 @@ var Application = function(appIcon, appDesc, handlesLaunchTypes, mainFunction, s
         //getId("app_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", 'dsktp')");
         getId("icn_" + appPath).setAttribute("onClick", "openapp(apps." + appPath + ", function(){if(apps." + appPath + ".appWindow.appIcon){return 'tskbr'}else{return 'dsktp'}}())");
         getId("win_" + appPath + "_top").setAttribute("onClick", "toTop(apps." + appPath + ")");
-        if(appPath !== 'startMenu' && appPath !== 'nora'){
+        if(appPath !== 'startMenu' /*&& appPath !== 'nora'*/){
             getId("icn_" + appPath).setAttribute("oncontextmenu", "ctxMenu(baseCtx.icnXXX, 1, event, '" + appPath + "')");
             getId("icn_" + appPath).setAttribute("onmouseenter", "if(apps." + appPath + ".appWindow.appIcon){highlightWindow('" + appPath + "')}");
             getId("icn_" + appPath).setAttribute("onmouseleave", "highlightHide()");
@@ -3964,24 +3964,36 @@ c(function(){
                 color: "#252F3A"
             }
         },
-        hideApp: 2,
+        hideApp: 1,
         launchTypes: 1,
         main: function(launchtype){
-            if(launchtype === 'srtup'){
+            if(!this.appWindow.appIcon){
                 this.appWindow.paddingMode(0);
-                getId('win_nora_exit').style.display = "none";
-                getId('win_nora_big').style.display = 'none';
-                getId('win_nora_shrink').style.right = '3px';
-                getId('win_nora_cap').setAttribute('oncontextmenu', 'ctxMenu([[event.pageX, event.pageY, "ctxMenu/beta/minimize.png", "ctxMenu/beta/add.png"], " Hide", "apps.nora.signalHandler(\'shrink\');toTop({appIcon:\'DSKTP\'},1)", " Toggle Fullscreen", "apps.nora.appWindow.toggleFullscreen();toTop(apps.nora)"])');
+                //getId('win_nora_exit').style.display = "none";
+                //getId('win_nora_big').style.display = 'none';
+                //getId('win_nora_shrink').style.right = '3px';
+                //getId('win_nora_cap').setAttribute('oncontextmenu', 'ctxMenu([[event.pageX, event.pageY, "ctxMenu/beta/minimize.png", "ctxMenu/beta/add.png"], " Hide", "apps.nora.signalHandler(\'shrink\');toTop({appIcon:\'DSKTP\'},1)", " Toggle Fullscreen", "apps.nora.appWindow.toggleFullscreen();toTop(apps.nora)"])');
                 this.appWindow.setCaption('NORAA');
-                getId('win_nora_cap').setAttribute('onmousedown','');
-                getId('win_nora_size').style.pointerEvents = "none";
-                this.appWindow.setDims(45, parseInt(getId('desktop').style.height, 10) - 500, 600, 500);
-                this.appWindow.setContent('<div id="NORAout" class="darkResponsive">-- aOS Ready --</div><button id="NORAspeech" onclick="apps.nora.vars.speakIn()">Speak</button><input id="NORAin" onKeydown="if(event.keyCode === 13){apps.nora.vars.input()}"><button id="NORAbtn" onClick="apps.nora.vars.input()">Say</button>');
-                this.appWindow.openWindow();
-                requestAnimationFrame(function(){
-                    apps.nora.signalHandler('close');
-                });
+                //getId('win_nora_cap').setAttribute('onmousedown','');
+                //getId('win_nora_size').style.pointerEvents = "none";
+                this.appWindow.setDims("auto", "auto", 600, 500);
+                //this.appWindow.setDims(45, parseInt(getId('desktop').style.height, 10) - 500, 600, 500);
+                this.appWindow.setContent('<div id="NORAout" class="darkResponsive"></div><button id="NORAspeech" onclick="apps.nora.vars.speakIn()">Speak</button><input id="NORAin" onKeydown="if(event.keyCode === 13){apps.nora.vars.input()}"><button id="NORAbtn" onClick="apps.nora.vars.input()">Say</button>');
+                //this.appWindow.openWindow();
+                //requestAnimationFrame(function(){
+                //    apps.nora.signalHandler('close');
+                //});
+                this.vars.sayDynamic("hello");
+                this.vars.say("Type \"help\" to see what I can do.");
+                this.vars.say("[this app is not finished yet]");
+            }
+            
+            //}else if(launchtype === 'dsktp' || launchtype === 'tskbr'){
+            //    if(getId('win_nora_top').style.display === 'none'){
+            //        this.appWindow.setDims(45, parseInt(getId('desktop').style.height, 10) - 500, 600, 500);
+            //    }
+            //}
+            if(launchtype === 'srtup'){
                 if(window.webkitSpeechRecognition){
                     this.vars.recognition = new window.webkitSpeechRecognition();
                     this.vars.recognition.interimResults = true;
@@ -4027,7 +4039,7 @@ c(function(){
                             apps.nora.vars.startContRecog();
                         }
                     };
-                    getId('win_nora_cap').setAttribute('oncontextmenu', 'ctxMenu(apps.nora.vars.captionCtx, 1, event)');
+                    //getId('win_nora_cap').setAttribute('oncontextmenu', 'ctxMenu(apps.nora.vars.captionCtx, 1, event)');
                 }else{
                     getId('NORAspeech').style.display = 'none';
                     getId('NORAin').style.left = '0';
@@ -4058,15 +4070,12 @@ c(function(){
                         return false;
                     };
                 }
-            }else if(launchtype === 'dsktp' || launchtype === 'tskbr'){
-                if(getId('win_nora_top').style.display === 'none'){
-                    this.appWindow.setDims(45, parseInt(getId('desktop').style.height, 10) - 500, 600, 500);
-                }
+            }else{
                 this.appWindow.openWindow();
             }
         },
         vars: {
-            appInfo: 'This is the Virtual Assistant of AaronOS. Compare to Apple\'s Siri, or to Microsoft\'s Cortana.',
+            appInfo: 'This is the Virtual Assistant of AaronOS.',
             captionCtx: [
                 [' ' + lang('ctxMenu', 'hideApp'), function(){
                     apps.nora.signalHandler('shrink');
@@ -5186,8 +5195,8 @@ c(function(){
                     this.appWindow.closeIcon();
                     break;
                 case "close":
-                    this.appWindow.closeKeepTask();
-                    getId("icn_nora").classList.remove("openAppIcon");
+                    this.appWindow.closeWindow();
+                    //getId("icn_nora").classList.remove("openAppIcon");
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -5197,11 +5206,11 @@ c(function(){
                     }
                 case "shrink":
                     this.appWindow.closeKeepTask();
-                    getId("icn_nora").classList.remove("openAppIcon");
+                    //getId("icn_nora").classList.remove("openAppIcon");
                     break;
                 case "USERFILES_DONE":
                     // remove taskbar text
-                    getId('icntitle_nora').style.display = "none";
+                    //getId('icntitle_nora').style.display = "none";
                     this.vars.ddg = new XMLHttpRequest();
                     this.vars.ddg.onreadystatechange = function(){
                         apps.nora.vars.finishDDG();
@@ -7070,13 +7079,18 @@ c(function(){
                 folderPath: 'apps.settings.vars.menus',
                 background: {
                     folder: 0,
-                    folderName: 'Desktop Background',
+                    folderName: 'Background',
                     folderPath: 'apps.settings.vars.menus.background',
                     image: 'settingIcons/new/background.png',
                     setUrl: {
-                        option: 'Background Image URL',
+                        option: 'Desktop Background URL',
                         description: function(){return 'Set an image as your desktop background. This can be png, jpg, gif, or any other web-compatible image. You can enter a filename from the "aOS Backgrounds" list at the bottom of this page or an external image URL. If aOS is loaded over HTTPS, make sure your image URL is on HTTPS as well. Some external image URLs may not allow aOS to load them.'},
                         buttons: function(){return '<input id="bckGrndImg" placeholder="images/beta1.png" style="display:inline-block; width:50%" value="' + (ufload("aos_system/desktop/background_image") || 'images/beta1.png') + '"> <button onClick="apps.settings.vars.sB()">Set</button>'}
+                    },
+                    setLock: {
+                        option: 'Login Background URL',
+                        description: function(){return 'Set an image as your login background.'},
+                        buttons: function(){return '<input id="lockImg" placeholder="images/beta1_no_logo.png" style="display:inline-block; width:50%" value="' + (ufload("aos_system/desktop/background_image") || 'images/beta1_no_logo.png') + '"> <button onClick="apps.settings.vars.setLock()">Set</button>'}
                     },
                     bgFit: {
                         option: 'Background Image Fit',
@@ -7632,6 +7646,7 @@ c(function(){
             },
             availableBackgrounds: [
                 'images/beta1.png',
+                'images/beta1_no_logo.png',
                 'images/p.png',
                 'images/bgBeta.png',
                 'images/p-bin.png',
@@ -8398,7 +8413,7 @@ c(function(){
             isAero: 0,
             sB: function(nosave){
                 perfStart('settings');
-                getId('aOSloadingBg').style.backgroundImage = "url(" + getId('bckGrndImg').value + ")";
+                // getId('aOSloadingBg').style.backgroundImage = "url(" + getId('bckGrndImg').value + ")";
                 getId("monitor").style.backgroundImage = "url(" + getId("bckGrndImg").value + ")";
                 getId("bgSizeElement").src = getId("bckGrndImg").value;
                 if(this.isAero){
@@ -8416,6 +8431,14 @@ c(function(){
                     
                 }
                 d(1, perfCheck('settings') + '&micro;s to set background');
+            },
+            setLock: function(nosave){
+                perfStart('settings');
+                getId('aOSloadingBg').style.backgroundImage = "url(" + getId('lockImg').value + ")";
+                if(!nosave){
+                    ufsave("aos_system/desktop/lock_image", getId("lockImg").value);
+                }
+                d(1, perfCheck('settings') + '&micro;s to set login background');
             },
             togAero: function(nosave){
                 perfStart('settings');
@@ -8704,7 +8727,7 @@ c(function(){
                             getId('aOSloadingBg').style.display = 'block';
                             window.shutDownPercentComplete = 0;
                             window.shutDownTotalPercent = 1;
-                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Shutting down...</div></div></div>';
+                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>AaronOS</h1><hr><br><br><br><br><br><br><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="100 - shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Shutting down...</div></div><br><br><br><br><br><br><br><br></div>';
                             // getId('aOSisLoading').style.cursor = cursors.loadLight;
                             getId('aOSisLoading').classList.remove('cursorLoadDark');
                             getId('aOSisLoading').classList.add('cursorLoadLight');
@@ -8730,7 +8753,7 @@ c(function(){
                                 shutDownPercentComplete = 0;
                                 c(function(){
                                     //apps.savemaster.vars.save();
-                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Restarting aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Goodbye!</div></div></div>';
+                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>AaronOS</h1><hr><br><br><br><br><br><br><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="100 - shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Goodbye!</div></div><br><br><br><br><br><br><br><br></div>';
                                     if(logout){
                                         document.cookie = "logintoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
@@ -8749,7 +8772,7 @@ c(function(){
                             getId('aOSloadingBg').style.display = 'block';
                             window.shutDownPercentComplete = 0;
                             window.shutDownTotalPercent = 1;
-                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Shutting down...</div></div></div>';
+                            getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>AaronOS</h1><hr><br><br><br><br><br><br><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="100 - shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Shutting down...</div></div><br><br><br><br><br><br><br><br></div>';
                             // getId('aOSisLoading').style.cursor = cursors.loadLight;
                             getId('aOSisLoading').classList.remove('cursorLoadDark');
                             getId('aOSisLoading').classList.add('cursorLoadLight');
@@ -8775,7 +8798,7 @@ c(function(){
                                 shutDownPercentComplete = 0;
                                 c(function(){
                                     //apps.savemaster.vars.save();
-                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>Shutting Down aOS</h1><hr><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Goodbye!</div></div></div>';
+                                    getId('aOSisLoading').innerHTML = '<div id="aOSisLoadingDiv"><h1>AaronOS</h1><hr><br><br><br><br><br><br><div id="aOSloadingInfoDiv"><div id="aOSloadingInfo" class="liveElement" data-live-eval="100 - shutDownPercentComplete / shutDownTotalPercent * 100 + \'%\'" data-live-target="style.width">Goodbye!</div></div><br><br><br><br><br><br><br><br></div>';
                                     if(logout){
                                         document.cookie = "logintoken=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
                                     }
@@ -11684,11 +11707,20 @@ c(function(){
                 " + New Smart Icons can be tested in Smart Icon Settings.",
                 " + Restored the Windows 10 theme to the Hub.",
                 " : Windows 10 theme has been overhauled."
+            ],
+            "01/03/2022: B1.7.0.0": [
+                " + Brand new design for login and loading screen.",
+                " + Logging out and in is now mostly seamless.",
+                " + New icon for Help app.",
+                " - NORAA is removed from its permanent place on the taskbar.",
+                " - NORAA's ridiculous window behavior is removed.",
+                " : NORAA can now be found in the Dashboard menu.",
+                " : Probably more fixes that have been forgotten about since they were implemented."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.9.2 (11/14/2021) r1';
+    window.aOSversion = 'B1.7.0.0 (01/03/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -12452,7 +12484,14 @@ c(function(){
         title: 'AaronOS Help',
         abbreviation: "Hlp",
         codeName: "help",
-        image: 'appicons/ds/HLP.png',
+        image: {
+            backgroundColor: "#303947",
+        	foreground: "smarticons/help/fg.png",
+        	backgroundBorder: {
+        		thickness: 2,
+        		color: "#252F3A"
+        	}
+        },
         hideApp: 0,
         main: function(){
             if(!this.appWindow.appIcon){
@@ -17930,7 +17969,7 @@ bootFileHTTP.onreadystatechange = function(){
         m("init fileloader");
         getId("aOSloadingInfo").innerHTML += "<br>Your OS key is " + SRVRKEYWORD;
         for(var app in apps){
-            getId("aOSloadingInfo").innerHTML="Loading your files...<br>Your OS key is" + SRVRKEYWORD + "<br>Loading " + app;
+            getId("aOSloadingInfo").innerHTML="Loading your files...<br>Loading " + app;
             try{
                 apps[app].signalHandler("USERFILES_DONE");
             }catch(err){

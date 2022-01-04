@@ -239,7 +239,7 @@
         <?php
             if(isset($_COOKIE['keyword'])){
                 if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt')){
-                    echo '<div id="background" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/background_image.txt').');"></div>';
+                    echo '<div id="background" style="background-image:url('.file_get_contents('USERFILES/'.$_COOKIE['keyword'].'/aos_system/desktop/lockscreen_image.txt').');"></div>';
                 }else{
                     echo '<div id="background"></div>';
                 }
@@ -249,26 +249,48 @@
         ?>
         <div id="card">
             <h1>AaronOS</h1>
-            <hr>
+            <hr><br>
+            <h1 style="font-family:Consolas, monospace;float:right;" id="hoursMinutes"></h1>
+            <h1 style="text-align:left;margin-bottom:0;">Welcome</h1>
             <?php
                 if(isset($_COOKIE['keyword'])){
                     if(file_exists('messageUsernames/n_'.$_COOKIE['keyword'].'.txt')){
-                        echo 'Welcome, <span id="name">'.file_get_contents('messageUsernames/n_'.$_COOKIE['keyword'].'.txt').'</span><script>document.getElementById("name").innerHTML = apps.messaging.vars.parseBB(document.getElementById("name").innerHTML, 1)</script>';
+                        echo '<div id="name">'.file_get_contents('messageUsernames/n_'.$_COOKIE['keyword'].'.txt').'</div><script>document.getElementById("name").innerHTML = apps.messaging.vars.parseBB(document.getElementById("name").innerHTML, 1)</script>';
                     }else{
-                        echo 'Welcome';
+                        echo '<div id="name">&nbsp;</div>';
                     }
                 }else{
-                    echo 'Welcome';
+                    echo '<div id="name">&nbsp;</div>';
                 }
-            ?><br><br>
-            OS ID: <?php echo $_COOKIE['keyword'] ?><br>
-            &nbsp;<br>
-            <span id="error"></span><br>
-            <input type="password" placeholder="Password" onkeypress="if(event.keyCode === 13){checkPassword();}" id="password"> <button id="checkBtn" onclick="checkPassword()">Log In</button><br><br>
-            Or, if this isn't your account, <button onclick="skipPassword()">Create a New One</button>.<br><br>
+            ?>
+            <br>
+            <input type="password" size="10" placeholder="Password" onkeypress="if(event.keyCode === 13){checkPassword();}" id="password"><button id="checkBtn" onclick="checkPassword()"><img style="height:32px;margin-bottom:-6px;" src="images/loginArrow2.png"></button><br><br>
+            <span id="error">&nbsp;</span>
+            <br><br><br>
+            <div id="keywordDiv">
+            OS ID: <span id="keywordHider"><?php echo $_COOKIE['keyword'] ?></span><br>
+            <div id="keywordPrompt">Click to Show</div>
+            </div><br>
+            Not your account? <button onclick="skipPassword()">Create a New One</button>
         </div>
     </body>
     <script defer>
         document.getElementById('password').focus();
+        var date = new Date();
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        if(minutes < 10){
+            minutes = "0" + minutes;
+        }
+        getId("hoursMinutes").innerHTML = (hours < 13 ? hours : hours - 12) + ":" + minutes;
+        setInterval(() => {
+            date = new Date();
+            hours = date.getHours();
+            minutes = date.getMinutes();
+            if(minutes < 10){
+                minutes = "0" + minutes;
+            }
+            getId("hoursMinutes").innerHTML = (hours < 13 ? hours : hours - 12) + ":" + minutes;
+        }, 1000)
     </script>
 </html>
