@@ -7090,7 +7090,7 @@ c(function(){
                     setLock: {
                         option: 'Login Background URL',
                         description: function(){return 'Set an image as your login background.'},
-                        buttons: function(){return '<input id="lockImg" placeholder="images/beta1_no_logo.png" style="display:inline-block; width:50%" value="' + (ufload("aos_system/desktop/background_image") || 'images/beta1_no_logo.png') + '"> <button onClick="apps.settings.vars.setLock()">Set</button>'}
+                        buttons: function(){return '<input id="lockImg" placeholder="images/beta1_no_logo.png" style="display:inline-block; width:50%" value="' + (ufload("aos_system/desktop/lock_image") || 'images/beta1_no_logo.png') + '"> <button onClick="apps.settings.vars.setLock()">Set</button>'}
                     },
                     bgFit: {
                         option: 'Background Image Fit',
