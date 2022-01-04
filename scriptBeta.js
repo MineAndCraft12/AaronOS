@@ -3947,9 +3947,132 @@ c(function(){
         }
     });
     apps.startMenu.main('srtup');
-    getId('aOSloadingInfo').innerHTML = 'NORAA';
+    getId('aOSloadingInfo').innerHTML = 'Eruda DevTools';
 });
 // all Applications go here
+c(function(){
+    apps.eruda = new Application({
+        title: "Eruda DevTools",
+        abbreviation: "ERD",
+        codeName: "eruda",
+        image: {
+            backgroundColor: "#303947",
+            // This image comes from the Eruda DevTools floating button.
+            foreground: "smarticons/eruda/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        },
+        hideApp: 1,
+        launchTypes: 0,
+        main: function(){
+            if(!this.vars.erudaLaunched){
+                this.appWindow.setCaption("Eruda Developer Tools");
+                this.appWindow.setDims("auto", "auto", 700, 500);
+                //this.appWindow.paddingMode(0);
+                this.appWindow.setContent(
+                    '<p>Eruda is an advanced developer tools suite written by LiriLiri especially for mobile devices.</p>' +
+                    '<p><a href="https://github.com/liriliri/eruda" target="blank">Eruda on Github</a></p>' +
+                    '<p>Eruda was not written by the developer of AaronOS. It will have full administrator permissions over AaronOS once launched.</p>' +
+                    '<p>After you launch Eruda, this app will stay open until you restart or close AaronOS.</p>' +
+                    '<button onclick="apps.eruda.vars.launch()">Launch Eruda Developer Tools</button>' +
+                    '<p id="launchingEruda"></p>'
+                );
+            }
+            this.appWindow.openWindow();
+        },
+        vars: {
+            erudaLaunched: 0,
+            launch: function(){
+                getId("launchingEruda").innerHTML = "Loading...";
+                var erudaSource = "https://cdn.jsdelivr.net/npm/eruda";
+                
+                var erudaMain = document.createElement("script");
+                //var erudaDom = document.createElement("script");
+                //var erudaFps = document.createElement("script");
+
+                erudaMain.src = erudaSource;
+                erudaMain.addEventListener('load', () => {
+                    if(typeof eruda !== 'undefined'){
+                        apps.eruda.appWindow.setContent('<div id="ERUDA_CONTAINER" style="width:100%;height:100%;"></div>');
+                        requestAnimationFrame(() => {
+                            eruda.init({
+                                container: getId("ERUDA_CONTAINER"),
+                                tool: ['elements', 'console', 'network', 'resource', 'info', 'snippets'],
+                                autoScale: false,
+                                defaults: {
+                                    theme: darkSwitch("Light", "Dark"),
+                                    displaySize: 100,
+                                    transparency: 1
+                                }
+                            });
+                            eruda.position({x:-40,y:-40});
+                            eruda.show();
+                            // for some reason Eruda occupies a space much larger than its container. This hacky stuff rectifies the issue for now.
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").style.width = "calc(100% - " + (apps.settings.vars.winBorder * 2) + "px)";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").style.height = "calc(100% - " + (apps.settings.vars.winBorder + 32) + "px)";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").style.left = apps.settings.vars.winBorder + "px";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").style.top = "32px";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").getElementsByClassName("eruda-dev-tools")[0].style.minHeight = "100%";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").getElementsByClassName("eruda-dev-tools")[0].style.borderBottomLeftRadius = "3px";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").getElementsByClassName("eruda-dev-tools")[0].style.borderBottomRightRadius = "3px";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").getElementsByClassName("eruda-dev-tools")[0].style.overflow = "hidden";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").getElementsByClassName("eruda-select")[0].style.opacity = "0.3";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").getElementsByClassName("eruda-select")[0].style.pointerEvents = "none";
+                            getId("ERUDA_CONTAINER").shadowRoot.getElementById("eruda").getElementsByClassName("eruda-icon-select")[0].style.pointerEvents = "none";
+                        });
+                    }else{
+                        getId("launchingEruda").innerHTML = "Failed.";
+                    }
+                });
+
+                document.head.appendChild(erudaMain);
+                this.erudaLaunched = 1;
+                getId("win_eruda_exit").innerHTML = "v";
+            }
+        },
+        signalHandler: function(signal){
+            switch(signal){
+                case "forceclose":
+                    //this.vars = this.varsOriginal;
+                    this.appWindow.closeWindow();
+                    this.appWindow.closeIcon();
+                    break;
+                case "close":
+                    if(this.vars.erudaLaunched){
+                        this.appWindow.closeKeepTask();
+                    }else{
+                        this.appWindow.closeWindow();
+                        setTimeout(function(){
+                            if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                                this.appWindow.setContent("");
+                            }
+                        }.bind(this), 300);
+                    }
+                    break;
+                case "checkrunning":
+                    if(this.appWindow.appIcon){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                case "shrink":
+                    this.appWindow.closeKeepTask();
+                    break;
+                case "USERFILES_DONE":
+                    
+                    break;
+                case 'shutdown':
+                        
+                    break;
+                default:
+                    doLog("No case found for '" + signal + "' signal in app '" + this.dsktpIcon + "'", "#F00");
+            }
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = "NORAA";
+});
 c(function(){
     m('init NRA');
     apps.nora = new Application({
@@ -5197,6 +5320,11 @@ c(function(){
                 case "close":
                     this.appWindow.closeWindow();
                     //getId("icn_nora").classList.remove("openAppIcon");
+                    setTimeout(function(){
+                        if(getId("win_" + this.objName + "_top").style.opacity === "0"){
+                            this.appWindow.setContent("");
+                        }
+                    }.bind(this), 300);
                     break;
                 case "checkrunning":
                     if(this.appWindow.appIcon){
@@ -11709,6 +11837,7 @@ c(function(){
                 " : Windows 10 theme has been overhauled."
             ],
             "01/03/2022: B1.6.10.0": [
+                " + Added Eruda developer tools app.",
                 " + Brand new design for login and loading screen.",
                 " + Logging out and in is now mostly seamless.",
                 " + New icon for Help app.",
@@ -11721,7 +11850,7 @@ c(function(){
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.10.0 (01/03/2022) r0';
+    window.aOSversion = 'B1.6.10.0 (01/03/2022) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13977,7 +14106,10 @@ c(function(){
             verifiedFrames: {},
             recieveMessage: function(msg){
                 if(typeof msg.data === "string"){
-                    doLog("String-formatted request is no longer supported. " + (msg.origin !== "null" ? msg.origin : "*"), "#F00");
+                    doLog("String-formatted postMessage request is no longer supported. Origin: " + (msg.origin !== "null" ? msg.origin : "*"), "#FF7F00");
+                    doLog("Message Text (50 chars): \"" + cleanStr(msg.data.substring(0, 50)) + "\"", "#FF7F00");
+                    doLog("Check browser developer console for detailed message information.", "#FF7F00");
+                    console.log(msg);
                 }else{
                     if(typeof msg.data === "object"){
                         if(msg.data.messageType){
