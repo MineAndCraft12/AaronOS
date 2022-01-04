@@ -579,7 +579,7 @@ var langContent = { // LANGUAGES
             nora: "NORAA",
             taskManager: "Task Manager",
             jsConsole: "JavaScript Console",
-            bash: "Psuedo-Bash Terminal",
+            bash: "Pseudo-Bash Terminal",
             cpuMon: "CPU Monitor",
             prompt: "Application Prompt",
             settings: "Settings",
@@ -5519,7 +5519,7 @@ c(function(){
 });
 c(function(){
     apps.bash = new Application({
-        title: 'Psuedo-Bash Terminal',
+        title: 'Pseudo-Bash Terminal',
         abbreviation: "sh",
         codeName: "bash",
         image: {
@@ -11715,6 +11715,7 @@ c(function(){
                 " - NORAA is removed from its permanent place on the taskbar.",
                 " - NORAA's ridiculous window behavior is removed.",
                 " : NORAA can now be found in the Dashboard menu.",
+                " : Fixed misspelling of Pseudo.",
                 " : Probably more fixes that have been forgotten about since they were implemented."
             ]
         },
