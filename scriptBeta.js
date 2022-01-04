@@ -11708,7 +11708,7 @@ c(function(){
                 " + Restored the Windows 10 theme to the Hub.",
                 " : Windows 10 theme has been overhauled."
             ],
-            "01/03/2022: B1.7.0.0": [
+            "01/03/2022: B1.6.10.0": [
                 " + Brand new design for login and loading screen.",
                 " + Logging out and in is now mostly seamless.",
                 " + New icon for Help app.",
@@ -11720,7 +11720,7 @@ c(function(){
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.7.0.0 (01/03/2022) r0';
+    window.aOSversion = 'B1.6.10.0 (01/03/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
