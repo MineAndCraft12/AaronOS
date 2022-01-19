@@ -6,7 +6,8 @@
     "appType": "webApp",
     "homeURL": "https://dustinbrett.com/",
     "icon": {
-        "foreground": "repository/webApps/daedal.png"
+        "foreground": "repository/webApps/daedal.png",
+        "backgroundColor": "#000"
     },
     "windowSize": [753, 507]
 }
