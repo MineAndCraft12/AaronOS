@@ -11849,7 +11849,8 @@ c(function(){
             ],
             "01/18/2022: B1.6.11.0": [
                 " + Added daedalOS app to the Repository.",
-                " : Fixed repo list-all command incorrectly sorting lowercase names."
+                " : Fixed App Hub incorrectly sorting lowercase names.",
+                " : Fixed Files app's root window shortcut not actually taking you to root."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
@@ -11972,9 +11973,9 @@ c(function(){
                     '/LOCALFILES/' +
                     function(){
                         if(apps.settings.vars.FILcanWin){
-                            return '</div><div class="cursorPointer" onClick="apps.files2.vars.next(\'window/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/window/\\\');toTop(apps.properties)\'])">' +
+                            return '</div><div class="cursorPointer" onClick="apps.files2.vars.currLoc = \'/\';apps.files2.vars.next(\'window/\')" oncontextmenu="ctxMenu([[event.pageX, event.pageY, \'ctxMenu/beta/file.png\'], \' Properties\', \'apps.properties.main(\\\'openFile\\\', \\\'/window/\\\');toTop(apps.properties)\'])">' +
                                 '<img src="files2/small/folder.png"> ' +
-                                '<span style="color:#F00">window/</span>';
+                                '<span style="color:#F00">/window/</span>';
                         }else{
                             return '';
                         }
