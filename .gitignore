@@ -5,3 +5,4 @@
 /weather/alerts.json
 /weather/alertTimestamp.txt
 /logs/errors/*
+.devcontainer
