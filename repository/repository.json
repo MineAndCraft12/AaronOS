@@ -270,16 +270,16 @@
             "description": "Themes aOS to look similar to Apple MacOS&tm;. Made by ElijahZAwesome\n\nAaronOS is not endorsed by, sponsored by, or affiliated with Apple."
         },
         "daedalos": {
-            "packageName": "DaedalOS",
+            "packageName": "daedalOS",
             "packageID": "daedalos",
-            "packageAliases": [],
+            "packageAliases": ["desktop", "webos", "dustin", "brett"],
             "version": "1.0",
             "packageType": "webApp",
             "installURL": "repository/webApps/daedalos.json",
             "icon": {
                 "foreground": "repository/webApps/daedal.png"
             },
-            "description": "DaedalOs but its an aOS app"
+            "description": "Web-based desktop environment similar to AaronOS, by Dustin Brett."
         }
     }
 }
