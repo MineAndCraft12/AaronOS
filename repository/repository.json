@@ -273,7 +273,7 @@
             "packageName": "daedalOS",
             "packageID": "daedalos",
             "packageAliases": ["desktop", "webos", "dustin", "brett"],
-            "version": "1.0",
+            "version": "1.1",
             "packageType": "webApp",
             "installURL": "repository/webApps/daedalos.json",
             "icon": {

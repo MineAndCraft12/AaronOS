@@ -11846,11 +11846,15 @@ c(function(){
                 " : NORAA can now be found in the Dashboard menu.",
                 " : Fixed misspelling of Pseudo.",
                 " : Probably more fixes that have been forgotten about since they were implemented."
+            ],
+            "01/18/2022: B1.6.11.0": [
+                " + Added daedalOS app to the Repository.",
+                " : Fixed repo list-all command incorrectly sorting lowercase names."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.10.0 (01/03/2022) r1';
+    window.aOSversion = 'B1.6.11.0 (01/18/2022) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -16467,10 +16471,12 @@ c(function(){
                     }
                 }
                 packageList.sort(function(a, b){
-                    if(a[0] < b[0]){
+                    var c1 = a[0].toLowerCase();
+                    var c2 = b[0].toLowerCase();
+                    if(c1 < c2){
                         return -1;
                     }
-                    if(a[0] > b[0]){
+                    if(c1 > c2){
                         return 1;
                     }
                     return 0;
