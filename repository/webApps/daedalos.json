@@ -1,0 +1,12 @@
+{
+    "name": "DaedalOs",
+    "id": "daedalos",
+    "version": "1.0",
+    "abbreviation": "dOS",
+    "appType": "webApp",
+    "homeURL": "https://dustinbrett.com/",
+    "icon": {
+        "foreground": "repository/webApps/daedal.png"
+    },
+    "windowSize": [753, 507]
+}
