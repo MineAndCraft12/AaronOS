@@ -11852,7 +11852,7 @@ c(function(){
                 " : Fixed App Hub incorrectly sorting lowercase names.",
                 " : Fixed Files app's root window shortcut not actually taking you to root."
             ],
-            "01/20/2022: B1.6.12.0": [
+            "01/21/2022: B1.6.12.0": [
                 " + Camera app is reintroduced.",
                 " + Camera app is rewritten from the ground up.",
                 " + Camera app can now take photos and videos.",
@@ -11861,7 +11861,7 @@ c(function(){
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.12.0 (01/20/2022) r1';
+    window.aOSversion = 'B1.6.12.0 (01/21/2022) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
