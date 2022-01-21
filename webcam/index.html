@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <script src="../aosTools.js"></script>
+        <script defer src="script.js"></script>
+    </head>
+    <body>
+        <div class="winHTML">
+            <video autoplay="true" id="video" muted oncanplay="feedReady()"></video>
+            <canvas class="inter" id="intermediate"></canvas>
+            <canvas class="inter" id="intermediate2"></canvas>
+            <div id="controls">
+                <div id="mainbuttons">
+                    <button id="photobutton" onclick="takeImage()">Take Photo</button><br>
+                    <button id="recordbutton" onclick="recordVideo()">Record Video</button>
+                    <button onclick="toggleHelp()">Help</button>
+                </div>
+                <div id="motionbuttons">
+                    <button id="motionbutton" onclick="motionCamStart()">Motion Camera</button>
+                    <span id="motionIndicator">&nbsp; &nbsp; &nbsp;</span>
+                    <span id="motionamount"></span>
+                    <div id="motionsettings">
+                    Sensitivity: <input id="motionsensitivity" type="number" value="90" min="0.1" max="100" step="0.1" style="width:15vh">%
+                    <br>
+                    Threshold: <input id="motionthreshold" type="number" value="0.3" min="0.1" max="100" step="0.1" style="width:15vh">%
+                    </div>
+                </div>
+                <button onclick="toggleOutput()" style="position:absolute;display:block;bottom:1vh;left:50%;transform:translateX(-50%)">&nbsp; <span id="saveCount">0</span> &nbsp;</button>
+            </div>
+            <div id="warnings" style="display:none"></div>
+            <div id="output" class="nodisplay">
+
+            </div>
+            <div id="help" class="nodisplay">
+                <h1>Buttons</h1>
+                &nbsp; On the right you'll find the buttons for taking photos and recording videos.<br><br>
+                &nbsp; At the center bottom is the Gallery where you can view and save all the media you've created.<br>
+                &nbsp; Pictures and recordings you take are not uploaded to the servers.<br>
+                &nbsp; You must save pictures and videos to your computer from the Gallery if you want to keep them.<br><br>
+                &nbsp; Motion Camera is on the left. It's similar to an automatic security camera.<br>
+                &nbsp; This feature lets you automatically record videos when motion is detected.<br>
+                &nbsp; Recordings include about a second of footage before and after motion.
+
+                <h1>Motion Camera: Sensitivity</h1>
+                &nbsp; Sensitivity controls the intensity of change required to track motion.<br>
+                &nbsp; It's visualized as colored blotches on the camera.<br>
+                &nbsp; Pixels turn green as they approach your sensitivity.<br>
+                &nbsp; Pixels turn red when they've reached your sensitivity and are counted as motion.<br><br>
+
+                &nbsp; If a moving object's edges do not turn red, try raising the sensitivity.<br>
+                &nbsp; If red detection indicators appear from thin air, try lowering the sensitivity.<br>
+                &nbsp; In most cases, you will need more sensitivity than you initially expected.<br><br>
+
+                <h1>Motion Camera: Threshold</h1>
+                &nbsp; Threshold controls the quantity of motion required to start recording.<br>
+                &nbsp; It's visualized by the square meter next to the Motion Camera controls.<br>
+                &nbsp; Green shows how close the movement is to starting a recording.<br>
+                &nbsp; Red means a recording is being triggered.<br><br>
+
+                &nbsp; If small or slow changes aren't being captured, try lowering the threshold.<br>
+                &nbsp; If you want to ignore changes that are too small or too slow, try raising the threshold.<br>
+                &nbsp; In most cases, you will need a much lower threshold than expected.<br><br>
+            </div>
+        </div>
+    </body>
+</html>

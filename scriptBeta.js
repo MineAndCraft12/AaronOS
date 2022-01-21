@@ -11851,11 +11851,17 @@ c(function(){
                 " + Added daedalOS app to the Repository.",
                 " : Fixed App Hub incorrectly sorting lowercase names.",
                 " : Fixed Files app's root window shortcut not actually taking you to root."
+            ],
+            "01/20/2022: B1.6.12.0": [
+                " + Camera app is reintroduced.",
+                " + Camera app is rewritten from the ground up.",
+                " + Camera app can now take photos and videos.",
+                " + Camera app now has a motion sensor mode."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.11.0 (01/18/2022) r1';
+    window.aOSversion = 'B1.6.12.0 (01/20/2022) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -15159,6 +15165,43 @@ c(function(){
                     this.colorModified = 0;
                 }
             }
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Camera';
+});
+c(function(){
+    m('init MSC');
+    apps.camera = new Application({
+        title: "Camera",
+        abbreviation: "CAM",
+        codeName: "camera",
+        image: {
+            // backgroundColor: "#303947",
+            foreground: "appicons/ds/CAM.png",
+            // backgroundBorder: {
+            //     thickness: 2,
+            //     color: "#252F3A"
+            // }
+        },
+        hideApp: 1,
+        main: function(){
+            if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
+                this.appWindow.setDims("auto", "auto", 646, 515);
+                this.appWindow.setContent('<iframe data-parent-app="camera" id="CAMframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="webcam/"></iframe>');
+            }
+            getId("icn_camera").style.display = "inline-block";
+            requestAnimationFrame(() => {
+                this.appWindow.appIcon = 1;
+            });
+            this.appWindow.setCaption('Camera');
+            blockScreensaver("apps.camera");
+            if(this.appWindow.appIcon){
+                this.appWindow.openWindow();
+            }
+        },
+        vars: {
+            appInfo: 'This is the official AaronOS Camera app. Files never leave your device and must be downloaded to persist.'
         }
     });
     getId('aOSloadingInfo').innerHTML = 'Apps Browser';
