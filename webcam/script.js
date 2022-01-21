@@ -162,7 +162,16 @@ function feedReady(){
     recorder.addEventListener("stop", recordSave);
     ready = 1;
     if(aosTools){
-        aosTools.openWindow();
+        aosTools.getBorders((response) => {
+            aosTools.setDims({
+                x: "auto",
+                y: "auto",
+                width: size[0] + response.content.left + response.content.right,
+                height: size[1] + response.content.top + response.content.bottom
+            }, () => {
+                aosTools.openWindow();
+            });
+        });
     }
 }
 
@@ -218,7 +227,6 @@ function recordFrame(event){
             if(event.data.size > 0){
                 recordData.push(event.data);
                 var newVideo = document.createElement("video");
-                newVideo.setAttribute("onerror", 'this.style.background = url(broken.png)');
                 // newVideo.src = URL.createObjectURL(new Blob(recordData));
                 newVideo.src = URL.createObjectURL(recordData[0]);
                 var totalMotionsRecordedZeros = totalMotionsRecorded;
