@@ -70,7 +70,7 @@ div{
 
 #output, #help, #motionmenu{
     position:absolute;
-    width:30%;
+    width:50%;
     height:80%;
     overflow:auto;
     text-align:center;
@@ -81,7 +81,6 @@ div{
 }
 #help{
     text-align:left;
-    width:50%;
 }
 #help h1{
     text-align:center;
