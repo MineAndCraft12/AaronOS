@@ -116,6 +116,84 @@ function formDate(dateStr){
 	return tempDate;
 }
 
+// alert helper
+function makeAlert(text){
+    if(aosTools.connected){
+        aosTools.alert({
+            content: text,
+            button: "Okay"
+        });
+    }else{
+        alert(text);
+    }
+}
+
+var dirmode = 0;
+var localdir = null;
+var dir = null;
+var pictureDir = null;
+var videoDir = null;
+var motionDir = null;
+// set output directory
+function setOutputDir(){
+    if(window.showDirectoryPicker){
+        window.showDirectoryPicker().then((handle) => {
+            localdir = handle;
+            if(localdir.name === "AaronOS Webcam"){
+                console.log("User selected the AaronOS Webcam directory, we don't need to use subfolder.");
+                dir = localdir;
+                dir.getDirectoryHandle("Pictures", {create: 'true'}).then((pichandle) => {
+                    pictureDir = pichandle;
+                }).catch((err) => {showWarning(err);});
+                dir.getDirectoryHandle("Videos", {create: 'true'}).then((vidhandle) => {
+                    videoDir = vidhandle;
+                }).catch((err) => {showWarning(err);});
+                dir.getDirectoryHandle("Motion Camera", {create: 'true'}).then((mothandle) => {
+                    motionDir = mothandle;
+                }).catch((err) => {showWarning(err);});
+            }else{
+                console.log("User selected a generic directory, we will use AaronOS Webcam subfolder.");
+                localdir.getDirectoryHandle("AaronOS Webcam", {create: 'true'}).then((dirhandle) => {
+                    dir = dirhandle;
+                    dir.getDirectoryHandle("Pictures", {create: 'true'}).then((pichandle) => {
+                        pictureDir = pichandle;
+                    }).catch((err) => {showWarning(err);});
+                    dir.getDirectoryHandle("Videos", {create: 'true'}).then((vidhandle) => {
+                        videoDir = vidhandle;
+                    }).catch((err) => {showWarning(err);});
+                    dir.getDirectoryHandle("Motion Camera", {create: 'true'}).then((mothandle) => {
+                        motionDir = mothandle;
+                    }).catch((err) => {showWarning(err);});
+                });
+            }
+            dirmode = 1;
+            totalOutputs = 0;
+            getId("saveCount").innerHTML = totalOutputs;
+            if(!haveOutputted){
+                getId("gallerybutton").classList.add("nodisplay");
+            }
+        }).catch((err) => {showWarning(err);});
+    }else{
+        makeAlert("Your browser does not support this feature. Try a Chromium-based browser.")
+    }
+}
+/*
+function setOutputDir(){
+    BrowserFS.install(window);
+    BrowserFS.configure({
+        fs: 'HTML5FS',
+        // HOW THE HELL DO I LOAD A LOCAL DIRECTORY???
+        // i'll do this later.
+    }, function(e) {
+        if (e) {
+          makeAlert("An error occurred loading your filesystem");
+          throw e;
+        }
+    });
+    var fs = require('fs');
+}
+*/
+
 var video = getId("video");
 var canvas = getId("intermediate");
 var canvas2 = getId("intermediate2");
@@ -149,11 +227,13 @@ function feedReady(){
     canvas.height = size[1];
     canvas2.width = size[0];
     canvas2.height = size[1];
-    if(MediaRecorder.isTypeSupported("video/webm;codecs=vp9")){
+    // VP8 and VP9 cause random corrpution
+    /*if(MediaRecorder.isTypeSupported("video/webm;codecs=vp9")){
         recorder = new MediaRecorder(camStream, {mimeType: 'video/webm;codecs=vp9'});
     }else if(MediaRecorder.isTypeSupported("video/webm;codecs=vp8")){
         recorder = new MediaRecorder(camStream, {mimeType: 'video/webm;codecs=vp8'});
-    }else if(MediaRecorder.isTypeSupported("video/webm")){
+    }else */
+    if(MediaRecorder.isTypeSupported("video/webm")){
         recorder = new MediaRecorder(camStream, {mimeType: 'video/webm'});
     }else{
         recorder = new MediaRecorder(camStream);
@@ -176,26 +256,63 @@ function feedReady(){
 }
 
 var totalOutputs = 0;
+var haveOutputted = 0;
 function outputNewline(){
     var newline = document.createElement("br");
-    getId("output").prepend(newline);
+    getId("output").appendChild(newline);
+    requestAnimationFrame(() => {
+        getId("output").scrollTop = getId("output").scrollHeight;
+    });
+    haveOutputted = 1;
 }
 function outputText(text){
     var newtext = document.createElement("p");
     newtext.innerHTML = text;
-    getId("output").prepend(newtext);
+    getId("output").appendChild(newtext);
     totalOutputs++;
     getId("saveCount").innerHTML = totalOutputs;
+    requestAnimationFrame(() => {
+        getId("output").scrollTop = getId("output").scrollHeight;
+    });
+    getId("warnings").style.display = "none";
+    haveOutputted = 1;
 }
+function outputIncrement(){
+    totalOutputs++;
+    getId("saveCount").innerHTML = totalOutputs;
+    getId("warnings").style.display = "none";
+}
+var lastOutput = "";
+var outputConflicts = 1;
 
 function takeImage(){
     if(ready){
+        var videoname = "aOS " + formDate("Y.M.D H.m.S");
+        if(videoname === lastOutput){
+            outputConflicts++;
+            lastOutput = videoname;
+            videoname += " (" + outputConflicts + ")";
+        }else{
+            lastOutput = videoname;
+        }
         ctx.drawImage(video, 0, 0, size[0], size[1]);
-        var newImg = document.createElement("img");
-        newImg.src = canvas.toDataURL('image/png');
-        var videoname = "aOSpic_" + formDate("Y.M.D_H.m.S");
-        getId("output").prepend(newImg);
-        outputText('<a style="" href="' + newImg.src + '" download="' + videoname + '.png">Save as File</a> | ' + videoname);
+        if(dirmode){
+            canvas.toBlob((newBlob) => {
+                pictureDir.getFileHandle(videoname + ".png", {create: 'true'}).then((handle) => {
+                    handle.createWritable().then((writable) => {
+                        writable.write(newBlob);
+                        writable.close();
+                        outputIncrement();
+                    }).catch((err) => {showWarning(err);});
+                }).catch((err) => {showWarning(err);});
+            });
+        }else{
+            var imgData = canvas.toDataURL('image/png');
+            var newImg = document.createElement("img");
+            newImg.src = imgData;
+            outputText('<a style="" href="' + newImg.src + '" download="' + videoname + '.png">Save as File</a> | ' + videoname);
+            getId("output").appendChild(newImg);
+        }
     }
 }
 
@@ -211,9 +328,11 @@ function recordVideo(){
         recorder.start();
         starttime = Date.now();
         if(!dontSaveVideo){
+            getId("recordbutton").classList.add("recording");
             getId("recordbutton").setAttribute("onclick", "recordStop()");
-            getId("recordbutton").innerHTML = "Stop Recording";
+            // getId("recordbutton").innerHTML = "Stop Recording";
             getId("motionbutton").classList.add("disabled");
+            getId("motionmenubutton").classList.add("disabled");
             getId("photobutton").classList.add("disabled");
         }
     }
@@ -226,22 +345,28 @@ function recordFrame(event){
             totalMotionsRecorded++;
             if(event.data.size > 0){
                 recordData.push(event.data);
-                var newVideo = document.createElement("video");
-                // newVideo.src = URL.createObjectURL(new Blob(recordData));
-                newVideo.src = URL.createObjectURL(recordData[0]);
-                var totalMotionsRecordedZeros = totalMotionsRecorded;
-                if(totalMotionsRecorded < 10){
-                    totalMotionsRecordedZeros = "0" + totalMotionsRecordedZeros;
-                }
-                if(totalMotionsRecorded < 100){
-                    totalMotionsRecordedZeros = "0" + totalMotionsRecordedZeros;
-                }
-                var videoname = "aOSvid_" + formDate("Y.M.D_H.m.S") + "_M" + totalMotionsRecordedZeros + "_" + Math.floor((Date.now() - starttime) / 1000) + "s";
-                newVideo.download = videoname + ".webm";
-                newVideo.setAttribute("controls", "true");
-                newVideo.setAttribute("preload", "auto");
-                getId("output").prepend(newVideo);
-                outputText('<a style="" href="' + newVideo.src + '" download="' + videoname + '.webm">Save as File</a> | ' + videoname);
+                var videoLength = Date.now() - starttime;
+                ysFixWebmDuration(recordData[0], videoLength, (fixedBlob) => {
+                    var videoname = "aOS " + " " + formDate("Y.M.D H.m.S") + " m" + totalMotionsRecorded;
+                    if(dirmode){
+                        motionSessionDir.getFileHandle(videoname + ".webm", {create: 'true'}).then((handle) => {
+                            handle.createWritable().then((writable) => {
+                                writable.write(fixedBlob);
+                                writable.close();
+                                outputIncrement();
+                            }).catch((err) => {showWarning(err);});
+                        }).catch((err) => {showWarning(err);});
+                    }else{
+                        var newVideo = document.createElement("video");
+                        // newVideo.src = URL.createObjectURL(new Blob(recordData));
+                        newVideo.src = URL.createObjectURL(fixedBlob);
+                        newVideo.download = videoname + ".webm";
+                        newVideo.setAttribute("controls", "true");
+                        newVideo.setAttribute("preload", "auto");
+                        outputText('<a style="" href="' + newVideo.src + '" download="' + videoname + '.webm">Save as File</a> | ' + videoname);
+                        getId("output").appendChild(newVideo);
+                    }
+                });
             }
         }
     }else{
@@ -253,15 +378,35 @@ function recordFrame(event){
 function recordSave(){
     if(!dontSaveVideo){
         recording = 0;
-        var newVideo = document.createElement("video");
-        // newVideo.src = URL.createObjectURL(new Blob(recordData, {type: "video/webm"}));
-        newVideo.src = URL.createObjectURL(recordData[0]);
-        var videoname = "aOSvid_" + formDate("Y.M.D_H.m.S") + "_" + Math.floor((Date.now() - starttime) / 1000) + "s";
-        newVideo.download = videoname + ".webm";
-        newVideo.setAttribute("controls", "true");
-        newVideo.setAttribute("preload", "auto");
-        getId("output").prepend(newVideo);
-        outputText('<a href="' + newVideo.src + '" download="' + videoname + '.webm">Save as File</a> | ' + videoname);
+        var videoLength = Date.now() - starttime;
+        ysFixWebmDuration(recordData[0], videoLength, (fixedBlob) => {
+            var videoname = "aOS " + formDate("Y.M.D H.m.S");
+            if(videoname === lastOutput){
+                outputConflicts++;
+                lastOutput = videoname;
+                videoname += " (" + outputConflicts + ")";
+            }else{
+                lastOutput = videoname;
+            }
+            if(dirmode){
+                videoDir.getFileHandle(videoname + ".webm", {create: 'true'}).then((handle) => {
+                    handle.createWritable().then((writable) => {
+                        writable.write(fixedBlob);
+                        writable.close();
+                        outputIncrement();
+                    }).catch((err) => {showWarning(err);});
+                }).catch((err) => {showWarning(err);});
+            }else{
+                var newVideo = document.createElement("video");
+                // newVideo.src = URL.createObjectURL(new Blob(recordData));
+                newVideo.src = URL.createObjectURL(fixedBlob);
+                newVideo.download = videoname + ".webm";
+                newVideo.setAttribute("controls", "true");
+                newVideo.setAttribute("preload", "auto");
+                outputText('<a style="" href="' + newVideo.src + '" download="' + videoname + '.webm">Save as File</a> | ' + videoname);
+                getId("output").appendChild(newVideo);
+            }
+        });
     }else{
         recording = 0;
         if(motionCamInterval){
@@ -278,9 +423,11 @@ function recordStop(){
     if(recording){
         recorder.stop();
         if(!dontSaveVideo){
+            getId("recordbutton").classList.remove("recording");
             getId("recordbutton").setAttribute("onclick", "recordVideo()");
-            getId("recordbutton").innerHTML = "Record Video";
+            // getId("recordbutton").innerHTML = "Record Video";
             getId("motionbutton").classList.remove("disabled");
+            getId("motionmenubutton").classList.remove("disabled");
             getId("photobutton").classList.remove("disabled");
         }
     }
@@ -292,6 +439,8 @@ var lastChunkTime = 0;
 var motionCamSensitivity = 0;
 var motionCamThreshold = 0;
 var savingMotion = 0;
+var motionSessionDir = null;
+var needToStopMotion = 0;
 function motionCamStart(){
     if(!recording){
         dontSaveVideo = 1;
@@ -299,15 +448,22 @@ function motionCamStart(){
         lastMotionTime = Date.now();
         lastChunkTime = Date.now();
         ctx.drawImage(video, 0, 0, size[0], size[1]);
+        getId("motionmenubutton").classList.add("recording");
         getId("motionbutton").setAttribute("onclick", "motionCamStop()");
         getId("motionbutton").innerHTML = "Stop Monitoring";
         getId("photobutton").classList.add("disabled");
         getId("recordbutton").classList.add("disabled");
-        getId("motionsettings").classList.add("disabled");
+        // getId("motionsettings").classList.add("disabled");
         motionCamSensitivity = (100 - parseFloat(getId("motionsensitivity").value)) / 100 * 765;
         motionCamThreshold = parseFloat(getId("motionthreshold").value) / 100 * (size[0] * size[1]);
         recordVideo();
         totalMotionsRecorded = 0;
+
+        if(dirmode){
+            motionDir.getDirectoryHandle("Session " + formDate("Y.M.D H.m.S"), {create: 'true'}).then((handle) => {
+                motionSessionDir = handle;
+            }).catch((err) => {showWarning(err);});
+        }
     }
 }
 function motionCamFrame(){
@@ -354,18 +510,30 @@ function motionCamFrame(){
         getId("motionIndicator").style.background = "#F00";
         savingMotion = 1;
         lastMotionTime = Date.now();
+        if(needToStopMotion){
+            savingMotion = 2;
+            lastChunkTime = Date.now();
+            recordStop();
+            actuallyStopMotionCam();
+        }
     }else{
         getId("motionIndicator").style.background = "linear-gradient(0deg, #0F0 " + Math.round(motionAmount / motionCamThreshold * 100) + "%, transparent " + Math.round(motionAmount / motionCamThreshold * 100) + "%)";
         if(savingMotion === 1){
-            if(Date.now() - lastMotionTime > 1000){
+            if(needToStopMotion || Date.now() - lastMotionTime > 1000){
                 savingMotion = 2;
                 recordStop();
                 lastChunkTime = Date.now();
+                if(needToStopMotion){
+                    actuallyStopMotionCam();
+                }
             }
         }else if(savingMotion === 0){
-            if(Date.now() - lastChunkTime > 1000){
+            if(needToStopMotion || Date.now() - lastChunkTime > 1000){
                 lastChunkTime = Date.now();
                 recordStop();
+                if(needToStopMotion){
+                    actuallyStopMotionCam();
+                }
             }
         }
     }
@@ -377,25 +545,41 @@ function motionCamFrame(){
     // }
 }
 function motionCamStop(){
+    needToStopMotion = 1;
+}
+function actuallyStopMotionCam(){
     clearInterval(motionCamInterval);
     motionCamInterval = 0;
-    if(recording){
-        recordStop();
-    }
+    // if(recording){
+    //    recordStop();
+    // }
+    getId("motionmenubutton").classList.remove("recording");
     getId("motionbutton").setAttribute("onclick", "motionCamStart()");
     getId("motionbutton").innerHTML = "Motion Camera";
     getId("photobutton").classList.remove("disabled");
     getId("recordbutton").classList.remove("disabled");
-    getId("motionsettings").classList.remove("disabled");
+    // getId("motionsettings").classList.remove("disabled");
     getId("motionamount").innerHTML = "";
-    getId("motionIndicator").style.backgroundColor = "";
+    getId("motionIndicator").style.background = "";
+    needToStopMotion = 0;
 }
 
 function toggleOutput(){
     getId("output").classList.toggle('nodisplay');
+    getId("helpbutton").classList.toggle('disabled');
+    requestAnimationFrame(() => {
+        getId("output").scrollTop = getId("output").scrollHeight;
+    });
 }
 function toggleHelp(){
+    if(!dirmode){
+        getId("gallerybutton").classList.toggle('disabled');
+    }
     getId("help").classList.toggle('nodisplay');
+    getId("folderbutton").classList.toggle('disabled');
+}
+function toggleMotionMenu(){
+    getId("motionmenu").classList.toggle('nodisplay');
 }
 
 startCamera();

@@ -11857,11 +11857,18 @@ c(function(){
                 " + Camera app is rewritten from the ground up.",
                 " + Camera app can now take photos and videos.",
                 " + Camera app now has a motion sensor mode."
+            ],
+            "01/23/2022: B1.6.13.0": [
+                " + Brand new Camera app UI.",
+                " + Camera app can now save files directly to your computer.",
+                " : Camera app Help section is simplified.",
+                " : Fixed random corruption in Camera app by switching from webm/vp9 to normal webm.",
+                " : Files created by Camera app now have correct timestamps."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.12.0 (01/21/2022) r1';
+    window.aOSversion = 'B1.6.13.0 (01/23/2022) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

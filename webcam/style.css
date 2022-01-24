@@ -18,7 +18,7 @@ div{
 }
 
 #warnings{
-    color: #F00;
+    color: #A00;
     position:absolute;
     text-align:center;
     left:0;
@@ -53,6 +53,8 @@ div{
     text-align:center;
     width:calc(100% - 16px);
     font-size:5vh;
+    height:calc(100% - 16px);
+    overflow:visible;
 }
 #controls button{
     font-size:5vh;
@@ -61,32 +63,56 @@ div{
     font-size:5vh;
 }
 
-#mainbuttons{
-    float:right;
-}
-#mainbuttons button{
-    width:100%;
-}
-#motionbuttons{
-    float:left;
-    text-align:left;
-}
 #motionIndicator{
-    outline: 1px solid #FFF;
+    outline: 2px solid #FFF;
+    border-radius:0.25em;
 }
-#output, #help{
+
+#output, #help, #motionmenu{
     position:absolute;
-    width:100%;
-    height:calc(90% - 16px);
+    width:30%;
+    height:80%;
     overflow:auto;
     text-align:center;
-    top:0;
-    left:0;
+    bottom:4.5em;
+    right:1em;
     background:rgba(0, 0, 0, 0.75);
-    box-shadow:0 1vh 1vh rgba(0, 0, 0, 0.75);
+    box-shadow:0 0vh 1vh 1vh rgba(0, 0, 0, 0.75);
 }
 #help{
     text-align:left;
+    width:50%;
+}
+#help h1{
+    text-align:center;
+}
+#motionmenu{
+    left:2.5%;
+    width:fit-content;
+    height:auto;
+    bottom:2em;
+}
+#motioncontrols{
+    position:absolute;
+    left:5%;
+    bottom:0;
+    cursor:default;
+    overflow:visible;
+}
+
+#maincontrols{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%);
+    cursor:default;
+}
+
+#rightcontrols{
+    position:absolute;
+    bottom:0;
+    right:5%;
+    cursor:default;
 }
 
 .nodisplay{
@@ -113,4 +139,30 @@ a:visited{
 
 #output p{
     margin-bottom: 0.25em;
+}
+
+.flaticon{
+    max-height:1em;
+    filter:invert(1);
+    cursor: pointer;
+    padding:0.2em;
+    margin-bottom:-0.3em;
+    border-radius:0.25em;
+    transition:0.2s;
+}
+.flaticon:hover{
+    background-color:rgba(0, 0, 0, 0.3);
+}
+.flaticon:active{
+    background-color:rgba(0, 0, 0, 0.1);
+}
+
+.flaticon.recording{
+    background-color:rgba(0, 255, 255, 0.5);
+}
+.flaticon.recording:hover{
+    background-color:rgba(0, 255, 255, 1);
+}
+.flaticon.recording:active{
+    background-color:rgba(0, 255, 255, 0.6);
 }
