@@ -40,9 +40,9 @@ function generate(type){
 var algorithms = {
     codabar: {
         // body must only contain [0-9]-$:/.+
-        // if start with one of ABCD, must end with one of ABCD and length 18
-        // if start with one of EN*T, must end with one of EN*T and length 18
-        // ABCDEN*T must not appear in the body
+        // if start with one of ABCD, must end with one of ABCD
+        // if start with one of EN*T, must end with one of EN*T
+        // if no ABCDEN*T control present, add it automatically
 
         // on error, return "error message"
 
@@ -107,8 +107,8 @@ var algorithms = {
             Codabar characters are seven symbols; four bars (B) with three spaces (S) between them.
             One "bit" is either zero or one, denoting a standard-length bar/space or a triple-length bar/space.
             One character is encoded as BSBSBSB, and characters are separated by a standard-length space.
-            Codabar begins with A and ends with B by default, for simplicity.
-            Users can specify another beginning or end if present.
+            Codabar begins with A and ends with B by default; this is how it's commonly used in libraries.
+            Users can specify another type of control start or control end if they wish.
         */
         dictionary: {
             //     BSBSBSB   px
