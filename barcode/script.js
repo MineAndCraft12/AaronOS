@@ -51,7 +51,6 @@ var algorithms = {
         // code is the final code including control characters
         // html is human readable code, including <span class="control"> for control characters
         verify: function(text){
-            console.log(this);
             text = text.toUpperCase();
             if(this.validChars.controlA.indexOf(text[0]) !== -1){
                 if(this.validChars.controlA.indexOf(text[17]) === -1){
