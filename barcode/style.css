@@ -1,0 +1,27 @@
+.verticalCenter{
+    position:absolute;
+    width:100%;
+    text-align:center;
+    left:0;
+    top:50%;
+    transform:translateY(calc(-50% + 1px));
+    font-family:sans-serif;
+    font-size:2em;
+}
+
+#barcode{
+    image-rendering:pixelated;
+    margin-top:-0.75px;
+}
+
+#finalcodetext{
+    font-weight:bold;
+}
+
+.control{
+    opacity:0.25;
+}
+
+button, input{
+    font-size:1em;
+}

@@ -6,7 +6,7 @@
     "appType": "webApp",
     "homeURL": "Calculator/",
     "icon": {
-        "foreground": "appicons/ds/Clc.png"
+        "foreground": "appicons/ds/aOS.png"
     },
     "windowSize": [600, 400]
 }

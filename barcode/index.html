@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="style.css">
+        <script defer src="../aosTools.js"></script>
+        <script defer src="script.js"></script>
+        <title>AaronOS Barcode Generator</title>
+    </head>
+    <body>
+        <div class="winHTML">
+            <div class="verticalCenter" oncontextmenu="if(!aosTools.connected){event.stopPropagation();}">
+                <h1>Barcode Generator</h1>
+                <canvas id="barcode" width="0" height="0" oncontextmenu=event.stopPropagation();></canvas>
+                <br>
+                <span id="finalcodetext">
+                    <span class="control">A</span>12345<span class="control">B</span>
+                </span>
+                <br><br>
+                <input id="codetext" placeholder="Type Code Here">
+                <br><br>
+                <button onclick="generate('codabar');">Generate (Codabar)</button>
+                <br><br><br>
+            </div>
+        </div>
+    </body>
+</html>

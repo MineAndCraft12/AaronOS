@@ -346,7 +346,7 @@ function recordFrame(event){
             if(event.data.size > 0){
                 recordData.push(event.data);
                 var videoLength = Date.now() - starttime;
-                ysFixWebmDuration(recordData[0], videoLength, (fixedBlob) => {
+                ysFixWebmDuration(recordData, videoLength, (fixedBlob) => {
                     var videoname = "aOS " + " " + formDate("Y.M.D H.m.S") + " m" + totalMotionsRecorded;
                     if(dirmode){
                         motionSessionDir.getFileHandle(videoname + ".webm", {create: 'true'}).then((handle) => {
@@ -379,7 +379,7 @@ function recordSave(){
     if(!dontSaveVideo){
         recording = 0;
         var videoLength = Date.now() - starttime;
-        ysFixWebmDuration(recordData[0], videoLength, (fixedBlob) => {
+        ysFixWebmDuration(recordData, videoLength, (fixedBlob) => {
             var videoname = "aOS " + formDate("Y.M.D H.m.S");
             if(videoname === lastOutput){
                 outputConflicts++;

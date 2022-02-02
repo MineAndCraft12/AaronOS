@@ -11864,11 +11864,14 @@ c(function(){
                 " : Camera app Help section is simplified.",
                 " : Fixed random corruption in Camera app by switching from webm/vp9 to normal webm.",
                 " : Files created by Camera app now have correct timestamps."
+            ],
+            "02/01/2022: B1.6.14.0": [
+                " + Barcode Generator app added to Repository."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.13.0 (01/23/2022) r1';
+    window.aOSversion = 'B1.6.14.0 (02/01/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

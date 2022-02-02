@@ -1,0 +1,17 @@
+{
+    "name": "Barcode Generator",
+    "id": "barcode",
+    "version": "1.0",
+    "abbreviation": "BC",
+    "appType": "webApp",
+    "homeURL": "barcode/",
+    "icon": {
+        "backgroundColor": "#303947",
+        "foreground": "smarticons/aOS/fg.png",
+        "backgroundBorder": {
+            "thickness": 2,
+            "color": "#252F3A"
+        }
+    },
+    "windowSize": [657, 527]
+}

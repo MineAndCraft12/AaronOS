@@ -280,6 +280,23 @@
                 "foreground": "repository/webApps/daedal.png"
             },
             "description": "Web-based desktop environment similar to AaronOS, by Dustin Brett."
+        },
+        "barcode": {
+            "packageName": "Barcode Generator",
+            "packageID": "barcode",
+            "packageAliases": ["codabar"],
+            "version": "1.0",
+            "packageType": "webApp",
+            "installURL": "repository/webApps/barcode.json",
+            "icon": {
+                "backgroundColor": "#303947",
+                "foreground": "smarticons/aOS/fg.png",
+                "backgroundBorder": {
+                    "thickness": 2,
+                    "color": "#252F3A"
+                }
+            },
+            "description": "Simple app to generate Codabar barcodes."
         }
     }
 }
