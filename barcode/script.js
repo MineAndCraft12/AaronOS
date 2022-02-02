@@ -140,6 +140,6 @@ var algorithms = {
     }
 };
 
-getId("codetext").value = "12345";
+getId("codetext").value = "1234567890123456";
 generate("codabar");
 getId("codetext").value = "";
