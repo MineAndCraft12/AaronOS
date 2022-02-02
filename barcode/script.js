@@ -53,11 +53,11 @@ var algorithms = {
         verify: function(text){
             text = text.toUpperCase();
             if(this.validChars.controlA.indexOf(text[0]) !== -1){
-                if(this.validChars.controlA.indexOf(text[17]) === -1){
+                if(this.validChars.controlA.indexOf(text[text.length - 1]) === -1){
                     return "Control Start is one of ABCD, Control End must be one of ABCD\n\nExample: A1234B";
                 }
             }else if(this.validChars.controlE.indexOf(text[0]) !== -1){
-                if(this.validChars.controlE.indexOf(text[17]) === -1){
+                if(this.validChars.controlE.indexOf(text[text.length - 1]) === -1){
                     return "Control Start is one of EN*T, Control End must be one of EN*T\n\nExample: E1234N";
                 }
             }else{
