@@ -13,12 +13,15 @@
                 <canvas id="barcode" width="0" height="0" oncontextmenu=event.stopPropagation();></canvas>
                 <br>
                 <span id="finalcodetext">
-                    <span class="control">A</span>1234567890123456<span class="control">B</span>
+                    <span class="control">A</span>12345<span class="control">B</span>
                 </span>
                 <br><br>
                 <input id="codetext" placeholder="Type Code Here" autocomplete="off">
                 <br><br>
-                <button onclick="generate('codabar');">Generate (Codabar)</button>
+                <button onclick="generate('code128');">Code 128</button>
+                <button onclick="c128ForceB = 1; generate('code128');">(B)</button>
+                &nbsp; &nbsp;
+                <button onclick="generate('codabar');">Codabar</button>
                 <br><br><br>
             </div>
         </div>

@@ -11867,6 +11867,9 @@ c(function(){
             ],
             "02/01/2022: B1.6.14.0": [
                 " + Barcode Generator app added to Repository."
+            ],
+            "02/05/2022: B1.6.14.1": [
+                " + Added limited subset of Code-128 to Barcode Generator."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
