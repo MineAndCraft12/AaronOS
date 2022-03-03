@@ -11870,11 +11870,25 @@ c(function(){
             ],
             "02/05/2022: B1.6.14.1": [
                 " + Added limited subset of Code-128 to Barcode Generator."
+            ],
+            "03/03/2022: B1.6.15.0": [
+                " + Major Music Player update!",
+                " + Added Triple Wave visualizer.",
+                " + Added Ukraine color themes, Sunrise and Sunset.",
+                " + Stereogram visualizer has recieved a new variety.",
+                " : Stereogram's existing visualizer was modified.",
+                " : AudioVision visualizers were moved to their own category.",
+                " : Queen color themes were moved to their own category.",
+                " : Music Player Title page is rearranged.",
+                " + Standalone supports Linux and Windows on arm, x32, x64.",
+                " + Standalone Transparent Mode supports hardware acceleration in Transparent mode.",
+                " : Standalone updated from Electron 9 to 17.",
+                " : Standalone build tools are updated."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.14.0 (02/01/2022) r0';
+    window.aOSversion = 'B1.6.15.0 (03/03/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
