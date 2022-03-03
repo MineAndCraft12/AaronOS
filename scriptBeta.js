@@ -11881,7 +11881,7 @@ c(function(){
                 " : Queen color themes were moved to their own category.",
                 " : Music Player Title page is rearranged.",
                 " + Standalone supports Linux and Windows on arm, x32, x64.",
-                " + Standalone Transparent Mode supports hardware acceleration in Transparent mode.",
+                " + Standalone Transparent Mode supports hardware acceleration.",
                 " : Standalone updated from Electron 9 to 17.",
                 " : Standalone build tools are updated."
             ]
