@@ -11884,11 +11884,14 @@ c(function(){
                 " + Standalone Transparent Mode supports hardware acceleration.",
                 " : Standalone updated from Electron 9 to 17.",
                 " : Standalone build tools are updated."
+            ],
+            "03/19/2022: B1.6.15.1": [
+                " - Messaging app is disabled."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.15.0 (03/03/2022) r0';
+    window.aOSversion = 'B1.6.15.1 (03/19/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
