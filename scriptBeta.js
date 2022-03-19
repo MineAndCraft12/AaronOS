@@ -14627,6 +14627,10 @@ c(function(){
                     
                     '<h1>&nbsp; Messaging is disabled.</h1>' +
                     '&nbsp; <a target="blank" href="https://discord.gg/Y5Jytdm">Visit our Discord community instead.</a>' +
+                    '<br><br>' +
+                    '&nbsp; Please contact the developer privately if you have inquiries.<br>' +
+                    '&nbsp; Inquiries that are not genuine will be ignored.<br>' +
+                    '&nbsp; Messaging was disabled on March 19, 2022 at roughly 4:00 PM' +
 
                     '</div>' +
                     '<div class="noselect" style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div>' +
