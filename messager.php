@@ -1,4 +1,7 @@
 <?php
+echo 'Error - Messaging is disabled.';
+die();
+
 // recieve message from client
 if(isset($_COOKIE['keyword']) && isset($_POST['c']) && (strpos($_SERVER['HTTP_REFERER'], $_SERVER['SERVER_NAME']) !== FALSE || explode(':', $_SERVER['HTTP_HOST'])[0] === "localhost" || $_SERVER['SERVER_NAME'] === '0.0.0.0')){
     if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){

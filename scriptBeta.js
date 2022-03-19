@@ -12726,8 +12726,8 @@ c(function(){
                     'The Discord server is home to announcements, updates, occasional polls, and our team. ' +
                     'There are spaces available to share your feedback, suggestions, and bug reports. Additionally, you can feel free to hang around and chat with the community.</p>' +
                     '<p>The AaronOS Discord server is available at <a target="_blank" href="https://discord.gg/Y5Jytdm">https://discord.gg/Y5Jytdm</a></p><br>' +
-                    '<p>Additionally, there is a Messaging app on AaronOS, where you can talk to everyone there in a more simple environment.</p>' +
-                    '<button onclick="apps.help.vars.showMeHideHighlight(getId(\'app_messaging\'));">Show Me the Messaging App</button>' +
+                    //'<p>Additionally, there is a Messaging app on AaronOS, where you can talk to everyone there in a more simple environment.</p>' +
+                    //'<button onclick="apps.help.vars.showMeHideHighlight(getId(\'app_messaging\'));">Show Me the Messaging App</button>' +
                     '<p>Web Developers, there is documentation available for creating your own applications in the Developer Documentation app, ' +
                     'and I am often around to help on the Discord server.</p>' +
                     '<button onclick="apps.help.vars.showMeHideHighlight(getId(\'app_devDocumentation\'));">Show Me the Developer Documentation</button>'
@@ -14608,7 +14608,7 @@ c(function(){
         		color: "#252F3A"
         	}
         },
-        hideApp: 0,
+        hideApp: 1,
         launchTypes: 1,
         main: function(launchType){
             if(!this.appWindow.appIcon){
@@ -14620,17 +14620,22 @@ c(function(){
             getId('win_messaging_html').setAttribute('onclick', 'if(apps.messaging.vars.soundToPlay && apps.messaging.vars.canLookethOverThereSound){apps.messaging.vars.notifClick.play(); apps.messaging.vars.soundToPlay = 0;}');
             if(launchType === 'dsktp'){
                 this.appWindow.setContent(
-                    '<div id="MSGdiv" style="width:100%;height:calc(100% - 52px);overflow-y:scroll;padding-top:32px;"></div>' +
+                    '<div id="MSGdiv" style="width:100%;height:calc(100% - 52px);overflow-y:scroll;padding-top:32px;">' +
+                    
+                    '<h1>&nbsp; Messaging is disabled.</h1>' +
+                    '&nbsp; <a target="blank" href="https://discord.gg/Y5Jytdm">Visit our Discord community instead.</a>' +
+
+                    '</div>' +
                     '<div class="noselect" style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div>' +
                     '<button style="position:absolute;bottom:0;height:24px;width:10%;" onclick="apps.messaging.vars.doSettings()">Settings</button>' +
                     '<button style="position:absolute;bottom:0;height:24px;width:10%;left:10%;" onclick="apps.messaging.vars.doFormatting()">Formatting</button>' +
-                    '<input id="MSGinput" style="position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:sans-serif">' +
-                    '<button onclick="apps.messaging.vars.sendMessage()" style="position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>');
+                    '<input id="MSGinput" style="opacity:0.25;pointer-events:none;position:absolute;height:21px;width:70%;bottom:0;left:20%;border:none;border-top:1px solid ' + darkSwitch('#000', '#FFF') + ';font-family:sans-serif">' +
+                    '<button style="opacity:0.25;pointer-events:none;position:absolute;right:0;bottom:0;width:10%;height:24px">Send</button>'); //onclick="apps.messaging.vars.sendMessage()"
                 this.vars.lastMsgRecieved = this.vars.lastMsgStart;
-                getId('MSGinput').setAttribute('onkeyup', 'if(event.keyCode === 13){apps.messaging.vars.sendMessage();}');
+                //getId('MSGinput').setAttribute('onkeyup', 'if(event.keyCode === 13){apps.messaging.vars.sendMessage();}');
             }
             this.appWindow.openWindow();
-            this.vars.requestMessage();
+            //this.vars.requestMessage();
         },
         vars: {
             appInfo: 'The official AaronOS Messenger. Chat with the entire aOS community, all at once.<br><br>To set your name, go to Settings -&gt; 1, and enter a chat name.<br><br>To view past messages, go to Settings -&gt; 2, and enter in the number of past messages you wish to view.',
@@ -14654,7 +14659,7 @@ c(function(){
                 apps.prompt.vars.alert('Here are all the installed formatting tools:' + tempStr, 'Okay', function(){}, 'Messaging');
             },
             doSettings: function(){
-                apps.prompt.vars.confirm('Choose a settings option below.', ['Cancel', 'Change Chat Name', 'Load Past Messages', 'Toggle Fun Geico Easter Egg'], function(txtIn){
+                apps.prompt.vars.confirm('Choose a settings option below.', ['Cancel', 'Change User Name'/*, 'Load Past Messages', 'Toggle Fun Geico Easter Egg'*/], function(txtIn){
                     apps.messaging.vars.lastSetIn = txtIn;
                     switch(apps.messaging.vars.lastSetIn){
                         case 1:
@@ -14670,6 +14675,7 @@ c(function(){
                                 }
                             }, 'Messaging');
                             break;
+                        /*
                         case 2:
                             apps.prompt.vars.prompt('Load the last x messages.<br>Default when opening is 10.<br>Make it a positive integer.<br>This will restart the Messaging app.', 'Submit', function(subNum){
                                 apps.messaging.vars.lastMsgStart = "-" + subNum;
@@ -14681,6 +14687,7 @@ c(function(){
                             apps.messaging.vars.canLookethOverThereSound = apps.messaging.vars.canLookethOverThereSound * -1 + 1;
                             apps.prompt.vars.alert('Looketh Over There enabled: ' + numtf(apps.messaging.vars.canLookethOverThereSound), 'Okay', function(){}, 'Messaging');
                             apps.savemaster.vars.save('aos_system/apps/messaging/easter_egg', apps.messaging.vars.canLookethOverThereSound, 1);
+                        */
                         default:
                             doLog('Messaging settings change cancelled');
                     }
@@ -14691,6 +14698,7 @@ c(function(){
             sendfd: {},
             lastMessage: '',
             lastMessageTime: 0,
+            /*
             sendMessage: function(){
                 this.messageTemp = getId("MSGinput").value;
                 if(this.messageTemp === this.lastMessage){
@@ -14724,6 +14732,7 @@ c(function(){
                 }
                 this.lastMessageTime = performance.now();
             },
+            */
             lastResponseObject: {},
             lastUserRecieved: '',
             needsScroll: false,
@@ -14956,6 +14965,7 @@ c(function(){
             },
             lastRecievedDate: "",
             lastRecievedTime: "",
+            /*
             nextMessage: function(text){
                 m('reading from messaging server');
                 if(text[0] === '{'){
@@ -15064,7 +15074,9 @@ c(function(){
                     apps.messaging.vars.xhttpDelay = makeTimeout('MSG', 'requestMessage', 'apps.messaging.vars.requestMessage()', 1000);
                 }
             },
+            */
             lastResponseTime: 0,
+            /*
             requestMessage: function(){
                 this.xhttp = new XMLHttpRequest();
                 this.xhttp.onreadystatechange = function(){
@@ -15088,6 +15100,7 @@ c(function(){
                 apps.savemaster.vars.saving = 3;
                 taskbarShowHardware();
             }
+            */
         },
         signalHandler: function(signal){
             switch(signal){

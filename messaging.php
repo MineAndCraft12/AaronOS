@@ -1,4 +1,8 @@
 <?php
+// messaging is disabled.
+echo '';
+die();
+
 // send message to client
 //if(isset($_COOKIE['keyword'])){
     $files = array_diff(scandir('USERFILES/!MESSAGE'), array('..', '.'));
