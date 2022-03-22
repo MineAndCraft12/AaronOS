@@ -11887,11 +11887,15 @@ c(function(){
             ],
             "03/19/2022: B1.6.15.1": [
                 " - Messaging app is disabled."
+            ],
+            "03/21/2022: B1.6.15.2": [
+                " + Added Orbs visualizers to Music Player.",
+                " : Fixed System Audio in standalone version of Music Player."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.15.1 (03/19/2022) r0';
+    window.aOSversion = 'B1.6.15.2 (03/21/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -14627,10 +14631,6 @@ c(function(){
                     
                     '<h1>&nbsp; Messaging is disabled.</h1>' +
                     '&nbsp; <a target="blank" href="https://discord.gg/Y5Jytdm">Visit our Discord community instead.</a>' +
-                    '<br><br>' +
-                    '&nbsp; Please contact the developer privately if you have inquiries.<br>' +
-                    '&nbsp; Inquiries that are not genuine will be ignored.<br>' +
-                    '&nbsp; Messaging was disabled on March 19, 2022 at roughly 4:00 PM' +
 
                     '</div>' +
                     '<div class="noselect" style="left:0;top:0;background:#FFA;padding:2px;font-family:aosProFont,monospace;font-size:12px;border-bottom-right-radius:5px;color:#000;">' + this.vars.discussionTopic + '</div>' +
