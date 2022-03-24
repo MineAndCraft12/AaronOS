@@ -11891,11 +11891,15 @@ c(function(){
             "03/21/2022: B1.6.15.2": [
                 " + Added Orbs visualizers to Music Player.",
                 " : Fixed System Audio in standalone version of Music Player."
+            ],
+            "03/24/2022: B1.6.15.3": [
+                " : Fixed Orbs frequencies sorted alphabetically rather than by value.",
+                " : Orbs visualizers are now more responsive to changes in treble pitch."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.15.2 (03/21/2022) r0';
+    window.aOSversion = 'B1.6.15.3 (03/24/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
