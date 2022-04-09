@@ -11895,6 +11895,10 @@ c(function(){
             "03/24/2022: B1.6.15.3": [
                 " : Fixed Orbs frequencies sorted alphabetically rather than by value.",
                 " : Orbs visualizers are now more responsive to changes in treble pitch."
+            ],
+            "04/09/2022: B1.6.15.0": [
+                " : Made changes to fix a security issue.",
+                " + Added notice about the security issue in the Help app."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
