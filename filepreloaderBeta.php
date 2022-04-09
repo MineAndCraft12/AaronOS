@@ -66,8 +66,10 @@
                     
                     // if password is correct
                     if(password_verify($changePass, $targetPass)){
+                        setcookie('keyword', $changeKey, time() - 86400, '/AaronOS');
+                        setcookie('keyword', $changeKey, time() - 86400, '/AaronOS/aosBeta.php');
                         // tell the browser the new user name
-                        setcookie('keyword', $changeKey, time() + 321408000);// time() + 321408000);
+                        setcookie('keyword', $changeKey, time() + 321408000, "/");// time() + 321408000);
                         $_COOKIE['keyword'] = $changeKey;
                     }else{
                         $refreshMessage = 'Failed to swap, incorrect password.';
@@ -97,7 +99,7 @@
             }
         }
         // tell the browser
-        setcookie('keyword', $newcode, time() + 321408000);
+        setcookie('keyword', $newcode, time() + 321408000, '/');
         $_COOKIE['keyword'] = $newcode;
     }
     // if user has weird keyword
@@ -112,7 +114,7 @@
             }
         }
         // tell the browser
-        setcookie('keyword', $newcode, time() + 321408000);
+        setcookie('keyword', $newcode, time() + 321408000, '/');
         $_COOKIE['keyword'] = $newcode;
     }
     if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){
@@ -161,9 +163,11 @@
     }
 
     if(!isset($_COOKIE['last_aOS_login'])){
+        setcookie('keyword', $_COOKIE['keyword'], time() - 86400, '/AaronOS');
+        setcookie('keyword', $_COOKIE['keyword'], time() - 86400, '/AaronOS/aosBeta.php');
         echo 'localStorage.setItem("aos_help_displayed", "0");';
     }
-    setcookie('last_aOS_login', round(microtime(true) * 1000), time() + 321408000);
+    setcookie('last_aOS_login', round(microtime(true) * 1000), time() + 321408000, '/');
     $_COOKIE['last_aOS_login'] = round(microtime(true) * 1000);
     
     // push javascript to set server variables
@@ -205,5 +209,5 @@
     fclose($newUsers);
     
     // renew your keyword cookie
-    setcookie('keyword', $_COOKIE['keyword'], time() + 321408000);
+    setcookie('keyword', $_COOKIE['keyword'], time() + 321408000, '/');
 ?>
