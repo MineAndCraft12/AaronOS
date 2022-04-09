@@ -12881,11 +12881,20 @@ c(function(){
                                 }
                             },
                             */
+                            filesHelpPrompt: {
+                                optionTitle: "",
+                                optionContent: () => {
+                                    return "<div style='position:relative;text-align:center;overflow:visible;'><button style=\"transform:scale(2);margin:-8px;\" onclick=\"apps.help.vars.showMenu(apps.help.vars.menus.menuOptions.filesHelp)\">IMPORTANT SECURITY NOTICE: 4/9/22</button></div>";
+                                },
+                                optionButton: () => {
+                                    return "";
+                                }
+                            },
                             tutorial: {
                                 optionTitle: "Guided Tour",
                                 optionContent: () => {
-                                    return 'This is the guided tour / tutorial of AaronOS and shows some of what it has to offer. ' +
-                                        'If this is your first visit, the tutorial may give you a general idea of what AaronOS has in store.';
+                                    return 'This is the guided tour of AaronOS and shows some of what it has to offer. ' +
+                                        'Give it a try if it\'s your first visit.';
                                 },
                                 optionButton: () => {
                                     return '<button onclick="apps.help.vars.showTutorial(\'welcome\')">Guided Tour</button>';
@@ -12894,8 +12903,8 @@ c(function(){
                             helpPages: {
                                 optionTitle: "Help Pages",
                                 optionContent: () => {
-                                    return 'If you ever feel lost, feel free to come back to this app for some help about various bits of the project. ' +
-                                    'Alternatively, if you like, you can skip the tour and go there now.'
+                                    return 'If you ever feel lost, come back to this app for some basic help. ' +
+                                    'Alternatively, you can skip the tour and go there now.'
                                 },
                                 optionButton: () => {
                                     return '<button onclick="apps.help.vars.showMenu()">Help Pages</button>'
@@ -12904,8 +12913,7 @@ c(function(){
                             noHelp: {
                                 optionTitle: "Jump Right In",
                                 optionContent: () => {
-                                    return 'If you want to, you can skip all of that and just jump right in. ' +
-                                    'Just close this app with the buttons in the top corner of the window, and it won\'t appear again until you launch it yourself.'
+                                    return 'Alternatively, just close this window and just jump right in.'
                                 }
                             }
                         }
@@ -12917,6 +12925,37 @@ c(function(){
                         menuAction: () => {
                             apps.help.vars.showTutorial('welcome');
                         }
+                    },
+                    filesHelp: {
+                        menuTitle: "SECURITY NOTICE: 4/9/22<br><i>(Where are my files?)</i>",
+                        menuLocation: "apps.help.vars.menus.menuOptions.filesHelp",
+                        menuType: "docs",
+                        menuContent: '<p>The AaronOS filesystem was full-reset on April 9, 2022 due to a security issue.</p>' +
+                            '<h2>What happened?</h2>' +
+                            '<p>Due to an oversight on my part, user-made files and cryptographic hashes of passwords on the AaronOS server were exposed to the public.</p>' +
+                            '<p>I am at present <b>not aware of any abuse</b>, but this issue was absolutely unacceptable and I was forced to act on it as soon as I became aware.</p>' +
+                            '<p>Just because I am not aware of any abuse, does not mean that it hasn\'t occurred. Please stay vigilant.</p>' +
+                            '<p>I would recommend that you <b>change your passwords</b> if you used an existing password on AaronOS.</p>' +
+                            '<h2>What does this mean for me?</h2>' +
+                            '<p>If you did not use AaronOS prior to April 9, 2022 then you are not affected.</p>' +
+                            '<p>If you used AaronOS prior to April 9, 2022 then you may have been affected in the following ways.</p>' +
+                            '<ul style="line-height:1.5em">' +
+                            '<li>The <b>cryptographic hash of your password</b> may have been exposed.</li>' +
+                            '<li>Files you stored in <b>USERFILES on AaronOS</b> may have been exposed.</li>' +
+                            '<li>Your AaronOS <b>preferences and settings</b> (desktop background, etc.) may have been exposed.</li>' +
+                            '<li>Files you stored in <b>LOCALFILES on AaronOS have NOT been exposed</b>, as they live on your device.</li>' +
+                            '<li>The packages you installed from the AaronOS Hub Repository have NOT been exposed, as they live on your device.</li>' +
+                            '<li>I have made the decision to wipe all user information and files from the official AaronOS server.</li>' +
+                            '<ul>' +
+                            '<li>You now have a brand new User ID and must set a new password.</li>' +
+                            '<li>Files you stored in LOCALFILES and packages installed from the aOS Hub should still be intact.</li>' +
+                            '</ul>' +
+                            '</ul>' +
+                            '<h2>Going Forward</h2>' +
+                            '<p>An oversight of this magnitude is absolutely unacceptable, and I sincerely apologise for this being possible in the first place.</p>' +
+                            '<p>I will be working on a more secure method of storing information on AaronOS, so that data is secure even if something like this somehow happens again.</p>' +
+                            '<p>In the meantime, I want to remind everyone that AaronOS is beta software and to please not store important information on its server, especially before I\'ve made substantial changes to its filesystem.</p>' +
+                            '<p>Thank you for using my little project.</p>',
                     },
                     desktop: {
                         menuTitle: "Desktop",

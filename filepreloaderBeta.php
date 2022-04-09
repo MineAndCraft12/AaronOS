@@ -86,7 +86,7 @@
     $newUser = 0;
     $lettertypes = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_';
     // if user not logged in
-    if(!isset($_COOKIE['keyword'])){
+    if(!isset($_COOKIE['keyword']) || !isset($_COOKIE['last_aOS_login'])){
         $newUser = 1;
         // create a new userkey
         $newcode = 'blank';
@@ -159,6 +159,13 @@
         }
         */
     }
+
+    if(!isset($_COOKIE['last_aOS_login'])){
+        echo 'localStorage.setItem("aos_help_displayed", "0");';
+    }
+    setcookie('last_aOS_login', round(microtime(true) * 1000), time() + 321408000);
+    $_COOKIE['last_aOS_login'] = round(microtime(true) * 1000);
+    
     // push javascript to set server variables
     echo 'window.SRVRKEYWORD="'.$_COOKIE['keyword'].'";';
     if(isset($_SERVER['HTTP_X_FORWARDED_FOR'])){
