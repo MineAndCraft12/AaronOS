@@ -27,7 +27,7 @@ You can install them by running the following in your terminal:
 ```sudo apt install -y Apache2 php```
 
 ## Setting Up
-We need to open the ports aOS uses, grab aOS from Github, move it into the correct folder, than change the folder permissions so that Apache can work properly.
+We need to open the ports aOS uses, grab aOS from Github, adjust Apache's settings, then change the folder permissions so that Apache can work properly.
 
 Note that this guide written for Ubuntu; you may need to make changes for another system.
 
