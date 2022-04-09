@@ -11896,14 +11896,14 @@ c(function(){
                 " : Fixed Orbs frequencies sorted alphabetically rather than by value.",
                 " : Orbs visualizers are now more responsive to changes in treble pitch."
             ],
-            "04/09/2022: B1.6.15.0": [
+            "04/09/2022: B1.6.16.0": [
                 " : Made changes to fix a security issue.",
                 " + Added notice about the security issue in the Help app."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.15.3 (03/24/2022) r0';
+    window.aOSversion = 'B1.6.16.0 (04/09/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
