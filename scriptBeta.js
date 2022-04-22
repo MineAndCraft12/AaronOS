@@ -11899,11 +11899,18 @@ c(function(){
             "04/09/2022: B1.6.16.0": [
                 " : Made changes to fix a security issue.",
                 " + Added notice about the security issue in the Help app."
+            ],
+            "04/22/2022: B1.6.17.0": [
+                " + Added Light Show music visualizer.",
+                " + Music visualizers are now configurable.",
+                " + Music visualizer can now auto-select color themes.",
+                " : Music Player's settings menu is cleaned up.",
+                " + Additional version of Rainbow color theme for more contrast."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.16.0 (04/09/2022) r0';
+    window.aOSversion = 'B1.6.17.0 (04/22/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
