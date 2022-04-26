@@ -11906,11 +11906,16 @@ c(function(){
                 " + Music visualizer can now auto-select color themes.",
                 " : Music Player's settings menu is cleaned up.",
                 " + Additional version of Rainbow color theme for more contrast."
+            ],
+            "04/25/2022: B1.6.18.0": [
+                " + Added per-track Custom Colors settings to Music Player.",
+                " : Music Player's FileInfo is now ColorInfo and completely overhauled.",
+                " : The FileInfo file is deprecated and the ColorInfo file replaces it."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.17.0 (04/22/2022) r0';
+    window.aOSversion = 'B1.6.18.0 (04/25/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
