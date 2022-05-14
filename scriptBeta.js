@@ -11911,11 +11911,17 @@ c(function(){
                 " + Added per-track Custom Colors settings to Music Player.",
                 " : Music Player's FileInfo is now ColorInfo and completely overhauled.",
                 " : The FileInfo file is deprecated and the ColorInfo file replaces it."
+            ],
+            "05/14/2022: B1.6.19.0": [
+                " + Added Refraction visualizer to Music Player.",
+                " + Added two Refraction color themes to Music Player.",
+                " : Fixed visualizer previews blowing out their colors when hovered.",
+                " : The photosensitivity warning is more prominent on the Music Player."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.18.0 (04/25/2022) r0';
+    window.aOSversion = 'B1.6.19.0 (04/25/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
