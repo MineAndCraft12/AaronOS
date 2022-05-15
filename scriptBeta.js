@@ -11917,11 +11917,14 @@ c(function(){
                 " + Added two Refraction color themes to Music Player.",
                 " : Fixed visualizer previews blowing out their colors when hovered.",
                 " : The photosensitivity warning is more prominent on the Music Player."
+            ],
+            "05/15/2022: B1.6.20.0": [
+                " + Added System Audio and Browser Tab support to Music Player on the web."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.19.0 (04/25/2022) r0';
+    window.aOSversion = 'B1.6.20.0 (05/15/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
