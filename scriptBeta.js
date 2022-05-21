@@ -11920,11 +11920,19 @@ c(function(){
             ],
             "05/15/2022: B1.6.20.0": [
                 " + Added System Audio and Browser Tab support to Music Player on the web."
+            ],
+            "05/21/2022: B1.6.21.0": [
+                " + Added Dancing Orb visualizer to Music Player",
+                " + Added Light Show 2 visualizer to Music Player.",
+                " : Pitch calculation is completely reworked for the whole Music Player.",
+                " : Light Show's center lasers are now enabled by default.",
+                " : Light Show's center lasers are now controlled by pitch rather than volume.",
+                " : Changed a debug visualizer."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.20.0 (05/15/2022) r0';
+    window.aOSversion = 'B1.6.21.0 (05/21/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
