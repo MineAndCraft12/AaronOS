@@ -11928,11 +11928,17 @@ c(function(){
                 " : Light Show's center lasers are now enabled by default.",
                 " : Light Show's center lasers are now controlled by pitch rather than volume.",
                 " : Changed a debug visualizer."
+            ],
+            "06/13/2022: B1.6.22.0": [
+                " + Added FUBAR visualizer to Music Player.",
+                " : Fixed Circle Lines visualizer.",
+                " + Added some settings to Dancing Orb visualizer.",
+                " : Adjusted the Capri Plum visualizer color theme."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.21.0 (05/21/2022) r0';
+    window.aOSversion = 'B1.6.22.0 (06/13/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
