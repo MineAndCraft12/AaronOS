@@ -11934,11 +11934,19 @@ c(function(){
                 " : Fixed Circle Lines visualizer.",
                 " + Added some settings to Dancing Orb visualizer.",
                 " : Adjusted the Capri Plum visualizer color theme."
+            ],
+            "06/17/2022: B1.6.23.0": [
+                " : Brand new tracklist table design for Music Player.",
+                " + Tracks are now separated into collapsible groups by their folder.",
+                " + The tracklist is now alphabetized.",
+                " + Track format is now displayed in the tracklist.",
+                " : Shuffle is now a toggled mode rather than directly manipulating the tracklist.",
+                " : Shuffle will now display a psuedo-tracklist to represent the shuffle order, while keeping the original tracklist intact.",
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.22.0 (06/13/2022) r0';
+    window.aOSversion = 'B1.6.23.0 (06/17/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
