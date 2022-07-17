@@ -1,0 +1,156 @@
+body{
+    font-family: sans-serif;
+}
+.info{
+    padding:0.5em;
+    font-family:Consolas, monospace;
+    background-color:#040;
+    color:#0A0;
+}
+.warn{
+    padding:0.5em;
+    font-family:Consolas, monospace;
+    background-color:#473700;
+    color:#FA0;
+}
+.error{
+    padding:0.5em;
+    font-family:Consolas, monospace;
+    background-color:#500;
+    color:#F88;
+}
+#wpstorage{
+    font-family:Consolas, monospace;
+    padding:0.5em;
+    border:1px solid #7F7F7F;
+    border-radius:5px;
+    background-color:rgba(127, 127, 127, 0.25);
+}
+.divContent{
+    padding-left:2em;
+    padding-bottom:1em;
+    width:fit-content;
+}
+    .collapsed .divContent{
+        display: none;
+    }
+.divTitle{
+    font-size: 1.5em;
+    width: fit-content;
+    padding-right: 1em;
+    cursor: pointer;
+    user-select: none;
+}
+    .divTitle:hover{
+        background-color:rgba(127, 127, 127, 0.25);
+    }
+    .divTitle:active{
+        background-color:rgba(127, 127, 127, 0.5);
+    }
+    .divTitleTri{
+        font-size: 1.5em;
+        vertical-align: middle;
+    }
+.formatEditorLine{
+    padding-left:1em;
+    line-height:1.5em;
+}
+#projectDiv{
+    line-height:1.5em;
+}
+    .section{
+        /* border-left:1px solid #7F7F7F; */
+        padding:0.5em;
+        border-top:1px solid transparent;
+        border-bottom:1px solid transparent;
+        border-right:1px solid transparent;
+        transition:0.2s;
+        width:fit-content;
+    }
+        .section:hover{
+            border-top:1px solid #7F7F7F;
+            border-bottom:1px solid #7F7F7F;
+            border-right:1px solid #7F7F7F;
+        }
+        .sectionRemoveBtn{
+            transition:0.2s;
+            opacity:0;
+            float:left;
+            margin-top:-1.5em;
+            margin-left:-2em;
+            pointer-events:none;
+            visibility:hidden;
+        }
+        .section:hover .sectionRemoveBtn{
+            opacity:1;
+            pointer-events:all;
+            visibility:visible;
+        }
+        .seamless{
+            transition:0.2s;
+            text-align:left;
+            width:fit-content;
+            padding-left:6px;
+            padding-right:6px;
+        }
+        .seamless:focus{
+            background-color:rgba(127, 127, 127, 0.1);
+        }
+        .seamless:hover{
+            background-color:rgba(127, 127, 127, 0.25);
+        }
+        .seamless:active{
+            background-color: rgba(127, 127, 127, 0.5);
+        }
+        .chunks{
+            margin-left:-1.5em;
+            width:fit-content;
+        }
+        .chunkwrapper{
+            display:inline-block;
+            width:fit-content;
+            transition:0.2s;
+            box-shadow: 0 0 0 1px rgba(127, 127, 127, 0);
+        }
+            .chunkwrapper:hover{
+                box-shadow:0 0 0 1px rgba(127, 127, 127, 1);
+            }
+        .seamlesschunk{
+            transition: 0.2s;
+            display:inline-block;
+            width:fit-content;
+            text-align:center;
+        }
+            .seamlesschunk .seamless{
+                display:inline-block;
+            }
+        .seamlesschunkbutton{
+            display:inline-block;
+            width:fit-content;
+            text-align:center;
+            opacity:0;
+            padding-left:2px;
+            padding-right:3px;
+            transition: 0.2s;
+            /* border-left:1px solid #7F7F7F; */
+        }
+        .chunks:hover .seamlesschunkbutton{
+            opacity:1;
+        }
+        .seamlesschunkbutton span{
+            cursor: pointer;
+            font-weight:bold;
+            transition:0.2s;
+            pointer-events:none;
+            visibility:hidden;
+        }
+        .chunks:hover .seamlesschunkbutton span{
+            pointer-events:all;
+            visibility:visible;
+        }
+        .seamlesschunkbutton span:hover{
+            background-color:rgba(127, 127, 127, 0.25);
+        }
+        .seamlesschunkbutton span:active{
+            background-color:rgba(127, 127, 127, 0.5);
+        }

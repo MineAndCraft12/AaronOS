@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script defer src="script.js?v=20220716"></script>
+        <link rel="stylesheet" href="style.css?v=20220716">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div id="lineFormatting" class="collapsed">
+            <div class="divTitle" onclick="toggleCollapse(this.parentNode);">
+                <span class="divTitleTri">&rtrif;</span>
+                Section Formatting
+            </div>
+            <div class="divContent" id="lineFormatEditor">
+
+            </div>
+        </div>
+
+        <div id="projectHeader">
+            <div id="projectTitle" class="divTitle" onclick="toggleCollapse(this.parentNode);">
+                <span class="divTitleTri">&dtrif;</span>
+                Project
+            </div>
+            <div class="divContent" id="projectDiv">
+
+            </div>
+        </div>
+
+        <div id="saving">
+            <div class="divTitle" onclick="toggleCollapse(this.parentNode);">
+                <span class="divTitleTri">&dtrif;</span>
+                Saving and Loading
+            </div>
+            <div class="divContent">
+                <b>File</b><br><br>
+                &nbsp; &nbsp; <i>Store your Project as a file on your device.</i>
+                <br><br>
+                &nbsp; &nbsp; <button onclick="saveToJSON('file')">Save to File</button>
+                    <span id="fileDownloadSpan"></span>
+                <br><br>
+                &nbsp; &nbsp; Load a Project:
+                    <input id="fileUploadInput" type="file" onchange="loadFromJSON('file')" accept="application/json,text/plain">
+                <br><br>
+
+                <b>Webpage Storage</b><br><br>
+                &nbsp; &nbsp; <i>Store your Project on this webpage instead of a file.</i><br>
+                &nbsp; &nbsp; <i>Webpage Storage may disappear if your cache is cleared.</i>
+                <br><br>
+                &nbsp; &nbsp; <button onclick="saveToJSON('localStorage')">Save to Webpage Storage</button>
+                <br><br>
+                &nbsp; &nbsp; <span id="wpstorage">Webpage Storage is empty.</span>
+                <br><br>
+                &nbsp; &nbsp; <button onclick="loadFromJSON('localStorage')">Load from Webpage Storage</button>
+                <br><br>
+
+                <b>JSON Data</b><br><br>
+                &nbsp; &nbsp; <i>Convert your Project to JSON Data.</i><br>
+                &nbsp; &nbsp; <i>You can copy-paste the Data to another program.</i>
+                <br><br>
+                &nbsp; &nbsp; <button onclick="saveToJSON('textarea')">Save to JSON</button>
+                <br><br>
+                &nbsp; &nbsp; <textarea id="convertfield" placeholder="JSON Data"></textarea>
+                <br><br>
+                &nbsp; &nbsp; <button onclick="loadFromJSON('textarea')">Load from JSON</button>
+                <div id="jsonLoadError"></div>
+            </div>
+        </div>
+    </body>
+</html>
