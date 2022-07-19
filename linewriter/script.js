@@ -1,3 +1,11 @@
+window.addEventListener("beforeunload", function (e) {
+    var confirmationMessage = 'Any changes you\'ve made since saving will be lost!\n'
+                            + 'Are you sure you want to leave this page?';
+
+    (e || window.event).returnValue = confirmationMessage; //Gecko + IE
+    return confirmationMessage; //Gecko + Webkit, Safari, Chrome etc.
+});
+
 function toggleCollapse(element){
     element.classList.toggle("collapsed");
     var collapseUI = element.getElementsByClassName("divTitleTri");
