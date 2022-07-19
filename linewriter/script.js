@@ -41,7 +41,7 @@ var lineData = {
             {
                 type: "plain",
                 color: "",
-                content: "This is a study tool that Aaron is using to study language."
+                content: "Check out a usage example (to study language) in the next section."
             },
             {
                 type: "chunks",
@@ -51,30 +51,7 @@ var lineData = {
                 ],
                 chunks: [
                     ["You can change section formatting above.", "This tool isn't finished yet!"],
-                    ["You can save and load projects below.", "See examples in the next sections."]
-                ]
-            }
-        ],
-        [
-            {
-                type: "plain",
-                color: "",
-                content: "This is a line of plain text."
-            },
-            {
-                type: "plain",
-                color: "",
-                content: "This is another line of plain text."
-            },
-            {
-                type: "chunks",
-                colors: [
-                    "#7F7F7F",
-                    "#7F7F7F"
-                ],
-                chunks: [
-                    ["This is the top of a chunk.", "Use (+) to insert a new chunk."],
-                    ["This is the bottom of a chunk.", "Use (x) to remove a chunk."]
+                    ["You can save and load projects below.", "It's a work in progress."]
                 ]
             }
         ],
@@ -237,19 +214,21 @@ function loadLine(secNumber, lineNumber){
 function loadSection(secNumber){
     var tempHTML = '';
     for(var j = 0; j < lineData.sections[secNumber].length; j++){
+        tempHTML += '<div class="projFormatLine_' + j + '">';
         tempHTML += loadLine(secNumber, j);
+        tempHTML += '</div>';
         // tempHTML += '<br>';
     }
     return tempHTML;
 }
 
-function addSection(){
-    lineData.sections.push([]);
+function addSection(secNumber){
+    lineData.sections.splice(secNumber, 0, []);
     for(var i = 0; i < lineData.sectionFormat.numberOfLines; i++){
         if(lineTypes.hasOwnProperty(lineData.sectionFormat.lineFormats[i].type)){
-            lineData.sections[lineData.sections.length - 1].push(lineTypes[lineData.sectionFormat.lineFormats[i].type].setupProject(i));
+            lineData.sections[secNumber].push(lineTypes[lineData.sectionFormat.lineFormats[i].type].setupProject(i));
         }else{
-            lineData.sections[lineData.sections.length - 1].push({type: 'plain', content: 'ERROR! I don\'t know how to make a "' + lineData.sectionFormat.lineFormats[i].type + '" type of line!'});
+            lineData.sections[secNumber].push({type: 'plain', content: 'ERROR! I don\'t know how to make a "' + lineData.sectionFormat.lineFormats[i].type + '" type of line!'});
         }
     }
     loadProject();
@@ -265,13 +244,21 @@ function removeSection(secNumber){
 function loadProject(){
     try{
         var tempHTML = '';
+        if(document.getElementById('projectDiv').classList.contains('showEditUI')){
+            tempHTML += '<input type="checkbox" id="editUIbtn" onclick="toggleEditUI()" checked><label for="editUIbtn">Show edit UI</label>';
+        }else{
+            tempHTML += '<input type="checkbox" id="editUIbtn" onclick="toggleEditUI()"><label for="editUIbtn">Show edit UI</label>';
+        }
         for(var i = 0; i < lineData.sections.length; i++){
-            tempHTML += '<div class="section">';
-            tempHTML += '<button class="sectionRemoveBtn" onclick="removeSection(' + i + ')">x</button>';
+            tempHTML += '<div class="section">' +
+                '<div class="sectionBtnContainer">' +
+                '<button class="sectionRemoveBtn" onclick="removeSection(' + i + ')">x</button>' +
+                '<button class="sectionInsertBtn" onclick="addSection(' + i + ')">+</button>' +
+                '</div>';
             tempHTML += loadSection(i);
             tempHTML += '</div>';
         }
-        tempHTML += '<button onclick="addSection()">Add New Section</button>';
+        tempHTML += '<button onclick="addSection()">+ Add New Section</button>';
         document.getElementById('projectDiv').innerHTML = tempHTML;
     }catch(e){
         document.getElementById('jsonLoadError').innerHTML += '<br><div style="width:fit-content;">' +
@@ -296,6 +283,19 @@ function removeFormatLine(lineNumber){
     }
 }
 
+function hideFormatLine(lineNumber, elem){
+    var elems = document.getElementsByClassName('projFormatLine_' + lineNumber);
+    if(elem.checked){
+        for(var i = 0; i < elems.length; i++){
+            elems[i].classList.add('hidden');
+        }
+    }else{
+        for(var i = 0; i < elems.length; i++){
+            elems[i].classList.remove('hidden');
+        }
+    }
+}
+
 function addFormatLine(lineNumber){
     if(typeof lineNumber !== "number"){
         lineData.sectionFormat.numberOfLines++;
@@ -308,7 +308,8 @@ function addFormatLine(lineNumber){
     }else{
         var tempHTML = '';
         tempHTML += 'Line ' + (lineNumber + 1) + ': ' +
-            '<button onclick="removeFormatLine(' + lineNumber + ')">Remove</button>' +
+            '<button onclick="removeFormatLine(' + lineNumber + ')">Remove</button><br>' +
+            '<input type="checkbox" id="formatLine_' + lineNumber + '" onclick="hideFormatLine(' + lineNumber + ', this)"><label for="formatLine_' + lineNumber + '">Hide this line for now</label>' +
             '<div class="formatEditorLine" id="lineFormat_' + lineNumber + '" data-line-number="' + lineNumber + '">' +
             'Line Type: <select onchange="editFormatLineType(this.parentNode.getAttribute(\'data-line-number\'), this.value)">';
         for(var j in lineTypes){
@@ -344,6 +345,14 @@ function loadFormatEditor(){
 }
 
 loadFormatEditor();
+
+function toggleEditUI(){
+    if(document.getElementById('editUIbtn').checked){
+        document.getElementById('projectDiv').classList.add('showEditUI');
+    }else{
+        document.getElementById('projectDiv').classList.remove('showEditUI');
+    }
+}
 
 function saveToJSON(saveType){
     switch(saveType){

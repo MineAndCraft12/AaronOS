@@ -1,6 +1,9 @@
 body{
     font-family: sans-serif;
 }
+.hidden{
+    display:none;
+}
 .info{
     padding:0.5em;
     font-family:Consolas, monospace;
@@ -66,22 +69,23 @@ body{
         border-right:1px solid transparent;
         transition:0.2s;
         width:fit-content;
+        margin-top:0.5em;
     }
-        .section:hover{
+        .section:hover, .showEditUI .section{
             border-top:1px solid #7F7F7F;
             border-bottom:1px solid #7F7F7F;
             border-right:1px solid #7F7F7F;
         }
-        .sectionRemoveBtn{
+        .sectionBtnContainer{
             transition:0.2s;
             opacity:0;
             float:left;
-            margin-top:-1.5em;
-            margin-left:-2em;
+            margin-top:-1.35em;
+            margin-left:-2.75em;
             pointer-events:none;
             visibility:hidden;
         }
-        .section:hover .sectionRemoveBtn{
+        .section:hover .sectionBtnContainer, .showEditUI .sectionBtnContainer{
             opacity:1;
             pointer-events:all;
             visibility:visible;
@@ -103,7 +107,7 @@ body{
             background-color: rgba(127, 127, 127, 0.5);
         }
         .chunks{
-            margin-left:-1.5em;
+            margin-left:calc(-1em - 2px);
             width:fit-content;
         }
         .chunkwrapper{
@@ -111,8 +115,9 @@ body{
             width:fit-content;
             transition:0.2s;
             box-shadow: 0 0 0 1px rgba(127, 127, 127, 0);
+            margin-right:1px;
         }
-            .chunkwrapper:hover{
+            .chunkwrapper:hover, .showEditUI .chunkwrapper{
                 box-shadow:0 0 0 1px rgba(127, 127, 127, 1);
             }
         .seamlesschunk{
@@ -129,12 +134,12 @@ body{
             width:fit-content;
             text-align:center;
             opacity:0;
-            padding-left:2px;
-            padding-right:3px;
+            /* padding-left:2px; */
+            /* padding-right:3px; */
             transition: 0.2s;
             /* border-left:1px solid #7F7F7F; */
         }
-        .chunks:hover .seamlesschunkbutton{
+        .chunks:hover .seamlesschunkbutton, .showEditUI .seamlesschunkbutton{
             opacity:1;
         }
         .seamlesschunkbutton span{
@@ -144,7 +149,7 @@ body{
             pointer-events:none;
             visibility:hidden;
         }
-        .chunks:hover .seamlesschunkbutton span{
+        .chunks:hover .seamlesschunkbutton span, .showEditUI .seamlesschunkbutton span{
             pointer-events:all;
             visibility:visible;
         }
