@@ -266,7 +266,7 @@ function loadProject(){
             tempHTML += loadSection(i);
             tempHTML += '</div>';
         }
-        tempHTML += '<button onclick="addSection()">+ Add New Section</button>';
+        tempHTML += '<button onclick="addSection(' + i + ')">+ Add New Section</button>';
         document.getElementById('projectDiv').innerHTML = tempHTML;
     }catch(e){
         document.getElementById('jsonLoadError').innerHTML += '<br><div style="width:fit-content;">' +
