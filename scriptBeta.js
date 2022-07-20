@@ -11942,11 +11942,24 @@ c(function(){
                 " + Track format is now displayed in the tracklist.",
                 " : Shuffle is now a toggled mode rather than directly manipulating the tracklist.",
                 " : Shuffle will now display a psuedo-tracklist to represent the shuffle order, while keeping the original tracklist intact.",
+            ],
+            "07/16/2022: B1.6.24.0": [
+                " + Added standalone web app LineWriter. Not added to AaronOS UI yet."
+            ],
+            "07/18/2022: B1.6.25.0": [
+                " + Linewriter lets you insert a section in the middle of the document now.",
+                " + Linewriter lets you show the edit UI at all times now.",
+                " + Linewriter lets you show or hide certain lines now.",
+                " + LineWriter warns the user before closing the page.",
+                " : Adjusted spacing in edit UI to look cleaner."
+            ],
+            "07/20/2022: B1.6.25.1": [
+                " : Fixed alphabetical sort in Music Player web version."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.23.0 (06/17/2022) r0';
+    window.aOSversion = 'B1.6.25.1 (07/20/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
