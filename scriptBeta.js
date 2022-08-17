@@ -11958,11 +11958,15 @@ c(function(){
             ],
             "08/05/2022: B1.6.25.2": [
                 " + Updated pitch detection in Music Player. Orbs and Lasers visualizers are more responsive."
+            ],
+            "08/16/2022: B1.6.25.3": [
+                " + Music Player's Orbs Arise visualizer now responds to the frequency of bass. It's much more active now.",
+                " : Orbs Arise replaces Orbs Around in the list of featured visualizers."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.25.2 (08/05/2022) r0';
+    window.aOSversion = 'B1.6.25.3 (08/16/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
