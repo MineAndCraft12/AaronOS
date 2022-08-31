@@ -3510,221 +3510,11 @@ c(function(){
                     this.appWindow.openWindow();
                     //getId('win_startMenu_top').style.transform = '';
                     this.vars.listOfApps = '';
-                    switch(ufload("aos_system/apps/startMenu/dashboard")){
-                        case 'whisker':
-                            this.appWindow.setContent(
-                                '<span style="color:#FFF;font-family:aosProFont,monospace;font-size:12px">User: ' + apps.messaging.vars.parseBB(apps.messaging.vars.name) + '</span>' +
-                                '<div class="darkResponsive" style="left:0;bottom:0;height:calc(100% - 3em);overflow-y:scroll;width:calc(70% - 2px);">' +
-                                '<table id="appDsBtable" class="noselect" style="position:absolute;left:0;top:0;width:100%;max-width:100%;"></table>' +
-                                '</div>' +
-                                '<div style="right:0;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);text-align:right">' +
-                                '<img class="cursorPointer" style="width:10px;height:10px;filter:invert(1)" src="ctxMenu/beta/gear.png" onclick="openapp(apps.settings,\'dsktp\')"> ' +
-                                '<img class="cursorPointer" style="width:10px;height:10px;filter:invert(1)" src="ctxMenu/beta/power.png" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})"><br><br><br>' +
-                                '<button style="width:100%" onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button><br>' +
-                                '<button style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button><br>' +
-                                '<button style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button><br>' +
-                                '<button style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button><br>' +
-                                '<button style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button>' +
-                                '</div>' +
-                                '<input autocomplete="off" style="position:absolute;left:0;top:1.5em;width:calc(100% - 2px);" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>'
-                            );
-                            if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
-                                //getId('appDsBtable').style.cursor = cursors.loadLight;
-                                getId('appDsBtable').classList.add('cursorLoadLight');
-                                for(var appHandle in appsSorted){
-                                    //c(function(app){
-                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
-                                            //apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:64px;height:64px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
-                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')"><th>' + buildSmartIcon(64, apps[appsSorted[appHandle]].appWindow.appImg) + '</th><td>' + apps[appsSorted[appHandle]].appDesc + '</td></tr>';
-                                        }
-                                    //}, appsSorted[appHandle]);
-                                }
-                                //c(function(){
-                                    getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
-                                    // getId('appDsBtable').style.cursor = '';
-                                    getId('appDsBtable').classList.remove('cursorLoadLight');
-                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
-                                //});
-                            }else{
-                                getId('appDsBtable').innerHTML = this.vars.listOfApps;
-                                this.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
-                            }
-                            if(!mobileMode){
-                                getId('appDsBsearch').focus();
-                            }
-                            break;
-                        case 'win7':
-                            this.appWindow.setContent(
-                                '<button style="position:absolute;right:0;bottom:8px;width:30%" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">Power</button>' +
-                                '<div class="darkResponsive" style="left:0;top:0;height:calc(100% - 2.5em);overflow-y:scroll;width:calc(70% - 2px);border-top-left-radius:5px;border-top-right-radius:5px;">' +
-                                '<table id="appDsBtable" class="noselect" style="border-top-left-radius:5px;border-top-right-radius:5px;position:absolute;left:0;top:0;width:100%;max-width:100%;"></table>' +
-                                '</div>' +
-                                '<div style="right:0;color:#FFF;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);">' +
-                                '<img style="width:50px;margin-left:15px;" src="appicons/ds/aOS.png"><br>' +
-                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</span><br><br>' +
-                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</span><hr>' +
-                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</span><br><br>' +
-                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</span><hr>' +
-                                '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</span>' +
-                                '</div>' +
-                                '<input autocomplete="off" style="position:absolute;left:0;bottom:0;background-color:#DDD;width:calc(70% - 2px);height:3em;border:none;border-bottom-right-radius:5px;border-bottom-left-radius:5px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>'
-                            );
-                            if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
-                                //getId('appDsBtable').style.cursor = cursors.loadLight;
-                                getId('appDsBtable').classList.add('cursorLoadLight');
-                                for(var appHandle in appsSorted){
-                                    //c(function(app){
-                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
-                                            //apps.startMenu.vars.listOfApps += '<tr class="cursorPointer" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><th><img style="width:32px;height:32px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"></th><td>' + apps[app].appDesc + '</td></tr>';
-                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')"><th>' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '</th><td>' + apps[appsSorted[appHandle]].appDesc + '</td></tr>';
-                                        }
-                                    //}, appsSorted[appHandle]);
-                                }
-                                //c(function(){
-                                    getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
-                                    // getId('appDsBtable').style.cursor = '';
-                                    getId('appDsBtable').classList.remove('cursorLoadLight');
-                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
-                                //});
-                            }else{
-                                getId('appDsBtable').innerHTML = this.vars.listOfApps;
-                                this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
-                            }
-                            if(!mobileMode){
-                                getId('appDsBsearch').focus();
-                            }
-                            break;
-                        case 'android':
-                            this.appWindow.setContent(
-                                '<div style="width:100%;height:100%;overflow-y:scroll">' +
-                                '<span style="padding-bottom:4px;">&nbsp;' +
-                                '<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  ' +
-                                '<button onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button> ' +
-                                '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
-                                '<button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> ' +
-                                '<button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> ' +
-                                '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
-                                '<input autocomplete="off" style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch">' +
-                                '</span><hr style="margin:0;margin-top:2px">' +
-                                '<div id="appDsBtable" class="darkResponsive noselect" style="font-family:aosProFont, monospace; font-size:12px; width:calc(100% - 2px);"></div>' +
-                                '</div>'
-                            );
-                            if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '';
-                                //getId('appDsBtable').style.cursor = cursors.loadLight;
-                                getId('appDsBtable').classList.add('cursorLoadLight');
-                                for(var appHandle in appsSorted){
-                                    //c(function(app){
-                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
-                                            //apps.startMenu.vars.listOfApps += '<div class="cursorPointer" style="min-height:96px;max-height:96px;display:inline-block;position:static;text-align:center;min-width:25%;max-width:25%" onClick="openapp(apps.' + app + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + app + '\')"><img style="width:32px;" src="' + (apps[app].appWindow.appImg || 'appicons/ds/redx.png') + '"><br>' + apps[app].appDesc + '</div>';
-                                            apps.startMenu.vars.listOfApps += '<div class="cursorPointer dashboardSearchItem" style="min-height:96px;max-height:96px;display:inline-block;position:static;text-align:center;min-width:25%;max-width:25%" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')">' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '<br>' + apps[appsSorted[appHandle]].appDesc + '</div>';
-                                        }
-                                    //}, appsSorted[appHandle]);
-                                }
-                                //c(function(){
-                                    getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
-                                    // getId('appDsBtable').style.cursor = '';
-                                    getId('appDsBtable').classList.remove('cursorLoadLight');
-                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
-                                //});
-                            }else{
-                                getId('appDsBtable').innerHTML = this.vars.listOfApps;
-                                this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
-                            }
-                            if(!mobileMode){
-                                getId('appDsBsearch').focus();
-                            }
-                            break;
-                        case "legacy":
-                            this.appWindow.setContent(
-                                '<div style="width:100%;height:100%;overflow-y:scroll;">' +
-                                '<span style="padding-bottom:4px;">&nbsp;' +
-                                '<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  ' +
-                                '<button onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button> ' +
-                                '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
-                                '<button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> ' +
-                                '<button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> ' +
-                                '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
-                                '<input style="width:calc(100% - 4px);margin-top:3px" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch">' +
-                                '</span><hr style="margin:0;margin-top:2px">' +
-                                '<table id="appDsBtable" class="noselect" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;"></table>' +
-                                '</div>'
-                            );
-                            if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
-                                //getId('appDsBtable').style.cursor = cursors.loadLight;
-                                getId('appDsBtable').classList.add('cursorLoadLight');
-                                for(var appHandle in appsSorted){
-                                    //c(function(app){
-                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
-                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" style="background-color:rgba(' + darkSwitch('255, 255, 255', '39, 39, 39') + ', 0.5);color:' + darkSwitch('#000', '#FFF') + ';" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')"><th>' + apps[appsSorted[appHandle]].dsktpIcon + '</th><td>' + apps[appsSorted[appHandle]].appDesc + '</td></tr>';
-                                        }
-                                    //}, appsSorted[appHandle]);
-                                }
-                                //c(function(){
-                                    getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
-                                    // getId('appDsBtable').style.cursor = '';
-                                    getId('appDsBtable').classList.remove('cursorLoadLight');
-                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
-                                //});
-                            }else{
-                                getId('appDsBtable').innerHTML = this.vars.listOfApps;
-                                this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
-                            }
-                            if(!mobileMode){
-                                getId('appDsBsearch').focus();
-                            }
-                            break;
-                        default:
-                            this.appWindow.setContent(
-                                '<div style="width:100%;height:100%;">' +
-                                '<div style="position:relative;text-align:center;">' +
-                                '<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  ' +
-                                '<button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> ' +
-                                '<button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> ' +
-                                '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
-                                '<button onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button> ' +
-                                '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
-                                //'<button onclick="openapp(apps.help, \'dsktp\')">' + lang('startMenu', 'aosHelp') + '</button><br>' +
-                                '<input autocomplete="off" style="width:calc(100% - 6px);margin-top:3px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch">' +
-                                '</div><div id="appDsBtableWrapper" class="noselect" style="width:100%;overflow-y:scroll;background-color:rgba(' + darkSwitch('255, 255, 255', '39, 39, 39') + ', 0.5);">' +
-                                '<table id="appDsBtable" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;color:' + darkSwitch('#000', '#FFF') + ';"></table>' +
-                                '</div></div>'
-                            );
-                            var outerbound = getId("win_startMenu_html").getBoundingClientRect();
-                            var innerbound = getId("appDsBtableWrapper").getBoundingClientRect();
-                            getId("appDsBtableWrapper").style.height = outerbound.height - (innerbound.top - outerbound.top) + "px";
-                            if(this.vars.listOfApps.length === 0){
-                                getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
-                                //getId('appDsBtable').style.cursor = cursors.loadLight;
-                                getId('appDsBtable').classList.add('cursorLoadLight');
-                                for(var appHandle in appsSorted){
-                                    //c(function(app){
-                                        if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
-                                            apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')">' +
-                                                '<th>' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '</th>' +
-                                                '<td>' + apps[appsSorted[appHandle]].appDesc + '</td>' +
-                                                '<td style="text-align:right;opacity:0.5">' + apps[appsSorted[appHandle]].dsktpIcon + '</td>' +
-                                                '</tr>';
-                                        }
-                                    //}, appsSorted[appHandle]);
-                                }
-                                //c(function(){
-                                    getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
-                                    getId('appDsBtable').innerHTML += '<tr><th><div style="width:32px;height:32px;position:relative;"></div></th><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td>';
-                                    // getId('appDsBtable').style.cursor = '';
-                                    getId('appDsBtable').classList.remove('cursorLoadLight');
-                                    apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
-                                //});
-                            }else{
-                                getId('appDsBtable').innerHTML = this.vars.listOfApps;
-                                this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
-                            }
-                            if(!mobileMode){
-                                getId('appDsBsearch').focus();
-                            }
+                    var dashboardUI = ufload("aos_system/apps/startMenu/dashboard");
+                    if(dashboardUI){
+                        this.vars.dashboards[dashboardUI].ui();
+                    }else{
+                        this.vars.dashboards.default.ui();
                     }
                 }else{
                     apps.startMenu.signalHandler('shrink');
@@ -3754,6 +3544,242 @@ c(function(){
                             }else{
                                 this.appElems[i].style.display = 'none';
                             }
+                        }
+                    }
+                }
+            },
+            dashboards: {
+                default: {
+                    title: "AaronOS Dashboard",
+                    desc: "The default Dashboard of AaronOS.",
+                    features: ["Shortcuts", "App Search", "App Icons", "App Acronyms"],
+                    ui: function(){
+                        // Warning! Most of this is very old (and very bad) code!
+                        // I've commented out what every part of this code does, maybe that will help.
+                        // I will return at a later date to redo this completely.
+
+                        // build the UI
+                        apps.startMenu.appWindow.setContent(
+                            // wrap the whole thing in a div
+                            '<div style="width:100%;height:100%;">' +
+                            // shortcut buttons
+                            '<div style="position:relative;text-align:center;margin-top:2px;">' +
+                            '<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  ' +
+                            '<button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> ' +
+                            '<button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> ' +
+                            '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
+                            '<button onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button> ' +
+                            '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
+                            // search bar
+                            '<input autocomplete="off" style="width:calc(100% - 6px);margin-top:3px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch">' +
+                            // scroll bar for app list
+                            '</div><div id="appDsBtableWrapper" class="noselect" style="width:100%;overflow-y:scroll;background-color:rgba(' + darkSwitch('255, 255, 255', '39, 39, 39') + ', 0.5);">' +
+                            // app list
+                            '<table id="appDsBtable" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;color:' + darkSwitch('#000', '#FFF') + ';"></table>' +
+                            '</div></div>'
+                        );
+                        // set height of app list to the empty space in the window
+                        var outerbound = getId("win_startMenu_html").getBoundingClientRect();
+                        var innerbound = getId("appDsBtableWrapper").getBoundingClientRect();
+                        getId("appDsBtableWrapper").style.height = outerbound.height - (innerbound.top - outerbound.top) + "px";
+                        // if the app list is not populated yet
+                        if(apps.startMenu.vars.listOfApps.length === 0){
+                            // populate the apps list
+                            getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
+                            getId('appDsBtable').classList.add('cursorLoadLight');
+                            for(var appHandle in appsSorted){
+                                    if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
+                                        apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')">' +
+                                            '<th>' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '</th>' +
+                                            '<td>' + apps[appsSorted[appHandle]].appDesc + '</td>' +
+                                            '<td style="text-align:right;opacity:0.5">' + apps[appsSorted[appHandle]].dsktpIcon + '</td>' +
+                                            '</tr>';
+                                    }
+                            }
+                            getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                            // add an extra blank app to simulate overscroll
+                            getId('appDsBtable').innerHTML += '<tr><th><div style="width:32px;height:32px;position:relative;"></div></th><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td>&nbsp;&nbsp;&nbsp;</td>';
+                            // register apps in the list for the search function
+                            apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
+                        }else{
+                            // i think this is legacy code? I don't think it's possible for this to run
+                            // i'm leaving it here anyway so I don't break something
+                            // I will return at a later date to clean up all of this code.
+                            getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                            this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
+                        }
+                        // if we are NOT mobile, auto-focus the search bar
+                        if(!mobileMode){
+                            getId('appDsBsearch').focus();
+                        }
+                        // remove the loading cursor
+                        getId('appDsBtable').classList.remove('cursorLoadLight');
+                    }
+                },
+                legacy: {
+                    title: "Legacy Dashboard",
+                    desc: "The old Dashboard from before AaronOS Beta 1.3",
+                    features: ["Shortcuts", "App Search", "App Acronyms"],
+                    ui: function(){
+                        apps.startMenu.appWindow.setContent(
+                            '<div style="width:100%;height:100%;">' +
+                            '<div style="position:relative;text-align:center;margin-top:2px;">' +
+                            '<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  ' +
+                            '<button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> ' +
+                            '<button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> ' +
+                            '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
+                            '<button onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button> ' +
+                            '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
+                            '<input autocomplete="off" style="width:calc(100% - 6px);margin-top:3px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch">' +
+                            '</div>' +
+                            '<div id="appDsBtableWrapper" style="position:relative;width:100%;overflow-y:scroll;"><table id="appDsBtable" class="noselect" style="color:#000;font-family:aosProFont, monospace; font-size:12px; width:100%;"></table></div>' +
+                            '</div>'
+                        );
+                        var outerbound = getId("win_startMenu_html").getBoundingClientRect();
+                        var innerbound = getId("appDsBtableWrapper").getBoundingClientRect();
+                        getId("appDsBtableWrapper").style.height = outerbound.height - (innerbound.top - outerbound.top) + "px";
+                        getId("appDsBtable").style.minHeight = outerbound.height - (innerbound.top - outerbound.top) + "px";
+                        if(apps.startMenu.vars.listOfApps.length === 0){
+                            getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
+                            getId('appDsBtable').classList.add('cursorLoadLight');
+                            for(var appHandle in appsSorted){
+                                    if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
+                                        apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" style="background-color:rgba(' + darkSwitch('255, 255, 255', '39, 39, 39') + ', 0.5);color:' + darkSwitch('#000', '#FFF') + ';" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')"><th>' + apps[appsSorted[appHandle]].dsktpIcon + '</th><td>' + apps[appsSorted[appHandle]].appDesc + '</td></tr>';
+                                    }
+                            }
+                            getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                            getId('appDsBtable').classList.remove('cursorLoadLight');
+                            apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
+                        }else{
+                            getId('appDsBtable').innerHTML = this.vars.listOfApps;
+                            apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
+                        }
+                        if(!mobileMode){
+                            getId('appDsBsearch').focus();
+                        }
+                    }
+                },
+                win7: {
+                    title: "Aero Dashboard",
+                    desc: "Looks similar to Windows 7's Start Menu.<br>Used with permission from Microsoft.",
+                    features: ["Shortcuts", "App Search", "App Icons"],
+                    ui: function(){
+                        apps.startMenu.appWindow.setContent(
+                            '<button style="position:absolute;right:0;bottom:5px;width:30%" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">Power</button>' +
+                            '<div class="darkResponsive" style="left:0;top:0;height:calc(100% - 2em + 3px);overflow-y:scroll;width:calc(70% - 2px);border-top-left-radius:5px;border-top-right-radius:5px;">' +
+                            '<table id="appDsBtable" class="noselect" style="border-top-left-radius:5px;border-top-right-radius:5px;position:absolute;left:0;top:0;width:100%;max-width:100%;"></table>' +
+                            '</div>' +
+                            '<div style="right:0;color:#FFF;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);">' +
+                            buildSmartIcon(64, apps.startMenu.appWindow.appImg, "margin-left:8px;") + '<br>' +
+                            '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</span><br><br>' +
+                            '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</span><hr>' +
+                            '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</span><br><br>' +
+                            '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</span><hr>' +
+                            '<span class="cursorPointer" style="width:100%" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</span>' +
+                            '</div>' +
+                            '<input autocomplete="off" style="position:absolute;left:0;bottom:0;background-color:#DDD;width:calc(70% - 9px);padding-left:5px;height:2em;border:none;border-bottom-right-radius:5px;border-bottom-left-radius:5px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>'
+                        );
+                        if(apps.startMenu.vars.listOfApps.length === 0){
+                            getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
+                            getId('appDsBtable').classList.add('cursorLoadLight');
+                            for(var appHandle in appsSorted){
+                                    if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
+                                        apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')"><th>' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '</th><td>' + apps[appsSorted[appHandle]].appDesc + '</td></tr>';
+                                    }
+                            }
+                            getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                            getId('appDsBtable').classList.remove('cursorLoadLight');
+                            apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
+                        }else{
+                            getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                            this.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
+                        }
+                        if(!mobileMode){
+                            getId('appDsBsearch').focus();
+                        }
+                    }
+                },
+                android: {
+                    title: "Android Dashboard",
+                    desc: "Arranges apps in a grid, looks similar to Android launchers.",
+                    features: ["Shortcuts", "App Search", "App Icons"],
+                    ui: function(){
+                        apps.startMenu.appWindow.setContent(
+                            '<div style="width:100%;height:100%;">' +
+                            '<div style="position:relative;text-align:center;margin-top:2px;">' +
+                            '<button onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})">' + lang('startMenu', 'power') + '</button>  ' +
+                            '<button onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button> ' +
+                            '<button onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button> ' +
+                            '<button onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button><br>' +
+                            '<button onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button> ' +
+                            '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
+                            '<input autocomplete="off" style="width:calc(100% - 6px);margin-top:3px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch">' +
+                            '</div>' +
+                            '<div id="appDsBtableWrapper" style="position:relative;width:100%;overflow-y:scroll;"><div id="appDsBtable" class="darkResponsive noselect" style="font-family:aosProFont, monospace; font-size:12px; width:100%;padding-top:3px;"></div></div>' +
+                            '</div>'
+                        );
+                        var outerbound = getId("win_startMenu_html").getBoundingClientRect();
+                        var innerbound = getId("appDsBtableWrapper").getBoundingClientRect();
+                        getId("appDsBtableWrapper").style.height = outerbound.height - (innerbound.top - outerbound.top) + "px";
+                        getId("appDsBtable").style.minHeight = outerbound.height - (innerbound.top - outerbound.top) - 3 + "px";
+                        if(apps.startMenu.vars.listOfApps.length === 0){
+                            getId('appDsBtable').innerHTML = '';
+                            getId('appDsBtable').classList.add('cursorLoadLight');
+                            for(var appHandle in appsSorted){
+                                    if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
+                                        apps.startMenu.vars.listOfApps += '<div class="cursorPointer dashboardSearchItem" style="min-height:72px;max-height:72px;display:inline-block;position:static;text-align:center;min-width:33.3%;max-width:33.3%" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')">' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '<br>' + apps[appsSorted[appHandle]].appDesc + '</div>';
+                                    }
+                            }
+                            getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                            getId('appDsBtable').classList.remove('cursorLoadLight');
+                            apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
+                        }else{
+                            getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                            apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
+                        }
+                        if(!mobileMode){
+                            getId('appDsBsearch').focus();
+                        }
+                    }
+                },
+                whisker: {
+                    title: "Whisker Dashboard",
+                    desc: "Looks similar to XFCE's Whisker Menu.",
+                    features: ["Shortcuts", "App Search", "App Icons", "Displays Username"],
+                    ui: function(){
+                        apps.startMenu.appWindow.setContent(
+                            '<span style="color:#FFF;font-family:aosProFont,monospace;font-size:24px"><img src="ctxmenu/beta/smile.png" style="filter:invert(1);margin:1px;margin-left:3px;margin-right:5px">' + apps.messaging.vars.parseBB(apps.messaging.vars.name) + '</span>' +
+                            '<div class="darkResponsive" style="left:0;bottom:0;height:calc(100% - 3em);overflow-y:scroll;width:calc(70% - 2px);">' +
+                            '<table id="appDsBtable" class="noselect" style="position:absolute;left:0;top:0;width:100%;max-width:100%;"></table>' +
+                            '</div>' +
+                            '<div style="right:0;top:0;height:calc(100% - 2em);width:calc(30% - 2px);max-width:calc(30% - 2px);text-align:right">' +
+                            '<img class="cursorPointer" style="width:10px;height:10px;filter:invert(1);border:5px solid transparent;overflow:visible;" src="ctxMenu/beta/gear.png" onclick="openapp(apps.settings,\'dsktp\')"> ' +
+                            '<img class="cursorPointer" style="width:10px;height:10px;filter:invert(1);border:5px solid transparent;;overflow:visible;" src="ctxMenu/beta/power.png" onclick="c(function(){ctxMenu(apps.startMenu.vars.powerCtx, 1, event)})"><br><br>' +
+                            '<button style="width:100%;margin-top:0.5em;" onclick="openapp(apps.appCenter, \'dsktp\')">AaronOS Hub</button><br>' +
+                            '<button style="width:100%;margin-top:3px;" onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button><br>' +
+                            '<button style="width:100%;margin-top:3px;" onclick="openapp(apps.settings, \'dsktp\')">' + lang('startMenu', 'settings') + '</button><br>' +
+                            '<button style="width:100%;margin-top:3px;" onclick="openapp(apps.files2, \'dsktp\')">' + lang('startMenu', 'files') + '</button><br>' +
+                            '<button style="width:100%;margin-top:3px;" onclick="openapp(apps.appsbrowser, \'dsktp\')">' + lang('startMenu', 'allApps') + '</button>' +
+                            '</div>' +
+                            '<input autocomplete="off" style="position:absolute;left:0;top:2em;width:calc(100% - 2px);" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event)" id="appDsBsearch"></span>'
+                        );
+                        if(apps.startMenu.vars.listOfApps.length === 0){
+                            getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
+                            getId('appDsBtable').classList.add('cursorLoadLight');
+                            for(var appHandle in appsSorted){
+                                    if(apps[appsSorted[appHandle]].keepOffDesktop < 2){
+                                        apps.startMenu.vars.listOfApps += '<tr class="cursorPointer dashboardSearchItem" onClick="openapp(apps.' + appsSorted[appHandle] + ', \'dsktp\')" oncontextmenu="ctxMenu(apps.startMenu.vars.ctx, 1, event, \'' + appsSorted[appHandle] + '\')"><th>' + buildSmartIcon(32, apps[appsSorted[appHandle]].appWindow.appImg) + '</th><td>' + apps[appsSorted[appHandle]].appDesc + '</td></tr>';
+                                    }
+                            }
+                                getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                                getId('appDsBtable').classList.remove('cursorLoadLight');
+                                apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByTagName('tr');
+                        }else{
+                            getId('appDsBtable').innerHTML = apps.startMenu.vars.listOfApps;
+                            apps.startMenu.vars.appElems = getId('appDsBtable').getElementsByClassName('dashboardSearchItem');
+                        }
+                        if(!mobileMode){
+                            getId('appDsBsearch').focus();
                         }
                     }
                 }
@@ -7483,30 +7509,26 @@ c(function(){
                     folderName: 'Dashboard',
                     folderPath: 'apps.settings.vars.menus.dashboard',
                     image: 'settingIcons/new/dashboard.png',
-                    dashDefault: {
-                        option: 'Default Dashboard',
-                        description: function(){return 'The default Dashboard of AaronOS. Features quick shortcuts at the top and a searchable list of apps along with their icons and three-letter IDs.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'default\')">Select Default Dashboard</button>'}
-                    },
-                    dashLegacy: {
-                        option: 'Legacy Dashboard',
-                        description: function(){return 'Previously the default Dashboard of AaronOS, prior to Beta 1.3. Features quick shortcuts at the top and a searchable list of apps along with their three-letter IDs.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'legacy\')">Select Legacy Dashboard</button>'}
-                    },
-                    dashWin7: {
-                        option: 'Aero Dashboard',
-                        description: function(){return 'Make the Dashboard look similar to the Start Menu of Windows 7 Aero. Features icons, shortcut buttons, app search, and a more familiar look.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'win7\')">Select Aero Dashboard</button>'}
-                    },
-                    dashAndroid: {
-                        option: 'Android Dashboard',
-                        description: function(){return 'Make the Dashboard look similar to the app-drawer style of Android launchers. Features shortcut buttons, app search, and icons.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'android\')">Select Android Dashboard</button>'}
-                    },
-                    dashWhisker: {
-                        option: 'Whisker Dashboard',
-                        description: function(){return 'Make the Dashboard look similar to the Whiskermenu of the XFCE desktop environment. Features icons, shortcut buttons, app search, and quick access to your OS ID.'},
-                        buttons: function(){return '<button onclick="apps.settings.vars.setDashboard(\'whisker\')">Select Whisker Dashboard</button>'}
+                    dashSelect: {
+                        option: "Select Dashboard",
+                        description: function(){
+                            var dsbhtml = '<select onchange="apps.settings.vars.setDashboard(this.value);' +
+                                'getId(\'appSTNdashboardPreview\').innerHTML = \'<p>\' + apps.startMenu.vars.dashboards[this.value].desc + \'</p><ul><li>\' +' +
+                                'apps.startMenu.vars.dashboards[this.value].features.join(\'</li><li>\') +' +
+                                '\'</li></ul>\';">';
+                            for(var i in apps.startMenu.vars.dashboards){
+                                dsbhtml += '<option value="' + i + '"';
+                                if(ufload("aos_system/apps/startMenu/dashboard") === i){
+                                    dsbhtml += ' selected';
+                                }
+                                dsbhtml += '>' + apps.startMenu.vars.dashboards[i].title + '</option>';
+                            }
+                            return dsbhtml + '</select>';
+                        },
+                        buttons: function(){
+                            return '<span id="appSTNdashboardPreview"><p>' + (apps.startMenu.vars.dashboards[(ufload("aos_system/apps/startMenu/dashboard") || "default")] || apps.startMenu.vars.dashboards).desc + '</p>' +
+                                '<ul><li>' + (apps.startMenu.vars.dashboards[(ufload("aos_system/apps/startMenu/dashboard") || "default")] || apps.startMenu.vars.dashboards).features.join("</li><li>") + '</li></ul></span>'
+                        }
                     }
                 },
                 applicationPermissions: {
@@ -11962,11 +11984,17 @@ c(function(){
             "08/16/2022: B1.6.25.3": [
                 " + Music Player's Orbs Arise visualizer now responds to the frequency of bass. It's much more active now.",
                 " : Orbs Arise replaces Orbs Around in the list of featured visualizers."
+            ],
+            "08/30/2022: B1.6.26.0": [
+                " : Cleaned up the UI of some of the custom Dashboards.",
+                " : The Dashboard selection in Settings has been redone.",
+                " : Custom Dashboard UI code is now separated from the Dashboard App's code.",
+                " + It's now possible to add custom Dashboards via Boot Script Editor, because of these changes."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.25.3 (08/16/2022) r0';
+    window.aOSversion = 'B1.6.26.0 (08/30/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
