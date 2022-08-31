@@ -11987,12 +11987,13 @@ c(function(){
                 " : Cleaned up the UI of some of the custom Dashboards.",
                 " : The Dashboard selection in Settings has been redone.",
                 " : Custom Dashboard UI code is now separated from the Dashboard App's code.",
-                " + It's now possible to add custom Dashboards via Boot Script Editor, because of these changes."
+                " + It's now possible to add custom Dashboards via Boot Script Editor, because of these changes.",
+                " : Fixed Boot Script Editor failing to create or load other scripts."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.26.0 (08/30/2022) r0';
+    window.aOSversion = 'B1.6.26.0 (08/30/2022) r1';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -15650,45 +15651,48 @@ c(function(){
             },
             currScript: 'main',
             openScript: function(scriptName){
-                if(ufload("aos_system/apps/bootScript/" + scriptName)){
-                    //getId("BtStextarea").value = ufload("aos_system/apps/bootScript/" + scriptName);
-                    if(
-                        ufload('aos_system/apps/bootScript/' + cleanStr(this.currScript)) !== getId("BtS_edit_frame").contentWindow.editor.getValue() &&
-                        getId("BtS_edit_frame").contentWindow.editor.getValue() !== ""
-                    ){
-                        apps.prompt.vars.confirm(
-                            "The current changes are NOT saved! Are you sure you want to load a different file?",
-                            ["Cancel", "Load &amp; Lose Changes"],
-                            (btn) => {
-                                if(btn){
-                                    this.currScript = scriptName;
-                                    var allScripts = document.getElementsByClassName('BtS_script');
-                                    for(var i = 0; i < allScripts.length; i++){
-                                        allScripts[i].style.color = '';
-                                    }
-                                    getId("BtS_edit_frame").contentWindow.editor.session.setValue(ufload("aos_system/apps/bootScript/" + cleanStr(scriptName)));
-                                    getId('BtS_edit_frame').contentWindow.editor.scrollToLine(0);
-                                    getId("BtS_script_" + scriptName).style.color = "#0AA";
-                                }
-                            },
-                            "Boot Script Editor"
-                        )
-                    }else{
-                        this.currScript = scriptName;
-                        var allScripts = document.getElementsByClassName('BtS_script');
-                        for(var i = 0; i < allScripts.length; i++){
-                            allScripts[i].style.color = '';
-                        }
-                        getId("BtS_edit_frame").contentWindow.editor.session.setValue(ufload("aos_system/apps/bootScript/" + cleanStr(scriptName)));
-                        getId('BtS_edit_frame').contentWindow.editor.scrollToLine(0);
-                        getId("BtS_script_" + scriptName).style.color = "#0AA";
-                    }
+                if(typeof ufload("aos_system/apps/bootScript/" + scriptName) !== "string"){
+                    ufsave("aos_system/apps/bootScript/" + scriptName, "// AaronOS Boot Script");
                 }
+                
+                //getId("BtStextarea").value = ufload("aos_system/apps/bootScript/" + scriptName);
+                if(
+                    ufload('aos_system/apps/bootScript/' + cleanStr(this.currScript)) !== getId("BtS_edit_frame").contentWindow.editor.getValue() &&
+                    getId("BtS_edit_frame").contentWindow.editor.getValue() !== ""
+                ){
+                    apps.prompt.vars.confirm(
+                        "The current changes are NOT saved! Are you sure you want to load a different file?",
+                        ["Cancel", "Load &amp; Lose Changes"],
+                        (btn) => {
+                            if(btn){
+                                this.currScript = scriptName;
+                                var allScripts = document.getElementsByClassName('BtS_script');
+                                for(var i = 0; i < allScripts.length; i++){
+                                    allScripts[i].style.color = '';
+                                }
+                                getId("BtS_edit_frame").contentWindow.editor.session.setValue(ufload("aos_system/apps/bootScript/" + cleanStr(scriptName)));
+                                getId('BtS_edit_frame').contentWindow.editor.scrollToLine(0);
+                                getId("BtS_script_" + scriptName).style.color = "#0AA";
+                            }
+                        },
+                        "Boot Script Editor"
+                    )
+                }else{
+                    this.currScript = scriptName;
+                    var allScripts = document.getElementsByClassName('BtS_script');
+                    for(var i = 0; i < allScripts.length; i++){
+                        allScripts[i].style.color = '';
+                    }
+                    getId("BtS_edit_frame").contentWindow.editor.session.setValue(ufload("aos_system/apps/bootScript/" + cleanStr(scriptName)));
+                    getId('BtS_edit_frame').contentWindow.editor.scrollToLine(0);
+                    getId("BtS_script_" + scriptName).style.color = "#0AA";
+                }
+                //}
             },
             newScript: function(){
                 apps.prompt.vars.prompt("Please enter a name for the new script.<br><br>Leave blank to cancel.", "Submit", function(str){
                     if(str){
-                        if(!ufload("aos_system/apps/bootScript").hasOwnProperty(cleanStr(str))){
+                        if(!(ufload("aos_system/apps/bootScript") || {}).hasOwnProperty(cleanStr(str))){
                             apps.bootScript.vars.createScript(str);
                         }else{
                             apps.prompt.vars.alert("There is already a boot script with that name.", "Okay", function(){}, "Boot Script Editor");
