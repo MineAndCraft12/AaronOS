@@ -3638,7 +3638,6 @@ c(function(){
                         var outerbound = getId("win_startMenu_html").getBoundingClientRect();
                         var innerbound = getId("appDsBtableWrapper").getBoundingClientRect();
                         getId("appDsBtableWrapper").style.height = outerbound.height - (innerbound.top - outerbound.top) + "px";
-                        getId("appDsBtable").style.minHeight = outerbound.height - (innerbound.top - outerbound.top) + "px";
                         if(apps.startMenu.vars.listOfApps.length === 0){
                             getId('appDsBtable').innerHTML = '<tr><td></td></tr>';
                             getId('appDsBtable').classList.add('cursorLoadLight');
@@ -3715,13 +3714,12 @@ c(function(){
                             '<button onclick="openapp(apps.jsConsole, \'dsktp\')">' + lang('startMenu', 'jsConsole') + '</button> ' +
                             '<input autocomplete="off" style="width:calc(100% - 6px);margin-top:3px;" placeholder="App Search" onkeyup="apps.startMenu.vars.search(event, 1)" id="appDsBsearch">' +
                             '</div>' +
-                            '<div id="appDsBtableWrapper" style="position:relative;width:100%;overflow-y:scroll;"><div id="appDsBtable" class="darkResponsive noselect" style="font-family:aosProFont, monospace; font-size:12px; width:100%;padding-top:3px;"></div></div>' +
+                            '<div id="appDsBtableWrapper" class="darkResponsive" style="position:relative;width:100%;overflow-y:scroll;"><div id="appDsBtable" class="darkResponsive noselect" style="font-family:aosProFont, monospace; font-size:12px; width:100%;padding-top:3px;"></div></div>' +
                             '</div>'
                         );
                         var outerbound = getId("win_startMenu_html").getBoundingClientRect();
                         var innerbound = getId("appDsBtableWrapper").getBoundingClientRect();
                         getId("appDsBtableWrapper").style.height = outerbound.height - (innerbound.top - outerbound.top) + "px";
-                        getId("appDsBtable").style.minHeight = outerbound.height - (innerbound.top - outerbound.top) - 3 + "px";
                         if(apps.startMenu.vars.listOfApps.length === 0){
                             getId('appDsBtable').innerHTML = '';
                             getId('appDsBtable').classList.add('cursorLoadLight');
