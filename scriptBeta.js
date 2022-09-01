@@ -1355,10 +1355,57 @@ var smartIconOptions = {
     radiusBottomLeft: 100,
     radiusBottomRight: 100,
     backgroundOpacity: 1,
+    borderEnabled: 1,
+    silhouette: 0,
     bgColor: ''
 };
 function updateSmartIconStyle(){
-    getId("smartIconStyle").innerHTML = '.smarticon_bg{border-top-left-radius:' + smartIconOptions.radiusTopLeft + '%;border-top-right-radius:' + smartIconOptions.radiusTopRight + '%;border-bottom-left-radius:' + smartIconOptions.radiusBottomLeft + '%;border-bottom-right-radius:' + smartIconOptions.radiusBottomRight + '%;display:' + function(){if(smartIconOptions.backgroundOpacity){return 'block'}else{return 'none'}}() + ';' + function(){if(smartIconOptions.bgColor){return 'background-color:' + smartIconOptions.bgColor.split(';')[0] + ' !important;'}else{return ''}}() + '}.smarticon_nobg{display:' + function(){if(smartIconOptions.backgroundOpacity){return 'none'}else{return 'block'}}() + ';}';
+    getId("smartIconStyle").innerHTML = '.smarticon_bg{' +
+        'border-top-left-radius:' + smartIconOptions.radiusTopLeft + '%;' +
+        'border-top-right-radius:' + smartIconOptions.radiusTopRight + '%;' +
+        'border-bottom-left-radius:' + smartIconOptions.radiusBottomLeft + '%;' +
+        'border-bottom-right-radius:' + smartIconOptions.radiusBottomRight + '%;' +
+        'display:' + function(){
+            if(smartIconOptions.backgroundOpacity){
+                return 'block;';
+            }else{
+                return 'none;';
+            }
+        }() +
+        function(){
+            if(smartIconOptions.bgColor){
+                return 'background-color:' + smartIconOptions.bgColor.split(';')[0] + ' !important;';
+            }else{
+                return '';
+            }
+        }() +
+        '}' +
+        '.smarticon_nobg{' +
+        'display:' + function(){
+            if(smartIconOptions.backgroundOpacity){
+                return 'none;';
+            }else{
+                return 'block;';
+            }
+        }() +
+        '}' +
+        function(){
+            if(smartIconOptions.borderEnabled !== 0){
+                return '.smarticon_border{display:none !important;}';
+            }else{
+                return '';
+            }
+        }() +
+        function(){
+            if(smartIconOptions.silhouette === 1){
+                return '.smarticon_fg, .smarticon_nobg{filter:grayscale(1) brightness(256);}';
+            }else if(smartIconOptions.grayscale === 1){
+                return '.smarticon_fg, .smarticon_nobg{filter:grayscale(1)}';
+            }else{
+                return '';
+            }
+        }();
+
     var allSmartIconsBG = document.getElementsByClassName("smarticon_bg");
     for(var i = 0; i < allSmartIconsBG.length; i++){
         var currSize = parseFloat(allSmartIconsBG[i].getAttribute("data-smarticon-size"));
@@ -9274,15 +9321,42 @@ c(function(){
                 '<div style="position:relative;width:100%;height:256px;padding-top:10px;padding-bottom:10px;background:#000;box-shadow:0 0 5px #000;text-align:center;">' +
                 buildSmartIcon(256, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(128, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(64, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(32, this.vars.aOSicon) +
                 '</div>' +
-                '<br><br>&nbsp;Border Radius:<br>' +
-                '&nbsp;<input id="smartIconSettings_tl" value="' + smartIconOptions.radiusTopLeft + '" size="3" placeholder="100"> ' + '<div style="width:64px;position:relative;display:inline-block"></div> ' +
-                '<input id="smartIconSettings_tr" value="' + smartIconOptions.radiusTopRight + '" size="3" placeholder="100">' + '<br>' +
-                '&nbsp;<input id="smartIconSettings_bl" value="' + smartIconOptions.radiusBottomLeft + '" size="3" placeholder="100"> ' + buildSmartIcon(64, this.vars.aOSicon, 'margin-top:-1em') + ' ' +
-                '<input id="smartIconSettings_br" value="' + smartIconOptions.radiusBottomRight + '" size="3" placeholder="100">' + '<br><br>' +
-                '&nbsp;<button onclick="apps.smartIconSettings.vars.saveRadiuses()">Save</button> ' +
-                '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br><br>' +
-                '<input id="smartIconSettings_bgcolor" value="' + smartIconOptions.bgColor + '" placeholder="color"> <button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button><br><br>' +
-                'Test an image: <input type="file" accept="image/*" onchange="apps.smartIconSettings.vars.changeImage(this)">'
+                '<div style="text-align:center;width:100%;">' +
+
+                '<div style="display:inline-block;position:relative;padding:8px;vertical-align:top;">' +
+                '<h2>Shape</h2>' +
+                'Roundness: <button onclick="apps.smartIconSettings.vars.saveRadiuses()">Save Changes</button>' +
+                '<br><br>' +
+                '<input type="number" id="smartIconSettings_tl" value="' + smartIconOptions.radiusTopLeft + '" placeholder="100" min="0" max="200" step="1"> ' +
+                '<div style="width:64px;position:relative;display:inline-block"></div> ' +
+                '<input type="number" id="smartIconSettings_tr" value="' + smartIconOptions.radiusTopRight + '" placeholder="100" min="0" max="200" step="1">' +
+                '<br>' +
+                '<input type="number" id="smartIconSettings_bl" value="' + smartIconOptions.radiusBottomLeft + '" placeholder="100" min="0" max="200" step="1"> ' +
+                buildSmartIcon(64, this.vars.aOSicon, 'margin-top:-1em') + ' ' +
+                '<input type="number" id="smartIconSettings_br" value="' + smartIconOptions.radiusBottomRight + '" placeholder="100" min="0" max="200" step="1">' +
+                '</div>' +
+
+                '<div style="display:inline-block;position:relative;padding:8px;line-height:1.5em;vertical-align:top;border-left:1px solid #7F7F7F;border-right:1px solid #7F7F7F;">' +
+                '<h2>Background</h2>' +
+                '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br>' +
+                '<button onclick="apps.smartIconSettings.vars.toggleBorder()">Toggle Outline</button><br><br>' +
+                '<input id="smartIconSettings_bgcolor" value="' + smartIconOptions.bgColor + '" placeholder="#RGB, rgb(), hsl(), red, blue"><br>' +
+                '<button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button>' +
+                '</div>' +
+
+                '<div style="display:inline-block;position:relative;padding:8px;line-height:1.5em;vertical-align:top;">' +
+                '<h2>Foreground</h2>' +
+                '<button onclick="apps.smartIconSettings.vars.toggleGrayscale()">Toggle Grayscale</button><br>' +
+                '<button onclick="apps.smartIconSettings.vars.toggleSilhouette()">Toggle Silhouette</button><br><br>' +
+                'Test an image:<br>' +
+                '<input type="file" accept="image/*" onchange="apps.smartIconSettings.vars.changeImage(this)" style="width:15em;">' +
+                '</div>' +
+                
+                '<p><i>Designers! Icon size should be a power of two; for example 64x64, 512x512, etc.' +
+                '<br>' +
+                'Also, keep in mind that your icon may be displayed with or without a background or color.</i></p>' +
+
+                '</div>'
             );
             this.appWindow.paddingMode(0);
             this.appWindow.openWindow();
@@ -9352,6 +9426,27 @@ c(function(){
             },
             toggleBG: function(nosave){
                 smartIconOptions.backgroundOpacity = Math.abs(smartIconOptions.backgroundOpacity - 1);
+                updateSmartIconStyle();
+                if(!nosave){
+                    saveSmartIconStyle();
+                }
+            },
+            toggleBorder: function(nosave){
+                smartIconOptions.borderEnabled = Math.abs((smartIconOptions.borderEnabled ?? 1) - 1);
+                updateSmartIconStyle();
+                if(!nosave){
+                    saveSmartIconStyle();
+                }
+            },
+            toggleSilhouette: function(nosave){
+                smartIconOptions.silhouette = Math.abs((smartIconOptions.silhouette ?? 0) - 1);
+                updateSmartIconStyle();
+                if(!nosave){
+                    saveSmartIconStyle();
+                }
+            },
+            toggleGrayscale: function(nosave){
+                smartIconOptions.grayscale = Math.abs((smartIconOptions.grayscale ?? 0) - 1);
                 updateSmartIconStyle();
                 if(!nosave){
                     saveSmartIconStyle();
@@ -11989,11 +12084,16 @@ c(function(){
                 " : Custom Dashboard UI code is now separated from the Dashboard App's code.",
                 " + It's now possible to add custom Dashboards via Boot Script Editor, because of these changes.",
                 " : Fixed Boot Script Editor failing to create or load other scripts."
+            ],
+            "08/31/2022: B1.6.27.0": [
+                " + Smart Icons can now have their outlines toggled.",
+                " + Smart Icons can now be grayscaled or silhouetted.",
+                " : Improved the UI of the Smart Icon Settings app."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.26.0 (08/30/2022) r1';
+    window.aOSversion = 'B1.6.27.0 (08/31/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
