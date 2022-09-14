@@ -1357,7 +1357,8 @@ var smartIconOptions = {
     backgroundOpacity: 1,
     borderEnabled: 1,
     silhouette: 0,
-    bgColor: ''
+    bgColor: '',
+    borderColor: ''
 };
 function updateSmartIconStyle(){
     getId("smartIconStyle").innerHTML = '.smarticon_bg{' +
@@ -1374,7 +1375,7 @@ function updateSmartIconStyle(){
         }() +
         function(){
             if(smartIconOptions.bgColor){
-                return 'background-color:' + smartIconOptions.bgColor.split(';')[0] + ' !important;';
+                return 'background-color:' + cleanStr(smartIconOptions.bgColor.split(';')[0]) + ' !important;';
             }else{
                 return '';
             }
@@ -1392,6 +1393,8 @@ function updateSmartIconStyle(){
         function(){
             if(smartIconOptions.borderEnabled !== 0){
                 return '.smarticon_border{display:none !important;}';
+            }else if(smartIconOptions.borderColor){
+                return '.smarticon_border{color: ' + cleanStr(smartIconOptions.borderColor.split(';')[0]) + ' !important;}';
             }else{
                 return '';
             }
@@ -1468,7 +1471,8 @@ function buildSmartIcon(size, options, optionalcss){
         icoTemp += '<div class="smarticon_fg" style="background:url(' + cleanStr(options.foreground.split(";")[0]) + ');"></div>';
     }
     if(options.backgroundBorder){
-        icoTemp += '<div class="smarticon_border" data-smarticon-size="' + size + '" style="box-shadow:inset 0 0 0 ' + (size / 32 * (options.backgroundBorder.thickness || 1)) + 'px ' + cleanStr(options.backgroundBorder.color.split(";")[0]) + ';' +
+        icoTemp += '<div class="smarticon_border" data-smarticon-size="' + size + '" style="box-shadow:inset 0 0 0 ' + (size / 32 * (options.backgroundBorder.thickness || 1)) + 'px;' +
+            'color:' + cleanStr(options.backgroundBorder.color.split(";")[0]) + ';' +
             'border-top-left-radius:' + Math.round((size / 2) * (smartIconOptions.radiusTopLeft / 100)) + 'px;' +
             'border-top-right-radius:' + Math.round((size / 2) * (smartIconOptions.radiusTopRight / 100)) + 'px;' +
             'border-bottom-left-radius:' + Math.round((size / 2) * (smartIconOptions.radiusBottomLeft / 100)) + 'px;' +
@@ -9316,7 +9320,7 @@ c(function(){
         launchTypes: 1,
         main: function(launchtype){
             this.appWindow.setCaption("Smart Icon Settings");
-            this.appWindow.setDims("auto", "auto", 800, 600);
+            this.appWindow.setDims("auto", "auto", 800, 616);
             this.appWindow.setContent(
                 '<div style="position:relative;width:100%;height:256px;padding-top:10px;padding-bottom:10px;background:#000;box-shadow:0 0 5px #000;text-align:center;">' +
                 buildSmartIcon(256, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(128, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(64, this.vars.aOSicon) + '&nbsp;' + buildSmartIcon(32, this.vars.aOSicon) +
@@ -9338,10 +9342,12 @@ c(function(){
 
                 '<div style="display:inline-block;position:relative;padding:8px;line-height:1.5em;vertical-align:top;border-left:1px solid #7F7F7F;border-right:1px solid #7F7F7F;">' +
                 '<h2>Background</h2>' +
-                '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br>' +
-                '<button onclick="apps.smartIconSettings.vars.toggleBorder()">Toggle Outline</button><br><br>' +
                 '<input id="smartIconSettings_bgcolor" value="' + smartIconOptions.bgColor + '" placeholder="#RGB, rgb(), hsl(), red, blue"><br>' +
-                '<button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button>' +
+                '<button onclick="apps.smartIconSettings.vars.setColor()">Override Background Color</button><br>' +
+                '<button onclick="apps.smartIconSettings.vars.toggleBG()">Toggle Background</button><br><br>' +
+                '<input id="smartIconSettings_bordercolor" value="' + (smartIconOptions.borderColor || '') + '" placeholder="#RGB, rgb(), hsl(), red, blue"><br>' +
+                '<button onclick="apps.smartIconSettings.vars.setBorderColor()">Override Outline Color</button><br>' +
+                '<button onclick="apps.smartIconSettings.vars.toggleBorder()">Toggle Outline</button>' +
                 '</div>' +
 
                 '<div style="display:inline-block;position:relative;padding:8px;line-height:1.5em;vertical-align:top;">' +
@@ -9458,6 +9464,18 @@ c(function(){
                     updateSmartIconStyle();
                 }else{
                     smartIconOptions.bgColor = getId("smartIconSettings_bgcolor").value;
+                    updateSmartIconStyle();
+                }
+                if(!nosave){
+                    saveSmartIconStyle();
+                }
+            },
+            setBorderColor: function(color, nosave){
+                if(color){
+                    smartIconOptions.borderColor = color;
+                    updateSmartIconStyle();
+                }else{
+                    smartIconOptions.borderColor = getId("smartIconSettings_bordercolor").value;
                     updateSmartIconStyle();
                 }
                 if(!nosave){
@@ -12089,11 +12107,14 @@ c(function(){
                 " + Smart Icons can now have their outlines toggled.",
                 " + Smart Icons can now be grayscaled or silhouetted.",
                 " : Improved the UI of the Smart Icon Settings app."
+            ],
+            "09/14/2022: B1.6.28.0": [
+                " + Smart Icons outline color can now be overridden."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.27.0 (08/31/2022) r0';
+    window.aOSversion = 'B1.6.28.0 (09/14/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
