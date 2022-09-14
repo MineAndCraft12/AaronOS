@@ -12108,7 +12108,7 @@ c(function(){
                 " + Smart Icons can now be grayscaled or silhouetted.",
                 " : Improved the UI of the Smart Icon Settings app."
             ],
-            "09/14/2022: B1.6.28.0": [
+            "09/14/2022: B1.6.28.0": [ // this update looks weird on git because i forgot to sign in before commit
                 " + Smart Icons outline color can now be overridden."
             ]
         },
