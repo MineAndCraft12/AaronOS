@@ -89,6 +89,7 @@ This notice's text is not to be modified in any way whatsoever from its original
         - is clearly readable
         - does not distort the meaning of the text in any way
 This notice is not to be moved to a new location in the work.
+This notice is not to be removed from the work.
 You are allowed to place your own, separate copyright notice anywhere you wish, but it must:
     - not claim ownership or responsibility of AaronOS or its resources
     - not attempt to override Aaron's copyright notice
@@ -126,4 +127,4 @@ The AaronOS project's code and resources are provided as-is, and Aaron is not in
     otherwise changed by people or services beyond Aaron himself.
 
 
-Document last updated 2021-06-18 at 11:09am
+Document last updated 2022-09-28 at 7:12pm

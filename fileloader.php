@@ -1,5 +1,15 @@
 <?php
 
+    if(isset($_COOKIE['keyword'])){
+        if($_COOKIE['keyword']){
+            if(strpos($_COOKIE['keyword'], '.') !== false || strpos($_COOKIE['keyword'], '/') !== false){
+                // bad cookie. ignore it
+                unset($_COOKIE['keyword']);
+            }
+        }
+    }
+    ini_set("open_basedir", "./");
+
     // THIS FILE IS DEPRECATED, see filepreloaderBeta.php and fileloaderBeta.php
     
     // error handler

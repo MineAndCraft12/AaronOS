@@ -1,4 +1,16 @@
 <?php
+    if(isset($_COOKIE['keyword'])){
+        if($_COOKIE['keyword']){
+            if(strpos($_COOKIE['keyword'], '.') !== false || strpos($_COOKIE['keyword'], '/') !== false){
+                // bad cookie. ignore it
+                unset($_COOKIE['keyword']);
+                echo 'bad keyword';
+                die();
+            }
+        }
+    }
+    ini_set("open_basedir", "./");
+
     if(file_exists('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt')){
         $passwordFile = fopen('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt', 'r');
         $currPassword = fread($passwordFile, filesize('USERFILES/'.$_COOKIE['keyword'].'/aOSpassword.txt'));

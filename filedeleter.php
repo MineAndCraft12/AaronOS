@@ -1,4 +1,17 @@
 <?php
+
+    if(isset($_COOKIE['keyword'])){
+        if($_COOKIE['keyword']){
+            if(strpos($_COOKIE['keyword'], '.') !== false || strpos($_COOKIE['keyword'], '/') !== false){
+                // bad cookie. ignore it
+                unset($_COOKIE['keyword']);
+                echo 'Error - bad keyword';
+                die();
+            }
+        }
+    }
+    ini_set("open_basedir", "./");
+
     function deleteDir($dirPath) {
         if (! is_dir($dirPath)) {
             throw new InvalidArgumentException("$dirPath must be a directory");

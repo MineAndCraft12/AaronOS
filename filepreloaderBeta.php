@@ -1,4 +1,14 @@
 <?php
+    if(isset($_COOKIE['keyword'])){
+        if($_COOKIE['keyword']){
+            if(strpos($_COOKIE['keyword'], '.') !== false || strpos($_COOKIE['keyword'], '/') !== false){
+                // bad cookie. ignore it
+                unset($_COOKIE['keyword']);
+            }
+        }
+    }
+    ini_set("open_basedir", "./");
+
     // error handler
     function error($errno, $errstr, $errfile, $errline){
         echo "alert('Serverside error in $errfile[$errline]: $errstr\n\nContact mineandcraft12@gmail.com or #bug-reports on https://discord.gg/Y5Jytdm\nIf needed, tell the developer in a PRIVATE conversation, your ID is ".$_COOKIE['keyword']."');";

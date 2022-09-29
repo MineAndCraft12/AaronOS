@@ -1,4 +1,14 @@
 <?php
+    if(isset($_COOKIE['keyword'])){
+        if($_COOKIE['keyword']){
+            if(strpos($_COOKIE['keyword'], '.') !== false || strpos($_COOKIE['keyword'], '/') !== false){
+                // bad cookie. ignore it
+                unset($_COOKIE['keyword']);
+            }
+        }
+    }
+    ini_set("open_basedir", "./");
+
     if(isset($_POST['k']) && isset($_COOKIE['keyword']) && strpos($_SERVER['HTTP_REFERER'], 'https://'.$_SERVER['SERVER_NAME']) === 0){
         if($_POST['k'] === $_COOKIE['keyword']){
             $onlineUsers = fopen('USERFILES/online.txt', 'r');

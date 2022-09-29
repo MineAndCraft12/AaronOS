@@ -1,5 +1,16 @@
 <?php
     header("Access-Control-Allow-Origin: ".$_SERVER['HTTP_REFERER']);
+
+    if(isset($_COOKIE['keyword'])){
+        if($_COOKIE['keyword']){
+            if(strpos($_COOKIE['keyword'], '.') !== false || strpos($_COOKIE['keyword'], '/') !== false){
+                // bad cookie. ignore it
+                unset($_COOKIE['keyword']);
+            }
+        }
+    }
+    ini_set("open_basedir", "./");
+
     if(isset($_GET['id']) && isset($_GET['file']) && (isset($_GET['text']) || isset($_GET['delete']))/* && substr($_SERVER['HTTP_REFERER'], 0, 37) === 'https://aaron-os-mineandcraft12.c9.io'*/){
         function error($errno, $errstr){
             echo "Error - [" + $errno + '] ' + $errstr;

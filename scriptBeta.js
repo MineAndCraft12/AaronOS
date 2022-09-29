@@ -179,6 +179,11 @@ function cleanStr(str){
     return str.split('&').join('&amp;').split('<').join('&lt;').split('>').join('&gt;');
 }
 
+// sanatize a string to make js safe
+function cleanStrJS(str){
+    return str.split('"').join('\\"').split('\'').join('\\\'').split(';').join('');
+}
+
 // i got bored
 var lsdTimeout = -1;
 function lsd(){
@@ -5850,7 +5855,7 @@ c(function(){
                 return this.workdirfinal;
             },
             getRealDir: function(origdir){
-                return eval(this.translateDir(origdir));
+                return eval(cleanStrJS(this.translateDir(origdir)));
             },
             alias: {},
             checkPrefix: function(event, keyUp){
@@ -7633,6 +7638,7 @@ c(function(){
                                         }
                                     }
                                 }
+                                tempHTML += '</div>';
                             }
                             return tempHTML + '</div>';
                         }
@@ -12110,11 +12116,20 @@ c(function(){
             ],
             "09/14/2022: B1.6.28.0": [ // this update looks weird on git because i forgot to sign in before commit
                 " + Smart Icons outline color can now be overridden."
-            ]
+            ],
+            "09/28/2022: B1.6.29.0": [
+                " : Updated the EULA! Check ./eula.txt please!",
+                " : Web Apps are now each assigned their own unique folders instead of root file access.",
+                " : Context Menus from Web Apps now position themselves correctly when screen is scaled.",
+                " : Fixed issues in Web App Permissions API",
+                " : Fixed issues in aOS Hub UI",
+                " : Backend fixes.",
+                " : Fixed App Permissions settings menu nesting improperly."
+            ],
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.28.0 (09/14/2022) r0';
+    window.aOSversion = 'B1.6.29.0 (09/28/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13878,7 +13893,7 @@ c(function(){
                             }
                             if(input.options[i].customImage){
                                 arrayToRender.push([
-                                    namePrefix + input.options[i].name,
+                                    namePrefix + cleanStr(input.options[i].name),
                                     (() => {
                                         var j = i;
                                         return () => {
@@ -13893,7 +13908,7 @@ c(function(){
                                 ]);
                             }else if(input.options[i].image){
                                 arrayToRender.push([
-                                    namePrefix + input.options[i].name,
+                                    namePrefix + cleanStr(input.options[i].name),
                                     (() => {
                                         var j = i;
                                         return () => {
@@ -13908,7 +13923,7 @@ c(function(){
                                 ]);
                             }else{
                                 arrayToRender.push([
-                                    namePrefix + input.options[i].name,
+                                    namePrefix + cleanStr(input.options[i].name),
                                     (() => {
                                         var j = i;
                                         return () => {
@@ -13924,8 +13939,8 @@ c(function(){
                         }
                         ctxMenu(
                             arrayToRender, 1, {
-                                pageX: (input.position || [0, 0])[0] + boundingRect.x,
-                                pageY: (input.position || [0, 0])[1] + boundingRect.y
+                                pageX: (input.position || [0, 0])[0] * screenScale + boundingRect.x,
+                                pageY: (input.position || [0, 0])[1] * screenScale + boundingRect.y
                             }, {}
                         )
                         return "APPMAKER_DO_NOT_REPLY";
@@ -13938,23 +13953,23 @@ c(function(){
                     }
                 },
                 fs: {
-                    read_uf: function(input){
-                        return ufload(input.targetFile);
+                    read_uf: function(input, frame){
+                        return ufload('aos_system/apps/' + frame.getAttribute('data-parent-app') + '/' + input.targetFile);
                     },
-                    write_uf: function(input){
+                    write_uf: function(input, frame){
                         try{
-                            ufsave(input.targetFile, input.content);
+                            ufsave('aos_system/apps/' + frame.getAttribute('data-parent-app') + '/' + input.targetFile, input.content);
                             return "success";
                         }catch(err){
                             return "error: " + err
                         }
                     },
-                    read_lf: function(input){
-                        return lfload(input.targetFile);
+                    read_lf: function(input, frame){
+                        return lfload('aos_system/apps/' + frame.getAttribute('data-parent-app') + '/' + input.targetFile);
                     },
-                    write_lf: function(input){
+                    write_lf: function(input, frame){
                         try{
-                            lfsave(input.targetFile, input.content);
+                            lfsave('aos_system/apps/' + frame.getAttribute('data-parent-app') + '/' + input.targetFile, input.content);
                             return "success";
                         }catch(err){
                             return "error: " + err
@@ -13964,7 +13979,7 @@ c(function(){
                 prompt: {
                     alert: function(input, srcFrame, frameOrigin){
                         try{
-                            apps.prompt.vars.alert(input.content || "", input.button || "Okay", () => {
+                            apps.prompt.vars.alert(cleanStr(input.content).split("\n").join("<br>").split("&lt;br&gt;").join("<br>") || "", cleanStr(input.button) || "Okay", () => {
                                 apps.webAppMaker.vars.postReply({
                                     messageType: "response",
                                     content: true,
@@ -13978,7 +13993,7 @@ c(function(){
                     },
                     prompt: function(input, srcFrame, frameOrigin){
                         try{
-                            apps.prompt.vars.prompt(input.content || "", input.button || "Okay", (userText) => {
+                            apps.prompt.vars.prompt(cleanStr(input.content).split("\n").join("<br>").split("&lt;br&gt;").join("<br>") || "", cleanStr(input.button) || "Okay", (userText) => {
                                 apps.webAppMaker.vars.postReply({
                                     messageType: "response",
                                     content: userText,
@@ -13992,7 +14007,11 @@ c(function(){
                     },
                     confirm: function(input, srcFrame, frameOrigin){
                         try{
-                            apps.prompt.vars.confirm(input.content || "", input.buttons || ["Cancel", "Okay"], (userBtn) => {
+                            var cleanedButtons = input.buttons || ["Cancel", "Okay"];
+                            for(var i = 0; i < cleanedButtons.length; i++){
+                                cleanedButtons[i] = cleanStr(cleanedButtons[i]);
+                            }
+                            apps.prompt.vars.confirm(cleanStr(input.content).split("\n").join("<br>").split("&lt;br&gt;").join("<br>") || "", cleanedButtons, (userBtn) => {
                                 apps.webAppMaker.vars.postReply({
                                     messageType: "response",
                                     content: userBtn,
@@ -14006,7 +14025,11 @@ c(function(){
                     },
                     notify: function(input, srcFrame, frameOrigin){
                         try{
-                            apps.prompt.vars.notify(input.content || "", input.buttons || ["Cancel", "Okay"], (userBtn) => {
+                            var cleanedButtons = input.buttons || ["Cancel", "Okay"];
+                            for(var i = 0; i < cleanedButtons.length; i++){
+                                cleanedButtons[i] = cleanStr(cleanedButtons[i]);
+                            }
+                            apps.prompt.vars.notify(cleanStr(input.content).split("\n").join("<br>").split("&lt;br&gt;").join("<br>") || "", cleanedButtons, (userBtn) => {
                                 apps.webAppMaker.vars.postReply({
                                     messageType: "response",
                                     content: userBtn,
@@ -14060,7 +14083,7 @@ c(function(){
                         try{
                             if(frame.getAttribute("data-parent-app")){
                                 if(apps[frame.getAttribute("data-parent-app")]){
-                                    apps[frame.getAttribute("data-parent-app")].appWindow.setCaption(input.content);
+                                    apps[frame.getAttribute("data-parent-app")].appWindow.setCaption(cleanStr(input.content));
                                     return true;
                                 }
                                 return false;
@@ -14323,8 +14346,8 @@ c(function(){
                     customstyle: "Get the user's system theme."
                 },
                 fs: {
-                    read_uf: "Read and write USERFILES",
-                    read_lf: "Read and write LOCALFILES",
+                    read_uf: "Read and write a unique folder in USERFILES",
+                    read_lf: "Read and write a unique folder in LOCALFILES",
                 },
                 readsetting: {
                     glbl: "Read your aOS settings."
@@ -16839,9 +16862,9 @@ c(function(){
                     if(selectedPackage.packageType.indexOf(apps.appCenter.vars.categories[apps.appCenter.vars.currCategorySearch]) !== -1){
                         finalhtml += "<div style='position:relative;width:calc(100% - 35px);min-height:128px;padding:16px;border-top:2px solid #7F7F7F;'>";
                         finalhtml += "<div style='position:relative;height:128px;width:128px;'>" + buildSmartIcon(128, selectedPackage.icon) + "</div><div style='position:relative;width:calc(100% - 144px);margin-left:160px;margin-top:-128px;'>"
-                        finalhtml += "<b>" + selectedPackage.packageName + " <span id='APPCENTER_NOTICE_" + repositories[packageList[i][1]].repoID + "_" + packageList[i][2] + "' style='color:#A00'></span></b><br>" +
-                            "<span style='font-family:aosProFont, monospace; font-size:12px'>" + repositories[packageList[i][1]].repoID + "." + selectedPackage.packageID + "</span><br>" +
-                            (selectedPackage.description || "No Description.").split("\n").join("<br>");
+                        finalhtml += "<b>" + cleanStr(selectedPackage.packageName) + " <span id='APPCENTER_NOTICE_" + cleanStr(repositories[packageList[i][1]].repoID) + "_" + cleanStr(packageList[i][2]) + "' style='color:#A00'></span></b><br>" +
+                            "<span style='font-family:aosProFont, monospace; font-size:12px'>" + cleanStr(repositories[packageList[i][1]].repoID) + "." + cleanStr(selectedPackage.packageID) + "</span><br>" +
+                            (cleanStr(selectedPackage.description) || "No Description.").split("\n").join("<br>");
                         finalhtml += "<br><br></div><div style='right:16px;text-align:right;bottom:16px;'>"
                         if(installedPackages.hasOwnProperty(repositories[packageList[i][1]].repoID)){
                             if(installedPackages[repositories[packageList[i][1]].repoID].hasOwnProperty(selectedPackage.packageID)){
@@ -16878,8 +16901,8 @@ c(function(){
                 var finalhtml = '';
                 for(var repo in repositories){
                     finalhtml += "<div style='position:relative;width:calc(100% - 35px);padding:16px;border-top:2px solid #7F7F7F;'>" +
-                        "<b>" + repositories[repo].repoName + "</b><br>" +
-                        "<span style='font-family:aosProFont, monospace; font-size:12px'>" + repositories[repo].repoID + "</span><br><br>" +
+                        "<b>" + cleanStr(repositories[repo].repoName) + "</b><br>" +
+                        "<span style='font-family:aosProFont, monospace; font-size:12px'>" + cleanStr(repositories[repo].repoID) + "</span><br><br>" +
                         repo + "<br><br>" +
                         "<div style='right:16px;text-align:right;bottom:16px;'>";
                     finalhtml += '<button data-appcenter-repo="' + repo + '" onclick="apps.appCenter.vars.removeRepo(this)">Remove</button>' +
@@ -16913,8 +16936,8 @@ c(function(){
                     currUpdates[i] = currUpdates[i].split('.');
                     var selectedPackage = installedPackages[currUpdates[i][0]][currUpdates[i][1]];
                     finalhtml += "<div style='position:relative;width:calc(100% - 35px);padding:16px;border-top:2px solid #7F7F7F;'>";
-                    finalhtml += "<b>" + selectedPackage.name + "</b><br>" +
-                        "<span style='font-family:aosProFont, monospace; font-size:12px'>" + currUpdates[i][0] + "." + selectedPackage.id + "</span><br>";
+                    finalhtml += "<b>" + cleanStr(selectedPackage.name) + "</b><br>" +
+                        "<span style='font-family:aosProFont, monospace; font-size:12px'>" + cleanStr(currUpdates[i][0]) + "." + cleanStr(selectedPackage.id) + "</span><br>";
                     finalhtml += "</div>";
                 }
                 getId("APPCENTER_packages").innerHTML = finalhtml;
