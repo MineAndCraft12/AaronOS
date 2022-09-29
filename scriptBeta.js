@@ -12119,6 +12119,8 @@ c(function(){
             ],
             "09/28/2022: B1.6.29.0": [
                 " : Updated the EULA! Check ./eula.txt please!",
+                " : Adjusted Welcome Screen",
+                " : Help App now displays EULA and Privacy Policy",
                 " : Web Apps are now each assigned their own unique folders instead of root file access.",
                 " : Context Menus from Web Apps now position themselves correctly when screen is scaled.",
                 " : Fixed issues in Web App Permissions API",
@@ -13053,8 +13055,13 @@ c(function(){
                         '<button onclick="apps.help.vars.showMenu(apps.help.vars.menus)" style="display:block;position:absolute;right:6px;top:6px;">Help Pages</button>' +
                         '<div id="Hlp_menudiv" class="noselect" style="width:calc(100% - 6px);font-size:1.5em;">';
                     for(var i in menuObj.menuOptions){
-                        menuStr += '<div style="width:calc(50% - 6px);display:inline-block;padding-left:6px;position:relative;margin-top:16px;">' +
-                        '<span class="cursorPointer" onclick="apps.help.vars.showMenu(' + menuObj.menuOptions[i].menuLocation + ')">' + menuObj.menuOptions[i].menuTitle + '</span></div>';
+                        if(menuObj.menuOptions[i].menuType === "link"){
+                            menuStr += '<div style="width:calc(50% - 6px);display:inline-block;padding-left:6px;position:relative;margin-top:16px;">' +
+                                '<span class="cursorPointer" onclick="apps.help.vars.showMenu(' + menuObj.menuOptions[i].menuLocation + ')"><a target="blank" href="' + menuObj.menuOptions[i].menuHref + '">' + menuObj.menuOptions[i].menuTitle + '</a></span></div>';
+                        }else{
+                            menuStr += '<div style="width:calc(50% - 6px);display:inline-block;padding-left:6px;position:relative;margin-top:16px;">' +
+                                '<span class="cursorPointer" onclick="apps.help.vars.showMenu(' + menuObj.menuOptions[i].menuLocation + ')">' + menuObj.menuOptions[i].menuTitle + '</span></div>';
+                        }
                     }
                     menuStr += '</div>';
                     apps.help.appWindow.setContent(menuStr);
@@ -13091,6 +13098,8 @@ c(function(){
                         menuObj.menuContent +
                         '</div>';
                     apps.help.appWindow.setContent(menuStr);
+                }else if(menuObj.menuType === "link"){
+
                 }
             },
             menus: {
@@ -13098,6 +13107,16 @@ c(function(){
                 menuType: "menus",
                 menuLocation: "apps.help.vars.menus",
                 menuOptions: {
+                    eula: {
+                        menuTitle: "EULA",
+                        menuType: "link",
+                        menuHref: "eula.txt"
+                    },
+                    privacy: {
+                        menuTitle: "Privacy Policy",
+                        menuType: "link",
+                        menuHref: "privacy.txt"
+                    },
                     intro: {
                         menuTitle: "Welcome",
                         menuType: "options",
@@ -13112,13 +13131,9 @@ c(function(){
                             },
                             */
                             filesHelpPrompt: {
-                                optionTitle: "",
                                 optionContent: () => {
-                                    return "<div style='position:relative;text-align:center;overflow:visible;'><button style=\"transform:scale(2);margin:-8px;\" onclick=\"apps.help.vars.showMenu(apps.help.vars.menus.menuOptions.filesHelp)\">IMPORTANT SECURITY NOTICE: 4/9/22</button></div>";
+                                    return "<div style='position:relative;text-align:center;overflow:visible;margin-top:-1em;'><button onclick=\"apps.help.vars.showMenu(apps.help.vars.menus.menuOptions.filesHelp)\">Security notice for users prior to April 9, 2022</button></div>";
                                 },
-                                optionButton: () => {
-                                    return "";
-                                }
                             },
                             tutorial: {
                                 optionTitle: "Guided Tour",
@@ -13141,9 +13156,10 @@ c(function(){
                                 }
                             },
                             noHelp: {
-                                optionTitle: "Jump Right In",
+                                optionTitle: "EULA and Privacy Policy",
                                 optionContent: () => {
-                                    return 'Alternatively, just close this window and just jump right in.'
+                                    return 'By using this project or its code, you must agree that:<br>' +
+                                        '&nbsp; &nbsp; <i>"I have read and agree to the <a target="_blank" href="eula.txt">EULA</a> and the <a target="_blank" href="privacy.txt">Privacy Policy</a>."</i>'
                                 }
                             }
                         }
@@ -13157,7 +13173,7 @@ c(function(){
                         }
                     },
                     filesHelp: {
-                        menuTitle: "SECURITY NOTICE: 4/9/22<br><i>(Where are my files?)</i>",
+                        menuTitle: "Security Notice:<br> April 9, 2022<br><i>(Where are my files?)</i>",
                         menuLocation: "apps.help.vars.menus.menuOptions.filesHelp",
                         menuType: "docs",
                         menuContent: '<p>The AaronOS filesystem was full-reset on April 9, 2022 due to a security issue.</p>' +
