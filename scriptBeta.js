@@ -2230,9 +2230,9 @@ function repoUpdateIntermediate(){
                 }
             }
             if(repoUpdateCallbackColored){
-                repoUpdateCallback("| Network Error " + this.status + ": " + this.repositoryName, "#579");
+                repoUpdateCallback("| Network Error " + this.status + ": " + this.repositoryName + " (" + Math.round(perfCheck("repoUpdatePerformance") / 1000) + "ms)", "#A00");
             }else{
-                repoUpdateCallback("Network Error " + this.status + ": " + this.repositoryName);
+                repoUpdateCallback("Network Error " + this.status + ": " + this.repositoryName + " (" + Math.round(perfCheck("repoUpdatePerformance") / 1000) + "ms)");
             }
         }
         repoStagedUpdates--;
@@ -2254,23 +2254,23 @@ function repoUpdateInstall(repoURL, repoResponse){
                 repositories[repoURL] = repoJSON;
                 repositoryIDs[repoJSON.repoID] = repoURL;
                 if(repoUpdateCallbackColored){
-                    repoUpdateCallback("| Success: " + repoURL, "#579");
+                    repoUpdateCallback("| Success: " + repoURL + " (" + Math.round(perfCheck("repoUpdatePerformance") / 1000) + "ms)", "#579");
                 }else{
-                    repoUpdateCallback("Success: " + repoURL);
+                    repoUpdateCallback("Success: " + repoURL + " (" + Math.round(perfCheck("repoUpdatePerformance") / 1000) + "ms)");
                 }
             }else if(repositoryIDs[repository] !== repoURL){
                 if(repoUpdateCallbackColored){
-                    repoUpdateCallback("| Error: " + repoJSON.repoID + " already exists: " + repoURL, "#579");
+                    repoUpdateCallback("| Error: " + repoJSON.repoID + " already exists: " + repoURL + " (" + Math.round(perfCheck("repoUpdatePerformance") / 1000) + "ms)", "#A00");
                 }else{
-                    repoUpdateCallback("Error: " + repoJSON.repoID + " already exists: " + repoURL);
+                    repoUpdateCallback("Error: " + repoJSON.repoID + " already exists: " + repoURL + " (" + Math.round(perfCheck("repoUpdatePerformance") / 1000) + "ms)");
                 }
             }
         }
     }catch(err){
         if(repoUpdateCallbackColored){
-            repoUpdateCallback("| Error: " + err + ": " + repoURL, "#579");
+            repoUpdateCallback("| Error: " + err + ": " + repoURL + " (" + Math.round(perfCheck("repoUpdatePerformance") / 1000) + "ms)", "#A00");
         }else{
-            repoUpdateCallback("Error: " + err + ": " + repoURL);
+            repoUpdateCallback("Error: " + err + ": " + repoURL + " (" + Math.round(perfCheck("repoUpdatePerformance") / 1000) + "ms)");
         }
     }
 }
@@ -2339,6 +2339,7 @@ function repoUpdate(callback, finishFunc){
         repositoryIDs = [];
         repoUpdateOutput = [];
         repoStagedUpdates = 0;
+        perfStart("repoUpdatePerformance");
         for(var repo in repositories){
             repoUpdateXHR[repo] = new XMLHttpRequest();
             if(repo.indexOf("?") > -1){ // this URL parameter is added to beat the Chrome cache system
@@ -12128,10 +12129,14 @@ c(function(){
                 " : Backend fixes.",
                 " : Fixed App Permissions settings menu nesting improperly."
             ],
+            "10/02/2022: B1.6.30.0": [
+                " + Added new Flash Cards app to repository.",
+                " : Updated repository status logging."
+            ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.29.0 (09/28/2022) r0';
+    window.aOSversion = 'B1.6.30.0 (10/02/2022) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });

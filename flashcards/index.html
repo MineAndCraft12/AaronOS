@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Page Title</title>
+        <link rel="stylesheet" href="style.css">
+        <script defer src="https://aaronos.dev/AaronOS/aosTools.js"></script>
+        <script defer src="script.js"></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <div class="winHTML">
+
+            <div id="homepage" class="fullscreen">
+                <h1>AaronOS Flashcards</h1>
+                <p><button id="createButton" onclick="switchScreen('editor');">Create New Project</button></p>
+                <p style="line-height:1.5em;">
+                    Load a File:<br>
+                    <input id="fileUploadInput" type="file" onchange="loadFile()" accept="application/json,text/plain"><br>
+                    <span id="fileButtons" class="disabled">
+                        <button onclick="switchScreen('study');">Study</button> or <button onclick="switchScreen('editor');">Edit</button>
+                    </span>
+                </p>
+                <p id="loadStatus" style="line-height:1.5em;"></p>
+            </div>
+
+            <div id="study" class="fullscreen hidden">
+                <div id="studyHeader">
+                    <div id="studyPrev" class="cursorPointer" onclick="studyPrev()">&larr;</div>
+                    <div id="studyNext" class="cursorPointer" onclick="studyNext()">&rarr;</div>
+                    <button onclick="switchScreen('homepage');">Go Home</button>
+                    <button onclick="switchScreen('editor');">Edit Cards</button>
+                    <button id="resetStudy" onclick="resetStudy()">Study Again</button><br>
+                    <select id="studyOrder" onchange="setStudyOrder(this.value)"></select>
+                    <select id="studyType" onchange="setStudyType(this.value)"></select>
+                    <!--
+                        <input id="showAllAnswers" type="checkbox" checked onchange="setShowAllAnswers(this.checked)">
+                        <label for="showAllAnswers">Show All Answers</label>
+                    -->
+                </div>
+                <div id="studyProgressWrapper">
+                    <div id="studyProgress"></div>
+                    <div id="studyFails"></div>
+                    <div id="studyWins"></div>
+                </div>
+                <div id="studyContent">
+
+                </div>
+            </div>
+
+            <div id="editor" class="fullscreen hidden">
+                <div id="editorHeader">
+                    <button onclick="switchScreen('homepage');">Go Home</button>
+                    <button onclick="switchScreen('study');">Go Study</button>
+                    <br>
+                    <button onclick="save();">Save File</button>
+                    <span id="fileDownloadSpan"></span>
+                </div>
+                <div id="editorWrapper">
+                    <div id="editorContent"></div>
+                    <button onclick="newCard()">Create New Card</button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
