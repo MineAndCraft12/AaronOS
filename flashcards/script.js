@@ -314,7 +314,7 @@ var studyTypes = {
             for(var i = 0; i < studyQueue.length; i++){
                 tempHTML += '<div id="studyCard_' + i + '" class="hidden quizCard">' +
                     '<div id="cardQ_' + i + '" class="termsQ">' + studyQueue[i].q.split("<").join("&lt;").split(">").join("&gt;") + '</div>' +
-                    '<div id="cardA_' + i + '" class="terms">' +
+                    '<div id="cardA_' + i + '" class="termsA">' +
                     studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                     '</div>' +
                     '<div class="quizWrapper">' +
