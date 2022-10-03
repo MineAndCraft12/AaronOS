@@ -299,7 +299,7 @@
             "description": "Simple app to generate Codabar barcodes."
         },
         "flashcards": {
-            "packageName": "flashcards",
+            "packageName": "Flash Cards",
             "packageID": "flashcards",
             "packageAliases": ["flash", "cards", "study"],
             "version": "1.0",
