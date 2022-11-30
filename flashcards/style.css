@@ -102,7 +102,7 @@ body{
     height:100%;
 }
 .quizQ, .quizA{
-    font-size:10vh;
+    font-size:6vh;
     width:100%;
     text-align:center;
     line-height:1.25em;
@@ -114,14 +114,14 @@ body{
     height: calc(50% + 19px);
 }
 .cardQ, .cardA{
-    font-size:10vh;
+    font-size:6vh;
     width:100%;
     text-align:center;
     line-height:1.25em;
     height:calc(100% - 22px);
 }
 .termsQ, .termsA{
-    font-size:10vh;
+    font-size:6vh;
     width:100%;
     text-align:center;
     line-height:1.25em;

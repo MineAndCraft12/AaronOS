@@ -113,13 +113,13 @@ var studyTypes = {
                 tempHTML += '<div id="studyCard_' + i + '" class="hidden quizCard">' +
                     '<div class="quizQ">' + studyQueue[i].q.split("<").join("&lt;").split(">").join("&gt;") + '</div>' +
                     '<div class="quizWrapper">' +
-                    '<button onclick="studyPrev()">Previous Card</button> &nbsp; ' +
-                    '<input id="quizInput_' + i + '" class="quizInput" autocomplete="off" onkeypress="if(event.keyCode === 13){getId(\'quizSubmit_' + i + '\').click();getId(\'quizNext_' + i + '\').focus();}"> ' +
-                    '<button onclick="studyTypes.quiz.test(this)" data-quiz-index="' + i + '" id="quizSubmit_' + i + '">Submit</button> &nbsp; ' +
+                    '<button onclick="studyPrev()">Last Card</button> &nbsp; ' +
+                    '<input id="quizInput_' + i + '" class="quizInput" placeholder="Type answer here" autocomplete="off" onkeypress="if(event.keyCode === 13){getId(\'quizSubmit_' + i + '\').click();getId(\'quizNext_' + i + '\').focus();}"> ' +
+                    '<button onclick="studyTypes.quiz.test(this)" data-quiz-index="' + i + '" id="quizSubmit_' + i + '">Test</button> &nbsp; ' +
                     '<button onclick="studyNext()" id="quizNext_' + i + '">Next Card</button>' +
                     '</div>' +
                     '<div id="quizResult_' + i + '" class="quizA hidden">' +
-                    studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
+                    studyQueue[i].a.filter(entry => typeof entry === "string").join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                     '</div>' +
                     '</div>';
             }
@@ -155,12 +155,12 @@ var studyTypes = {
             for(var i = 0; i < studyQueue.length; i++){
                 tempHTML += '<div id="studyCard_' + i + '" class="hidden quizCard">' +
                     '<div class="quizA">' +
-                    studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
+                    studyQueue[i].a.filter(entry => typeof entry === "string").join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                     '</div>' +
                     '<div class="quizWrapper">' +
-                    '<button onclick="studyPrev()">Previous Card</button> &nbsp; ' +
-                    '<input id="quizInput_' + i + '" class="quizInput" autocomplete="off" onkeypress="if(event.keyCode === 13){getId(\'quizSubmit_' + i + '\').click();getId(\'quizNext_' + i + '\').focus();}"> ' +
-                    '<button onclick="studyTypes.quizReverse.test(this)" data-quiz-index="' + i + '" id="quizSubmit_' + i + '">Submit</button> &nbsp; ' +
+                    '<button onclick="studyPrev()">Last Card</button> &nbsp; ' +
+                    '<input id="quizInput_' + i + '" class="quizInput" placeholder="Type answer here" autocomplete="off" onkeypress="if(event.keyCode === 13){getId(\'quizSubmit_' + i + '\').click();getId(\'quizNext_' + i + '\').focus();}"> ' +
+                    '<button onclick="studyTypes.quizReverse.test(this)" data-quiz-index="' + i + '" id="quizSubmit_' + i + '">Test</button> &nbsp; ' +
                     '<button onclick="studyNext()" id="quizNext_' + i + '">Next Card</button>' +
                     '</div>' +
                     '<div id="quizResult_' + i + '" class="quizQ hidden">' + studyQueue[i].q.split("<").join("&lt;").split(">").join("&gt;") + '</div>' +
@@ -194,13 +194,13 @@ var studyTypes = {
                     tempHTML += '<div id="studyCard_' + i + '" class="hidden quizCard">' +
                         '<div class="quizQ">' + studyQueue[i].q.split("<").join("&lt;").split(">").join("&gt;") + '</div>' +
                         '<div class="quizWrapper">' +
-                        '<button onclick="studyPrev()">Previous Card</button> &nbsp; ' +
-                        '<input id="quizInput_' + i + '" class="quizInput" autocomplete="off" onkeypress="if(event.keyCode === 13){getId(\'quizSubmit_' + i + '\').click();getId(\'quizNext_' + i + '\').focus();}"> ' +
-                        '<button onclick="studyTypes.quiz.test(this)" data-quiz-index="' + i + '" id="quizSubmit_' + i + '">Submit</button> &nbsp; ' +
+                        '<button onclick="studyPrev()">Last Card</button> &nbsp; ' +
+                        '<input id="quizInput_' + i + '" class="quizInput" placeholder="Type answer here" autocomplete="off" onkeypress="if(event.keyCode === 13){getId(\'quizSubmit_' + i + '\').click();getId(\'quizNext_' + i + '\').focus();}"> ' +
+                        '<button onclick="studyTypes.quiz.test(this)" data-quiz-index="' + i + '" id="quizSubmit_' + i + '">Test</button> &nbsp; ' +
                         '<button onclick="studyNext()" id="quizNext_' + i + '">Next Card</button>' +
                         '</div>' +
                         '<div id="quizResult_' + i + '" class="quizA hidden">' +
-                        studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
+                        studyQueue[i].a.filter(entry => typeof entry === "string").join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                         '</div>' +
                         '</div>';
                 }else{
@@ -209,9 +209,9 @@ var studyTypes = {
                         studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                         '</div>' +
                         '<div class="quizWrapper">' +
-                        '<button onclick="studyPrev()">Previous Card</button> &nbsp; ' +
-                        '<input id="quizInput_' + i + '" class="quizInput" autocomplete="off" onkeypress="if(event.keyCode === 13){getId(\'quizSubmit_' + i + '\').click();getId(\'quizNext_' + i + '\').focus();}"> ' +
-                        '<button onclick="studyTypes.quizReverse.test(this)" data-quiz-index="' + i + '" id="quizSubmit_' + i + '">Submit</button> &nbsp; ' +
+                        '<button onclick="studyPrev()">Last Card</button> &nbsp; ' +
+                        '<input id="quizInput_' + i + '" class="quizInput" placeholder="Type answer here" autocomplete="off" onkeypress="if(event.keyCode === 13){getId(\'quizSubmit_' + i + '\').click();getId(\'quizNext_' + i + '\').focus();}"> ' +
+                        '<button onclick="studyTypes.quizReverse.test(this)" data-quiz-index="' + i + '" id="quizSubmit_' + i + '">Test</button> &nbsp; ' +
                         '<button onclick="studyNext()" id="quizNext_' + i + '">Next Card</button>' +
                         '</div>' +
                         '<div id="quizResult_' + i + '" class="quizQ hidden">' + studyQueue[i].q.split("<").join("&lt;").split(">").join("&gt;") + '</div>' +
@@ -229,10 +229,10 @@ var studyTypes = {
                 tempHTML += '<div id="studyCard_' + i + '" class="hidden quizCard">' +
                     '<div id="cardQ_' + i + '" class="cardQ">' + studyQueue[i].q.split("<").join("&lt;").split(">").join("&gt;") + '</div>' +
                     '<div id="cardA_' + i + '" class="cardA hidden">' +
-                    studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
+                    studyQueue[i].a.filter(entry => typeof entry === "string").join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                     '</div>' +
                     '<div class="quizWrapper">' +
-                    '<button onclick="studyPrev()">Previous Card</button> &nbsp; ' +
+                    '<button onclick="studyPrev()">Last Card</button> &nbsp; ' +
                     '<button onclick="studyTypes.cards.flip(this)" data-card-side="q" data-card-index="' + i + '" id="quizInput_' + i + '">Flip Card</button> &nbsp; ' +
                     '<button onclick="studyNext()" id="cardNext_' + i + '">Next Card</button>' +
                     '</div>' +
@@ -261,10 +261,10 @@ var studyTypes = {
                 tempHTML += '<div id="studyCard_' + i + '" class="hidden quizCard">' +
                     '<div id="cardQ_' + i + '" class="cardQ hidden">' + studyQueue[i].q.split("<").join("&lt;").split(">").join("&gt;") + '</div>' +
                     '<div id="cardA_' + i + '" class="cardA">' +
-                    studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
+                    studyQueue[i].a.filter(entry => typeof entry === "string").join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                     '</div>' +
                     '<div class="quizWrapper">' +
-                    '<button onclick="studyPrev()">Previous Card</button> &nbsp; ' +
+                    '<button onclick="studyPrev()">Last Card</button> &nbsp; ' +
                     '<button onclick="studyTypes.cards.flip(this)" data-card-side="a" data-card-index="' + i + '" id="quizInput_' + i + '">Flip Card</button> &nbsp; ' +
                     '<button onclick="studyNext()" id="cardNext_' + i + '">Next Card</button>' +
                     '</div>' +
@@ -282,10 +282,10 @@ var studyTypes = {
                     tempHTML += '<div id="studyCard_' + i + '" class="hidden quizCard">' +
                         '<div id="cardQ_' + i + '" class="cardQ">' + studyQueue[i].q.split("<").join("&lt;").split(">").join("&gt;") + '</div>' +
                         '<div id="cardA_' + i + '" class="cardA hidden">' +
-                        studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
+                        studyQueue[i].a.filter(entry => typeof entry === "string").join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                         '</div>' +
                         '<div class="quizWrapper">' +
-                        '<button onclick="studyPrev()">Previous Card</button> &nbsp; ' +
+                        '<button onclick="studyPrev()">Last Card</button> &nbsp; ' +
                         '<button onclick="studyTypes.cards.flip(this)" data-card-side="q" data-card-index="' + i + '" id="quizInput_' + i + '">Flip Card</button> &nbsp; ' +
                         '<button onclick="studyNext()" id="cardNext_' + i + '">Next Card</button>' +
                         '</div>' +
@@ -297,7 +297,7 @@ var studyTypes = {
                         studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                         '</div>' +
                         '<div class="quizWrapper">' +
-                        '<button onclick="studyPrev()">Previous Card</button> &nbsp; ' +
+                        '<button onclick="studyPrev()">Last Card</button> &nbsp; ' +
                         '<button onclick="studyTypes.cards.flip(this)" data-card-side="a" data-card-index="' + i + '" id="quizInput_' + i + '">Flip Card</button> &nbsp; ' +
                         '<button onclick="studyNext()" id="cardNext_' + i + '">Next Card</button>' +
                         '</div>' +
@@ -315,10 +315,10 @@ var studyTypes = {
                 tempHTML += '<div id="studyCard_' + i + '" class="hidden quizCard">' +
                     '<div id="cardQ_' + i + '" class="termsQ">' + studyQueue[i].q.split("<").join("&lt;").split(">").join("&gt;") + '</div>' +
                     '<div id="cardA_' + i + '" class="termsA">' +
-                    studyQueue[i].a.join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
+                    studyQueue[i].a.filter(entry => typeof entry === "string").join('\n').split("<").join("&lt;").split(">").join("&gt;").split('\n').join('<br>') +
                     '</div>' +
                     '<div class="quizWrapper">' +
-                    '<button onclick="studyPrev()">Previous Card</button> &nbsp; ' +
+                    '<button onclick="studyPrev()">Last Card</button> &nbsp; ' +
                     '<button onclick="studyNext()" id="quizInput_' + i + '">Next Card</button>' +
                     '</div>' +
                     '</div>';
@@ -417,8 +417,10 @@ var screens = {
                     '<input class="cardQuestion" onchange="updateCardQuestion(' + i + ', this.value)" placeholder="Question" value="' + project.cards[i].q.split('"').join('\"') + '"></input>' +
                     '<div class="editorAnswers">';
                 for(var j in project.cards[i].a){
-                    tempHTML += '<div><button onclick="removeCardAnswer(' + i + ', ' + j + ')">x</button> ' +
-                        '<input class="cardAnswer" onchange="updateCardAnswer(' + i + ', ' + j + ', this.value)" placeholder="Answer" value="' + project.cards[i].a[j].split('"').join('\"') + '"></div>'
+                    if(typeof project.cards[i].a[j] === "string"){
+                        tempHTML += '<div><button onclick="removeCardAnswer(' + i + ', ' + j + ')">x</button> ' +
+                            '<input class="cardAnswer" onchange="updateCardAnswer(' + i + ', ' + j + ', this.value)" placeholder="Answer" value="' + project.cards[i].a[j].split('"').join('\"') + '"></div>';
+                    }
                 }
                 tempHTML += '</div><button onclick="addCardAnswer(' + i + ')" style="margin-left:2em;">Add New Answer</button>' +
                     '</div>';
@@ -437,6 +439,7 @@ function newCard(){
 
 function removeCard(card){
     delete project.cards[card];
+    project.cards = project.cards.filter(entry => entry !== null && entry !== undefined);
     refreshEditor();
     studyLoaded = 0;
 }
@@ -459,6 +462,7 @@ function updateCardAnswer(card, answer, text){
 
 function removeCardAnswer(card, answer){
     delete project.cards[card].a[answer];
+    project.cards[card].a = project.cards[card].a.filter(entry => typeof entry === "string");
     refreshEditor();
     studyLoaded = 0;
 }
@@ -490,10 +494,36 @@ function loadFile(){ // func borrowed from LineWriter app
             try{
                 if(JSON.parse(tempFileData).aosFlashCards){
                     project = JSON.parse(tempFileData);
-                    getId("fileButtons").classList.remove("disabled");
-                    getId("loadStatus").innerHTML = file.name + "<br>Loaded " + project.cards.length + " cards from file.";
-                    studyLoaded = 0;
-                    editorLoaded = 0;
+                    try{
+                        var lengthPreTrim = project.cards.length;
+                        project.cards = project.cards.filter(entry => entry !== null);
+                        var lengthPostTrim = project.cards.length;
+                        var answersPreTrim = 0;
+                        var answersPostTrim = 0;
+                        for(var i in project.cards){
+                            answersPreTrim += project.cards[i].a.length;
+                            project.cards[i].a = project.cards[i].a.filter(entry => typeof entry === "string");
+                            answersPostTrim += project.cards[i].a.length;
+                        }
+                        getId("fileButtons").classList.remove("disabled");
+                        getId("loadStatus").innerHTML = file.name + "<br>Loaded " + project.cards.length + " cards from file.";
+                        if(lengthPostTrim !== lengthPreTrim || answersPostTrim !== answersPreTrim){
+                            getId("loadStatus").innerHTML += '<br>';
+                        }
+                        if(lengthPostTrim !== lengthPreTrim){
+                            getId("loadStatus").innerHTML += '<br>Ignored ' + (lengthPreTrim - lengthPostTrim) + ' null cards.';
+                        }
+                        if(answersPostTrim !== answersPreTrim){
+                            getId("loadStatus").innerHTML += '<br>Ignored ' + (answersPreTrim - answersPostTrim) + ' null answers.';
+                        }
+                        if(lengthPostTrim !== lengthPreTrim || answersPostTrim !== answersPreTrim){
+                            getId("loadStatus").innerHTML += '<br>(bugged entries from old versions)';
+                        }
+                        studyLoaded = 0;
+                        editorLoaded = 0;
+                    }catch(err){
+                        getId("loadStatus").innerHTML = "ERROR! Project file is incorrectly formatted.";
+                    }
                 }else{
                     getId("loadStatus").innerHTML = "ERROR! File is not a Flash Cards Project.";
                 }

@@ -12136,6 +12136,14 @@ c(function(){
             "10/03/2022: B1.6.31.0": [
                 " + Added Radar visualizer to Music Player.",
                 " : Adjusted featured visualizers list."
+            ],
+            "11/29/2022: B1.6.31.1": [
+                " : Flashcard study text is smaller to better accomodate mobile.",
+                " : Flashcard button text is shorter to better accomodate mobile.",
+                " : Flashcards no longer leaves behind null entries when deleting a Card or Answer.",
+                " : Flashcards now discards null Cards and Answers when you load a Project affected by the null entries bug.",
+                " : Flashcards no longer displays blank spaces in Study after triggering the null entries bug.",
+                " : Flashcards no longer crashes when you select Edit after loading a Project affected by the null entries bug."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
