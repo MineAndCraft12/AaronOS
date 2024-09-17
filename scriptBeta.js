@@ -8230,7 +8230,7 @@ c(function(){
             },
             getVoicesForNORAA: function(){
                 this.currVoiceStr = '';
-                if(apps.nora.vars.voices !== []){
+                if(apps.nora.vars.voices.length > 0){
                     for(var i in apps.nora.vars.voices){
                         this.currVoiceStr += '<button onclick="apps.nora.vars.lang = \'' + apps.nora.vars.voices[i].name + '\';window.speechSynthesis.onvoiceschanged();apps.settings.vars.saveNORAAvoice()">' + apps.nora.vars.voices[i].name + '</button> ';
                     }
@@ -12144,11 +12144,16 @@ c(function(){
                 " : Flashcards now discards null Cards and Answers when you load a Project affected by the null entries bug.",
                 " : Flashcards no longer displays blank spaces in Study after triggering the null entries bug.",
                 " : Flashcards no longer crashes when you select Edit after loading a Project affected by the null entries bug."
+            ],
+            "09/16/2024: B1.6.31.2": [
+                " + Notice warning users that the OS is free.",
+                " + Added Donate app to buy me a coffee.",
+                " : Fixed small error in NORAA's voice selection code."
             ]
         },
         oldVersions: "aOS has undergone many stages of development. Older versions are available at https://aaronos.dev/AaronOS_Old/"
     }; // changelog: (using this comment to make changelog easier for me to find)
-    window.aOSversion = 'B1.6.31.0 (10/03/2022) r0';
+    window.aOSversion = 'B1.6.31.2 (09/16/2024) r0';
     document.title = 'AaronOS ' + aOSversion;
     getId('aOSloadingInfo').innerHTML = 'Properties Viewer';
 });
@@ -13152,6 +13157,16 @@ c(function(){
                                     return "<div style='position:relative;text-align:center;overflow:visible;margin-top:-1em;'><button onclick=\"apps.help.vars.showMenu(apps.help.vars.menus.menuOptions.filesHelp)\">Security notice for users prior to April 9, 2022</button></div>";
                                 },
                             },
+                            aosIsFree: {
+                                optionTitle: "IMPORTANT NOTICE: <u>AaronOS is free.</u>",
+                                optionContent: () => {
+                                    return 'If you paid money to access AaronOS or its source code, I highly urge you to seek a refund immediately and report the seller.<br>' +
+                                        'If you wish to support the project, you could buy me a coffee on Ko-Fi!';
+                                },
+                                optionButton: () => {
+                                    return '<button onclick="requestAnimationFrame(function(){openapp(apps.donate)})">Buy me a coffee</button>';
+                                }
+                            },
                             tutorial: {
                                 optionTitle: "Guided Tour",
                                 optionContent: () => {
@@ -13161,7 +13176,7 @@ c(function(){
                                 optionButton: () => {
                                     return '<button onclick="apps.help.vars.showTutorial(\'welcome\')">Guided Tour</button>';
                                 }
-                            },
+                            }, /* hidden to make room for scam notice
                             helpPages: {
                                 optionTitle: "Help Pages",
                                 optionContent: () => {
@@ -13171,7 +13186,7 @@ c(function(){
                                 optionButton: () => {
                                     return '<button onclick="apps.help.vars.showMenu()">Help Pages</button>'
                                 }
-                            },
+                            }, */
                             noHelp: {
                                 optionTitle: "EULA and Privacy Policy",
                                 optionContent: () => {
@@ -13332,11 +13347,11 @@ c(function(){
                     this.appWindow.closeKeepTask();
                     break;
                 case "USERFILES_DONE":
-                    if(localStorage.getItem("aos_help_displayed") !== "1"){
+                    if(localStorage.getItem("aos_help_displayed") !== "2"){
                         c(function(){
                             openapp(apps.help, "dsktp");
                             apps.help.vars.showMenu(apps.help.vars.menus.menuOptions.intro);
-                            localStorage.setItem("aos_help_displayed", "1");
+                            localStorage.setItem("aos_help_displayed", "2");
                         });
                     }
                     break;
@@ -17140,6 +17155,40 @@ c(function(){
         },
         vars: {
             appInfo: 'This is the official AaronOS developer documentation. This is mostly useful to those writing Web Apps.'
+        }
+    });
+    getId('aOSloadingInfo').innerHTML = 'Donation app...';
+});
+c(function(){
+    m('init SD');
+    apps.donate = new Application({
+        title: "Support the Developer",
+        abbreviation: "SD",
+        codeName: "donate",
+        image: {
+            backgroundColor: "#303947",
+            foreground: "smarticons/aOS/fg.png",
+            backgroundBorder: {
+                thickness: 2,
+                color: "#252F3A"
+            }
+        },
+        hideApp: 0,
+        main: function(){
+            if(!this.appWindow.appIcon){
+                this.appWindow.paddingMode(0);
+                this.appWindow.setContent('<iframe data-parent-app="donate" id="SDframe" style="border:none; display:block; width:100%; height:100%; overflow:hidden;" src="https://ko-fi.com/aaronadams_aaronos/?hidefeed=true&widget=true&embed=true&preview=true"></iframe>');
+                getId("icn_donate").style.display = "inline-block";
+                requestAnimationFrame(() => {
+                    this.appWindow.appIcon = 1;
+                });
+            }
+            this.appWindow.setCaption('Support the Developer');
+            this.appWindow.setDims("auto", "auto", 406, 670);
+            this.appWindow.openWindow();
+        },
+        vars: {
+            appInfo: 'Want to support the project? Buy me a coffee!'
         }
     });
     getId('aOSloadingInfo').innerHTML = 'Finalizing...';
